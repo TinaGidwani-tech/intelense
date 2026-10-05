@@ -18,7 +18,7 @@
   --stroke: #cfcac7;
   --ink: #101010;
   --text: #1d1a18;
-  --muted: #5f5956;     /* Warm Granite darkened for 4.5:1 on light */
+  --muted: #6C6E82;     /* brand slate: taglines + secondary text (4.8:1 on canvas) */
   --faint: #8a8380;     /* logos + decorative only */
   /* dark figure (the console / cards) */
   --obsidian: #101010;
@@ -27,10 +27,18 @@
   --graphite: #4d4947;
   --stone: #b8b3b0;
   --bone: #eeeeee;
-  /* functional accents: data voice only */
-  --signal: #ee6018;
-  --metric: #a0ca92;
-  --metric-ink: #4c8a3c; /* green readable on light ground */
+  /* brand gradient stops, in order (slate kept out: it muddies the blends) */
+  --g-blue: #0A34ED;
+  --g-violet: #7C28E9;
+  --g-coral: #FF7953;
+  --g-sky: #78AFCF;
+  --g-teal: #73C4C5;
+  --brand-gradient: linear-gradient(90deg, var(--g-blue) 0%, var(--g-violet) 25%, var(--g-coral) 50%, var(--g-sky) 75%, var(--g-teal) 100%);
+  --brand-gradient-diag: linear-gradient(120deg, var(--g-blue) 0%, var(--g-violet) 25%, var(--g-coral) 50%, var(--g-sky) 75%, var(--g-teal) 100%);
+  /* functional accents drawn from the brand stops: coral = alert, teal = ok */
+  --signal: var(--g-coral);
+  --metric: var(--g-teal);
+  --metric-ink: var(--g-blue); /* positive state as text on light ground */
 
   --sans: "Geist", Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
   --mono: "Geist Mono", "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
@@ -48,7 +56,7 @@ body {
   -webkit-font-smoothing: antialiased; overflow-x: hidden;
 }
 a { color: inherit; }
-:focus-visible { outline: 2px solid var(--signal); outline-offset: 3px; }
+:focus-visible { outline: 2px solid var(--g-blue); outline-offset: 3px; }
 .wrap { max-width: var(--max); margin: 0 auto; padding-inline: var(--gutter); }
 h1, h2, h3 { font-weight: 400; margin: 0; color: var(--ink); text-wrap: balance; }
 h1 { font-size: clamp(44px, 6vw, 72px); line-height: 1; letter-spacing: -0.04em; }
@@ -60,6 +68,7 @@ p { margin: 0; }
 .eyebrow { display: inline-flex; align-items: center; gap: 8px; color: var(--muted); }
 .pulse { width: 6px; height: 6px; border-radius: 50%; background: var(--signal); flex: none; }
 .pulse.ok { background: var(--metric); }
+.eyebrow > .pulse { width: 8px; height: 8px; background: linear-gradient(135deg, var(--g-blue), var(--g-violet) 50%, var(--g-coral)); }
 
 /* Buttons */
 .btn {
@@ -81,10 +90,12 @@ p { margin: 0; }
 
 /* Nav */
 .nav { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 10; background: var(--canvas); border-bottom: 1px solid var(--hairline); }
+.nav::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 3px; background: var(--brand-gradient); }
 .nav .wrap { display: flex; align-items: center; justify-content: space-between; gap: 24px; min-height: 64px; }
 .brand { display: inline-flex; align-items: center; gap: 10px; text-decoration: none; font-family: var(--mono); font-size: 13px; letter-spacing: 0.18em; color: var(--ink); }
-.brand i { width: 14px; height: 14px; border-radius: 50%; border: 1.5px solid var(--ink); display: grid; place-items: center; }
-.brand i::after { content: ""; width: 4px; height: 4px; border-radius: 50%; background: var(--signal); }
+.brand i { width: 18px; height: 18px; border-radius: 50%; display: grid; place-items: center;
+  background: conic-gradient(from 200deg, var(--g-blue), var(--g-violet), var(--g-coral), var(--g-sky), var(--g-teal), var(--g-blue)); }
+.brand i::after { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--canvas); }
 .links { display: flex; gap: 28px; list-style: none; margin: 0; padding: 0; }
 .links a { text-decoration: none; font-size: 14px; text-transform: uppercase; letter-spacing: -0.01em; color: var(--ink); transition: color .18s var(--ease); }
 .links a:hover { color: var(--muted); }
@@ -94,14 +105,18 @@ p { margin: 0; }
 .hero { padding-block: clamp(48px, 7vw, 96px) var(--section); }
 .hero-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 2fr); gap: 48px; align-items: center; }
 .hero-copy { display: flex; flex-direction: column; gap: 24px; min-width: 0; }
+.hero-copy h1 .hl { background-image: var(--brand-gradient); background-repeat: no-repeat; background-size: 100% 5px; background-position: 0 92%; padding-bottom: 6px; -webkit-box-decoration-break: clone; box-decoration-break: clone; }
 .hero-copy .lede { font-size: 16px; color: var(--muted); max-width: 40ch; }
 .hero-actions { display: flex; gap: 8px; flex-wrap: wrap; }
 .hero-meta { display: flex; flex-direction: column; gap: 10px; padding-top: 24px; border-top: 1px solid var(--hairline); color: var(--muted); }
 .hero-meta span { display: flex; align-items: center; gap: 8px; }
 
 /* Console (the dark figure) */
-.console { background: var(--obsidian); color: var(--bone); border-radius: 10px; overflow: hidden; border: 1px solid var(--obsidian); min-width: 0; animation: frameIn .6s var(--ease) both; }
+.console-wrap { position: relative; isolation: isolate; min-width: 0; }
+.console-wrap::before { content: ""; position: absolute; inset: 10% -3% 6% 8%; z-index: -1; background: var(--brand-gradient-diag); filter: blur(64px); opacity: .32; border-radius: 40px; pointer-events: none; }
+.console { position: relative; background: var(--obsidian); color: var(--bone); border-radius: 10px; overflow: hidden; border: 1px solid var(--obsidian); min-width: 0; animation: frameIn .6s var(--ease) both; }
 @keyframes frameIn { from { transform: translateY(10px); } to { transform: none; } }
+.console::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 2px; background: var(--brand-gradient); z-index: 1; }
 .chrome { display: flex; align-items: center; gap: 14px; padding: 12px 16px; border-bottom: 1px solid var(--carbon); }
 .dots { display: flex; gap: 6px; }
 .dots i { width: 10px; height: 10px; border-radius: 50%; background: var(--ash); }
@@ -128,14 +143,14 @@ p { margin: 0; }
   background-size: 56px 56px; transform: perspective(480px) rotateX(58deg); transform-origin: bottom; }
 .feed .hud { position: absolute; left: 12px; right: 12px; top: 10px; display: flex; justify-content: space-between; color: var(--stone); z-index: 2; font-size: 10px; }
 .feed .hud.b { top: auto; bottom: 10px; color: var(--graphite); }
-.zone { position: absolute; left: 55%; top: 46%; width: 39%; height: 46%; border: 1px dashed rgba(238,96,24,.6); }
+.zone { position: absolute; left: 55%; top: 46%; width: 39%; height: 46%; border: 1px dashed rgba(255,121,83,.65); }
 .blob { position: absolute; background: rgba(238,238,238,.09); border-radius: 40% 40% 10% 10%; filter: blur(1.5px); }
 .box { position: absolute; border: 1px solid var(--metric); }
 .box b { position: absolute; left: -1px; bottom: 100%; margin-bottom: 3px; font: 400 10px/1.2 var(--mono); text-transform: uppercase; background: var(--metric); color: var(--obsidian); padding: 2px 5px; white-space: nowrap; }
 .box.alert { border-color: var(--signal); }
 .box.alert b { background: var(--signal); color: var(--obsidian); }
-.box.neutral { border-color: var(--stone); }
-.box.neutral b { background: var(--stone); }
+.box.neutral { border-color: var(--g-sky); }
+.box.neutral b { background: var(--g-sky); }
 .log { padding: 16px 20px; display: flex; flex-direction: column; min-width: 0; }
 .log .mono { color: var(--stone); padding-bottom: 10px; }
 .log ul { list-style: none; margin: 0; padding: 0; }
@@ -172,14 +187,17 @@ section.block { padding-block: var(--section); }
 .mod { border: 1px solid var(--hairline); border-radius: 10px; padding: 24px; display: flex; flex-direction: column; gap: 12px; min-width: 0; transition: border-color .18s var(--ease); }
 .mod:hover { border-color: var(--stroke); }
 .mod .top { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-bottom: 20px; color: var(--muted); }
-.mod svg.ic { width: 20px; height: 20px; stroke: var(--ink); fill: none; stroke-width: 1.4; stroke-linecap: round; stroke-linejoin: round; }
+.mod svg.ic { width: 22px; height: 22px; stroke: url(#brand-g); fill: none; stroke-width: 1.4; stroke-linecap: round; stroke-linejoin: round; }
 .mod p { color: var(--muted); font-size: 15px; }
 .mod .read { margin-top: auto; padding-top: 12px; }
 .tag-new { display: inline-flex; align-items: center; gap: 6px; color: var(--ink); }
-.mod.feature { grid-column: span 2; background: var(--obsidian); border-color: var(--obsidian); color: var(--bone); }
+.mod.feature { position: relative; overflow: hidden; grid-column: span 2; background: var(--obsidian); border-color: var(--obsidian); color: var(--bone); }
+.mod.feature::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 3px; background: var(--brand-gradient); }
+.mod.feature::after { content: ""; position: absolute; width: 60%; aspect-ratio: 1; right: -22%; top: -38%; background: var(--brand-gradient-diag); filter: blur(70px); opacity: .28; pointer-events: none; }
+.mod.feature > * { position: relative; z-index: 1; }
 .mod.feature h3 { color: var(--bone); font-size: 36px; letter-spacing: -0.031em; line-height: 1.1; }
 .mod.feature p, .mod.feature .top { color: var(--stone); }
-.mod.feature svg.ic { stroke: var(--bone); }
+
 .mod.feature .read { color: var(--bone); }
 .mini { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border-top: 1px solid var(--carbon); margin-top: 8px; }
 .mini div { padding: 14px 14px 4px 0; }
@@ -202,14 +220,25 @@ td:nth-child(2) { color: var(--muted); }
 .cta { padding-bottom: var(--section); }
 .cta-card {
   position: relative; overflow: hidden; background: var(--obsidian); color: var(--bone); border-radius: 20px;
-  padding: clamp(32px, 6vw, 72px); display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); gap: 32px; align-items: end;
+  padding: clamp(32px, 6vw, 72px); display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); gap: 40px; align-items: center;
 }
 .cta-card::before { /* film grain */
   content: ""; position: absolute; inset: 0; opacity: .14; pointer-events: none; mix-blend-mode: screen;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .6 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 .cta-card > * { position: relative; }
-.cta-card h2 { color: var(--bone); margin-top: 16px; max-width: 16ch; }
+.cta-copy { display: flex; flex-direction: column; gap: 20px; color: var(--stone); }
+.cta-copy p { max-width: 44ch; }
+.cta-copy .row { display: flex; gap: 8px; flex-wrap: wrap; }
+.orb { position: relative; justify-self: center; width: min(100%, 360px); aspect-ratio: 1; max-width: 100%; }
+.orb i { position: absolute; border-radius: 50%; display: block; }
+.orb .glow { inset: 6%; background: conic-gradient(from 200deg, var(--g-blue), var(--g-violet), var(--g-coral), var(--g-sky), var(--g-teal), var(--g-blue)); filter: blur(28px); opacity: .9; animation: turn 24s linear infinite; }
+.orb .ring { inset: 0; border: 1px solid rgba(238,238,238,.22); }
+.orb .ring.r2 { inset: 18%; border-color: rgba(238,238,238,.35); }
+.orb .core { inset: 36%; background: var(--obsidian); box-shadow: 0 0 0 1px rgba(238,238,238,.4); }
+.orb .core::after { content: ""; position: absolute; inset: 38%; border-radius: 50%; background: var(--brand-gradient-diag); }
+@keyframes turn { to { transform: rotate(360deg); } }
+.cta-card h2 { color: var(--bone); max-width: 16ch; }
 .cta-card .eyebrow { color: var(--stone); }
 .cta-side { display: flex; flex-direction: column; gap: 20px; color: var(--stone); }
 .cta-side .row { display: flex; gap: 8px; flex-wrap: wrap; }
@@ -258,6 +287,14 @@ footer .muted { margin-top: 14px; max-width: 32ch; }
 </head>
 <body>
 
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <defs>
+    <linearGradient id="brand-g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0A34ED"/><stop offset=".3" stop-color="#7C28E9"/><stop offset=".6" stop-color="#FF7953"/><stop offset=".82" stop-color="#78AFCF"/><stop offset="1" stop-color="#73C4C5"/>
+    </linearGradient>
+  </defs>
+</svg>
+
 <header class="nav">
   <div class="wrap">
     <a class="brand" href="#top" aria-label="Intelense home"><i aria-hidden="true"></i>INTELENSE</a>
@@ -279,7 +316,7 @@ footer .muted { margin-top: 14px; max-width: 32ch; }
     <div class="wrap hero-grid">
       <div class="hero-copy">
         <span class="mono eyebrow"><span class="pulse"></span>AI for public safety</span>
-        <h1>See what matters. Act before it escalates.</h1>
+        <h1>See what matters. <span class="hl">Act before it escalates.</span></h1>
         <p class="lede">Intelense turns live video, sensor and voice data into real-time alerts, so the right people know what is happening and can respond in seconds.</p>
         <div class="hero-actions">
           <a class="btn btn-dark" href="#cta">Book a demo</a>
@@ -292,7 +329,7 @@ footer .muted { margin-top: 14px; max-width: 32ch; }
         </div>
       </div>
 
-      <div>
+      <div class="console-wrap">
         <div class="console" role="img" aria-label="Illustration of the Intelense operations console with live metrics, a camera feed and an event log">
           <div class="chrome">
             <div class="dots" aria-hidden="true"><i></i><i></i><i></i></div>
@@ -303,25 +340,25 @@ footer .muted { margin-top: 14px; max-width: 32ch; }
             <div class="tile">
               <div class="mono">Cameras online</div>
               <div class="val">248<small>/252</small></div>
-              <svg viewBox="0 0 100 40" preserveAspectRatio="none" aria-hidden="true"><polyline stroke="#a0ca92" points="0,22 10,20 20,21 30,18 40,19 50,16 60,17 70,14 80,15 90,12 100,12"/></svg>
+              <svg viewBox="0 0 100 40" preserveAspectRatio="none" aria-hidden="true"><polyline stroke="#73C4C5" points="0,22 10,20 20,21 30,18 40,19 50,16 60,17 70,14 80,15 90,12 100,12"/></svg>
               <div class="delta up">98.4% uptime</div>
             </div>
             <div class="tile">
               <div class="mono">Events today</div>
               <div class="val">1,284</div>
-              <svg viewBox="0 0 100 40" preserveAspectRatio="none" aria-hidden="true"><polyline stroke="#a0ca92" points="0,34 10,30 20,31 30,26 40,27 50,20 60,22 70,16 80,18 90,11 100,8"/></svg>
+              <svg viewBox="0 0 100 40" preserveAspectRatio="none" aria-hidden="true"><polyline stroke="#73C4C5" points="0,34 10,30 20,31 30,26 40,27 50,20 60,22 70,16 80,18 90,11 100,8"/></svg>
               <div class="delta up">Auto-triaged</div>
             </div>
             <div class="tile">
               <div class="mono">Escalated</div>
               <div class="val">7</div>
-              <svg viewBox="0 0 100 40" preserveAspectRatio="none" aria-hidden="true"><polyline stroke="#ee6018" points="0,30 10,30 20,28 30,29 40,24 50,26 60,20 70,22 80,15 90,17 100,12"/></svg>
+              <svg viewBox="0 0 100 40" preserveAspectRatio="none" aria-hidden="true"><polyline stroke="#FF7953" points="0,30 10,30 20,28 30,29 40,24 50,26 60,20 70,22 80,15 90,17 100,12"/></svg>
               <div class="delta down">+2 since 14:00</div>
             </div>
             <div class="tile">
               <div class="mono">Avg. response</div>
               <div class="val">38<small>s</small></div>
-              <svg viewBox="0 0 100 40" preserveAspectRatio="none" aria-hidden="true"><polyline stroke="#a0ca92" points="0,10 10,12 20,11 30,15 40,14 50,19 60,18 70,22 80,24 90,27 100,29"/></svg>
+              <svg viewBox="0 0 100 40" preserveAspectRatio="none" aria-hidden="true"><polyline stroke="#73C4C5" points="0,10 10,12 20,11 30,15 40,14 50,19 60,18 70,22 80,24 90,27 100,29"/></svg>
               <div class="delta up">Down 12s</div>
             </div>
           </div>
@@ -516,17 +553,16 @@ footer .muted { margin-top: 14px; max-width: 32ch; }
   <section class="cta" id="cta">
     <div class="wrap">
       <div class="cta-card">
-        <div>
+        <div class="cta-copy">
           <span class="mono eyebrow"><span class="pulse"></span>Get started</span>
           <h2>See Intelense on your own footage.</h2>
-        </div>
-        <div class="cta-side">
           <p>We review your sites, pick a first use case and run a pilot on a few cameras so you can judge the results yourself.</p>
           <div class="row">
             <a class="btn btn-light" href="#cta">Book a demo</a>
             <a class="btn btn-ghost" href="#modules">Compare modules</a>
           </div>
         </div>
+        <div class="orb" aria-hidden="true"><i class="glow"></i><i class="ring"></i><i class="ring r2"></i><i class="core"></i></div>
       </div>
     </div>
   </section>
