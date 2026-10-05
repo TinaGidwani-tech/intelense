@@ -1,0 +1,563 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Intelense Console Homepage</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500&family=Geist+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: Factory "terminal war room", inverted to daylight — light chalk canvas, the dark console panel is the one figure on the ground; single light look by design */
+:root {
+  color-scheme: light;
+  /* light canvas stack (inverted Factory) */
+  --canvas: #fafafa;
+  --raised: #f0efed;
+  --hairline: #e3e0de;
+  --stroke: #cfcac7;
+  --ink: #101010;
+  --text: #1d1a18;
+  --muted: #5f5956;     /* Warm Granite darkened for 4.5:1 on light */
+  --faint: #8a8380;     /* logos + decorative only */
+  /* dark figure (the console / cards) */
+  --obsidian: #101010;
+  --carbon: #1d1a18;
+  --ash: #3d3a39;
+  --graphite: #4d4947;
+  --stone: #b8b3b0;
+  --bone: #eeeeee;
+  /* functional accents: data voice only */
+  --signal: #ee6018;
+  --metric: #a0ca92;
+  --metric-ink: #4c8a3c; /* green readable on light ground */
+
+  --sans: "Geist", Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "Geist Mono", "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+  --max: 1200px;
+  --gutter: clamp(16px, 4vw, 40px);
+  --section: clamp(72px, 9vw, 120px);
+  --ease: cubic-bezier(0.4, 0, 0.2, 1);
+}
+* { box-sizing: border-box; }
+html { background: var(--canvas); }
+body {
+  margin: 0; background: var(--canvas); color: var(--text);
+  font-family: var(--sans); font-size: 16px; line-height: 1.5; font-weight: 400;
+  -webkit-font-smoothing: antialiased; overflow-x: hidden;
+}
+a { color: inherit; }
+:focus-visible { outline: 2px solid var(--signal); outline-offset: 3px; }
+.wrap { max-width: var(--max); margin: 0 auto; padding-inline: var(--gutter); }
+h1, h2, h3 { font-weight: 400; margin: 0; color: var(--ink); text-wrap: balance; }
+h1 { font-size: clamp(44px, 6vw, 72px); line-height: 1; letter-spacing: -0.04em; }
+h2 { font-size: clamp(32px, 3.8vw, 44px); line-height: 1.12; letter-spacing: -0.025em; }
+h3 { font-size: 22px; line-height: 1.2; letter-spacing: -0.02em; }
+p { margin: 0; }
+.muted { color: var(--muted); }
+.mono { font-family: var(--mono); font-size: 12px; line-height: 1.2; text-transform: uppercase; letter-spacing: -0.02em; }
+.eyebrow { display: inline-flex; align-items: center; gap: 8px; color: var(--muted); }
+.pulse { width: 6px; height: 6px; border-radius: 50%; background: var(--signal); flex: none; }
+.pulse.ok { background: var(--metric); }
+
+/* Buttons */
+.btn {
+  display: inline-flex; align-items: center; gap: 10px; min-height: 40px; padding: 0 16px;
+  font: 400 14px/1 var(--sans); letter-spacing: -0.01em; text-decoration: none; cursor: pointer;
+  border-radius: 3px; border: 1px solid transparent; white-space: nowrap;
+  transition: background-color .18s var(--ease), color .18s var(--ease), border-color .18s var(--ease);
+}
+.btn-dark { background: var(--obsidian); color: var(--bone); }
+.btn-dark:hover { background: var(--carbon); }
+.btn-ghost { border-color: var(--stroke); border-radius: 0; color: var(--ink); background: transparent; }
+.btn-ghost::after { content: "→"; }
+.btn-ghost:hover { border-color: var(--ink); }
+.btn-light { background: var(--bone); color: var(--obsidian); }
+.btn-light:hover { background: #ffffff; }
+.read { display: inline-flex; gap: 6px; font-size: 14px; text-decoration: none; color: var(--ink); transition: color .18s var(--ease); }
+.read::after { content: "→"; transition: transform .18s var(--ease); }
+.read:hover::after { transform: translateX(3px); }
+
+/* Nav */
+.nav { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 10; background: var(--canvas); border-bottom: 1px solid var(--hairline); }
+.nav .wrap { display: flex; align-items: center; justify-content: space-between; gap: 24px; min-height: 64px; }
+.brand { display: inline-flex; align-items: center; gap: 10px; text-decoration: none; font-family: var(--mono); font-size: 13px; letter-spacing: 0.18em; color: var(--ink); }
+.brand i { width: 14px; height: 14px; border-radius: 50%; border: 1.5px solid var(--ink); display: grid; place-items: center; }
+.brand i::after { content: ""; width: 4px; height: 4px; border-radius: 50%; background: var(--signal); }
+.links { display: flex; gap: 28px; list-style: none; margin: 0; padding: 0; }
+.links a { text-decoration: none; font-size: 14px; text-transform: uppercase; letter-spacing: -0.01em; color: var(--ink); transition: color .18s var(--ease); }
+.links a:hover { color: var(--muted); }
+.nav-cta { display: flex; gap: 8px; }
+
+/* Hero */
+.hero { padding-block: clamp(48px, 7vw, 96px) var(--section); }
+.hero-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 2fr); gap: 48px; align-items: center; }
+.hero-copy { display: flex; flex-direction: column; gap: 24px; min-width: 0; }
+.hero-copy .lede { font-size: 16px; color: var(--muted); max-width: 40ch; }
+.hero-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+.hero-meta { display: flex; flex-direction: column; gap: 10px; padding-top: 24px; border-top: 1px solid var(--hairline); color: var(--muted); }
+.hero-meta span { display: flex; align-items: center; gap: 8px; }
+
+/* Console (the dark figure) */
+.console { background: var(--obsidian); color: var(--bone); border-radius: 10px; overflow: hidden; border: 1px solid var(--obsidian); min-width: 0; animation: frameIn .6s var(--ease) both; }
+@keyframes frameIn { from { transform: translateY(10px); } to { transform: none; } }
+.chrome { display: flex; align-items: center; gap: 14px; padding: 12px 16px; border-bottom: 1px solid var(--carbon); }
+.dots { display: flex; gap: 6px; }
+.dots i { width: 10px; height: 10px; border-radius: 50%; background: var(--ash); }
+.chrome .title { color: var(--stone); flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.chrome .live { display: inline-flex; align-items: center; gap: 6px; color: var(--bone); }
+.chrome .live .pulse { animation: blink 1.4s steps(2) infinite; }
+@keyframes blink { 50% { opacity: .25; } }
+.tiles { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.tile { padding: 20px; border-right: 1px solid var(--carbon); border-bottom: 1px solid var(--carbon); min-width: 0; }
+.tile:last-child { border-right: 0; }
+.tile .mono { color: var(--stone); }
+.tile .val { font-size: clamp(26px, 2.6vw, 36px); line-height: 1.1; letter-spacing: -0.031em; margin-top: 10px; font-variant-numeric: tabular-nums; }
+.tile .val small { font-size: 14px; color: var(--stone); letter-spacing: 0; }
+.tile svg { display: block; width: 100%; height: 40px; margin-top: 12px; }
+.tile polyline { fill: none; stroke-width: 1.25; vector-effect: non-scaling-stroke; }
+.tile .delta { margin-top: 8px; font-family: var(--mono); font-size: 11px; text-transform: uppercase; }
+.up { color: var(--metric); } .down { color: var(--signal); }
+.lower { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); }
+.feed { position: relative; aspect-ratio: 16 / 10; max-width: 100%; overflow: hidden; border-right: 1px solid var(--carbon);
+  background: radial-gradient(ellipse at 30% 110%, rgba(238,238,238,.07), transparent 60%), linear-gradient(180deg, #181818, #0c0c0c 55%, #141414);
+}
+.feed::before { content: ""; position: absolute; left: -30%; right: -30%; bottom: -10%; height: 60%;
+  background-image: linear-gradient(rgba(238,238,238,.06) 1px, transparent 1px), linear-gradient(90deg, rgba(238,238,238,.06) 1px, transparent 1px);
+  background-size: 56px 56px; transform: perspective(480px) rotateX(58deg); transform-origin: bottom; }
+.feed .hud { position: absolute; left: 12px; right: 12px; top: 10px; display: flex; justify-content: space-between; color: var(--stone); z-index: 2; font-size: 10px; }
+.feed .hud.b { top: auto; bottom: 10px; color: var(--graphite); }
+.zone { position: absolute; left: 55%; top: 46%; width: 39%; height: 46%; border: 1px dashed rgba(238,96,24,.6); }
+.blob { position: absolute; background: rgba(238,238,238,.09); border-radius: 40% 40% 10% 10%; filter: blur(1.5px); }
+.box { position: absolute; border: 1px solid var(--metric); }
+.box b { position: absolute; left: -1px; bottom: 100%; margin-bottom: 3px; font: 400 10px/1.2 var(--mono); text-transform: uppercase; background: var(--metric); color: var(--obsidian); padding: 2px 5px; white-space: nowrap; }
+.box.alert { border-color: var(--signal); }
+.box.alert b { background: var(--signal); color: var(--obsidian); }
+.box.neutral { border-color: var(--stone); }
+.box.neutral b { background: var(--stone); }
+.log { padding: 16px 20px; display: flex; flex-direction: column; min-width: 0; }
+.log .mono { color: var(--stone); padding-bottom: 10px; }
+.log ul { list-style: none; margin: 0; padding: 0; }
+.log li { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 2px 12px; padding: 10px 0; border-top: 1px solid var(--carbon); font-size: 13px; line-height: 1.35; }
+.log time { font-family: var(--mono); font-size: 11px; color: var(--stone); padding-top: 2px; font-variant-numeric: tabular-nums; }
+.log .st { grid-column: 2; display: inline-flex; align-items: center; gap: 6px; font-family: var(--mono); font-size: 10px; text-transform: uppercase; color: var(--stone); }
+.log .st .pulse { width: 5px; height: 5px; }
+.note { margin-top: 12px; color: var(--muted); text-align: right; }
+
+/* Trust */
+.trust { padding-block: 40px; border-top: 1px solid var(--hairline); border-bottom: 1px solid var(--hairline); }
+.trust .wrap { display: flex; align-items: center; justify-content: space-between; gap: 24px 48px; flex-wrap: wrap; }
+.trust .marks { display: flex; gap: 24px 56px; flex-wrap: wrap; align-items: center; }
+.trust .marks span { font-size: 24px; letter-spacing: -0.03em; color: var(--faint); }
+
+/* Sections */
+section.block { padding-block: var(--section); }
+.head { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 20px 48px; align-items: end; margin-bottom: 48px; }
+.head h2 { margin-top: 16px; }
+.head p { color: var(--muted); max-width: 46ch; justify-self: end; }
+
+/* Steps */
+.steps { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; }
+.step { border: 1px solid var(--hairline); border-radius: 10px; padding: 24px; display: flex; flex-direction: column; gap: 14px; min-width: 0; }
+.step .mono { color: var(--muted); }
+.step p { color: var(--muted); font-size: 15px; }
+.step pre { margin: 8px 0 0; padding: 14px; border-radius: 3px; background: var(--raised); font: 400 12px/1.5 var(--mono); color: var(--text); overflow-x: auto; }
+.step pre .k { color: var(--muted); }
+.step pre .o { color: var(--signal); }
+.step pre .g { color: var(--metric-ink); }
+
+/* Modules */
+.modules { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 24px; }
+.mod { border: 1px solid var(--hairline); border-radius: 10px; padding: 24px; display: flex; flex-direction: column; gap: 12px; min-width: 0; transition: border-color .18s var(--ease); }
+.mod:hover { border-color: var(--stroke); }
+.mod .top { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-bottom: 20px; color: var(--muted); }
+.mod svg.ic { width: 20px; height: 20px; stroke: var(--ink); fill: none; stroke-width: 1.4; stroke-linecap: round; stroke-linejoin: round; }
+.mod p { color: var(--muted); font-size: 15px; }
+.mod .read { margin-top: auto; padding-top: 12px; }
+.tag-new { display: inline-flex; align-items: center; gap: 6px; color: var(--ink); }
+.mod.feature { grid-column: span 2; background: var(--obsidian); border-color: var(--obsidian); color: var(--bone); }
+.mod.feature h3 { color: var(--bone); font-size: 36px; letter-spacing: -0.031em; line-height: 1.1; }
+.mod.feature p, .mod.feature .top { color: var(--stone); }
+.mod.feature svg.ic { stroke: var(--bone); }
+.mod.feature .read { color: var(--bone); }
+.mini { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border-top: 1px solid var(--carbon); margin-top: 8px; }
+.mini div { padding: 14px 14px 4px 0; }
+.mini div + div { padding-left: 14px; border-left: 1px solid var(--carbon); }
+.mini .mono { color: var(--stone); font-size: 10px; }
+.mini b { display: block; font-weight: 400; font-size: 18px; color: var(--bone); margin-top: 6px; letter-spacing: -0.02em; }
+
+/* Sector table */
+.table-wrap { overflow-x: auto; border: 1px solid var(--hairline); border-radius: 10px; }
+table { width: 100%; border-collapse: collapse; min-width: 640px; font-size: 15px; }
+th, td { text-align: left; padding: 16px 20px; border-bottom: 1px solid var(--hairline); vertical-align: top; }
+tr:last-child td { border-bottom: 0; }
+th { font: 400 12px/1.2 var(--mono); text-transform: uppercase; color: var(--muted); background: var(--raised); }
+td:first-child { color: var(--ink); white-space: nowrap; }
+td:nth-child(2) { color: var(--muted); }
+.mods { display: flex; flex-wrap: wrap; gap: 6px; }
+.mods span { font: 400 11px/1 var(--mono); text-transform: uppercase; border: 1px solid var(--stroke); border-radius: 3px; padding: 5px 7px; white-space: nowrap; }
+
+/* CTA card */
+.cta { padding-bottom: var(--section); }
+.cta-card {
+  position: relative; overflow: hidden; background: var(--obsidian); color: var(--bone); border-radius: 20px;
+  padding: clamp(32px, 6vw, 72px); display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); gap: 32px; align-items: end;
+}
+.cta-card::before { /* film grain */
+  content: ""; position: absolute; inset: 0; opacity: .14; pointer-events: none; mix-blend-mode: screen;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .6 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+.cta-card > * { position: relative; }
+.cta-card h2 { color: var(--bone); margin-top: 16px; max-width: 16ch; }
+.cta-card .eyebrow { color: var(--stone); }
+.cta-side { display: flex; flex-direction: column; gap: 20px; color: var(--stone); }
+.cta-side .row { display: flex; gap: 8px; flex-wrap: wrap; }
+.cta-card .btn-ghost { border-color: var(--ash); color: var(--bone); }
+.cta-card .btn-ghost:hover { border-color: var(--bone); }
+
+/* Footer */
+footer { border-top: 1px solid var(--hairline); padding-block: 72px 40px; font-size: 14px; }
+.foot { display: grid; grid-template-columns: minmax(0, 1.5fr) repeat(3, minmax(0, 1fr)); gap: 32px; }
+footer h4 { margin: 0 0 14px; font: 500 12px/1.2 var(--mono); text-transform: uppercase; color: var(--ink); }
+footer ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+footer a { text-decoration: none; color: var(--muted); transition: color .18s var(--ease); }
+footer a:hover { color: var(--ink); }
+footer .muted { margin-top: 14px; max-width: 32ch; }
+.email { user-select: all; color: var(--ink); }
+.legal { margin-top: 56px; padding-top: 20px; border-top: 1px solid var(--hairline); display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; color: var(--muted); }
+
+/* Responsive */
+@media (max-width: 1080px) {
+  .links { display: none; }
+  .hero-grid { grid-template-columns: minmax(0, 1fr); }
+  .hero-copy { max-width: 640px; }
+  .modules { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .foot { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 820px) {
+  .head, .cta-card { grid-template-columns: minmax(0, 1fr); }
+  .head p { justify-self: start; }
+  .steps { grid-template-columns: minmax(0, 1fr); }
+  .tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .tile:nth-child(2) { border-right: 0; }
+  .lower { grid-template-columns: minmax(0, 1fr); }
+  .feed { border-right: 0; border-bottom: 1px solid var(--carbon); }
+}
+@media (max-width: 600px) {
+  .modules { grid-template-columns: minmax(0, 1fr); }
+  .mod.feature { grid-column: auto; }
+  .nav-cta .btn-ghost { display: none; }
+  .chrome .title { font-size: 10px; }
+  .foot { grid-template-columns: minmax(0, 1fr); }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}
+</style>
+</head>
+<body>
+
+<header class="nav">
+  <div class="wrap">
+    <a class="brand" href="#top" aria-label="Intelense home"><i aria-hidden="true"></i>INTELENSE</a>
+    <ul class="links">
+      <li><a href="#how">Platform</a></li>
+      <li><a href="#modules">Modules</a></li>
+      <li><a href="#sectors">Industries</a></li>
+      <li><a href="#cta">Company</a></li>
+    </ul>
+    <div class="nav-cta">
+      <a class="btn btn-ghost" href="#cta">Contact</a>
+      <a class="btn btn-dark" href="#cta">Book a demo</a>
+    </div>
+  </div>
+</header>
+
+<main id="top">
+  <section class="hero">
+    <div class="wrap hero-grid">
+      <div class="hero-copy">
+        <span class="mono eyebrow"><span class="pulse"></span>AI for public safety</span>
+        <h1>See what matters. Act before it escalates.</h1>
+        <p class="lede">Intelense turns live video, sensor and voice data into real-time alerts, so the right people know what is happening and can respond in seconds.</p>
+        <div class="hero-actions">
+          <a class="btn btn-dark" href="#cta">Book a demo</a>
+          <a class="btn btn-ghost" href="#modules">Explore modules</a>
+        </div>
+        <div class="hero-meta mono">
+          <span><span class="pulse ok"></span>7 Ken modules on one platform</span>
+          <span><span class="pulse ok"></span>Works with existing cameras and sensors</span>
+          <span><span class="pulse"></span>New: KenVoice</span>
+        </div>
+      </div>
+
+      <div>
+        <div class="console" role="img" aria-label="Illustration of the Intelense operations console with live metrics, a camera feed and an event log">
+          <div class="chrome">
+            <div class="dots" aria-hidden="true"><i></i><i></i><i></i></div>
+            <span class="title mono">Intelense console — Site 2 · Loading dock</span>
+            <span class="live mono"><span class="pulse"></span>Live</span>
+          </div>
+          <div class="tiles">
+            <div class="tile">
+              <div class="mono">Cameras online</div>
+              <div class="val">248<small>/252</small></div>
+              <svg viewBox="0 0 100 40" preserveAspectRatio="none" aria-hidden="true"><polyline stroke="#a0ca92" points="0,22 10,20 20,21 30,18 40,19 50,16 60,17 70,14 80,15 90,12 100,12"/></svg>
+              <div class="delta up">98.4% uptime</div>
+            </div>
+            <div class="tile">
+              <div class="mono">Events today</div>
+              <div class="val">1,284</div>
+              <svg viewBox="0 0 100 40" preserveAspectRatio="none" aria-hidden="true"><polyline stroke="#a0ca92" points="0,34 10,30 20,31 30,26 40,27 50,20 60,22 70,16 80,18 90,11 100,8"/></svg>
+              <div class="delta up">Auto-triaged</div>
+            </div>
+            <div class="tile">
+              <div class="mono">Escalated</div>
+              <div class="val">7</div>
+              <svg viewBox="0 0 100 40" preserveAspectRatio="none" aria-hidden="true"><polyline stroke="#ee6018" points="0,30 10,30 20,28 30,29 40,24 50,26 60,20 70,22 80,15 90,17 100,12"/></svg>
+              <div class="delta down">+2 since 14:00</div>
+            </div>
+            <div class="tile">
+              <div class="mono">Avg. response</div>
+              <div class="val">38<small>s</small></div>
+              <svg viewBox="0 0 100 40" preserveAspectRatio="none" aria-hidden="true"><polyline stroke="#a0ca92" points="0,10 10,12 20,11 30,15 40,14 50,19 60,18 70,22 80,24 90,27 100,29"/></svg>
+              <div class="delta up">Down 12s</div>
+            </div>
+          </div>
+          <div class="lower">
+            <div class="feed">
+              <div class="hud mono"><span>CAM-04</span><span id="clock">14:32:09</span></div>
+              <div class="zone" aria-hidden="true"></div>
+              <div class="blob" style="left:17%;top:40%;width:7%;height:30%"></div>
+              <div class="blob" style="left:63%;top:47%;width:6.5%;height:28%"></div>
+              <div class="blob" style="left:30%;top:58%;width:22%;height:20%;border-radius:8px"></div>
+              <div class="box" style="left:15.5%;top:37%;width:10%;height:35%"><b>Person 0.97</b></div>
+              <div class="box alert" style="left:61.5%;top:44%;width:9.5%;height:33%"><b>No hard hat 0.94</b></div>
+              <div class="box neutral" style="left:28.5%;top:55%;width:25%;height:25%"><b>Forklift 0.91</b></div>
+              <div class="hud b mono"><span>3 tracked</span><span>12 fps</span></div>
+            </div>
+            <div class="log">
+              <div class="mono">Event log</div>
+              <ul>
+                <li><time>14:32:07</time><span>No hard hat in restricted zone</span><span class="st"><span class="pulse"></span>Escalated</span></li>
+                <li><time>14:31:52</time><span>Forklift entered dock B</span><span class="st"><span class="pulse ok"></span>Logged</span></li>
+                <li><time>14:30:15</time><span>Person crossed safety line</span><span class="st"><span class="pulse ok"></span>Logged</span></li>
+                <li><time>14:12:40</time><span>Gate 3 open for 5 min</span><span class="st"><span class="pulse ok"></span>Resolved</span></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <p class="note mono">Illustrative console. Example data only.</p>
+      </div>
+    </div>
+  </section>
+
+  <div class="trust">
+    <div class="wrap">
+      <span class="mono muted">Supported by</span>
+      <div class="marks"><span>CENGN</span><span>VentureLab</span></div>
+      <span class="mono muted">Founded 2018 · Markham, ON</span>
+    </div>
+  </div>
+
+  <section class="block" id="how">
+    <div class="wrap">
+      <div class="head">
+        <div>
+          <span class="mono eyebrow"><span class="pulse"></span>How it works</span>
+          <h2>From raw feed to the right response.</h2>
+        </div>
+        <p>Connect the cameras and devices you already run. Intelense understands them in real time and routes every event to the team that needs it.</p>
+      </div>
+      <div class="steps">
+        <div class="step">
+          <span class="mono">01 · Connect</span>
+          <h3>Plug in what you have</h3>
+          <p>CCTV, drones, body cams, IoT sensors and call audio stream into one platform. No rip-and-replace.</p>
+<pre><span class="k">source</span>  cam-04 / rtsp
+<span class="k">source</span>  dock-sensor-12
+<span class="k">status</span>  <span class="g">● connected</span></pre>
+        </div>
+        <div class="step">
+          <span class="mono">02 · Detect</span>
+          <h3>Understand every frame</h3>
+          <p>Computer vision and machine learning find people, vehicles, hazards and unusual activity as they happen.</p>
+<pre><span class="k">detect</span>  person      0.97
+<span class="k">detect</span>  forklift    0.91
+<span class="k">detect</span>  <span class="o">no_hard_hat 0.94</span></pre>
+        </div>
+        <div class="step">
+          <span class="mono">03 · Respond</span>
+          <h3>Alert the right people</h3>
+          <p>Supervisors and dispatchers get the clip, the location and the context, and every event lands in one timeline.</p>
+<pre><span class="k">route</span>   site-supervisor
+<span class="k">attach</span>  clip 00:12 · zone B
+<span class="k">sent</span>    <span class="g">● 14:32:08</span></pre>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="block" id="modules" style="padding-top:0">
+    <div class="wrap">
+      <div class="head">
+        <div>
+          <span class="mono eyebrow"><span class="pulse"></span>The Ken platform</span>
+          <h2>Seven modules. One engine.</h2>
+        </div>
+        <p>Start with the module that solves today's problem. Add others on the same engine, the same alerts and the same dashboard.</p>
+      </div>
+      <div class="modules">
+        <article class="mod feature">
+          <div class="top mono">
+            <svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>
+            <span>Video analytics</span>
+          </div>
+          <h3>KenVision</h3>
+          <p>Turns existing CCTV into a real-time detection system. Find people, vehicles, intrusions and crowding as they happen, and search hours of footage in seconds.</p>
+          <div class="mini">
+            <div><span class="mono">Detects</span><b>People, vehicles</b></div>
+            <div><span class="mono">Flags</span><b>Intrusion, crowds</b></div>
+            <div><span class="mono">Search</span><b>Hours in seconds</b></div>
+          </div>
+          <a class="read" href="#cta">Read more</a>
+        </article>
+
+        <article class="mod">
+          <div class="top mono">
+            <svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 15a8 8 0 0116 0M2.5 15h19v2.5h-19zM12 7v4"/></svg>
+            <span>Workplace safety</span>
+          </div>
+          <h3>KenSafety</h3>
+          <p>Spots missing PPE, unsafe zones, slips and falls, and alerts supervisors before a near miss becomes an injury.</p>
+          <a class="read" href="#cta">Read more</a>
+        </article>
+
+        <article class="mod">
+          <div class="top mono">
+            <svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11l9-7 9 7M5.5 9.5V20h13V9.5M10 20v-5h4v5"/></svg>
+            <span>Home security</span>
+          </div>
+          <h3>KenHome</h3>
+          <p>Knows a family member from a stranger at the door and cuts the false alarms that make people ignore alerts.</p>
+          <a class="read" href="#cta">Read more</a>
+        </article>
+
+        <article class="mod">
+          <div class="top mono">
+            <svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21V11M12 11c0-4 3-7 8-7 0 5-3 7-8 7zM12 14c0-3-2.5-5.5-7-5.5 0 4 2.5 5.5 7 5.5z"/></svg>
+            <span>Agriculture</span>
+          </div>
+          <h3>KenAgri</h3>
+          <p>Watches crops, livestock and field perimeters to flag stress, disease and intrusions early.</p>
+          <a class="read" href="#cta">Read more</a>
+        </article>
+
+        <article class="mod">
+          <div class="top mono">
+            <svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="2.5"/><circle cx="4.5" cy="5" r="1.8"/><circle cx="19.5" cy="5" r="1.8"/><circle cx="4.5" cy="19" r="1.8"/><circle cx="19.5" cy="19" r="1.8"/><path d="M6 6.3l4.2 4.2M18 6.3l-4.2 4.2M6 17.7l4.2-4.2M18 17.7l-4.2-4.2"/></svg>
+            <span>Predictive</span>
+          </div>
+          <h3>KenIoT</h3>
+          <p>Reads equipment and environmental sensors to predict failures before anything breaks.</p>
+          <a class="read" href="#cta">Read more</a>
+        </article>
+
+        <article class="mod">
+          <div class="top mono">
+            <svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 21h8M8 21v-5l5-6M13 10l5-2M18 8l2 3M5.5 16h5"/><circle cx="13" cy="10" r="1.6"/></svg>
+            <span>Autonomous</span>
+          </div>
+          <h3>KenRobotics</h3>
+          <p>Gives robots and drones the vision to navigate, inspect and patrol on their own.</p>
+          <a class="read" href="#cta">Read more</a>
+        </article>
+
+        <article class="mod" id="kenvoice">
+          <div class="top mono">
+            <svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12h2M7 8v8M11 5v14M15 9v6M19 7v10M22 12h-1"/></svg>
+            <span class="tag-new"><span class="pulse"></span>New</span>
+          </div>
+          <h3>KenVoice</h3>
+          <p>Brings voice into the platform: spoken alerts, hands-free commands and call transcription in the same incident timeline.</p>
+          <a class="read" href="#cta">Read more</a>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="block" id="sectors" style="padding-top:0">
+    <div class="wrap">
+      <div class="head">
+        <div>
+          <span class="mono eyebrow"><span class="pulse"></span>Industries</span>
+          <h2>Built for places where safety can't wait.</h2>
+        </div>
+        <p>Our mission is a safer world, starting with public safety. Here is where each module does its work.</p>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Sector</th><th>Where it helps</th><th>Modules</th></tr></thead>
+          <tbody>
+            <tr><td>Public safety</td><td>Faster detection and dispatch across city cameras and calls</td><td><div class="mods"><span>KenVision</span><span>KenVoice</span></div></td></tr>
+            <tr><td>Smart cities</td><td>Crowd, traffic and infrastructure monitoring</td><td><div class="mods"><span>KenVision</span><span>KenIoT</span></div></td></tr>
+            <tr><td>Industrial</td><td>PPE compliance, restricted zones and equipment health</td><td><div class="mods"><span>KenSafety</span><span>KenIoT</span><span>KenRobotics</span></div></td></tr>
+            <tr><td>Retail</td><td>Loss prevention and store operations</td><td><div class="mods"><span>KenVision</span></div></td></tr>
+            <tr><td>Healthcare</td><td>Patient and staff safety, restricted areas</td><td><div class="mods"><span>KenVision</span><span>KenSafety</span></div></td></tr>
+            <tr><td>Agriculture</td><td>Crop, livestock and perimeter monitoring</td><td><div class="mods"><span>KenAgri</span><span>KenRobotics</span></div></td></tr>
+            <tr><td>Residential</td><td>Smarter alerts at the front door</td><td><div class="mods"><span>KenHome</span></div></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta" id="cta">
+    <div class="wrap">
+      <div class="cta-card">
+        <div>
+          <span class="mono eyebrow"><span class="pulse"></span>Get started</span>
+          <h2>See Intelense on your own footage.</h2>
+        </div>
+        <div class="cta-side">
+          <p>We review your sites, pick a first use case and run a pilot on a few cameras so you can judge the results yourself.</p>
+          <div class="row">
+            <a class="btn btn-light" href="#cta">Book a demo</a>
+            <a class="btn btn-ghost" href="#modules">Compare modules</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="foot">
+      <div>
+        <a class="brand" href="#top"><i aria-hidden="true"></i>INTELENSE</a>
+        <p class="muted">AI and data analytics for a safer world, starting with public safety.</p>
+      </div>
+      <div><h4>Platform</h4><ul><li><a href="#how">How it works</a></li><li><a href="#modules">All modules</a></li><li><a href="#kenvoice">KenVoice</a></li></ul></div>
+      <div><h4>Company</h4><ul><li><a href="#sectors">Industries</a></li><li><a href="#cta">Book a demo</a></li></ul></div>
+      <div><h4>Contact</h4><ul><li class="email">enquiries@intelense.ca</li><li class="muted" style="margin:0">Markham, Ontario, Canada</li></ul></div>
+    </div>
+    <div class="legal mono"><span>© 2026 Intelense Inc.</span><span>Sample homepage concept</span></div>
+  </div>
+</footer>
+
+<script>
+(function () {
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  var el = document.getElementById('clock');
+  var s = 14 * 3600 + 32 * 60 + 9;
+  function p(n) { return (n < 10 ? '0' : '') + n; }
+  setInterval(function () {
+    s++;
+    el.textContent = p(Math.floor(s / 3600) % 24) + ':' + p(Math.floor(s / 60) % 60) + ':' + p(s % 60);
+  }, 1000);
+})();
+</script>
+</body>
+</html>
