@@ -6,12 +6,12 @@
 <title>Intelense Homepage</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600&display=swap">
 <style>
-/* Layout: Monad "editorial tech journal on warm parchment" — serif announces, mono instructs; single light look by design */
+/* Layout: Monad-derived editorial layout on a neutral #f5f5f5 canvas, Montserrat throughout, Intelense brand gradient as the only colour; single light look by design */
 :root {
   color-scheme: light;
-  --parchment: #f6f3f1;
+  --parchment: #f5f5f5; /* page canvas */
   /* Intelense brand gradient stops, in order; slate is kept out of the blend */
   --g-blue: #0A34ED;
   --g-violet: #7C28E9;
@@ -29,12 +29,11 @@
   --ink: #000000;
   --graphite: #4e4d4d;
   --smoke: #6C6E82; /* brand slate: taglines, labels, helper text */
-  --ash: #cecac8;
+  --ash: #d8d8dc;
   --white: #ffffff;
   --screen: #151515;
 
-  --serif: "Instrument Serif", "Untitled Serif", Georgia, "Times New Roman", serif;
-  --mono: "JetBrains Mono", "ABC Diatype Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  --font: "Montserrat", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
 
   --max: 1432px;
   --gutter: clamp(16px, 4vw, 56px);
@@ -47,10 +46,10 @@ body {
   margin: 0;
   background: var(--parchment);
   color: var(--off-black);
-  font-family: var(--mono);
+  font-family: var(--font);
   font-size: 16px;
-  line-height: 1.35;
-  letter-spacing: -0.025em;
+  line-height: 1.5;
+  letter-spacing: -0.005em;
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
 }
@@ -59,18 +58,18 @@ a { color: inherit; }
 .wrap { max-width: var(--max); margin: 0 auto; padding-inline: var(--gutter); }
 
 h1, h2, h3, .serif {
-  font-family: var(--serif);
-  font-weight: 400;
-  letter-spacing: -0.02em;
+  font-family: var(--font);
+  font-weight: 500;
+  letter-spacing: -0.03em;
   line-height: 1.1;
   margin: 0;
   text-wrap: balance;
 }
-h1 { font-size: clamp(46px, 7.4vw, 96px); line-height: 1.02; }
-h2 { font-size: clamp(36px, 4.4vw, 56px); }
-h3 { font-size: 28px; line-height: 1.15; }
+h1 { font-size: clamp(38px, 6vw, 76px); line-height: 1.06; }
+h2 { font-size: clamp(30px, 3.6vw, 48px); }
+h3 { font-size: 24px; line-height: 1.2; }
 p { margin: 0; }
-.lede { font-size: clamp(16px, 1.5vw, 20px); color: var(--graphite); max-width: 60ch; }
+.lede { font-size: clamp(16px, 1.4vw, 19px); line-height: 1.6; color: var(--graphite); max-width: 60ch; }
 .eyebrow {
   font-size: 12px; text-transform: uppercase; letter-spacing: 0.04em;
   color: var(--smoke); display: inline-flex; gap: 10px; align-items: center;
@@ -80,7 +79,7 @@ p { margin: 0; }
 /* Buttons */
 .btn {
   display: inline-flex; align-items: center; gap: 10px;
-  font-family: var(--mono); font-size: 14px; text-transform: uppercase; letter-spacing: -0.01em;
+  font-family: var(--font); font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em;
   padding: 15px 30px; border-radius: 100px; border: 1px solid transparent;
   text-decoration: none; cursor: pointer; white-space: nowrap;
   transition: transform .2s ease, background-color .2s ease, color .2s ease;
@@ -112,11 +111,11 @@ p { margin: 0; }
 
 /* Nav */
 .nav .wrap { display: flex; align-items: center; justify-content: space-between; gap: 24px; min-height: 84px; padding-block: 12px; }
-.logo { display: inline-flex; align-items: center; gap: 10px; text-decoration: none; font-family: var(--serif); font-size: 30px; letter-spacing: -0.02em; }
+.logo { display: inline-flex; align-items: center; gap: 10px; text-decoration: none; font-family: var(--font); font-size: 25px; font-weight: 600; letter-spacing: -0.03em; }
 .logo-mark { width: 26px; height: 26px; border-radius: 50%; background: var(--brand-conic); display: grid; place-items: center; }
 .logo-mark::after { content: ""; width: 12px; height: 12px; border-radius: 50%; background: var(--parchment); }
 .nav-links { display: flex; gap: 32px; list-style: none; margin: 0; padding: 0; }
-.nav-links a { text-decoration: none; text-transform: uppercase; font-size: 15px; }
+.nav-links a { text-decoration: none; text-transform: uppercase; font-size: 13px; font-weight: 500; }
 .nav-links a:hover { color: var(--lake-blue); }
 .nav-cta { display: flex; gap: 10px; }
 .nav-cta .btn { padding: 12px 22px; font-size: 13px; }
@@ -127,7 +126,7 @@ p { margin: 0; }
 .wash-a { width: 46vw; height: 30vw; max-width: 640px; max-height: 420px; left: 6%; top: 18%; background: radial-gradient(circle, rgba(255,121,83,.6), rgba(255,121,83,0) 70%); }
 .wash-b { width: 50vw; height: 34vw; max-width: 700px; max-height: 460px; right: 4%; top: 6%; background: radial-gradient(circle, rgba(124,40,233,.38), rgba(10,52,237,.18) 45%, rgba(10,52,237,0) 70%); }
 .wash-c { width: 34vw; height: 22vw; max-width: 480px; max-height: 300px; left: 38%; bottom: 0; background: radial-gradient(circle, rgba(115,196,197,.75), rgba(120,175,207,.3) 45%, rgba(115,196,197,0) 70%); }
-.hero h1 { max-width: 13ch; margin: 28px auto 0; }
+.hero h1 { max-width: 16ch; margin: 28px auto 0; }
 .hero h1 .hl { background-image: var(--brand-gradient); background-repeat: no-repeat; background-size: 100% 4px; background-position: 0 94%; -webkit-box-decoration-break: clone; box-decoration-break: clone; }
 .hero .lede { margin: 28px auto 0; color: var(--smoke); }
 .hero-ctas { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-top: 40px; }
@@ -162,7 +161,7 @@ section.block { padding-block: var(--section); border-top: 1px solid var(--ash);
   background: var(--parchment); border: 1px solid var(--ash);
   display: grid; place-content: center; text-align: center; gap: 6px;
 }
-.hub-core .serif { font-size: 30px; }
+.hub-core .serif { font-size: 22px; font-weight: 600; letter-spacing: -0.02em; }
 .hub-core span { font-size: 11px; text-transform: uppercase; color: var(--smoke); }
 .hub-ring { position: absolute; inset: -14px; border-radius: 50%; border: 1.5px dashed var(--g-violet); opacity: .55; animation: spin 40s linear infinite; }
 @keyframes spin { to { transform: rotate(360deg); } }
@@ -250,22 +249,22 @@ section.block { padding-block: var(--section); border-top: 1px solid var(--ash);
 .art .lens { position: absolute; inset: 18% 22%; border: 1px solid rgba(36,36,36,.5); border-radius: 50%; mix-blend-mode: normal; }
 .art .lens::after { content: ""; position: absolute; inset: 30%; border: 1px solid rgba(36,36,36,.5); border-radius: 50%; }
 .art .bracket { position: absolute; width: 22%; height: 26%; border: 1.5px solid var(--off-black); border-radius: 0; mix-blend-mode: normal; left: 44%; top: 34%; }
-.art .bracket b { position: absolute; bottom: 100%; left: -1.5px; margin-bottom: 4px; font: 500 10px/1 var(--mono); text-transform: uppercase; background: var(--off-black); color: var(--parchment); padding: 3px 6px; white-space: nowrap; }
+.art .bracket b { position: absolute; bottom: 100%; left: -1.5px; margin-bottom: 4px; font: 500 10px/1 var(--font); text-transform: uppercase; background: var(--off-black); color: var(--parchment); padding: 3px 6px; white-space: nowrap; }
 
 /* Sectors + proof */
 .sectors { display: flex; flex-wrap: wrap; gap: 10px; }
 .sectors span { border: 1px solid var(--ash); border-radius: 9999px; padding: 12px 22px; font-size: 14px; text-transform: uppercase; }
 .proof { display: flex; align-items: center; gap: 24px 48px; flex-wrap: wrap; margin-top: 64px; padding-top: 32px; border-top: 1px solid var(--ash); }
 .proof .lbl { font-size: 12px; text-transform: uppercase; color: var(--smoke); }
-.proof .mark { font-family: var(--serif); font-size: 30px; color: var(--smoke); letter-spacing: -0.02em; }
+.proof .mark { font-family: var(--font); font-weight: 600; font-size: 26px; color: var(--smoke); letter-spacing: -0.02em; }
 
 /* FAQ */
 .faq-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.6fr); gap: 40px 64px; }
 details { border-bottom: 1px solid var(--ash); }
 details:first-of-type { border-top: 1px solid var(--ash); }
-summary { list-style: none; cursor: pointer; display: flex; justify-content: space-between; align-items: center; gap: 24px; padding-block: 32px; font-family: var(--serif); font-size: clamp(22px, 2.2vw, 28px); letter-spacing: -0.02em; }
+summary { list-style: none; cursor: pointer; display: flex; justify-content: space-between; align-items: center; gap: 24px; padding-block: 32px; font-family: var(--font); font-size: clamp(22px, 2.2vw, 28px); letter-spacing: -0.02em; }
 summary::-webkit-details-marker { display: none; }
-summary::after { content: "↓"; font-family: var(--mono); font-size: 20px; transition: transform .25s; flex: none; }
+summary::after { content: "↓"; font-family: var(--font); font-size: 20px; transition: transform .25s; flex: none; }
 details[open] summary::after { transform: rotate(180deg); }
 details p { color: var(--graphite); padding-bottom: 32px; max-width: 62ch; }
 
@@ -284,6 +283,13 @@ footer a { text-decoration: none; }
 footer a:hover { color: var(--parchment); }
 .email { user-select: all; color: var(--parchment); }
 .legal { margin-top: 56px; padding-top: 24px; border-top: 1px solid #3a3a3a; display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; font-size: 12px; color: #8f8b88; text-transform: uppercase; }
+
+/* Montserrat caps need open tracking */
+.eyebrow, .btn, .announce .pill, .tag-new, .nav-links a, .hero-meta, .col-label, .node, .hub-core span,
+.steps b, .box span, .zone span, .hud, .log-sub, .events .lvl, .demo-note, .card .kind, .chip, .link-arrow,
+.sectors span, .proof .lbl, footer h4, .legal, .art .bracket b { letter-spacing: 0.06em; }
+.eyebrow, .col-label, .card .kind, .proof .lbl, .hero-meta, .log-sub, .demo-note, .legal { font-weight: 500; }
+.events time { font-variant-numeric: tabular-nums; }
 
 /* Responsive */
 @media (max-width: 1080px) {
