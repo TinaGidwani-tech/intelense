@@ -64,7 +64,7 @@ def icon(name):
 
 MODULES = [
     dict(key='kenvision', name='KenVision', kind='Video analytics', color='#0A34ED', logo='kenvision.png', size=(783, 287),
-         card='Turns existing CCTV into a real-time detection system. Find people, vehicles, intrusions and crowding as they happen, and search hours of footage in seconds.',
+         card='Turns your existing CCTV cameras into business intelligence. Track footfall, customer movement, dwell time and queues without manually reviewing footage.',
          h1='Turn every camera into a sensor that understands.',
          lede='KenVision runs computer vision on the CCTV you already have. It detects people, vehicles and unusual activity in real time, and makes hours of footage searchable in seconds.',
          caps=[('eye', 'Intrusion detection', 'Draw a zone on any camera and get an alert the moment someone enters it out of hours.'),
@@ -76,10 +76,9 @@ MODULES = [
          steps=[('Connect', 'Point KenVision at the IP cameras you already run. No new cameras needed for most sites.'),
                 ('Configure', 'Draw zones, choose what to detect and set who gets each alert.'),
                 ('Act', 'Operators get a clip, a location and a confidence score, then acknowledge, escalate or dismiss.')],
-         uses=[('public-safety', 'City and campus cameras', 'Faster detection and dispatch across hundreds of feeds.'),
-               ('smart-cities', 'Streets and transit', 'Crowd, traffic and incident monitoring in real time.'),
-               ('retail', 'Stores and malls', 'Loss prevention, queue length and after-hours intrusion.'),
-               ('healthcare', 'Hospitals', 'Restricted areas, wandering patients and entrances.')],
+         uses=[('retail', 'Retail stores and malls', 'Footfall, heatmaps, dwell time and billing queues.'),
+               ('smart-cities', 'Transit hubs and offices', 'Passenger movement, occupancy and space utilisation.'),
+               ('healthcare', 'Hospitals and clinics', 'Occupancy in waiting areas and entrances.')],
          visual='console', related=['kensafety', 'keniot', 'kenvoice']),
     dict(key='kensafety', name='KenSafety', kind='Workplace safety', color='#FF7953', logo='kensafety.png', size=(793, 300),
          card='Spots missing PPE, unsafe zones, slips and falls, and alerts supervisors before a near miss becomes an injury.',
@@ -379,7 +378,7 @@ def module_grid():
             <div class="card-top" style="margin-bottom:6px"><span class="kind">{v["kind"]}</span></div>
             <h3><a href="kenvision.html">{logo_img(v, 0.36)}</a></h3>
             <p>{v["card"]}</p>
-            <div class="chips"><span class="chip">Intrusion</span><span class="chip">Crowd density</span><span class="chip">Vehicle tracking</span><span class="chip">Video search</span></div>
+            <div class="chips"><span class="chip">Footfall</span><span class="chip">Heatmaps</span><span class="chip">Dwell time</span><span class="chip">Queues</span></div>
             <a class="link-arrow" href="kenvision.html">Explore KenVision</a>
           </div>
           <div class="snap" role="img" aria-label="Simulated plaza camera with a crowd-density heatmap and a live people count for zone A">
@@ -417,7 +416,7 @@ def tile(scene, osd=None, w=960, h=540):
 # ---------------------------------------------------------------- home page sections (reused from the approved homepage)
 
 _home = HOME_SOURCE.read_text()
-_main = _home[_home.index('<main id="top">') + len('<main id="top">'):_home.index('</main>')].replace('src="logos/', 'src="assets/logos/')
+_main = _home[_home.index('<main id="top">') + len('<main id="top">'):_home.index('</main>')].replace('src="logos/', 'src="assets/logos/').replace('<img class="c-logo" src="assets/logos/kenvision-light.png" alt="" width="82" height="30">', '<img class="c-logo" src="assets/logos/intelense-light.png" alt="Intelense" width="143" height="22" style="height:22px">').replace('<span class="eyebrow">KenVision in action</span>', '<span class="eyebrow">Intelense in action</span>')
 
 
 def home_section(sid=None, cls=None):
@@ -438,7 +437,7 @@ FAQ = home_section('faq')
 def page_index():
     platform = FLOW_SECTION.replace('</div>\n    </div>\n  </section>', '</div>\n      <p style="margin-top:32px"><a class="link-arrow" href="platform.html">See how the platform works</a></p>\n    </div>\n  </section>', 1)
     live = CONSOLE_SECTION.replace('<p class="demo-note">Simulated camera feeds and example data. Not a real site or customer.</p>',
-                                   '<p class="demo-note">Simulated camera feeds and example data. Not a real site or customer.</p>\n      <p style="margin-top:20px"><a class="link-arrow" href="kenvision.html">Explore KenVision</a></p>')
+                                   '<p class="demo-note">Simulated camera feeds and example data. Not a real site or customer.</p>\n      <p style="margin-top:20px"><a class="link-arrow" href="platform.html#console">See the platform</a></p>')
     modules = f'''<section class="block" id="modules">
     <div class="wrap">
       {head_block('The Ken platform', 'Seven modules. One platform.', "Start with the module that solves today's problem. Add others as you grow, on the same engine and the same dashboard.")}
@@ -526,10 +525,10 @@ def page_modules():
     </div>
   </section>'''
     rows = []
-    watch = {'kenvision': 'CCTV and IP cameras', 'kensafety': 'Cameras on floors, docks and sites', 'kenhome': 'Doorbells and home cameras',
+    watch = {'kenvision': 'Existing CCTV and IP cameras', 'kensafety': 'Cameras on floors, docks and sites', 'kenhome': 'Doorbells and home cameras',
              'kenagri': 'Farm cameras, thermal and drones', 'keniot': 'Vibration, temperature, power and air sensors',
              'kenrobotics': 'Robot and drone cameras', 'kenvoice': 'Speakers, radios, phones and microphones'}
-    alerts = {'kenvision': 'Intrusion, crowding, loitering, vehicles', 'kensafety': 'Missing PPE, hazard zones, falls, close calls',
+    alerts = {'kenvision': 'Footfall, heatmaps, dwell time, queue build-up', 'kensafety': 'Missing PPE, hazard zones, falls, close calls',
               'kenhome': 'Unknown visitors, packages, night activity', 'kenagri': 'Crop stress, livestock, wildlife, intruders',
               'keniot': 'Drift, overheating, predicted failures', 'kenrobotics': 'Obstacles, patrol findings, inspection issues',
               'kenvoice': 'Keywords, calls for help, spoken alerts'}
@@ -768,7 +767,347 @@ def page_contact():
                 active='contact.html', body=body)
 
 
-PAGES = [page_index, page_platform, page_modules, *[(lambda m: (lambda: page_module(m)))(m) for m in MODULES], page_industries, page_about, page_contact]
+# ---------------------------------------------------------------- KenVision page (business intelligence)
+
+def _bar(x, y, w, h, r=3):
+    """Bar with rounded data end (top), square at the baseline."""
+    r = min(r, w / 2, h)
+    return f'M{x:.1f},{y + h:.1f}V{y + r:.1f}Q{x:.1f},{y:.1f} {x + r:.1f},{y:.1f}H{x + w - r:.1f}Q{x + w:.1f},{y:.1f} {x + w:.1f},{y + r:.1f}V{y + h:.1f}Z'
+
+
+def footfall_chart(dark=True):
+    hours = list(range(8, 22))
+    vals = [32, 58, 84, 96, 121, 148, 132, 118, 126, 152, 188, 201, 164, 96]
+    W, H, ml, mb, mt = 560, 210, 34, 26, 16
+    pw, ph = W - ml - 6, H - mb - mt
+    bw = pw / len(vals)
+    ink, mute, grid, fill = ('#e9e9ec', '#9b9daf', '#2a2c33', '#5b7cff') if dark else ('#242424', '#6C6E82', '#dcdce0', '#0A34ED')
+    out = [f'<svg class="chart" viewBox="0 0 {W} {H}" role="img" aria-label="Footfall by hour, 08:00 to 21:00. Peak 201 visitors at 19:00.">']
+    for gv in (0, 100, 200):
+        y = mt + ph - gv / 220 * ph
+        out.append(f'<line x1="{ml}" x2="{W - 6}" y1="{y:.1f}" y2="{y:.1f}" stroke="{grid}" stroke-width="1"/><text x="{ml - 8}" y="{y + 3:.1f}" text-anchor="end" fill="{mute}" font-size="10">{gv}</text>')
+    for i, (hr, v) in enumerate(zip(hours, vals)):
+        bh = v / 220 * ph
+        x = ml + i * bw + 1
+        out.append(f'<path d="{_bar(x, mt + ph - bh, bw - 2, bh)}" fill="{fill}" data-tip="{hr:02d}:00 · {v} visitors"/>')
+        if i % 2 == 0:
+            out.append(f'<text x="{x + (bw - 2) / 2:.1f}" y="{H - 8}" text-anchor="middle" fill="{mute}" font-size="10">{hr:02d}:00</text>')
+    pk = vals.index(max(vals))
+    px = ml + pk * bw + bw / 2
+    out.append(f'<text x="{px:.1f}" y="{mt + ph - max(vals) / 220 * ph - 6:.1f}" text-anchor="middle" fill="{ink}" font-size="11" font-weight="600">Peak {max(vals)}</text>')
+    out.append('</svg>')
+    return ''.join(out)
+
+
+def dwell_chart():
+    zones = [('Promo display', 250), ('Electronics', 185), ('Checkout', 160), ('Apparel', 140), ('Grocery', 105)]
+    W, rowh, lab = 360, 30, 104
+    H = rowh * len(zones) + 6
+    out = [f'<svg class="chart" viewBox="0 0 {W} {H}" role="img" aria-label="Average dwell time by zone">']
+    for i, (z, s) in enumerate(zones):
+        y = i * rowh + 6
+        bw = s / 260 * (W - lab - 54)
+        out.append(f'<text x="0" y="{y + 13}" fill="#c9cbd6" font-size="11">{z}</text>')
+        out.append(f'<rect x="{lab}" y="{y + 3}" width="{W - lab - 54}" height="14" rx="3" fill="#24262d"/>')
+        out.append(f'<path d="M{lab},{y + 3}H{lab + bw - 3:.1f}Q{lab + bw:.1f},{y + 3} {lab + bw:.1f},{y + 6}V{y + 14}Q{lab + bw:.1f},{y + 17} {lab + bw - 3:.1f},{y + 17}H{lab}Z" fill="#5b7cff" data-tip="{z} · {s // 60}m {s % 60:02d}s average"/>')
+        out.append(f'<text x="{W}" y="{y + 14}" text-anchor="end" fill="#e9e9ec" font-size="11" font-weight="600">{s // 60}m {s % 60:02d}s</text>')
+    out.append('</svg>')
+    return ''.join(out)
+
+
+def queue_chart():
+    vals = [1, 1, 2, 1, 2, 3, 2, 2, 3, 4, 3, 2, 2, 3, 3, 4, 5, 6, 6, 5, 4, 3, 2, 2, 1]
+    W, H, ml, mb, mt = 360, 170, 24, 24, 12
+    pw, ph = W - ml - 6, H - mb - mt
+    X = lambda i: ml + i * pw / (len(vals) - 1)
+    Y = lambda v: mt + ph - v / 8 * ph
+    pts = ' '.join(f'{X(i):.1f},{Y(v):.1f}' for i, v in enumerate(vals))
+    out = [f'<svg class="chart" viewBox="0 0 {W} {H}" role="img" aria-label="Queue length at checkout through the day, crossing the alert threshold of 5 between 17:00 and 18:30.">']
+    for gv in (0, 4, 8):
+        out.append(f'<line x1="{ml}" x2="{W - 6}" y1="{Y(gv):.1f}" y2="{Y(gv):.1f}" stroke="#2a2c33"/><text x="{ml - 6}" y="{Y(gv) + 3:.1f}" text-anchor="end" fill="#9b9daf" font-size="10">{gv}</text>')
+    out.append(f'<line x1="{ml}" x2="{W - 6}" y1="{Y(5):.1f}" y2="{Y(5):.1f}" stroke="#FF7953" stroke-dasharray="4 4" stroke-width="1.5"/><text x="{W - 6}" y="{Y(5) - 5:.1f}" text-anchor="end" fill="#ffb39b" font-size="10" font-weight="600">Alert at 5</text>')
+    out.append(f'<polygon points="{ml},{Y(0):.1f} {pts} {X(len(vals) - 1):.1f},{Y(0):.1f}" fill="rgba(115,196,197,.14)"/>')
+    out.append(f'<polyline points="{pts}" fill="none" stroke="#73C4C5" stroke-width="2" stroke-linejoin="round"/>')
+    for i, v in enumerate(vals):
+        hh, mm = 9 + i // 2, '30' if i % 2 else '00'
+        col = '#FF7953' if v >= 5 else '#73C4C5'
+        out.append(f'<circle cx="{X(i):.1f}" cy="{Y(v):.1f}" r="{4 if v >= 5 else 2.5}" fill="{col}" stroke="#16171b" stroke-width="2" data-tip="{hh:02d}:{mm} · {v} in queue"/>')
+    for i, lab in ((0, '09:00'), (12, '15:00'), (24, '21:00')):
+        out.append(f'<text x="{X(i):.1f}" y="{H - 6}" text-anchor="{"start" if i == 0 else "end" if i == 24 else "middle"}" fill="#9b9daf" font-size="10">{lab}</text>')
+    out.append('</svg>')
+    return ''.join(out)
+
+
+def heat_plan(dark=False, uid='a'):
+    """Top-down store plan with a single-hue activity heatmap (same layout as the store camera)."""
+    W, H = 400, 260
+    wall, floor, shelf, ink, mute = ('#3a3c44', '#1d1f24', '#2c2e35', '#e9e9ec', '#9b9daf') if dark else ('#9a978f', '#ffffff', '#e4e2dc', '#242424', '#6C6E82')
+    hot = [(.66, .45, 70, 1.0), (.88, .4, 58, .95), (.5, .86, 60, .8), (.3, .415, 46, .55), (.3, .245, 40, .35), (.06, .6, 40, .3), (.3, .76, 44, .45), (.2, .585, 36, .3)]
+    out = [f'<svg class="plan" viewBox="0 0 {W} {H + 34}" role="img" aria-label="Store heatmap: most activity at the promo display, checkout queue and entrance; least in the back aisles.">',
+           f'<defs><radialGradient id="ht-{uid}"><stop offset="0" stop-color="#7C28E9" stop-opacity=".85"/><stop offset=".55" stop-color="#7C28E9" stop-opacity=".35"/><stop offset="1" stop-color="#7C28E9" stop-opacity="0"/></radialGradient>'
+           f'<linearGradient id="hl-{uid}"><stop offset="0" stop-color="#7C28E9" stop-opacity=".08"/><stop offset="1" stop-color="#7C28E9" stop-opacity=".9"/></linearGradient></defs>',
+           f'<rect x="1" y="1" width="{W - 2}" height="{H - 2}" rx="10" fill="{floor}" stroke="{wall}" stroke-width="2"/>',
+           f'<rect x="{W * .4}" y="{H - 3}" width="{W * .2}" height="5" fill="{floor}"/>']
+    for gy in (.15, .32, .49, .66):
+        out.append(f'<rect x="{W * .08}" y="{H * gy}" width="{W * .42}" height="{H * .075}" rx="3" fill="{shelf}"/>')
+    out.append(f'<circle cx="{W * .66}" cy="{H * .45}" r="{W * .055}" fill="{shelf}"/>')
+    for cy in (.16, .7):
+        out.append(f'<rect x="{W * .84}" y="{H * cy}" width="{W * .12}" height="{H * .08}" rx="3" fill="{shelf}"/>')
+    for x, y, r, a in hot:
+        out.append(f'<circle cx="{x * W:.0f}" cy="{y * H:.0f}" r="{r}" fill="url(#ht-{uid})" opacity="{a}"/>')
+    labels = [(.66, .25, 'Promo display', 'middle'), (.9, .1, 'Checkout', 'middle'), (.5, .975, 'Entrance', 'middle'), (.3, .1, 'Back aisles · low activity', 'middle')]
+    for x, y, t, anc in labels:
+        out.append(f'<text x="{x * W:.0f}" y="{y * H:.0f}" text-anchor="{anc}" fill="{ink}" font-size="11" font-weight="600">{t}</text>')
+    out.append(f'<text x="0" y="{H + 24}" fill="{mute}" font-size="10">Less activity</text><rect x="78" y="{H + 15}" width="120" height="10" rx="5" fill="url(#hl-{uid})"/><text x="206" y="{H + 24}" fill="{mute}" font-size="10">More</text>')
+    out.append('</svg>')
+    return ''.join(out)
+
+
+def mini(kind):
+    """Small illustrative visual for each feature card (light surface)."""
+    b, v, m, g = '#0A34ED', '#7C28E9', '#6C6E82', '#e4e2dc'
+    if kind == 'footfall':
+        vals = [20, 34, 46, 40, 58, 70, 52, 64, 78, 60]
+        return '<svg viewBox="0 0 220 72" aria-hidden="true">' + ''.join(f'<path d="{_bar(4 + i * 21.5, 70 - h * .85, 17, h * .85)}" fill="{b}" opacity="{.45 + i * .05:.2f}"/>' for i, h in enumerate(vals)) + '</svg>'
+    if kind == 'heat':
+        import random
+        rnd = random.Random(4)
+        cells = []
+        for r in range(3):
+            for c in range(10):
+                o = max(.06, min(.95, (1 - abs(c - 6.5) / 7) * (1 - abs(r - 1) / 3) + rnd.uniform(-.15, .15)))
+                cells.append(f'<rect x="{c * 22 + 1}" y="{r * 24 + 1}" width="20" height="22" rx="4" fill="{v}" opacity="{o:.2f}"/>')
+        return '<svg viewBox="0 0 220 72" aria-hidden="true">' + ''.join(cells) + '</svg>'
+    if kind == 'dwell':
+        rows = [('Display', 180), ('Counter', 130), ('Aisle', 80)]
+        return '<svg viewBox="0 0 220 72" aria-hidden="true">' + ''.join(f'<text x="0" y="{i * 24 + 15}" fill="{m}" font-size="10">{n}</text><rect x="54" y="{i * 24 + 5}" width="166" height="12" rx="3" fill="{g}"/><rect x="54" y="{i * 24 + 5}" width="{w * .9:.0f}" height="12" rx="3" fill="{b}"/>' for i, (n, w) in enumerate(rows)) + '</svg>'
+    if kind == 'queue':
+        dots = ''.join(f'<circle cx="{18 + i * 30}" cy="40" r="10" fill="{"#FF7953" if i >= 4 else b}" opacity="{1 if i < 4 else .9}"/>' for i in range(6))
+        return f'<svg viewBox="0 0 220 72" aria-hidden="true"><rect x="0" y="22" width="200" height="36" rx="18" fill="none" stroke="{g}" stroke-width="2"/>{dots}<line x1="129" x2="129" y1="10" y2="66" stroke="#FF7953" stroke-dasharray="3 3" stroke-width="1.5"/><text x="135" y="14" fill="{m}" font-size="10">Alert</text></svg>'
+    if kind == 'funnel':
+        rows = [('Visitors', 210), ('Engaged', 140), ('Purchased', 70)]
+        return '<svg viewBox="0 0 220 72" aria-hidden="true">' + ''.join(f'<rect x="{(220 - w) / 2:.0f}" y="{i * 24 + 2}" width="{w}" height="20" rx="4" fill="{b}" opacity="{1 - i * .25:.2f}"/><text x="110" y="{i * 24 + 16}" text-anchor="middle" fill="#fff" font-size="10" font-weight="600">{n}</text>' for i, (n, w) in enumerate(rows)) + '</svg>'
+    if kind == 'util':
+        rows = [('Floor', .82), ('Checkout', .64), ('Fitting', .38)]
+        return '<svg viewBox="0 0 220 72" aria-hidden="true">' + ''.join(f'<text x="0" y="{i * 24 + 15}" fill="{m}" font-size="10">{n}</text><rect x="58" y="{i * 24 + 5}" width="162" height="12" rx="6" fill="{g}"/><rect x="58" y="{i * 24 + 5}" width="{162 * p:.0f}" height="12" rx="6" fill="{v}"/>' for i, (n, p) in enumerate(rows)) + '</svg>'
+    raise ValueError(kind)
+
+
+KV_FAQ = [
+    ('What is AI video analytics?', 'AI video analytics uses artificial intelligence and computer vision to analyse video footage and identify useful information, such as people counts, movement patterns, occupancy and activity within defined areas.'),
+    ('What is KenVision?', "KenVision is Intelense's AI video analytics product. It turns video feeds from compatible cameras into business insights, including footfall analytics, heatmaps, dwell time, queue monitoring and other supported metrics."),
+    ('How is AI video analytics different from CCTV?', 'Traditional CCTV primarily records video for live monitoring or later review. AI video analytics automatically analyses video feeds to generate metrics, identify patterns and provide operational insights.'),
+    ('Can KenVision work with existing CCTV cameras?', 'KenVision is designed to integrate with compatible existing cameras and recording systems. The exact compatibility and setup depend on your current infrastructure.'),
+    ('What is footfall analytics?', 'Footfall analytics measures visitor traffic across a location. Businesses use it to understand visitor numbers, entry and exit patterns, and peak hours.'),
+    ('What is dwell time analytics?', 'Dwell time analytics measures how long people remain in a defined area. Retailers can use it to understand activity around displays, counters and other selected zones.'),
+    ('Can KenVision help improve retail performance?', 'KenVision can help retailers understand footfall, customer movement, dwell time and queue patterns. These insights can support decisions about staffing, store layouts and customer experience. Actual sales impact depends on how the insights are used.'),
+    ('Does KenVision require new hardware?', 'Not necessarily. KenVision can use compatible existing camera infrastructure. Hardware, processing and integration requirements depend on the deployment.'),
+    ('Can KenVision be used outside retail?', 'Yes. Video analytics can also support applications in commercial buildings, offices, transport hubs, healthcare facilities and hospitality environments, depending on the features configured.'),
+    ('How can I get a KenVision demo?', 'Contact Intelense to discuss your business requirements, camera infrastructure and analytics needs. The team can help you understand the appropriate configuration for your use case.'),
+]
+
+
+def page_kenvision():
+    import json
+    m = MOD['kenvision']
+    hero = f'''<section class="page-hero kv-hero" style="--mod:{m["color"]}">
+    <div class="wash wash-a" aria-hidden="true"></div>
+    <div class="wash wash-b" aria-hidden="true"></div>
+    <div class="cursor-grid" aria-hidden="true"></div>
+    <div class="wrap kv-hero-grid">
+      <div class="kv-hero-copy">
+        {crumbs(('modules.html', 'Modules'), (None, 'KenVision'))}
+        <span class="eyebrow">AI video analytics by Intelense</span>
+        {logo_img(m, 0.36, 'hero-logo')}
+        <h1>Turn Your Existing CCTV Cameras into Business Intelligence.</h1>
+        <p class="lede">KenVision is AI-powered video analytics software that helps you understand what's happening across your business. Track footfall, customer movement, dwell time and queues using your existing camera infrastructure.</p>
+        <p class="lede kv-sub">Get useful insights from your video feeds without spending hours manually reviewing footage.</p>
+        <div class="hero-ctas"><a class="btn btn-blue" href="contact.html">Book a Demo</a><a class="btn btn-ghost" href="modules.html">All Modules</a></div>
+        <p class="kv-tagline">AI video analytics for retail, commercial spaces and business operations.</p>
+      </div>
+      <div class="kv-hero-visual">
+        <div class="tile-solo" role="img" aria-label="Overhead store camera counting people at the entrance, tracking a checkout queue and measuring dwell time at a promo display">
+          <canvas class="cctv" data-scene="store" width="960" height="540"></canvas>
+        </div>
+        <div class="kv-chips"><span><b>1,284</b> footfall today</span><span><b>37</b> in store now</span><span class="hot"><b>4</b> in queue</span></div>
+        <p class="demo-note">Simulated camera feed and example data</p>
+      </div>
+    </div>
+  </section>'''
+
+    problem = f'''<section class="block" id="problem">
+    <div class="wrap">
+      {head_block('The problem', 'Your CCTV Cameras Record Everything. But What Can They Tell You?', 'Traditional CCTV helps you see what happened. AI video analytics helps you understand patterns in what is happening.')}
+      <div class="kv-problem">
+        <div class="kv-questions">
+          <p class="kv-q">How many people visited your store today?</p>
+          <p class="kv-q">Which areas attracted the most attention?</p>
+          <p class="kv-q">When did queues start building up?</p>
+          <p class="kv-q">Where could your operations improve?</p>
+          <p class="kv-answer">Finding these answers manually takes time. KenVision analyses video feeds to help you turn everyday activity into useful business data.</p>
+        </div>
+        <ul class="kv-points">
+          <li>{icon('users')}<div><b>Understand visitor traffic</b><span>Track footfall and identify peak visiting hours.</span></div></li>
+          <li>{icon('clock')}<div><b>See where people spend time</b><span>Measure dwell time and understand activity across different areas.</span></div></li>
+          <li>{icon('timeline')}<div><b>Monitor queues</b><span>Identify queue build-up and help your team respond sooner.</span></div></li>
+          <li>{icon('chart')}<div><b>Make better operational decisions</b><span>Use video analytics reports and trends to understand what needs attention.</span></div></li>
+        </ul>
+      </div>
+    </div>
+  </section>'''
+
+    feats = [
+        ('footfall', 'Footfall Analytics &amp; People Counting', 'Know how many people walk through your doors.', 'Count visitors, understand entry and exit patterns, and identify peak hours. Footfall analytics helps you understand traffic across stores, buildings and other business locations.'),
+        ('heat', 'Heatmap Analytics', 'See which areas attract attention.', 'Visualise movement patterns and activity across defined zones. Identify busy and less-visited areas to help inform store layouts, product placement and space planning.'),
+        ('dwell', 'Dwell Time Analytics', 'Understand where people spend their time.', 'Measure how long people stay in selected areas, around displays or at counters. Use dwell time insights to understand activity and engagement across your space.'),
+        ('queue', 'Queue Monitoring &amp; Detection', 'Know when waiting lines start building up.', 'Monitor queues and activity around billing counters or service areas. Help your team identify congestion and respond during busy periods.'),
+        ('funnel', 'Conversion Analytics', 'Understand the gap between visitors and purchases.', 'Combine visitor and zone activity data with compatible sales or POS data to understand how store traffic relates to purchasing activity and identify opportunities for improvement.'),
+        ('util', 'Staff &amp; Space Utilisation', 'Make better use of your people and space.', 'Understand activity across designated areas and compare it with busy periods. Use these insights to support staffing plans, space utilisation and operational decisions.'),
+    ]
+    features = f'''<section class="block" id="features">
+    <div class="wrap">
+      {head_block('Features', 'Everything You Need to Understand Your Space Better', 'KenVision combines AI video analytics, people counting and movement analysis to help you see beyond the camera feed.')}
+      <div class="kv-feats">{''.join(f'<article class="kv-feat"><div class="kv-mini">{mini(k)}</div><span class="kv-num">{i + 1:02d}</span><h3>{t}</h3><p class="kv-strap">{s}</p><p>{d}</p></article>' for i, (k, t, s, d) in enumerate(feats))}</div>
+    </div>
+  </section>'''
+
+    how = f'''<section class="block" id="how">
+    <div class="wrap">
+      {head_block('How it works', 'How Does AI Video Analytics Work?', 'KenVision turns camera footage into structured insights in three steps.')}
+      <ol class="kv-steps">
+        <li><span>Step 1</span><h3>Connect Your Existing Cameras</h3><p>Integrate compatible CCTV cameras and video recording systems with KenVision. Use your existing infrastructure where supported instead of replacing your entire camera setup.</p></li>
+        <li><span>Step 2</span><h3>AI Analyses Video Feeds</h3><p>AI-powered video analytics processes camera feeds to count people, measure activity across defined zones and identify configured events or patterns.</p></li>
+        <li><span>Step 3</span><h3>View Insights on Your Dashboard</h3><p>Access available metrics, trends and alerts through dashboards and reports. Use the information to understand activity and make informed operational decisions.</p></li>
+      </ol>
+      <p style="margin-top:36px"><a class="btn btn-black" href="#dashboard">See KenVision in Action</a></p>
+    </div>
+  </section>'''
+
+    inds = [('box', 'Retail Stores &amp; Shopping Malls', 'Use retail video analytics to track footfall, analyse customer movement, understand dwell time around product displays and monitor billing queues.', 'retail'),
+            ('users', 'Supermarkets &amp; Food Courts', 'Understand visitor patterns, monitor queues at checkout counters and identify busy periods across service areas.', 'retail'),
+            ('route', 'Airports &amp; Transit Hubs', 'Analyse passenger movement, monitor occupancy and understand queue patterns across designated areas.', 'smart-cities'),
+            ('layers', 'Offices &amp; Commercial Buildings', 'Understand visitor footfall, activity across floors and utilisation patterns in shared spaces.', 'smart-cities'),
+            ('plug', 'Hospitals &amp; Clinics', 'Monitor occupancy and activity in designated waiting areas, entrances and other operational spaces.', 'healthcare'),
+            ('home', 'Hotels &amp; Hospitality', 'Understand guest movement and activity across lobbies, restaurants and other shared spaces.', 'retail')]
+    industries = f'''<section class="block" id="industries">
+    <div class="wrap">
+      {head_block('Industry applications', 'AI Video Analytics for Different Industries', 'KenVision helps businesses understand movement, occupancy and activity across their physical spaces.')}
+      <div class="caps">{''.join(f'<div class="cap">{icon(ic)}<h3>{t}</h3><p>{d}</p><a class="kv-link" href="industries.html#{a}">More on {IND[a]["name"].lower()} →</a></div>' for ic, t, d, a in inds)}</div>
+    </div>
+  </section>'''
+
+    retail = f'''<section class="block" id="retail">
+    <div class="wrap kv-split">
+      <div>
+        <span class="eyebrow">Retail use case</span>
+        <h2 style="margin-top:18px">A Busy Store Doesn't Always Mean More Sales.</h2>
+        <p class="lede" style="margin-top:20px">Your store may be full of visitors, but that doesn't automatically mean customers are finding what they need or completing purchases.</p>
+        <p class="kv-body">Retail video analytics can help you investigate what's happening.</p>
+        <ul class="kv-defs">
+          <li><b>Footfall analytics</b><span>Understand how many visitors enter and when your store is busiest.</span></li>
+          <li><b>Heatmap analytics</b><span>Identify which areas attract more activity and which are overlooked.</span></li>
+          <li><b>Dwell time analytics</b><span>Understand how long visitors spend around selected counters and displays.</span></li>
+          <li><b>Queue analytics</b><span>Identify waiting-time and congestion patterns around billing counters.</span></li>
+        </ul>
+        <p class="kv-body">By combining these insights with available sales data, retailers can make better-informed decisions about store layouts, staffing and the customer experience.</p>
+      </div>
+      <figure class="panel kv-plan">
+        {heat_plan(False, 'light')}
+        <figcaption class="demo-note">Example store heatmap</figcaption>
+      </figure>
+    </div>
+  </section>'''
+
+    bens = [('plug', 'Beyond Traditional CCTV', 'Go beyond recording footage and use AI video analytics to understand activity patterns across your business.'),
+            ('clock', 'Less Manual Video Review', 'Automate supported analysis and reduce the need to manually review footage for routine operational insights.'),
+            ('eye', 'Real-Time Operational Visibility', 'Access supported live analytics and alerts to understand activity as it unfolds.'),
+            ('chart', 'Better-Informed Decisions', 'Use footfall, dwell time, heatmaps and queue data to identify patterns and opportunities for improvement.'),
+            ('layers', 'Flexible Integration', 'Connect compatible cameras and recording systems, subject to your existing setup and deployment requirements.')]
+    benefits = f'''<section class="block" id="benefits">
+    <div class="wrap">
+      {head_block('Key benefits', 'Get More from Your Existing Camera Infrastructure', '')}
+      <div class="kv-bens">{''.join(f'<div class="cap">{icon(ic)}<h3>{t}</h3><p>{d}</p></div>' for ic, t, d in bens)}</div>
+    </div>
+  </section>'''
+
+    dash = f'''<section class="block" id="dashboard">
+    <div class="wrap">
+      {head_block('Dashboard', 'See the Numbers Behind What You See.', 'Bring important video analytics into one view. Monitor footfall, review activity across zones, understand dwell time and track queue patterns through an analytics dashboard.')}
+      <div class="kv-dash">
+        <div class="c-top">
+          <img class="c-logo" src="assets/logos/kenvision-light.png" alt="KenVision" width="82" height="30">
+          <span class="c-site">Store 014 · Downtown</span>
+          <div class="c-tabs"><span class="on">Today</span><span>7 days</span><span>30 days</span></div>
+          <div class="c-right"><span class="c-live">Live</span><span id="clock">14:32:09</span></div>
+        </div>
+        <div class="kv-kpis">
+          <div><span>Footfall today</span><b>1,284</b><em class="up">▲ 8% vs last Tuesday</em></div>
+          <div><span>In store now</span><b>37</b><em>Updated live</em></div>
+          <div><span>Average dwell time</span><b>6m 12s</b><em class="up">▲ 24s vs last week</em></div>
+          <div><span>Average queue wait</span><b>2m 40s</b><em class="down">Peak 17:30 to 18:00</em></div>
+        </div>
+        <div class="kv-grid">
+          <div class="kv-card kv-wide"><h4>Footfall by hour</h4>{footfall_chart()}</div>
+          <div class="kv-card"><h4>Zone activity</h4>{heat_plan(True, 'dark')}</div>
+          <div class="kv-card"><h4>Average dwell time by zone</h4>{dwell_chart()}</div>
+          <div class="kv-card"><h4>Checkout queue length</h4>{queue_chart()}</div>
+          <div class="kv-card"><h4>Live · CAM-02 store floor</h4><div class="tile-solo" style="border-radius:12px"><canvas class="cctv" data-scene="store" width="480" height="270"></canvas></div></div>
+        </div>
+      </div>
+      <p class="demo-note">Example dashboard with simulated data. Not a real store.</p>
+      <p class="kv-body" style="max-width:62ch">Move from watching camera footage to understanding what the activity means for your business.</p>
+      <p style="margin-top:28px"><a class="btn btn-blue" href="contact.html">Request a KenVision Demo</a></p>
+    </div>
+  </section>'''
+
+    faq = f'''<section class="block" id="faq">
+    <div class="wrap faq-grid">
+      <div>
+        <span class="eyebrow">FAQ</span>
+        <h2 style="margin-top:18px">Frequently asked questions</h2>
+      </div>
+      <div>{''.join(f'<details{" open" if i == 0 else ""}><summary>{q}</summary><p>{a}</p></details>' for i, (q, a) in enumerate(KV_FAQ))}</div>
+    </div>
+  </section>'''
+
+    related = f'''<section class="block" id="related">
+    <div class="wrap">
+      {head_block('Related modules', 'Works well with.', 'Modules share one engine and dashboard, so they combine easily.')}
+      <div class="related">{''.join(card(MOD[k]) for k in m['related'])}</div>
+      <div class="proof" style="margin-top:48px">
+        <a class="link-prev" href="kenvoice.html">← KenVoice</a>
+        <a class="link-arrow" href="modules.html" style="margin-inline:auto">All modules</a>
+        <a class="link-arrow" href="kensafety.html">KenSafety</a>
+      </div>
+    </div>
+  </section>'''
+
+    final = '''<section class="cta">
+    <div class="wash wash-b" aria-hidden="true" style="top:10%;right:20%"></div>
+    <div class="wash wash-a" aria-hidden="true" style="top:30%;left:20%"></div>
+    <div class="wrap">
+      <span class="eyebrow">Get started</span>
+      <h2 style="margin-top:20px">Your Cameras Can Do More Than Record.</h2>
+      <p class="lede" style="margin:20px auto 0">Discover how KenVision AI video analytics can help you understand footfall, customer movement, dwell time and queues across your business.</p>
+      <div class="hero-ctas">
+        <a class="btn btn-blue" href="contact.html">Book a Free Demo</a>
+      </div>
+      <p class="kv-tagline" style="margin-top:18px">See what your existing camera infrastructure can tell you.</p>
+      <p class="kv-sign">KenVision by Intelense | Intelligence at the Edge.</p>
+    </div>
+  </section>'''
+
+    ld = {'@context': 'https://schema.org', '@type': 'FAQPage',
+          'mainEntity': [{'@type': 'Question', 'name': q, 'acceptedAnswer': {'@type': 'Answer', 'text': a}} for q, a in KV_FAQ]}
+    schema = '<script type="application/ld+json">' + json.dumps(ld) + '</script>'
+
+    body = '\n\n  '.join([hero, problem, features, how, industries, retail, benefits, dash, faq, related, final, schema])
+    return dict(file='kenvision.html', title='KenVision: AI Video Analytics Software | Intelense',
+                desc="KenVision is AI-powered video analytics software. Track footfall, customer movement, dwell time and queues using your existing CCTV cameras.",
+                active='kenvision', body=body, cctv=True)
+
+
+PAGES = [page_index, page_platform, page_modules, page_kenvision, *[(lambda m: (lambda: page_module(m)))(m) for m in MODULES[1:]], page_industries, page_about, page_contact]
 
 # ---------------------------------------------------------------- output
 

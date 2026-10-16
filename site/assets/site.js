@@ -60,6 +60,16 @@
     setInterval(function () { s++; clock.textContent = pad(Math.floor(s / 3600) % 24) + ':' + pad(Math.floor(s / 60) % 60) + ':' + pad(s % 60); }, 1000);
   }
 
+  // Hover tooltips for chart marks
+  var tip = null;
+  document.addEventListener('pointerover', function (e) {
+    var el = e.target.closest && e.target.closest('[data-tip]');
+    if (!el) { if (tip) tip.hidden = true; return; }
+    if (!tip) { tip = document.createElement('div'); tip.className = 'tip'; tip.setAttribute('role', 'status'); document.body.appendChild(tip); }
+    tip.textContent = el.getAttribute('data-tip'); tip.hidden = false;
+  });
+  document.addEventListener('pointermove', function (e) { if (tip && !tip.hidden) { tip.style.left = e.clientX + 'px'; tip.style.top = e.clientY + 'px'; } });
+
   // Contact form: validates in the page; not wired to a mail service yet
   var form = document.getElementById('demo-form');
   if (form) {

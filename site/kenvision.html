@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>KenVision: Video analytics | Intelense</title>
-<meta name="description" content="KenVision runs computer vision on the CCTV you already have. It detects people, vehicles and unusual activity in real time, and makes hours of footage searchable in seconds.">
+<title>KenVision: AI Video Analytics Software | Intelense</title>
+<meta name="description" content="KenVision is AI-powered video analytics software. Track footfall, customer movement, dwell time and queues using your existing CCTV cameras.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600&display=swap">
@@ -47,80 +47,68 @@
 </header>
 
 <main id="top">
-  <section class="page-hero" style="--mod:#0A34ED">
+  <section class="page-hero kv-hero" style="--mod:#0A34ED">
     <div class="wash wash-a" aria-hidden="true"></div>
     <div class="wash wash-b" aria-hidden="true"></div>
     <div class="cursor-grid" aria-hidden="true"></div>
-    <div class="wrap">
-      <ol class="crumbs" aria-label="Breadcrumb"><li><a href="index.html">Home</a></li><li><a href="modules.html">Modules</a></li><li aria-current="page">KenVision</li></ol>
-      <span class="eyebrow">Video analytics</span>
-      <img class="hero-logo" src="assets/logos/kenvision.png" alt="KenVision by Intelense" width="329" height="121">
-      <h1>Turn every camera into a sensor that understands.</h1>
-      <p class="lede">KenVision runs computer vision on the CCTV you already have. It detects people, vehicles and unusual activity in real time, and makes hours of footage searchable in seconds.</p>
-      <div class="hero-ctas"><a class="btn btn-blue" href="contact.html">Book a demo</a><a class="btn btn-ghost" href="modules.html">All modules</a></div>
+    <div class="wrap kv-hero-grid">
+      <div class="kv-hero-copy">
+        <ol class="crumbs" aria-label="Breadcrumb"><li><a href="index.html">Home</a></li><li><a href="modules.html">Modules</a></li><li aria-current="page">KenVision</li></ol>
+        <span class="eyebrow">AI video analytics by Intelense</span>
+        <img class="hero-logo" src="assets/logos/kenvision.png" alt="KenVision by Intelense" width="282" height="103">
+        <h1>Turn Your Existing CCTV Cameras into Business Intelligence.</h1>
+        <p class="lede">KenVision is AI-powered video analytics software that helps you understand what's happening across your business. Track footfall, customer movement, dwell time and queues using your existing camera infrastructure.</p>
+        <p class="lede kv-sub">Get useful insights from your video feeds without spending hours manually reviewing footage.</p>
+        <div class="hero-ctas"><a class="btn btn-blue" href="contact.html">Book a Demo</a><a class="btn btn-ghost" href="modules.html">All Modules</a></div>
+        <p class="kv-tagline">AI video analytics for retail, commercial spaces and business operations.</p>
+      </div>
+      <div class="kv-hero-visual">
+        <div class="tile-solo" role="img" aria-label="Overhead store camera counting people at the entrance, tracking a checkout queue and measuring dwell time at a promo display">
+          <canvas class="cctv" data-scene="store" width="960" height="540"></canvas>
+        </div>
+        <div class="kv-chips"><span><b>1,284</b> footfall today</span><span><b>37</b> in store now</span><span class="hot"><b>4</b> in queue</span></div>
+        <p class="demo-note">Simulated camera feed and example data</p>
+      </div>
     </div>
   </section>
 
-  <section class="block" id="in-action">
+  <section class="block" id="problem">
     <div class="wrap">
       <div class="head">
         <div>
-          <span class="eyebrow">KenVision in action</span>
-          <h2>See what it sees.</h2>
+          <span class="eyebrow">The problem</span>
+          <h2>Your CCTV Cameras Record Everything. But What Can They Tell You?</h2>
         </div>
-        <p class="lede">A live example of the alerts and context your team would get.</p>
+        <p class="lede">Traditional CCTV helps you see what happened. AI video analytics helps you understand patterns in what is happening.</p>
       </div>
-      <div class="console" role="img" aria-label="KenVision operator console with four live camera feeds, detection boxes, an alerts list and hourly detection counts">
-        <div class="c-top">
-          <img class="c-logo" src="assets/logos/kenvision-light.png" alt="" width="82" height="30">
-          <span class="c-site">Markham DC · Site 2</span>
-          <div class="c-tabs"><span class="on">Live</span><span>Alerts</span><span>Search</span><span>Analytics</span></div>
-          <div class="c-right"><span class="c-live">Live</span><span id="clock">14:32:09</span><span class="c-avatar">OP</span></div>
+      <div class="kv-problem">
+        <div class="kv-questions">
+          <p class="kv-q">How many people visited your store today?</p>
+          <p class="kv-q">Which areas attracted the most attention?</p>
+          <p class="kv-q">When did queues start building up?</p>
+          <p class="kv-q">Where could your operations improve?</p>
+          <p class="kv-answer">Finding these answers manually takes time. KenVision analyses video feeds to help you turn everyday activity into useful business data.</p>
         </div>
-        <div class="c-body">
-          <div class="c-grid">
-            <figure class="tile big"><canvas class="cctv" data-scene="dock" width="960" height="540"></canvas><span class="tile-tag hot">1 alert</span></figure>
-            <figure class="tile"><canvas class="cctv" data-scene="aisle" width="480" height="270"></canvas><span class="tile-tag">2 tracked</span></figure>
-            <figure class="tile"><canvas class="cctv" data-scene="lot" width="480" height="270"></canvas><span class="tile-tag hot">1 alert</span></figure>
-            <figure class="tile"><canvas class="cctv" data-scene="lobby" width="480" height="270"></canvas><span class="tile-tag hot">1 alert</span></figure>
-          </div>
-          <aside class="c-side">
-            <div class="c-h"><span>Open alerts</span><b>3</b></div>
-            <ul class="alerts">
-              <li class="sev-high">
-                <canvas class="thumb" data-from="dock" data-crop=".56,.30,.36,.36" width="224" height="126"></canvas>
-                <div><span class="sev">High</span><span class="a-title">No hard hat in restricted zone</span><span class="a-meta">CAM-04 · 14:32:07 · 94%</span>
-                  <div class="a-acts"><span class="pri">Acknowledge</span><span>View clip</span></div></div>
-              </li>
-              <li class="sev-med">
-                <canvas class="thumb" data-from="lot" data-crop=".50,.45,.46,.46" width="224" height="126"></canvas>
-                <div><span class="sev">Medium</span><span class="a-title">Vehicle stopped in fire lane</span><span class="a-meta">CAM-02 · 14:28:51 · 96%</span></div>
-              </li>
-              <li class="sev-low">
-                <canvas class="thumb" data-from="lobby" data-crop=".18,.32,.5,.5" width="224" height="126"></canvas>
-                <div><span class="sev">Review</span><span class="a-title">Possible tailgating at door 1</span><span class="a-meta">CAM-07 · 14:21:16 · 89%</span></div>
-              </li>
-            </ul>
-            <div class="c-h"><span>Detections today</span><b>Site 2</b></div>
-            <div class="kpis"><div><span>People</span><b>3,412</b></div><div><span>Vehicles</span><b>286</b></div><div><span>Alerts</span><b>19</b></div></div>
-            <svg class="bars" id="bars" viewBox="0 0 300 96" aria-hidden="true"></svg>
-          </aside>
-        </div>
+        <ul class="kv-points">
+          <li><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="3"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/><circle cx="17" cy="9" r="2.5"/><path d="M16 14.2c2.9.4 5 2.8 5 5.8"/></svg><div><b>Understand visitor traffic</b><span>Track footfall and identify peak visiting hours.</span></div></li>
+          <li><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><div><b>See where people spend time</b><span>Measure dwell time and understand activity across different areas.</span></div></li>
+          <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3v18"/><circle cx="6" cy="7" r="2"/><circle cx="6" cy="17" r="2"/><path d="M10 7h10M10 17h7"/></svg><div><b>Monitor queues</b><span>Identify queue build-up and help your team respond sooner.</span></div></li>
+          <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 20h18"/><path d="M6 16v-5M11 16V7M16 16v-8M21 16v-3"/></svg><div><b>Make better operational decisions</b><span>Use video analytics reports and trends to understand what needs attention.</span></div></li>
+        </ul>
       </div>
-      <p class="demo-note">Simulated camera feeds and example data. Not a real site or customer.</p>
     </div>
   </section>
 
-  <section class="block" id="capabilities">
+  <section class="block" id="features">
     <div class="wrap">
       <div class="head">
         <div>
-          <span class="eyebrow">Capabilities</span>
-          <h2>What KenVision does.</h2>
+          <span class="eyebrow">Features</span>
+          <h2>Everything You Need to Understand Your Space Better</h2>
         </div>
-        <p class="lede">Six things your team can switch on from day one.</p>
+        <p class="lede">KenVision combines AI video analytics, people counting and movement analysis to help you see beyond the camera feed.</p>
       </div>
-      <div class="caps"><div class="cap"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg><h3>Intrusion detection</h3><p>Draw a zone on any camera and get an alert the moment someone enters it out of hours.</p></div><div class="cap"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="3"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/><circle cx="17" cy="9" r="2.5"/><path d="M16 14.2c2.9.4 5 2.8 5 5.8"/></svg><h3>Crowd density</h3><p>Count people per zone and flag crowding before it becomes unsafe.</p></div><div class="cap"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 16v-4l2-5h14l2 5v4H3z"/><circle cx="7.5" cy="16.5" r="1.8"/><circle cx="16.5" cy="16.5" r="1.8"/><path d="M5 12h14"/></svg><h3>Vehicle tracking</h3><p>Follow vehicles across cameras and flag stops in fire lanes, loading bays or no-go areas.</p></div><div class="cap"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><h3>Loitering and dwell time</h3><p>Spot people or vehicles that stay too long in sensitive places.</p></div><div class="cap"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7l9-4 9 4v10l-9 4-9-4V7z"/><path d="M3 7l9 4 9-4M12 11v10"/></svg><h3>Objects left behind</h3><p>Flag bags, boxes and equipment left unattended in public spaces.</p></div><div class="cap"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg><h3>Video search</h3><p>Search recorded footage by person, vehicle, colour or time instead of scrubbing through hours.</p></div></div>
+      <div class="kv-feats"><article class="kv-feat"><div class="kv-mini"><svg viewBox="0 0 220 72" aria-hidden="true"><path d="M4.0,70.0V56.0Q4.0,53.0 7.0,53.0H18.0Q21.0,53.0 21.0,56.0V70.0Z" fill="#0A34ED" opacity="0.45"/><path d="M25.5,70.0V44.1Q25.5,41.1 28.5,41.1H39.5Q42.5,41.1 42.5,44.1V70.0Z" fill="#0A34ED" opacity="0.50"/><path d="M47.0,70.0V33.9Q47.0,30.9 50.0,30.9H61.0Q64.0,30.9 64.0,33.9V70.0Z" fill="#0A34ED" opacity="0.55"/><path d="M68.5,70.0V39.0Q68.5,36.0 71.5,36.0H82.5Q85.5,36.0 85.5,39.0V70.0Z" fill="#0A34ED" opacity="0.60"/><path d="M90.0,70.0V23.7Q90.0,20.7 93.0,20.7H104.0Q107.0,20.7 107.0,23.7V70.0Z" fill="#0A34ED" opacity="0.65"/><path d="M111.5,70.0V13.5Q111.5,10.5 114.5,10.5H125.5Q128.5,10.5 128.5,13.5V70.0Z" fill="#0A34ED" opacity="0.70"/><path d="M133.0,70.0V28.8Q133.0,25.8 136.0,25.8H147.0Q150.0,25.8 150.0,28.8V70.0Z" fill="#0A34ED" opacity="0.75"/><path d="M154.5,70.0V18.6Q154.5,15.6 157.5,15.6H168.5Q171.5,15.6 171.5,18.6V70.0Z" fill="#0A34ED" opacity="0.80"/><path d="M176.0,70.0V6.7Q176.0,3.7 179.0,3.7H190.0Q193.0,3.7 193.0,6.7V70.0Z" fill="#0A34ED" opacity="0.85"/><path d="M197.5,70.0V22.0Q197.5,19.0 200.5,19.0H211.5Q214.5,19.0 214.5,22.0V70.0Z" fill="#0A34ED" opacity="0.90"/></svg></div><span class="kv-num">01</span><h3>Footfall Analytics &amp; People Counting</h3><p class="kv-strap">Know how many people walk through your doors.</p><p>Count visitors, understand entry and exit patterns, and identify peak hours. Footfall analytics helps you understand traffic across stores, buildings and other business locations.</p></article><article class="kv-feat"><div class="kv-mini"><svg viewBox="0 0 220 72" aria-hidden="true"><rect x="1" y="1" width="20" height="22" rx="4" fill="#7C28E9" opacity="0.06"/><rect x="23" y="1" width="20" height="22" rx="4" fill="#7C28E9" opacity="0.06"/><rect x="45" y="1" width="20" height="22" rx="4" fill="#7C28E9" opacity="0.21"/><rect x="67" y="1" width="20" height="22" rx="4" fill="#7C28E9" opacity="0.23"/><rect x="89" y="1" width="20" height="22" rx="4" fill="#7C28E9" opacity="0.30"/><rect x="111" y="1" width="20" height="22" rx="4" fill="#7C28E9" opacity="0.49"/><rect x="133" y="1" width="20" height="22" rx="4" fill="#7C28E9" opacity="0.74"/><rect x="155" y="1" width="20" height="22" rx="4" fill="#7C28E9" opacity="0.71"/><rect x="177" y="1" width="20" height="22" rx="4" fill="#7C28E9" opacity="0.60"/><rect x="199" y="1" width="20" height="22" rx="4" fill="#7C28E9" opacity="0.35"/><rect x="1" y="25" width="20" height="22" rx="4" fill="#7C28E9" opacity="0.08"/><rect x="23" y="25" width="20" height="22" rx="4" fill="#7C28E9" opacity="0.15"/><rect x="45" y="25" width="20" height="22" rx="4" fill="#7C28E9" opacity="0.26"/><rect x="67" y="25" width="20" height="22" rx="4" fill="#7C28E9" opacity="0.38"/><rect x="89" y="25" width="20" height="22" rx="4" fill="#7C28E9" opacity="0.56"/><rect x="111" y="25" width="20" height="22" rx="4" fill="#7C28E9" opacity="0.91"/><rect x="133" y="25" width="20" height="22" rx="4" fill="#7C28E9" opacity="0.95"/><rect x="155" y="25" width="20" height="22" rx="4" fill="#7C28E9" opacity="0.95"/><rect x="177" y="25" width="20" height="22" rx="4" fill="#7C28E9" opacity="0.88"/><rect x="199" y="25" width="20" height="22" rx="4" fill="#7C28E9" opacity="0.55"/><rect x="1" y="49" width="20" height="22" rx="4" fill="#7C28E9" opacity="0.06"/><rect x="23" y="49" width="20" height="22" rx="4" fill="#7C28E9" opacity="0.18"/><rect x="45" y="49" width="20" height="22" rx="4" fill="#7C28E9" opacity="0.31"/><rect x="67" y="49" width="20" height="22" rx="4" fill="#7C28E9" opacity="0.44"/><rect x="89" y="49" width="20" height="22" rx="4" fill="#7C28E9" opacity="0.54"/><rect x="111" y="49" width="20" height="22" rx="4" fill="#7C28E9" opacity="0.40"/><rect x="133" y="49" width="20" height="22" rx="4" fill="#7C28E9" opacity="0.65"/><rect x="155" y="49" width="20" height="22" rx="4" fill="#7C28E9" opacity="0.67"/><rect x="177" y="49" width="20" height="22" rx="4" fill="#7C28E9" opacity="0.53"/><rect x="199" y="49" width="20" height="22" rx="4" fill="#7C28E9" opacity="0.33"/></svg></div><span class="kv-num">02</span><h3>Heatmap Analytics</h3><p class="kv-strap">See which areas attract attention.</p><p>Visualise movement patterns and activity across defined zones. Identify busy and less-visited areas to help inform store layouts, product placement and space planning.</p></article><article class="kv-feat"><div class="kv-mini"><svg viewBox="0 0 220 72" aria-hidden="true"><text x="0" y="15" fill="#6C6E82" font-size="10">Display</text><rect x="54" y="5" width="166" height="12" rx="3" fill="#e4e2dc"/><rect x="54" y="5" width="162" height="12" rx="3" fill="#0A34ED"/><text x="0" y="39" fill="#6C6E82" font-size="10">Counter</text><rect x="54" y="29" width="166" height="12" rx="3" fill="#e4e2dc"/><rect x="54" y="29" width="117" height="12" rx="3" fill="#0A34ED"/><text x="0" y="63" fill="#6C6E82" font-size="10">Aisle</text><rect x="54" y="53" width="166" height="12" rx="3" fill="#e4e2dc"/><rect x="54" y="53" width="72" height="12" rx="3" fill="#0A34ED"/></svg></div><span class="kv-num">03</span><h3>Dwell Time Analytics</h3><p class="kv-strap">Understand where people spend their time.</p><p>Measure how long people stay in selected areas, around displays or at counters. Use dwell time insights to understand activity and engagement across your space.</p></article><article class="kv-feat"><div class="kv-mini"><svg viewBox="0 0 220 72" aria-hidden="true"><rect x="0" y="22" width="200" height="36" rx="18" fill="none" stroke="#e4e2dc" stroke-width="2"/><circle cx="18" cy="40" r="10" fill="#0A34ED" opacity="1"/><circle cx="48" cy="40" r="10" fill="#0A34ED" opacity="1"/><circle cx="78" cy="40" r="10" fill="#0A34ED" opacity="1"/><circle cx="108" cy="40" r="10" fill="#0A34ED" opacity="1"/><circle cx="138" cy="40" r="10" fill="#FF7953" opacity="0.9"/><circle cx="168" cy="40" r="10" fill="#FF7953" opacity="0.9"/><line x1="129" x2="129" y1="10" y2="66" stroke="#FF7953" stroke-dasharray="3 3" stroke-width="1.5"/><text x="135" y="14" fill="#6C6E82" font-size="10">Alert</text></svg></div><span class="kv-num">04</span><h3>Queue Monitoring &amp; Detection</h3><p class="kv-strap">Know when waiting lines start building up.</p><p>Monitor queues and activity around billing counters or service areas. Help your team identify congestion and respond during busy periods.</p></article><article class="kv-feat"><div class="kv-mini"><svg viewBox="0 0 220 72" aria-hidden="true"><rect x="5" y="2" width="210" height="20" rx="4" fill="#0A34ED" opacity="1.00"/><text x="110" y="16" text-anchor="middle" fill="#fff" font-size="10" font-weight="600">Visitors</text><rect x="40" y="26" width="140" height="20" rx="4" fill="#0A34ED" opacity="0.75"/><text x="110" y="40" text-anchor="middle" fill="#fff" font-size="10" font-weight="600">Engaged</text><rect x="75" y="50" width="70" height="20" rx="4" fill="#0A34ED" opacity="0.50"/><text x="110" y="64" text-anchor="middle" fill="#fff" font-size="10" font-weight="600">Purchased</text></svg></div><span class="kv-num">05</span><h3>Conversion Analytics</h3><p class="kv-strap">Understand the gap between visitors and purchases.</p><p>Combine visitor and zone activity data with compatible sales or POS data to understand how store traffic relates to purchasing activity and identify opportunities for improvement.</p></article><article class="kv-feat"><div class="kv-mini"><svg viewBox="0 0 220 72" aria-hidden="true"><text x="0" y="15" fill="#6C6E82" font-size="10">Floor</text><rect x="58" y="5" width="162" height="12" rx="6" fill="#e4e2dc"/><rect x="58" y="5" width="133" height="12" rx="6" fill="#7C28E9"/><text x="0" y="39" fill="#6C6E82" font-size="10">Checkout</text><rect x="58" y="29" width="162" height="12" rx="6" fill="#e4e2dc"/><rect x="58" y="29" width="104" height="12" rx="6" fill="#7C28E9"/><text x="0" y="63" fill="#6C6E82" font-size="10">Fitting</text><rect x="58" y="53" width="162" height="12" rx="6" fill="#e4e2dc"/><rect x="58" y="53" width="62" height="12" rx="6" fill="#7C28E9"/></svg></div><span class="kv-num">06</span><h3>Staff &amp; Space Utilisation</h3><p class="kv-strap">Make better use of your people and space.</p><p>Understand activity across designated areas and compare it with busy periods. Use these insights to support staffing plans, space utilisation and operational decisions.</p></article></div>
     </div>
   </section>
 
@@ -129,25 +117,110 @@
       <div class="head">
         <div>
           <span class="eyebrow">How it works</span>
-          <h2>Up and running in three steps.</h2>
+          <h2>How Does AI Video Analytics Work?</h2>
         </div>
-        <p class="lede">Most teams start with a pilot on a few cameras or sensors.</p>
+        <p class="lede">KenVision turns camera footage into structured insights in three steps.</p>
       </div>
-      <div class="steps"><div><b>Connect</b><p>Point KenVision at the IP cameras you already run. No new cameras needed for most sites.</p></div><div><b>Configure</b><p>Draw zones, choose what to detect and set who gets each alert.</p></div><div><b>Act</b><p>Operators get a clip, a location and a confidence score, then acknowledge, escalate or dismiss.</p></div></div>
-      <p style="margin-top:32px"><a class="link-arrow" href="platform.html">How the Intelense platform works</a></p>
+      <ol class="kv-steps">
+        <li><span>Step 1</span><h3>Connect Your Existing Cameras</h3><p>Integrate compatible CCTV cameras and video recording systems with KenVision. Use your existing infrastructure where supported instead of replacing your entire camera setup.</p></li>
+        <li><span>Step 2</span><h3>AI Analyses Video Feeds</h3><p>AI-powered video analytics processes camera feeds to count people, measure activity across defined zones and identify configured events or patterns.</p></li>
+        <li><span>Step 3</span><h3>View Insights on Your Dashboard</h3><p>Access available metrics, trends and alerts through dashboards and reports. Use the information to understand activity and make informed operational decisions.</p></li>
+      </ol>
+      <p style="margin-top:36px"><a class="btn btn-black" href="#dashboard">See KenVision in Action</a></p>
     </div>
   </section>
 
-  <section class="block" id="use-cases">
+  <section class="block" id="industries">
     <div class="wrap">
       <div class="head">
         <div>
-          <span class="eyebrow">Where it is used</span>
-          <h2>Built for real sites.</h2>
+          <span class="eyebrow">Industry applications</span>
+          <h2>AI Video Analytics for Different Industries</h2>
         </div>
-        <p class="lede">Typical places teams run KenVision.</p>
+        <p class="lede">KenVision helps businesses understand movement, occupancy and activity across their physical spaces.</p>
       </div>
-      <ul class="uses"><li><b>City and campus cameras</b><span>Faster detection and dispatch across hundreds of feeds.</span><a href="industries.html#public-safety">Public safety →</a></li><li><b>Streets and transit</b><span>Crowd, traffic and incident monitoring in real time.</span><a href="industries.html#smart-cities">Smart cities →</a></li><li><b>Stores and malls</b><span>Loss prevention, queue length and after-hours intrusion.</span><a href="industries.html#retail">Retail →</a></li><li><b>Hospitals</b><span>Restricted areas, wandering patients and entrances.</span><a href="industries.html#healthcare">Healthcare →</a></li></ul>
+      <div class="caps"><div class="cap"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7l9-4 9 4v10l-9 4-9-4V7z"/><path d="M3 7l9 4 9-4M12 11v10"/></svg><h3>Retail Stores &amp; Shopping Malls</h3><p>Use retail video analytics to track footfall, analyse customer movement, understand dwell time around product displays and monitor billing queues.</p><a class="kv-link" href="industries.html#retail">More on retail →</a></div><div class="cap"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="3"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/><circle cx="17" cy="9" r="2.5"/><path d="M16 14.2c2.9.4 5 2.8 5 5.8"/></svg><h3>Supermarkets &amp; Food Courts</h3><p>Understand visitor patterns, monitor queues at checkout counters and identify busy periods across service areas.</p><a class="kv-link" href="industries.html#retail">More on retail →</a></div><div class="cap"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="6" cy="18" r="2"/><circle cx="18" cy="6" r="2"/><path d="M8 18h7a3 3 0 000-6H9a3 3 0 010-6h7"/></svg><h3>Airports &amp; Transit Hubs</h3><p>Analyse passenger movement, monitor occupancy and understand queue patterns across designated areas.</p><a class="kv-link" href="industries.html#smart-cities">More on smart cities →</a></div><div class="cap"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l9 5-9 5-9-5 9-5z"/><path d="M3 13l9 5 9-5"/></svg><h3>Offices &amp; Commercial Buildings</h3><p>Understand visitor footfall, activity across floors and utilisation patterns in shared spaces.</p><a class="kv-link" href="industries.html#smart-cities">More on smart cities →</a></div><div class="cap"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 3v5M15 3v5M6 8h12v3a6 6 0 01-12 0V8zM12 17v4"/></svg><h3>Hospitals &amp; Clinics</h3><p>Monitor occupancy and activity in designated waiting areas, entrances and other operational spaces.</p><a class="kv-link" href="industries.html#healthcare">More on healthcare →</a></div><div class="cap"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11l9-7 9 7M5.5 9.5V20h13V9.5M10 20v-5h4v5"/></svg><h3>Hotels &amp; Hospitality</h3><p>Understand guest movement and activity across lobbies, restaurants and other shared spaces.</p><a class="kv-link" href="industries.html#retail">More on retail →</a></div></div>
+    </div>
+  </section>
+
+  <section class="block" id="retail">
+    <div class="wrap kv-split">
+      <div>
+        <span class="eyebrow">Retail use case</span>
+        <h2 style="margin-top:18px">A Busy Store Doesn't Always Mean More Sales.</h2>
+        <p class="lede" style="margin-top:20px">Your store may be full of visitors, but that doesn't automatically mean customers are finding what they need or completing purchases.</p>
+        <p class="kv-body">Retail video analytics can help you investigate what's happening.</p>
+        <ul class="kv-defs">
+          <li><b>Footfall analytics</b><span>Understand how many visitors enter and when your store is busiest.</span></li>
+          <li><b>Heatmap analytics</b><span>Identify which areas attract more activity and which are overlooked.</span></li>
+          <li><b>Dwell time analytics</b><span>Understand how long visitors spend around selected counters and displays.</span></li>
+          <li><b>Queue analytics</b><span>Identify waiting-time and congestion patterns around billing counters.</span></li>
+        </ul>
+        <p class="kv-body">By combining these insights with available sales data, retailers can make better-informed decisions about store layouts, staffing and the customer experience.</p>
+      </div>
+      <figure class="panel kv-plan">
+        <svg class="plan" viewBox="0 0 400 294" role="img" aria-label="Store heatmap: most activity at the promo display, checkout queue and entrance; least in the back aisles."><defs><radialGradient id="ht-light"><stop offset="0" stop-color="#7C28E9" stop-opacity=".85"/><stop offset=".55" stop-color="#7C28E9" stop-opacity=".35"/><stop offset="1" stop-color="#7C28E9" stop-opacity="0"/></radialGradient><linearGradient id="hl-light"><stop offset="0" stop-color="#7C28E9" stop-opacity=".08"/><stop offset="1" stop-color="#7C28E9" stop-opacity=".9"/></linearGradient></defs><rect x="1" y="1" width="398" height="258" rx="10" fill="#ffffff" stroke="#9a978f" stroke-width="2"/><rect x="160.0" y="257" width="80.0" height="5" fill="#ffffff"/><rect x="32.0" y="39.0" width="168.0" height="19.5" rx="3" fill="#e4e2dc"/><rect x="32.0" y="83.2" width="168.0" height="19.5" rx="3" fill="#e4e2dc"/><rect x="32.0" y="127.39999999999999" width="168.0" height="19.5" rx="3" fill="#e4e2dc"/><rect x="32.0" y="171.6" width="168.0" height="19.5" rx="3" fill="#e4e2dc"/><circle cx="264.0" cy="117.0" r="22.0" fill="#e4e2dc"/><rect x="336.0" y="41.6" width="48.0" height="20.8" rx="3" fill="#e4e2dc"/><rect x="336.0" y="182.0" width="48.0" height="20.8" rx="3" fill="#e4e2dc"/><circle cx="264" cy="117" r="70" fill="url(#ht-light)" opacity="1.0"/><circle cx="352" cy="104" r="58" fill="url(#ht-light)" opacity="0.95"/><circle cx="200" cy="224" r="60" fill="url(#ht-light)" opacity="0.8"/><circle cx="120" cy="108" r="46" fill="url(#ht-light)" opacity="0.55"/><circle cx="120" cy="64" r="40" fill="url(#ht-light)" opacity="0.35"/><circle cx="24" cy="156" r="40" fill="url(#ht-light)" opacity="0.3"/><circle cx="120" cy="198" r="44" fill="url(#ht-light)" opacity="0.45"/><circle cx="80" cy="152" r="36" fill="url(#ht-light)" opacity="0.3"/><text x="264" y="65" text-anchor="middle" fill="#242424" font-size="11" font-weight="600">Promo display</text><text x="360" y="26" text-anchor="middle" fill="#242424" font-size="11" font-weight="600">Checkout</text><text x="200" y="254" text-anchor="middle" fill="#242424" font-size="11" font-weight="600">Entrance</text><text x="120" y="26" text-anchor="middle" fill="#242424" font-size="11" font-weight="600">Back aisles · low activity</text><text x="0" y="284" fill="#6C6E82" font-size="10">Less activity</text><rect x="78" y="275" width="120" height="10" rx="5" fill="url(#hl-light)"/><text x="206" y="284" fill="#6C6E82" font-size="10">More</text></svg>
+        <figcaption class="demo-note">Example store heatmap</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section class="block" id="benefits">
+    <div class="wrap">
+      <div class="head">
+        <div>
+          <span class="eyebrow">Key benefits</span>
+          <h2>Get More from Your Existing Camera Infrastructure</h2>
+        </div>
+        <p class="lede"></p>
+      </div>
+      <div class="kv-bens"><div class="cap"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 3v5M15 3v5M6 8h12v3a6 6 0 01-12 0V8zM12 17v4"/></svg><h3>Beyond Traditional CCTV</h3><p>Go beyond recording footage and use AI video analytics to understand activity patterns across your business.</p></div><div class="cap"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><h3>Less Manual Video Review</h3><p>Automate supported analysis and reduce the need to manually review footage for routine operational insights.</p></div><div class="cap"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg><h3>Real-Time Operational Visibility</h3><p>Access supported live analytics and alerts to understand activity as it unfolds.</p></div><div class="cap"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 20h18"/><path d="M6 16v-5M11 16V7M16 16v-8M21 16v-3"/></svg><h3>Better-Informed Decisions</h3><p>Use footfall, dwell time, heatmaps and queue data to identify patterns and opportunities for improvement.</p></div><div class="cap"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l9 5-9 5-9-5 9-5z"/><path d="M3 13l9 5 9-5"/></svg><h3>Flexible Integration</h3><p>Connect compatible cameras and recording systems, subject to your existing setup and deployment requirements.</p></div></div>
+    </div>
+  </section>
+
+  <section class="block" id="dashboard">
+    <div class="wrap">
+      <div class="head">
+        <div>
+          <span class="eyebrow">Dashboard</span>
+          <h2>See the Numbers Behind What You See.</h2>
+        </div>
+        <p class="lede">Bring important video analytics into one view. Monitor footfall, review activity across zones, understand dwell time and track queue patterns through an analytics dashboard.</p>
+      </div>
+      <div class="kv-dash">
+        <div class="c-top">
+          <img class="c-logo" src="assets/logos/kenvision-light.png" alt="KenVision" width="82" height="30">
+          <span class="c-site">Store 014 · Downtown</span>
+          <div class="c-tabs"><span class="on">Today</span><span>7 days</span><span>30 days</span></div>
+          <div class="c-right"><span class="c-live">Live</span><span id="clock">14:32:09</span></div>
+        </div>
+        <div class="kv-kpis">
+          <div><span>Footfall today</span><b>1,284</b><em class="up">▲ 8% vs last Tuesday</em></div>
+          <div><span>In store now</span><b>37</b><em>Updated live</em></div>
+          <div><span>Average dwell time</span><b>6m 12s</b><em class="up">▲ 24s vs last week</em></div>
+          <div><span>Average queue wait</span><b>2m 40s</b><em class="down">Peak 17:30 to 18:00</em></div>
+        </div>
+        <div class="kv-grid">
+          <div class="kv-card kv-wide"><h4>Footfall by hour</h4><svg class="chart" viewBox="0 0 560 210" role="img" aria-label="Footfall by hour, 08:00 to 21:00. Peak 201 visitors at 19:00."><line x1="34" x2="554" y1="184.0" y2="184.0" stroke="#2a2c33" stroke-width="1"/><text x="26" y="187.0" text-anchor="end" fill="#9b9daf" font-size="10">0</text><line x1="34" x2="554" y1="107.6" y2="107.6" stroke="#2a2c33" stroke-width="1"/><text x="26" y="110.6" text-anchor="end" fill="#9b9daf" font-size="10">100</text><line x1="34" x2="554" y1="31.3" y2="31.3" stroke="#2a2c33" stroke-width="1"/><text x="26" y="34.3" text-anchor="end" fill="#9b9daf" font-size="10">200</text><path d="M35.0,184.0V162.6Q35.0,159.6 38.0,159.6H67.1Q70.1,159.6 70.1,162.6V184.0Z" fill="#5b7cff" data-tip="08:00 · 32 visitors"/><text x="52.6" y="202" text-anchor="middle" fill="#9b9daf" font-size="10">08:00</text><path d="M72.1,184.0V142.7Q72.1,139.7 75.1,139.7H104.3Q107.3,139.7 107.3,142.7V184.0Z" fill="#5b7cff" data-tip="09:00 · 58 visitors"/><path d="M109.3,184.0V122.9Q109.3,119.9 112.3,119.9H141.4Q144.4,119.9 144.4,122.9V184.0Z" fill="#5b7cff" data-tip="10:00 · 84 visitors"/><text x="126.9" y="202" text-anchor="middle" fill="#9b9daf" font-size="10">10:00</text><path d="M146.4,184.0V113.7Q146.4,110.7 149.4,110.7H178.6Q181.6,110.7 181.6,113.7V184.0Z" fill="#5b7cff" data-tip="11:00 · 96 visitors"/><path d="M183.6,184.0V94.6Q183.6,91.6 186.6,91.6H215.7Q218.7,91.6 218.7,94.6V184.0Z" fill="#5b7cff" data-tip="12:00 · 121 visitors"/><text x="201.1" y="202" text-anchor="middle" fill="#9b9daf" font-size="10">12:00</text><path d="M220.7,184.0V74.0Q220.7,71.0 223.7,71.0H252.9Q255.9,71.0 255.9,74.0V184.0Z" fill="#5b7cff" data-tip="13:00 · 148 visitors"/><path d="M257.9,184.0V86.2Q257.9,83.2 260.9,83.2H290.0Q293.0,83.2 293.0,86.2V184.0Z" fill="#5b7cff" data-tip="14:00 · 132 visitors"/><text x="275.4" y="202" text-anchor="middle" fill="#9b9daf" font-size="10">14:00</text><path d="M295.0,184.0V96.9Q295.0,93.9 298.0,93.9H327.1Q330.1,93.9 330.1,96.9V184.0Z" fill="#5b7cff" data-tip="15:00 · 118 visitors"/><path d="M332.1,184.0V90.8Q332.1,87.8 335.1,87.8H364.3Q367.3,87.8 367.3,90.8V184.0Z" fill="#5b7cff" data-tip="16:00 · 126 visitors"/><text x="349.7" y="202" text-anchor="middle" fill="#9b9daf" font-size="10">16:00</text><path d="M369.3,184.0V70.9Q369.3,67.9 372.3,67.9H401.4Q404.4,67.9 404.4,70.9V184.0Z" fill="#5b7cff" data-tip="17:00 · 152 visitors"/><path d="M406.4,184.0V43.4Q406.4,40.4 409.4,40.4H438.6Q441.6,40.4 441.6,43.4V184.0Z" fill="#5b7cff" data-tip="18:00 · 188 visitors"/><text x="424.0" y="202" text-anchor="middle" fill="#9b9daf" font-size="10">18:00</text><path d="M443.6,184.0V33.5Q443.6,30.5 446.6,30.5H475.7Q478.7,30.5 478.7,33.5V184.0Z" fill="#5b7cff" data-tip="19:00 · 201 visitors"/><path d="M480.7,184.0V61.8Q480.7,58.8 483.7,58.8H512.9Q515.9,58.8 515.9,61.8V184.0Z" fill="#5b7cff" data-tip="20:00 · 164 visitors"/><text x="498.3" y="202" text-anchor="middle" fill="#9b9daf" font-size="10">20:00</text><path d="M517.9,184.0V113.7Q517.9,110.7 520.9,110.7H550.0Q553.0,110.7 553.0,113.7V184.0Z" fill="#5b7cff" data-tip="21:00 · 96 visitors"/><text x="461.1" y="24.5" text-anchor="middle" fill="#e9e9ec" font-size="11" font-weight="600">Peak 201</text></svg></div>
+          <div class="kv-card"><h4>Zone activity</h4><svg class="plan" viewBox="0 0 400 294" role="img" aria-label="Store heatmap: most activity at the promo display, checkout queue and entrance; least in the back aisles."><defs><radialGradient id="ht-dark"><stop offset="0" stop-color="#7C28E9" stop-opacity=".85"/><stop offset=".55" stop-color="#7C28E9" stop-opacity=".35"/><stop offset="1" stop-color="#7C28E9" stop-opacity="0"/></radialGradient><linearGradient id="hl-dark"><stop offset="0" stop-color="#7C28E9" stop-opacity=".08"/><stop offset="1" stop-color="#7C28E9" stop-opacity=".9"/></linearGradient></defs><rect x="1" y="1" width="398" height="258" rx="10" fill="#1d1f24" stroke="#3a3c44" stroke-width="2"/><rect x="160.0" y="257" width="80.0" height="5" fill="#1d1f24"/><rect x="32.0" y="39.0" width="168.0" height="19.5" rx="3" fill="#2c2e35"/><rect x="32.0" y="83.2" width="168.0" height="19.5" rx="3" fill="#2c2e35"/><rect x="32.0" y="127.39999999999999" width="168.0" height="19.5" rx="3" fill="#2c2e35"/><rect x="32.0" y="171.6" width="168.0" height="19.5" rx="3" fill="#2c2e35"/><circle cx="264.0" cy="117.0" r="22.0" fill="#2c2e35"/><rect x="336.0" y="41.6" width="48.0" height="20.8" rx="3" fill="#2c2e35"/><rect x="336.0" y="182.0" width="48.0" height="20.8" rx="3" fill="#2c2e35"/><circle cx="264" cy="117" r="70" fill="url(#ht-dark)" opacity="1.0"/><circle cx="352" cy="104" r="58" fill="url(#ht-dark)" opacity="0.95"/><circle cx="200" cy="224" r="60" fill="url(#ht-dark)" opacity="0.8"/><circle cx="120" cy="108" r="46" fill="url(#ht-dark)" opacity="0.55"/><circle cx="120" cy="64" r="40" fill="url(#ht-dark)" opacity="0.35"/><circle cx="24" cy="156" r="40" fill="url(#ht-dark)" opacity="0.3"/><circle cx="120" cy="198" r="44" fill="url(#ht-dark)" opacity="0.45"/><circle cx="80" cy="152" r="36" fill="url(#ht-dark)" opacity="0.3"/><text x="264" y="65" text-anchor="middle" fill="#e9e9ec" font-size="11" font-weight="600">Promo display</text><text x="360" y="26" text-anchor="middle" fill="#e9e9ec" font-size="11" font-weight="600">Checkout</text><text x="200" y="254" text-anchor="middle" fill="#e9e9ec" font-size="11" font-weight="600">Entrance</text><text x="120" y="26" text-anchor="middle" fill="#e9e9ec" font-size="11" font-weight="600">Back aisles · low activity</text><text x="0" y="284" fill="#9b9daf" font-size="10">Less activity</text><rect x="78" y="275" width="120" height="10" rx="5" fill="url(#hl-dark)"/><text x="206" y="284" fill="#9b9daf" font-size="10">More</text></svg></div>
+          <div class="kv-card"><h4>Average dwell time by zone</h4><svg class="chart" viewBox="0 0 360 156" role="img" aria-label="Average dwell time by zone"><text x="0" y="19" fill="#c9cbd6" font-size="11">Promo display</text><rect x="104" y="9" width="202" height="14" rx="3" fill="#24262d"/><path d="M104,9H295.2Q298.2,9 298.2,12V20Q298.2,23 295.2,23H104Z" fill="#5b7cff" data-tip="Promo display · 4m 10s average"/><text x="360" y="20" text-anchor="end" fill="#e9e9ec" font-size="11" font-weight="600">4m 10s</text><text x="0" y="49" fill="#c9cbd6" font-size="11">Electronics</text><rect x="104" y="39" width="202" height="14" rx="3" fill="#24262d"/><path d="M104,39H244.7Q247.7,39 247.7,42V50Q247.7,53 244.7,53H104Z" fill="#5b7cff" data-tip="Electronics · 3m 05s average"/><text x="360" y="50" text-anchor="end" fill="#e9e9ec" font-size="11" font-weight="600">3m 05s</text><text x="0" y="79" fill="#c9cbd6" font-size="11">Checkout</text><rect x="104" y="69" width="202" height="14" rx="3" fill="#24262d"/><path d="M104,69H225.3Q228.3,69 228.3,72V80Q228.3,83 225.3,83H104Z" fill="#5b7cff" data-tip="Checkout · 2m 40s average"/><text x="360" y="80" text-anchor="end" fill="#e9e9ec" font-size="11" font-weight="600">2m 40s</text><text x="0" y="109" fill="#c9cbd6" font-size="11">Apparel</text><rect x="104" y="99" width="202" height="14" rx="3" fill="#24262d"/><path d="M104,99H209.8Q212.8,99 212.8,102V110Q212.8,113 209.8,113H104Z" fill="#5b7cff" data-tip="Apparel · 2m 20s average"/><text x="360" y="110" text-anchor="end" fill="#e9e9ec" font-size="11" font-weight="600">2m 20s</text><text x="0" y="139" fill="#c9cbd6" font-size="11">Grocery</text><rect x="104" y="129" width="202" height="14" rx="3" fill="#24262d"/><path d="M104,129H182.6Q185.6,129 185.6,132V140Q185.6,143 182.6,143H104Z" fill="#5b7cff" data-tip="Grocery · 1m 45s average"/><text x="360" y="140" text-anchor="end" fill="#e9e9ec" font-size="11" font-weight="600">1m 45s</text></svg></div>
+          <div class="kv-card"><h4>Checkout queue length</h4><svg class="chart" viewBox="0 0 360 170" role="img" aria-label="Queue length at checkout through the day, crossing the alert threshold of 5 between 17:00 and 18:30."><line x1="24" x2="354" y1="146.0" y2="146.0" stroke="#2a2c33"/><text x="18" y="149.0" text-anchor="end" fill="#9b9daf" font-size="10">0</text><line x1="24" x2="354" y1="79.0" y2="79.0" stroke="#2a2c33"/><text x="18" y="82.0" text-anchor="end" fill="#9b9daf" font-size="10">4</text><line x1="24" x2="354" y1="12.0" y2="12.0" stroke="#2a2c33"/><text x="18" y="15.0" text-anchor="end" fill="#9b9daf" font-size="10">8</text><line x1="24" x2="354" y1="62.2" y2="62.2" stroke="#FF7953" stroke-dasharray="4 4" stroke-width="1.5"/><text x="354" y="57.2" text-anchor="end" fill="#ffb39b" font-size="10" font-weight="600">Alert at 5</text><polygon points="24,146.0 24.0,129.2 37.8,129.2 51.5,112.5 65.2,129.2 79.0,112.5 92.8,95.8 106.5,112.5 120.2,112.5 134.0,95.8 147.8,79.0 161.5,95.8 175.2,112.5 189.0,112.5 202.8,95.8 216.5,95.8 230.2,79.0 244.0,62.2 257.8,45.5 271.5,45.5 285.2,62.2 299.0,79.0 312.8,95.8 326.5,112.5 340.2,112.5 354.0,129.2 354.0,146.0" fill="rgba(115,196,197,.14)"/><polyline points="24.0,129.2 37.8,129.2 51.5,112.5 65.2,129.2 79.0,112.5 92.8,95.8 106.5,112.5 120.2,112.5 134.0,95.8 147.8,79.0 161.5,95.8 175.2,112.5 189.0,112.5 202.8,95.8 216.5,95.8 230.2,79.0 244.0,62.2 257.8,45.5 271.5,45.5 285.2,62.2 299.0,79.0 312.8,95.8 326.5,112.5 340.2,112.5 354.0,129.2" fill="none" stroke="#73C4C5" stroke-width="2" stroke-linejoin="round"/><circle cx="24.0" cy="129.2" r="2.5" fill="#73C4C5" stroke="#16171b" stroke-width="2" data-tip="09:00 · 1 in queue"/><circle cx="37.8" cy="129.2" r="2.5" fill="#73C4C5" stroke="#16171b" stroke-width="2" data-tip="09:30 · 1 in queue"/><circle cx="51.5" cy="112.5" r="2.5" fill="#73C4C5" stroke="#16171b" stroke-width="2" data-tip="10:00 · 2 in queue"/><circle cx="65.2" cy="129.2" r="2.5" fill="#73C4C5" stroke="#16171b" stroke-width="2" data-tip="10:30 · 1 in queue"/><circle cx="79.0" cy="112.5" r="2.5" fill="#73C4C5" stroke="#16171b" stroke-width="2" data-tip="11:00 · 2 in queue"/><circle cx="92.8" cy="95.8" r="2.5" fill="#73C4C5" stroke="#16171b" stroke-width="2" data-tip="11:30 · 3 in queue"/><circle cx="106.5" cy="112.5" r="2.5" fill="#73C4C5" stroke="#16171b" stroke-width="2" data-tip="12:00 · 2 in queue"/><circle cx="120.2" cy="112.5" r="2.5" fill="#73C4C5" stroke="#16171b" stroke-width="2" data-tip="12:30 · 2 in queue"/><circle cx="134.0" cy="95.8" r="2.5" fill="#73C4C5" stroke="#16171b" stroke-width="2" data-tip="13:00 · 3 in queue"/><circle cx="147.8" cy="79.0" r="2.5" fill="#73C4C5" stroke="#16171b" stroke-width="2" data-tip="13:30 · 4 in queue"/><circle cx="161.5" cy="95.8" r="2.5" fill="#73C4C5" stroke="#16171b" stroke-width="2" data-tip="14:00 · 3 in queue"/><circle cx="175.2" cy="112.5" r="2.5" fill="#73C4C5" stroke="#16171b" stroke-width="2" data-tip="14:30 · 2 in queue"/><circle cx="189.0" cy="112.5" r="2.5" fill="#73C4C5" stroke="#16171b" stroke-width="2" data-tip="15:00 · 2 in queue"/><circle cx="202.8" cy="95.8" r="2.5" fill="#73C4C5" stroke="#16171b" stroke-width="2" data-tip="15:30 · 3 in queue"/><circle cx="216.5" cy="95.8" r="2.5" fill="#73C4C5" stroke="#16171b" stroke-width="2" data-tip="16:00 · 3 in queue"/><circle cx="230.2" cy="79.0" r="2.5" fill="#73C4C5" stroke="#16171b" stroke-width="2" data-tip="16:30 · 4 in queue"/><circle cx="244.0" cy="62.2" r="4" fill="#FF7953" stroke="#16171b" stroke-width="2" data-tip="17:00 · 5 in queue"/><circle cx="257.8" cy="45.5" r="4" fill="#FF7953" stroke="#16171b" stroke-width="2" data-tip="17:30 · 6 in queue"/><circle cx="271.5" cy="45.5" r="4" fill="#FF7953" stroke="#16171b" stroke-width="2" data-tip="18:00 · 6 in queue"/><circle cx="285.2" cy="62.2" r="4" fill="#FF7953" stroke="#16171b" stroke-width="2" data-tip="18:30 · 5 in queue"/><circle cx="299.0" cy="79.0" r="2.5" fill="#73C4C5" stroke="#16171b" stroke-width="2" data-tip="19:00 · 4 in queue"/><circle cx="312.8" cy="95.8" r="2.5" fill="#73C4C5" stroke="#16171b" stroke-width="2" data-tip="19:30 · 3 in queue"/><circle cx="326.5" cy="112.5" r="2.5" fill="#73C4C5" stroke="#16171b" stroke-width="2" data-tip="20:00 · 2 in queue"/><circle cx="340.2" cy="112.5" r="2.5" fill="#73C4C5" stroke="#16171b" stroke-width="2" data-tip="20:30 · 2 in queue"/><circle cx="354.0" cy="129.2" r="2.5" fill="#73C4C5" stroke="#16171b" stroke-width="2" data-tip="21:00 · 1 in queue"/><text x="24.0" y="164" text-anchor="start" fill="#9b9daf" font-size="10">09:00</text><text x="189.0" y="164" text-anchor="middle" fill="#9b9daf" font-size="10">15:00</text><text x="354.0" y="164" text-anchor="end" fill="#9b9daf" font-size="10">21:00</text></svg></div>
+          <div class="kv-card"><h4>Live · CAM-02 store floor</h4><div class="tile-solo" style="border-radius:12px"><canvas class="cctv" data-scene="store" width="480" height="270"></canvas></div></div>
+        </div>
+      </div>
+      <p class="demo-note">Example dashboard with simulated data. Not a real store.</p>
+      <p class="kv-body" style="max-width:62ch">Move from watching camera footage to understanding what the activity means for your business.</p>
+      <p style="margin-top:28px"><a class="btn btn-blue" href="contact.html">Request a KenVision Demo</a></p>
+    </div>
+  </section>
+
+  <section class="block" id="faq">
+    <div class="wrap faq-grid">
+      <div>
+        <span class="eyebrow">FAQ</span>
+        <h2 style="margin-top:18px">Frequently asked questions</h2>
+      </div>
+      <div><details open><summary>What is AI video analytics?</summary><p>AI video analytics uses artificial intelligence and computer vision to analyse video footage and identify useful information, such as people counts, movement patterns, occupancy and activity within defined areas.</p></details><details><summary>What is KenVision?</summary><p>KenVision is Intelense's AI video analytics product. It turns video feeds from compatible cameras into business insights, including footfall analytics, heatmaps, dwell time, queue monitoring and other supported metrics.</p></details><details><summary>How is AI video analytics different from CCTV?</summary><p>Traditional CCTV primarily records video for live monitoring or later review. AI video analytics automatically analyses video feeds to generate metrics, identify patterns and provide operational insights.</p></details><details><summary>Can KenVision work with existing CCTV cameras?</summary><p>KenVision is designed to integrate with compatible existing cameras and recording systems. The exact compatibility and setup depend on your current infrastructure.</p></details><details><summary>What is footfall analytics?</summary><p>Footfall analytics measures visitor traffic across a location. Businesses use it to understand visitor numbers, entry and exit patterns, and peak hours.</p></details><details><summary>What is dwell time analytics?</summary><p>Dwell time analytics measures how long people remain in a defined area. Retailers can use it to understand activity around displays, counters and other selected zones.</p></details><details><summary>Can KenVision help improve retail performance?</summary><p>KenVision can help retailers understand footfall, customer movement, dwell time and queue patterns. These insights can support decisions about staffing, store layouts and customer experience. Actual sales impact depends on how the insights are used.</p></details><details><summary>Does KenVision require new hardware?</summary><p>Not necessarily. KenVision can use compatible existing camera infrastructure. Hardware, processing and integration requirements depend on the deployment.</p></details><details><summary>Can KenVision be used outside retail?</summary><p>Yes. Video analytics can also support applications in commercial buildings, offices, transport hubs, healthcare facilities and hospitality environments, depending on the features configured.</p></details><details><summary>How can I get a KenVision demo?</summary><p>Contact Intelense to discuss your business requirements, camera infrastructure and analytics needs. The team can help you understand the appropriate configuration for your use case.</p></details></div>
     </div>
   </section>
 
@@ -189,13 +262,17 @@
     <div class="wash wash-a" aria-hidden="true" style="top:30%;left:20%"></div>
     <div class="wrap">
       <span class="eyebrow">Get started</span>
-      <h2 style="margin-top:20px">See KenVision on your own site.</h2>
+      <h2 style="margin-top:20px">Your Cameras Can Do More Than Record.</h2>
+      <p class="lede" style="margin:20px auto 0">Discover how KenVision AI video analytics can help you understand footfall, customer movement, dwell time and queues across your business.</p>
       <div class="hero-ctas">
-        <a class="btn btn-blue" href="contact.html">Book a demo</a>
-        <a class="btn btn-black" href="modules.html">Compare modules</a>
+        <a class="btn btn-blue" href="contact.html">Book a Free Demo</a>
       </div>
+      <p class="kv-tagline" style="margin-top:18px">See what your existing camera infrastructure can tell you.</p>
+      <p class="kv-sign">KenVision by Intelense | Intelligence at the Edge.</p>
     </div>
   </section>
+
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "What is AI video analytics?", "acceptedAnswer": {"@type": "Answer", "text": "AI video analytics uses artificial intelligence and computer vision to analyse video footage and identify useful information, such as people counts, movement patterns, occupancy and activity within defined areas."}}, {"@type": "Question", "name": "What is KenVision?", "acceptedAnswer": {"@type": "Answer", "text": "KenVision is Intelense's AI video analytics product. It turns video feeds from compatible cameras into business insights, including footfall analytics, heatmaps, dwell time, queue monitoring and other supported metrics."}}, {"@type": "Question", "name": "How is AI video analytics different from CCTV?", "acceptedAnswer": {"@type": "Answer", "text": "Traditional CCTV primarily records video for live monitoring or later review. AI video analytics automatically analyses video feeds to generate metrics, identify patterns and provide operational insights."}}, {"@type": "Question", "name": "Can KenVision work with existing CCTV cameras?", "acceptedAnswer": {"@type": "Answer", "text": "KenVision is designed to integrate with compatible existing cameras and recording systems. The exact compatibility and setup depend on your current infrastructure."}}, {"@type": "Question", "name": "What is footfall analytics?", "acceptedAnswer": {"@type": "Answer", "text": "Footfall analytics measures visitor traffic across a location. Businesses use it to understand visitor numbers, entry and exit patterns, and peak hours."}}, {"@type": "Question", "name": "What is dwell time analytics?", "acceptedAnswer": {"@type": "Answer", "text": "Dwell time analytics measures how long people remain in a defined area. Retailers can use it to understand activity around displays, counters and other selected zones."}}, {"@type": "Question", "name": "Can KenVision help improve retail performance?", "acceptedAnswer": {"@type": "Answer", "text": "KenVision can help retailers understand footfall, customer movement, dwell time and queue patterns. These insights can support decisions about staffing, store layouts and customer experience. Actual sales impact depends on how the insights are used."}}, {"@type": "Question", "name": "Does KenVision require new hardware?", "acceptedAnswer": {"@type": "Answer", "text": "Not necessarily. KenVision can use compatible existing camera infrastructure. Hardware, processing and integration requirements depend on the deployment."}}, {"@type": "Question", "name": "Can KenVision be used outside retail?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. Video analytics can also support applications in commercial buildings, offices, transport hubs, healthcare facilities and hospitality environments, depending on the features configured."}}, {"@type": "Question", "name": "How can I get a KenVision demo?", "acceptedAnswer": {"@type": "Answer", "text": "Contact Intelense to discuss your business requirements, camera infrastructure and analytics needs. The team can help you understand the appropriate configuration for your use case."}}]}</script>
 </main>
 
 <footer>
