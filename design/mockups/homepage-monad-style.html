@@ -226,7 +226,7 @@ section.block { padding-block: var(--section); border-top: 1px solid var(--ash);
   transition: border-color .2s, transform .2s;
 }
 .card:hover { border-color: var(--off-black); }
-.card-top { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 18px; }
+.card-top { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 8px; }
 .icon { width: 44px; height: 44px; border-radius: 50%; border: 1px solid var(--ash); display: grid; place-items: center; }
 .icon svg { width: 22px; height: 22px; stroke: url(#brand-g); fill: none; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
 .card .kind { font-size: 12px; text-transform: uppercase; color: var(--smoke); }
@@ -284,6 +284,14 @@ footer a:hover { color: var(--parchment); }
 .email { user-select: all; color: var(--parchment); }
 .legal { margin-top: 56px; padding-top: 24px; border-top: 1px solid #3a3a3a; display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; font-size: 12px; color: #8f8b88; text-transform: uppercase; }
 
+.mod-logo { display: block; max-width: 100%; height: auto; }
+.card { --mod: var(--ash); }
+.card:hover { border-color: var(--mod); }
+.card .kind { display: inline-flex; align-items: center; gap: 8px; }
+.card .kind::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--mod); flex: none; }
+.card .link-arrow::after { color: var(--mod); }
+.card h3 { margin-bottom: 4px; }
+.card.feature .mod-logo { margin-block: 4px 8px; }
 /* Montserrat caps need open tracking */
 .eyebrow, .btn, .announce .pill, .tag-new, .nav-links a, .hero-meta, .col-label, .node, .hub-core span,
 .steps b, .box span, .zone span, .hud, .log-sub, .events .lvl, .demo-note, .card .kind, .chip, .link-arrow,
@@ -476,13 +484,12 @@ footer a:hover { color: var(--parchment); }
       </div>
 
       <div class="modules">
-        <article class="card feature">
+        <article style="--mod:#0A34ED" class="card feature">
           <div class="feat-copy">
             <div class="card-top" style="margin-bottom:6px">
-              <div class="icon"><svg viewBox="0 0 24 24"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg></div>
               <span class="kind">Video analytics</span>
             </div>
-            <h3>KenVision</h3>
+            <h3><img class="mod-logo" src="logos/kenvision.png" alt="KenVision by Intelense" width="282" height="103"></h3>
             <p>Turns existing CCTV into a real-time detection system. Find people, vehicles, intrusions and crowding as they happen, and search hours of footage in seconds.</p>
             <div class="chips"><span class="chip">Intrusion</span><span class="chip">Crowd density</span><span class="chip">Vehicle tracking</span><span class="chip">Video search</span></div>
             <a class="link-arrow" href="#demo-cta">Explore KenVision</a>
@@ -493,62 +500,57 @@ footer a:hover { color: var(--parchment); }
           </div>
         </article>
 
-        <article class="card">
+        <article style="--mod:#FF7953" class="card">
           <div class="card-top">
-            <div class="icon"><svg viewBox="0 0 24 24"><path d="M4 15a8 8 0 0116 0M2.5 15h19v2.5h-19zM12 7v4M9 8l1 3M15 8l-1 3"/></svg></div>
             <span class="kind">Workplace safety</span>
           </div>
-          <h3>KenSafety</h3>
+          <h3><img class="mod-logo" src="logos/kensafety.png" alt="KenSafety by Intelense" width="174" height="66"></h3>
           <p>Spots missing PPE, unsafe zones, slips and falls, and alerts supervisors before a near miss becomes an injury.</p>
           <a class="link-arrow" href="#demo-cta">Learn more</a>
         </article>
 
-        <article class="card">
+        <article style="--mod:#78AFCF" class="card">
           <div class="card-top">
-            <div class="icon"><svg viewBox="0 0 24 24"><path d="M3 11l9-7 9 7M5.5 9.5V20h13V9.5M10 20v-5h4v5"/></svg></div>
             <span class="kind">Smart home security</span>
           </div>
-          <h3>KenHome</h3>
+          <h3><img class="mod-logo" src="logos/kenhome.png" alt="KenHome by Intelense" width="174" height="66"></h3>
           <p>Knows a family member from a stranger at the door and cuts the false alarms that make people ignore alerts.</p>
           <a class="link-arrow" href="#demo-cta">Learn more</a>
         </article>
 
-        <article class="card">
+        <article style="--mod:#368736" class="card">
           <div class="card-top">
-            <div class="icon"><svg viewBox="0 0 24 24"><path d="M12 21V11M12 11c0-4 3-7 8-7 0 5-3 7-8 7zM12 14c0-3-2.5-5.5-7-5.5 0 4 2.5 5.5 7 5.5z"/></svg></div>
             <span class="kind">Precision agriculture</span>
           </div>
-          <h3>KenAgri</h3>
+          <h3><img class="mod-logo" src="logos/kenagri.png" alt="KenAgri by Intelense" width="148" height="66"></h3>
           <p>Watches crops, livestock and field perimeters to flag stress, disease and intrusions early.</p>
           <a class="link-arrow" href="#demo-cta">Learn more</a>
         </article>
 
-        <article class="card">
+        <article style="--mod:#7C28E9" class="card">
           <div class="card-top">
-            <div class="icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="2.5"/><circle cx="4.5" cy="5" r="1.8"/><circle cx="19.5" cy="5" r="1.8"/><circle cx="4.5" cy="19" r="1.8"/><circle cx="19.5" cy="19" r="1.8"/><path d="M6 6.3l4.2 4.2M18 6.3l-4.2 4.2M6 17.7l4.2-4.2M18 17.7l-4.2-4.2"/></svg></div>
             <span class="kind">Predictive monitoring</span>
           </div>
-          <h3>KenIoT</h3>
+          <h3><img class="mod-logo" src="logos/keniot.png" alt="KenIoT by Intelense" width="141" height="63"></h3>
           <p>Reads equipment and environmental sensors to predict failures and send maintenance teams before anything breaks.</p>
           <a class="link-arrow" href="#demo-cta">Learn more</a>
         </article>
 
-        <article class="card">
+        <article style="--mod:#6C6E82" class="card">
           <div class="card-top">
-            <div class="icon"><svg viewBox="0 0 24 24"><path d="M4 21h8M8 21v-5l5-6M13 10l5-2M18 8l2 3M5.5 16h5"/><circle cx="13" cy="10" r="1.6"/></svg></div>
             <span class="kind">Autonomous systems</span>
           </div>
-          <h3>KenRobotics</h3>
+          <h3><img class="mod-logo" src="logos/kenrobotics.png" alt="KenRobotics by Intelense" width="202" height="66"></h3>
           <p>Gives robots and drones the vision to navigate, inspect and patrol on their own.</p>
           <a class="link-arrow" href="#demo-cta">Learn more</a>
         </article>
 
-        <article class="card" id="kenvoice">
+        <article style="--mod:#73C4C5" class="card" id="kenvoice">
           <div class="card-top">
-            <div class="icon"><svg viewBox="0 0 24 24"><path d="M3 12h2M7 8v8M11 5v14M15 9v6M19 7v10M22 12h-1"/></svg></div>
+            <span class="kind">Voice AI</span>
             <span class="tag-new">New</span>
           </div>
-          <h3>KenVoice</h3>
+          <h3><img class="mod-logo" src="logos/kenvoice.png" alt="KenVoice by Intelense" width="167" height="66"></h3>
           <p>Brings voice into the platform: spoken alerts, hands-free commands and call transcription that feed the same incident timeline.</p>
           <a class="link-arrow" href="#demo-cta">Learn more</a>
         </article>
