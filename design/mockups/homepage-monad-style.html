@@ -44,7 +44,7 @@
 html { background: var(--parchment); }
 body {
   margin: 0;
-  background: transparent; /* page colour lives on html so the cursor grid shows through */
+  background: var(--parchment);
   color: var(--off-black);
   font-family: var(--font);
   font-size: 16px;
@@ -76,8 +76,8 @@ p { margin: 0; }
 }
 .eyebrow::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: linear-gradient(135deg, var(--g-blue), var(--g-violet) 50%, var(--g-coral)); }
 
-/* Cursor-reactive grid layer (see cursor-grid.js) */
-.cursor-grid { position: fixed; inset: 0; z-index: -1; pointer-events: none; }
+/* Cursor-reactive grid layer, scoped to the hero (see cursor-grid.js) */
+.cursor-grid { position: absolute; inset: 0; z-index: -1; pointer-events: none; }
 
 /* Buttons */
 .btn {
@@ -369,8 +369,6 @@ footer a:hover { color: var(--parchment); }
   </defs>
 </svg>
 
-<div class="cursor-grid" aria-hidden="true"></div>
-
 <div class="announce">
   <div class="wrap">
     <span><span class="tag-new">New</span>&nbsp; KenVoice joins the Ken platform as our seventh module</span>
@@ -399,8 +397,9 @@ footer a:hover { color: var(--parchment); }
     <div class="wash wash-a" aria-hidden="true"></div>
     <div class="wash wash-b" aria-hidden="true"></div>
     <div class="wash wash-c" aria-hidden="true"></div>
+    <div class="cursor-grid" aria-hidden="true"></div>
     <div class="wrap">
-      <span class="eyebrow">AI for public safety</span>
+      <span class="eyebrow">AI Video Analytics &amp; Intelligence at the Edge</span>
       <h1>See what matters. <span class="hl">Act before it escalates.</span></h1>
       <p class="lede">Intelense turns live video, sensor and voice data into real-time alerts, so the right people know what is happening and can respond in seconds.</p>
       <div class="hero-ctas">
@@ -1129,7 +1128,7 @@ footer a:hover { color: var(--parchment); }
 <script type="module">
 import { initCursorGrid } from './cursor-grid.js';
 
-initCursorGrid(document.querySelector('.cursor-grid'), {
+initCursorGrid(document.querySelector('.hero .cursor-grid'), {
   cellSize: 60, color: '#0a0a0a', radius: 160, falloff: 'smooth', holdTime: 300, fadeDuration: 700,
   lineWidth: 1, maxOpacity: 0.3, fillOpacity: 0, gridOpacity: 0, cellRadius: 4, clickPulse: true, pulseSpeed: 700
 });

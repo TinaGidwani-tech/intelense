@@ -194,15 +194,24 @@ export function initCursorGrid(container, options = {}) {
     return { x: e.clientX - rect.left, y: e.clientY - rect.top };
   }
 
+  // How far a point lies outside the container (0 when inside).
+  function outside(p) {
+    const dx = Math.max(0, -p.x, p.x - width), dy = Math.max(0, -p.y, p.y - height);
+    return Math.hypot(dx, dy);
+  }
+
   function onMove(e) {
     if (e.pointerType === 'touch') return;
-    pointer = local(e);
+    const p = local(e);
+    if (outside(p) >= o.radius) return; // too far away to light any cell
+    pointer = p;
     wake();
   }
 
   function onDown(e) {
     if (!o.clickPulse || e.pointerType === 'touch') return;
     const p = local(e);
+    if (outside(p) > 0) return; // only clicks inside the container send a ring
     pulses.push({ x: p.x, y: p.y, start: performance.now(), prev: 0 });
     wake();
   }
