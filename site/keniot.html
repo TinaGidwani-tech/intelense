@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>KenIoT: Predictive monitoring | Intelense</title>
+<meta name="description" content="KenIoT reads vibration, temperature, power and environmental sensors, learns what normal looks like, and warns you when something starts to drift.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="assets/site.css">
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <defs>
+    <linearGradient id="brand-g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0A34ED"/><stop offset=".3" stop-color="#7C28E9"/><stop offset=".6" stop-color="#FF7953"/><stop offset=".82" stop-color="#78AFCF"/><stop offset="1" stop-color="#73C4C5"/>
+    </linearGradient>
+  </defs>
+</svg>
+
+<div class="announce">
+  <div class="wrap">
+    <span><span class="tag-new">New</span>&nbsp; KenVoice joins the Ken platform as our seventh module</span>
+    <a class="pill" href="kenvoice.html">See KenVoice</a>
+  </div>
+</div>
+
+<header class="nav">
+  <div class="wrap">
+    <a class="logo" href="index.html"><img src="assets/logos/intelense.png" alt="Intelense home" width="169" height="26"></a>
+    <ul class="nav-links">
+      <li><a href="platform.html">Platform</a></li><li class="has-menu"><a href="modules.html" aria-current="page">Modules</a><div class="dropdown"><ul><li><a href="kenvision.html" style="--mod:#0A34ED"><i></i>KenVision<small>Video analytics</small></a></li><li><a href="kensafety.html" style="--mod:#FF7953"><i></i>KenSafety<small>Workplace safety</small></a></li><li><a href="kenhome.html" style="--mod:#78AFCF"><i></i>KenHome<small>Smart home security</small></a></li><li><a href="kenagri.html" style="--mod:#368736"><i></i>KenAgri<small>Precision agriculture</small></a></li><li><a href="keniot.html" style="--mod:#7C28E9"><i></i>KenIoT<small>Predictive monitoring</small></a></li><li><a href="kenrobotics.html" style="--mod:#6C6E82"><i></i>KenRobotics<small>Autonomous systems</small></a></li><li><a href="kenvoice.html" style="--mod:#5466DD"><i></i>KenVoice<small>Voice AI</small></a></li><li><a href="modules.html#compare">Compare all modules</a></li></ul></div></li><li><a href="industries.html">Industries</a></li><li><a href="about.html">Company</a></li>
+    </ul>
+    <div class="nav-cta">
+      <a class="btn btn-ghost" href="contact.html">Contact</a>
+      <a class="btn btn-blue" href="contact.html">Book a demo</a>
+      <button class="menu-btn" type="button" aria-expanded="false" aria-controls="mobile-menu" aria-label="Menu"><span></span></button>
+    </div>
+  </div>
+  <nav class="mobile-menu" id="mobile-menu" hidden aria-label="Mobile">
+    <div class="wrap">
+      <a href="index.html">Home</a><a href="platform.html">Platform</a><a href="modules.html">Modules</a><a class="sub" href="kenvision.html">KenVision</a><a class="sub" href="kensafety.html">KenSafety</a><a class="sub" href="kenhome.html">KenHome</a><a class="sub" href="kenagri.html">KenAgri</a><a class="sub" href="keniot.html">KenIoT</a><a class="sub" href="kenrobotics.html">KenRobotics</a><a class="sub" href="kenvoice.html">KenVoice</a><a href="industries.html">Industries</a><a href="about.html">Company</a><a href="contact.html">Contact</a>
+      <a class="btn btn-blue" href="contact.html">Book a demo</a>
+    </div>
+  </nav>
+</header>
+
+<main id="top">
+  <section class="page-hero" style="--mod:#7C28E9">
+    <div class="wash wash-a" aria-hidden="true"></div>
+    <div class="wash wash-b" aria-hidden="true"></div>
+    <div class="cursor-grid" aria-hidden="true"></div>
+    <div class="wrap">
+      <ol class="crumbs" aria-label="Breadcrumb"><li><a href="index.html">Home</a></li><li><a href="modules.html">Modules</a></li><li aria-current="page">KenIoT</li></ol>
+      <span class="eyebrow">Predictive monitoring</span>
+      <img class="hero-logo" src="assets/logos/keniot.png" alt="KenIoT by Intelense" width="270" height="121">
+      <h1>Hear the machine before it fails.</h1>
+      <p class="lede">KenIoT reads vibration, temperature, power and environmental sensors, learns what normal looks like, and warns you when something starts to drift.</p>
+      <div class="hero-ctas"><a class="btn btn-blue" href="contact.html">Book a demo</a><a class="btn btn-ghost" href="modules.html">All modules</a></div>
+    </div>
+  </section>
+
+  <section class="block" id="in-action">
+    <div class="wrap">
+      <div class="head">
+        <div>
+          <span class="eyebrow">KenIoT in action</span>
+          <h2>See what it sees.</h2>
+        </div>
+        <p class="lede">A live example of the alerts and context your team would get.</p>
+      </div>
+      <div class="split"><div class="iot" role="img" aria-label="KenIoT dashboard with four sensor readings and a predicted failure alert">
+        <div class="iot-top"><b style="color:#e9e9ec;font-size:14px">Line 2 · Compressor C-3</b><span>Updated 14:32</span></div>
+        <div class="iot-grid">
+          <div class="sensor warn"><div class="lbl"><span>Vibration</span><span class="tag">Rising</span></div><div class="val">4.2 <small>mm/s</small></div><svg viewBox="0 0 200 44" preserveAspectRatio="none" aria-hidden="true"><polyline points="0.0,40.0 18.2,38.3 36.4,40.0 54.5,36.6 72.7,38.3 90.9,34.9 109.1,31.4 127.3,28.0 145.5,22.9 163.6,17.7 181.8,9.1 200.0,4.0" fill="none" stroke="#FF7953" stroke-width="2" vector-effect="non-scaling-stroke"/></svg></div>
+          <div class="sensor"><div class="lbl"><span>Bearing temp</span><span class="tag">Watch</span></div><div class="val">68 <small>°C</small></div><svg viewBox="0 0 200 44" preserveAspectRatio="none" aria-hidden="true"><polyline points="0.0,40.0 18.2,34.9 36.4,40.0 54.5,29.7 72.7,34.9 90.9,24.6 109.1,29.7 127.3,19.4 145.5,24.6 163.6,14.3 181.8,9.1 200.0,4.0" fill="none" stroke="#A98BF5" stroke-width="2" vector-effect="non-scaling-stroke"/></svg></div>
+          <div class="sensor"><div class="lbl"><span>Power draw</span><span class="tag">Normal</span></div><div class="val">4.0 <small>kW</small></div><svg viewBox="0 0 200 44" preserveAspectRatio="none" aria-hidden="true"><polyline points="0.0,28.0 18.2,16.0 36.4,40.0 54.5,28.0 72.7,4.0 90.9,16.0 109.1,28.0 127.3,16.0 145.5,4.0 163.6,16.0 181.8,28.0 200.0,16.0" fill="none" stroke="#73C4C5" stroke-width="2" vector-effect="non-scaling-stroke"/></svg></div>
+          <div class="sensor"><div class="lbl"><span>Humidity</span><span class="tag">Normal</span></div><div class="val">44 <small>%</small></div><svg viewBox="0 0 200 44" preserveAspectRatio="none" aria-hidden="true"><polyline points="0.0,16.0 18.2,28.0 36.4,4.0 54.5,16.0 72.7,40.0 90.9,28.0 109.1,16.0 127.3,4.0 145.5,28.0 163.6,16.0 181.8,16.0 200.0,28.0" fill="none" stroke="#73C4C5" stroke-width="2" vector-effect="non-scaling-stroke"/></svg></div>
+        </div>
+        <div class="iot-alert"><b>Bearing wear likely on C-3</b><span>Vibration has risen steadily for 9 days. Suggested: inspect before next weekend shift.</span></div>
+      </div><div class="panel"><h3>Flagged this week</h3><ul class="checklist"><li><span class="dot bad"></span><span>Compressor C-3: vibration drift</span><span class="st bad">Alert</span></li><li><span class="dot bad"></span><span>Freezer F-1: door left open twice</span><span class="st bad">Review</span></li><li><span class="dot"></span><span>Conveyor B: normal</span><span class="st">OK</span></li><li><span class="dot"></span><span>Air quality, packing room: normal</span><span class="st">OK</span></li></ul><p class="demo-note">Example data</p></div></div>
+    </div>
+  </section>
+
+  <section class="block" id="capabilities">
+    <div class="wrap">
+      <div class="head">
+        <div>
+          <span class="eyebrow">Capabilities</span>
+          <h2>What KenIoT does.</h2>
+        </div>
+        <p class="lede">Six things your team can switch on from day one.</p>
+      </div>
+      <div class="caps"><div class="cap"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12h4l2-5 4 10 2-5h6"/></svg><h3>Vibration and temperature</h3><p>Continuous readings from motors, pumps, compressors and conveyors.</p></div><div class="cap"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 18a8 8 0 1116 0"/><path d="M12 18l4-6"/></svg><h3>Anomaly detection</h3><p>Learns each machine's normal pattern and flags drift early.</p></div><div class="cap"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 6a4 4 0 015 5l-8.5 8.5a2 2 0 01-3-3L16 8"/><path d="M14 6l4 4"/></svg><h3>Failure prediction</h3><p>Estimates how long until a part needs attention, so you can plan the fix.</p></div><div class="cap"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9h11a3 3 0 10-3-3M3 15h15a3 3 0 11-3 3M3 12h8"/></svg><h3>Environmental sensing</h3><p>Air quality, humidity and temperature across rooms and cold chain.</p></div><div class="cap"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13 2L4 14h7l-1 8 9-12h-7l1-8z"/></svg><h3>Energy monitoring</h3><p>Spots machines drawing more power than they should.</p></div><div class="cap"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a6 6 0 016 6v4l2 3H4l2-3V9a6 6 0 016-6zM10 19a2 2 0 004 0"/></svg><h3>Alerts to the right team</h3><p>Maintenance gets the reading, the trend and the asset location.</p></div></div>
+    </div>
+  </section>
+
+  <section class="block" id="how">
+    <div class="wrap">
+      <div class="head">
+        <div>
+          <span class="eyebrow">How it works</span>
+          <h2>Up and running in three steps.</h2>
+        </div>
+        <p class="lede">Most teams start with a pilot on a few cameras or sensors.</p>
+      </div>
+      <div class="steps"><div><b>Connect sensors</b><p>Bring in the sensors you have, or add new ones where you need them.</p></div><div><b>Learn normal</b><p>KenIoT builds a baseline for each asset over its first weeks of data.</p></div><div><b>Fix before failure</b><p>Drift becomes an alert and a work order, not a breakdown.</p></div></div>
+      <p style="margin-top:32px"><a class="link-arrow" href="platform.html">How the Intelense platform works</a></p>
+    </div>
+  </section>
+
+  <section class="block" id="use-cases">
+    <div class="wrap">
+      <div class="head">
+        <div>
+          <span class="eyebrow">Where it is used</span>
+          <h2>Built for real sites.</h2>
+        </div>
+        <p class="lede">Typical places teams run KenIoT.</p>
+      </div>
+      <ul class="uses"><li><b>Manufacturing lines</b><span>Motors, pumps and conveyors.</span><a href="industries.html#industrial">Industrial →</a></li><li><b>Cold chain</b><span>Freezers, trucks and storage temperatures.</span><a href="industries.html#industrial">Industrial →</a></li><li><b>Buildings and HVAC</b><span>Air handling, chillers and indoor air quality.</span><a href="industries.html#smart-cities">Smart cities →</a></li><li><b>Utilities</b><span>Pumping stations and remote equipment.</span><a href="industries.html#smart-cities">Smart cities →</a></li></ul>
+    </div>
+  </section>
+
+  <section class="block" id="related">
+    <div class="wrap">
+      <div class="head">
+        <div>
+          <span class="eyebrow">Related modules</span>
+          <h2>Works well with.</h2>
+        </div>
+        <p class="lede">Modules share one engine and dashboard, so they combine easily.</p>
+      </div>
+      <div class="related"><article style="--mod:#FF7953" class="card">
+          <div class="card-top"><span class="kind">Workplace safety</span></div>
+          <h3><a href="kensafety.html"><img class="mod-logo" src="assets/logos/kensafety.png" alt="KenSafety by Intelense" width="174" height="66"></a></h3>
+          <p>Spots missing PPE, unsafe zones, slips and falls, and alerts supervisors before a near miss becomes an injury.</p>
+          <a class="link-arrow" href="kensafety.html">Learn more</a>
+        </article><article style="--mod:#0A34ED" class="card">
+          <div class="card-top"><span class="kind">Video analytics</span></div>
+          <h3><a href="kenvision.html"><img class="mod-logo" src="assets/logos/kenvision.png" alt="KenVision by Intelense" width="172" height="63"></a></h3>
+          <p>Turns existing CCTV into a real-time detection system. Find people, vehicles, intrusions and crowding as they happen, and search hours of footage in seconds.</p>
+          <a class="link-arrow" href="kenvision.html">Learn more</a>
+        </article><article style="--mod:#6C6E82" class="card">
+          <div class="card-top"><span class="kind">Autonomous systems</span></div>
+          <h3><a href="kenrobotics.html"><img class="mod-logo" src="assets/logos/kenrobotics.png" alt="KenRobotics by Intelense" width="202" height="66"></a></h3>
+          <p>Gives robots and drones the vision to navigate, inspect and patrol on their own.</p>
+          <a class="link-arrow" href="kenrobotics.html">Learn more</a>
+        </article></div>
+      <div class="proof" style="margin-top:48px">
+        <a class="link-prev" href="kenagri.html">← KenAgri</a>
+        <a class="link-arrow" href="modules.html" style="margin-inline:auto">All modules</a>
+        <a class="link-arrow" href="kenrobotics.html">KenRobotics</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta">
+    <div class="wash wash-b" aria-hidden="true" style="top:10%;right:20%"></div>
+    <div class="wash wash-a" aria-hidden="true" style="top:30%;left:20%"></div>
+    <div class="wrap">
+      <span class="eyebrow">Get started</span>
+      <h2 style="margin-top:20px">See KenIoT on your own site.</h2>
+      <div class="hero-ctas">
+        <a class="btn btn-blue" href="contact.html">Book a demo</a>
+        <a class="btn btn-black" href="modules.html">Compare modules</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="foot">
+      <div>
+        <a class="logo" href="index.html"><img src="assets/logos/intelense-light.png" alt="Intelense home" width="169" height="26"></a>
+        <p style="margin-top:16px;max-width:34ch">AI video analytics and intelligence at the edge, for a safer world.</p>
+      </div>
+      <div>
+        <h4>Platform</h4>
+        <ul><li><a href="platform.html">How it works</a></li><li><a href="platform.html#console">Live console</a></li><li><a href="platform.html#integrations">Integrations</a></li><li><a href="modules.html">All modules</a></li><li><a href="modules.html#compare">Compare modules</a></li></ul>
+      </div>
+      <div>
+        <h4>Modules</h4>
+        <ul><li><a href="kenvision.html">KenVision</a></li><li><a href="kensafety.html">KenSafety</a></li><li><a href="kenhome.html">KenHome</a></li><li><a href="kenagri.html">KenAgri</a></li><li><a href="keniot.html">KenIoT</a></li><li><a href="kenrobotics.html">KenRobotics</a></li><li><a href="kenvoice.html">KenVoice</a></li></ul>
+      </div>
+      <div>
+        <h4>Company</h4>
+        <ul><li><a href="about.html">About Intelense</a></li><li><a href="industries.html">Industries</a></li><li><a href="index.html#faq">FAQ</a></li><li><a href="contact.html">Contact</a></li><li><a href="contact.html">Book a demo</a></li></ul>
+      </div>
+      <div>
+        <h4>Contact</h4>
+        <ul><li class="email">enquiries@intelense.ca</li><li>Markham, Ontario, Canada</li></ul>
+      </div>
+    </div>
+    <div class="legal"><span>© 2026 Intelense Inc.</span><span>Sample site concept</span></div>
+  </div>
+</footer>
+
+<script src="assets/site.js" defer></script>
+<script type="module">
+import { initCursorGrid } from './assets/cursor-grid.js';
+initCursorGrid(document.querySelector('.cursor-grid'), { cellSize: 60, color: '#0a0a0a', radius: 160, falloff: 'smooth', holdTime: 300, fadeDuration: 700, lineWidth: 1, maxOpacity: 0.3, fillOpacity: 0, gridOpacity: 0, cellRadius: 4, clickPulse: true, pulseSpeed: 700 });
+</script>
+</body>
+</html>
