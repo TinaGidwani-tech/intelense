@@ -44,7 +44,7 @@
 html { background: var(--parchment); }
 body {
   margin: 0;
-  background: var(--parchment);
+  background: transparent; /* page colour lives on html so the cursor grid shows through */
   color: var(--off-black);
   font-family: var(--font);
   font-size: 16px;
@@ -75,6 +75,9 @@ p { margin: 0; }
   color: var(--smoke); display: inline-flex; gap: 10px; align-items: center;
 }
 .eyebrow::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: linear-gradient(135deg, var(--g-blue), var(--g-violet) 50%, var(--g-coral)); }
+
+/* Cursor-reactive grid layer (see cursor-grid.js) */
+.cursor-grid { position: fixed; inset: 0; z-index: -1; pointer-events: none; }
 
 /* Buttons */
 .btn {
@@ -365,6 +368,8 @@ footer a:hover { color: var(--parchment); }
     </linearGradient>
   </defs>
 </svg>
+
+<div class="cursor-grid" aria-hidden="true"></div>
 
 <div class="announce">
   <div class="wrap">
@@ -1120,6 +1125,14 @@ footer a:hover { color: var(--parchment); }
     bars.innerHTML = s;
   }
 })();
+</script>
+<script type="module">
+import { initCursorGrid } from './cursor-grid.js';
+
+initCursorGrid(document.querySelector('.cursor-grid'), {
+  cellSize: 60, color: '#0a0a0a', radius: 160, falloff: 'smooth', holdTime: 300, fadeDuration: 700,
+  lineWidth: 1, maxOpacity: 0.3, fillOpacity: 0, gridOpacity: 0, cellRadius: 4, clickPulse: true, pulseSpeed: 700
+});
 </script>
 </body>
 </html>
