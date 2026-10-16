@@ -412,6 +412,61 @@
       return d;
     }
   };
+
+  // Warehouse floor with a forklift lane (KenSafety real-world example)
+  function forklift(c, fx, fy, u, dir) {
+    var L = 78 * u, H = 44 * u, x = fx - L / 2, y = fy;
+    c.fillStyle = 'rgba(0,0,0,.35)'; c.beginPath(); c.ellipse(fx, y, L * .62, 8 * u, 0, 0, 7); c.fill();
+    c.fillStyle = '#7d6237'; rrect(c, x, y - H, L * .72, H * .78, 4 * u); c.fill();
+    c.fillStyle = '#5c4728'; c.fillRect(x, y - H * .5, L * .72, H * .3);
+    c.fillStyle = '#1d1e20'; c.fillRect(x + L * .08, y - H * 1.45, 3 * u, H * .7); c.fillRect(x + L * .5, y - H * 1.45, 3 * u, H * .7); c.fillRect(x + L * .08, y - H * 1.47, L * .45, 3 * u);
+    var mx = dir > 0 ? x + L * .72 : x - L * .06;
+    c.fillStyle = '#262729'; c.fillRect(mx, y - H * 1.6, L * .06, H * 1.55);
+    c.fillStyle = '#3a3b3d'; c.fillRect(dir > 0 ? mx : mx - L * .26, y - 5 * u, L * .32, 3 * u);
+    c.fillStyle = '#a4836c'; c.beginPath(); c.arc(x + L * .32, y - H * 1.02, 6 * u, 0, 7); c.fill();
+    c.fillStyle = '#e4e0d2'; c.beginPath(); c.ellipse(x + L * .32, y - H * 1.07, 7 * u, 4 * u, 0, Math.PI, 0); c.fill();
+    c.fillStyle = '#121212'; c.beginPath(); c.arc(x + L * .14, y - 4 * u, 8 * u, 0, 7); c.arc(x + L * .58, y - 4 * u, 8 * u, 0, 7); c.fill();
+    return [x - L * .32, y - H * 1.7, L * 1.4, H * 1.75];
+  }
+  SCENES.whse = {
+    osd: 'CAM-09  AISLE 3 · VEHICLE LANE',
+    bg: function (c, w, h) {
+      var R = rng(63), u = w / 480, hz = h * .42, g, i, k;
+      c.fillStyle = '#2d3033'; c.fillRect(0, 0, w, hz);
+      for (i = 0; i < 6; i++) {
+        var x0 = i * w / 6 + 4 * u, bw = w / 6 - 8 * u;
+        [.05, .17, .29].forEach(function (ly) {
+          for (k = 0; k < 3; k++) { if (R() < .2) continue; var bh = h * (.06 + R() * .04), tone = 100 + R() * 40; c.fillStyle = 'rgb(' + (tone + 12 | 0) + ',' + (tone - 6 | 0) + ',' + (tone - 34 | 0) + ')'; c.fillRect(x0 + k * bw / 3 + 2 * u, h * (ly + .1) - bh, bw / 3 - 4 * u, bh); }
+          c.fillStyle = '#93582c'; c.fillRect(x0, h * (ly + .1), bw, 3 * u);
+        });
+        c.fillStyle = '#3d5672'; c.fillRect(x0 - 3 * u, 0, 4 * u, hz); c.fillRect(x0 + bw - 1 * u, 0, 4 * u, hz);
+      }
+      g = c.createLinearGradient(0, hz, 0, h); g.addColorStop(0, '#55585a'); g.addColorStop(1, '#717371'); c.fillStyle = g; c.fillRect(0, hz, w, h - hz);
+      speckle(c, w, h, hz, 2400, R, .12);
+      c.fillStyle = 'rgba(176,160,74,.12)'; c.fillRect(0, h * .52, w, h * .2);
+      c.fillStyle = 'rgba(190,172,80,.95)'; c.fillRect(0, h * .52, w, 3 * u); c.fillRect(0, h * .72, w, 3 * u);
+      c.fillStyle = 'rgba(225,222,210,.55)';
+      for (i = 0; i < 4; i++) { var ax = w * (.12 + i * .25), ay = h * .62; c.beginPath(); c.moveTo(ax, ay - 6 * u); c.lineTo(ax + 22 * u, ay - 6 * u); c.lineTo(ax + 22 * u, ay - 12 * u); c.lineTo(ax + 34 * u, ay); c.lineTo(ax + 22 * u, ay + 12 * u); c.lineTo(ax + 22 * u, ay + 6 * u); c.lineTo(ax, ay + 6 * u); c.fill(); }
+      c.fillStyle = 'rgba(80,140,95,.35)'; c.fillRect(0, h * .8, w, h * .12);
+      c.fillStyle = 'rgba(100,170,115,.9)'; c.fillRect(0, h * .8, w, 2 * u); c.fillRect(0, h * .92, w, 2 * u);
+      cuboid(c, w * .02, h * .99, w * .12, 22 * u, 10 * u, '#7b6a54', '#907e65', '#5d5141');
+      cuboid(c, w * .86, h * .99, w * .12, 30 * u, 10 * u, '#83725a', '#99876c', '#625645');
+      c.globalCompositeOperation = 'lighter'; for (i = 0; i < 3; i++) glow(c, w * (.2 + i * .3), 0, w * .18, .18); c.globalCompositeOperation = 'source-over';
+    },
+    frame: function (c, w, h, t) {
+      var u = w / 480, d = [], items = [];
+      var fx = w * (.5 + .3 * Math.sin(t * .28)), dir = Math.cos(t * .28) > 0 ? 1 : -1;
+      items.push({ y: h * .68, f: function () { d.push({ b: forklift(c, fx, h * .68, u, dir), l: 'Forklift', p: 92, k: 'vehicle' }); } });
+      var cyc = (t % 12) / 12, q = cyc < .5 ? cyc * 2 : 2 - cyc * 2, py = lerp(h * .9, h * .62, Math.min(1, q * 1.3)), px = w * .62;
+      var inLane = py < h * .72;
+      items.push({ y: py, f: function () { d.push({ b: person(c, px, py, 74 * u, { vest: '#b0b84f', stripe: 1, hat: '#e8e4d6', phase: q > 0 && q < .77 ? t * 6 : 0, walk: q < .77 }), l: inLane ? 'Person in vehicle zone' : 'Person', p: 96, k: inLane ? 'alert' : 'person' }); } });
+      var bx = w * .2 + Math.sin(t * .5) * 3 * u;
+      items.push({ y: h * .5, f: function () { d.push({ b: person(c, bx, h * .5, 62 * u, { vest: '#3a3f47', arm: '#3a3f47', hat: '#e8e4d6', phase: 0, walk: false }), l: 'No hi-vis vest', p: 91, k: 'alert' }); } });
+      items.sort(function (a, b) { return a.y - b.y; }).forEach(function (i) { i.f(); });
+      d.push({ zone: [0.005, .52, .99, .2], l: 'Vehicle zone', k: 'crowd' });
+      return d;
+    }
+  };
   var noise = {};
   function noiseFrames(w, h) {
     var k = w + 'x' + h; if (noise[k]) return noise[k];

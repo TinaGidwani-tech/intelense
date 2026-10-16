@@ -81,7 +81,7 @@ MODULES = [
                ('healthcare', 'Hospitals and clinics', 'Occupancy in waiting areas and entrances.')],
          visual='console', related=['kensafety', 'keniot', 'kenvoice']),
     dict(key='kensafety', name='KenSafety', kind='Workplace safety', color='#FF7953', logo='kensafety.png', size=(793, 300),
-         card='Spots missing PPE, unsafe zones, slips and falls, and alerts supervisors before a near miss becomes an injury.',
+         card='Uses AI video analytics on your existing CCTV to flag missing PPE, restricted-zone entry, human-vehicle risks, fire, smoke and falls.',
          h1='Catch the near miss before it becomes an injury.',
          lede='KenSafety watches your floors, docks and yards for the moments that lead to accidents, and tells supervisors while there is still time to step in.',
          caps=[('hardhat', 'PPE compliance', 'Checks for hard hats and hi-vis vests where your rules require them.'),
@@ -528,7 +528,7 @@ def page_modules():
     watch = {'kenvision': 'Existing CCTV and IP cameras', 'kensafety': 'Cameras on floors, docks and sites', 'kenhome': 'Doorbells and home cameras',
              'kenagri': 'Farm cameras, thermal and drones', 'keniot': 'Vibration, temperature, power and air sensors',
              'kenrobotics': 'Robot and drone cameras', 'kenvoice': 'Speakers, radios, phones and microphones'}
-    alerts = {'kenvision': 'Footfall, heatmaps, dwell time, queue build-up', 'kensafety': 'Missing PPE, hazard zones, falls, close calls',
+    alerts = {'kenvision': 'Footfall, heatmaps, dwell time, queue build-up', 'kensafety': 'Missing PPE, restricted zones, human-vehicle proximity, fire and smoke, falls',
               'kenhome': 'Unknown visitors, packages, night activity', 'kenagri': 'Crop stress, livestock, wildlife, intruders',
               'keniot': 'Drift, overheating, predicted failures', 'kenrobotics': 'Obstacles, patrol findings, inspection issues',
               'kenvoice': 'Keywords, calls for help, spoken alerts'}
@@ -1107,7 +1107,331 @@ def page_kenvision():
                 active='kenvision', body=body, cctv=True)
 
 
-PAGES = [page_index, page_platform, page_modules, page_kenvision, *[(lambda m: (lambda: page_module(m)))(m) for m in MODULES[1:]], page_industries, page_about, page_contact]
+# ---------------------------------------------------------------- shared blocks for reworked module pages
+
+def faq_block(items, title='Frequently asked questions'):
+    return f'''<section class="block" id="faq">
+    <div class="wrap faq-grid">
+      <div>
+        <span class="eyebrow">FAQ</span>
+        <h2 style="margin-top:18px">{title}</h2>
+      </div>
+      <div>{''.join(f'<details{" open" if i == 0 else ""}><summary>{q}</summary><p>{a}</p></details>' for i, (q, a) in enumerate(items))}</div>
+    </div>
+  </section>'''
+
+
+def faq_schema(items):
+    import json
+    ld = {'@context': 'https://schema.org', '@type': 'FAQPage',
+          'mainEntity': [{'@type': 'Question', 'name': q, 'acceptedAnswer': {'@type': 'Answer', 'text': a}} for q, a in items]}
+    return '<script type="application/ld+json">' + json.dumps(ld) + '</script>'
+
+
+def related_block(m):
+    i = MODULES.index(m)
+    prev_m, next_m = MODULES[i - 1], MODULES[(i + 1) % len(MODULES)]
+    return f'''<section class="block" id="related">
+    <div class="wrap">
+      {head_block('Related modules', 'Works well with.', 'Modules share one engine and dashboard, so they combine easily.')}
+      <div class="related">{''.join(card(MOD[k]) for k in m['related'])}</div>
+      <div class="proof" style="margin-top:48px">
+        <a class="link-prev" href="{prev_m['key']}.html">← {prev_m['name']}</a>
+        <a class="link-arrow" href="modules.html" style="margin-inline:auto">All modules</a>
+        <a class="link-arrow" href="{next_m['key']}.html">{next_m['name']}</a>
+      </div>
+    </div>
+  </section>'''
+
+
+def final_cta(h2, lede, btn, support, sign):
+    return f'''<section class="cta">
+    <div class="wash wash-b" aria-hidden="true" style="top:10%;right:20%"></div>
+    <div class="wash wash-a" aria-hidden="true" style="top:30%;left:20%"></div>
+    <div class="wrap">
+      <span class="eyebrow">Get started</span>
+      <h2 style="margin-top:20px">{h2}</h2>
+      {''.join(f'<p class="lede" style="margin:18px auto 0">{p}</p>' for p in lede)}
+      <div class="hero-ctas"><a class="btn btn-blue" href="contact.html">{btn}</a></div>
+      <p class="kv-tagline" style="margin:18px auto 0;max-width:60ch">{support}</p>
+      <p class="kv-sign">{sign}</p>
+    </div>
+  </section>'''
+
+
+# ---------------------------------------------------------------- KenSafety page
+
+def ks_mini(kind):
+    b, v, m, g, c = '#0A34ED', '#7C28E9', '#6C6E82', '#e4e2dc', '#FF7953'
+    if kind == 'ppe':
+        rows = [('Hard hat', True), ('Hi-vis vest', True), ('Gloves', False)]
+        fig = f'<circle cx="26" cy="16" r="8" fill="{m}"/><path d="M17 13a9 8 0 0118 0z" fill="{b}"/><rect x="15" y="26" width="22" height="30" rx="6" fill="#d0a43a"/><rect x="15" y="36" width="22" height="3" fill="#fff"/><rect x="17" y="56" width="7" height="14" rx="2" fill="{m}"/><rect x="28" y="56" width="7" height="14" rx="2" fill="{m}"/>'
+        lst = ''.join(f'<rect x="64" y="{i * 23 + 2}" width="156" height="19" rx="9.5" fill="{"#e6f4f4" if ok else "#ffe9e2"}"/><circle cx="76" cy="{i * 23 + 11.5}" r="4" fill="{"#73C4C5" if ok else c}"/><text x="86" y="{i * 23 + 15}" font-size="10" fill="#242424">{n}</text><text x="212" y="{i * 23 + 15}" font-size="10" text-anchor="end" font-weight="600" fill="{"#1e5f60" if ok else "#9a3412"}">{"Detected" if ok else "Missing"}</text>' for i, (n, ok) in enumerate(rows))
+        return f'<svg viewBox="0 0 220 72" aria-hidden="true">{fig}{lst}</svg>'
+    if kind == 'zone':
+        hatch = ''.join(f'<line x1="{x}" y1="70" x2="{x + 60}" y2="10" stroke="{c}" stroke-opacity=".35" stroke-width="3"/>' for x in range(40, 200, 12))
+        return f'<svg viewBox="0 0 220 72" aria-hidden="true"><defs><clipPath id="kz"><rect x="70" y="10" width="140" height="58" rx="6"/></clipPath></defs><g clip-path="url(#kz)">{hatch}</g><rect x="70" y="10" width="140" height="58" rx="6" fill="none" stroke="{c}" stroke-dasharray="5 4" stroke-width="2"/><text x="140" y="8" text-anchor="middle" font-size="9" fill="{m}">Restricted zone</text><circle cx="30" cy="40" r="8" fill="{b}"/><circle cx="104" cy="40" r="8" fill="{c}"/><circle cx="104" cy="40" r="14" fill="none" stroke="{c}" stroke-width="2"/><path d="M40 40h46" stroke="{m}" stroke-dasharray="3 3"/></svg>'
+    if kind == 'proximity':
+        return f'<svg viewBox="0 0 220 72" aria-hidden="true"><circle cx="66" cy="38" r="32" fill="{c}" fill-opacity=".1" stroke="{c}" stroke-dasharray="4 4" stroke-width="1.5"/><rect x="44" y="26" width="34" height="22" rx="4" fill="{b}"/><rect x="78" y="18" width="4" height="30" fill="{m}"/><rect x="78" y="44" width="16" height="3" fill="{m}"/><circle cx="52" cy="50" r="4" fill="#242424"/><circle cx="70" cy="50" r="4" fill="#242424"/><circle cx="118" cy="36" r="8" fill="{c}"/><path d="M98 54h18" stroke="{c}" stroke-width="2"/><text x="142" y="40" font-size="11" font-weight="600" fill="#242424">1.2 m</text><text x="142" y="54" font-size="9" fill="{m}">Too close</text></svg>'
+    if kind == 'fire':
+        return f'<svg viewBox="0 0 220 72" aria-hidden="true"><circle cx="70" cy="18" r="10" fill="{g}"/><circle cx="84" cy="12" r="8" fill="{g}"/><circle cx="96" cy="20" r="9" fill="{g}"/><path d="M84 66c-14 0-20-9-18-19 2-8 9-11 9-20 7 5 9 10 9 14 3-3 4-7 4-10 8 6 12 14 12 21 0 9-6 14-16 14z" fill="{c}"/><path d="M85 66c-6 0-9-4-8-9 1-4 4-6 5-10 4 4 9 8 9 12 0 4-2 7-6 7z" fill="#ffd27a"/><rect x="58" y="6" width="54" height="64" rx="3" fill="none" stroke="{c}" stroke-width="2"/><text x="124" y="34" font-size="11" font-weight="600" fill="#242424">Smoke</text><text x="124" y="50" font-size="11" font-weight="600" fill="#242424">Flame</text><text x="124" y="64" font-size="9" fill="{m}">Flagged for review</text></svg>'
+    if kind == 'fall':
+        return f'<svg viewBox="0 0 220 72" aria-hidden="true"><line x1="10" y1="62" x2="210" y2="62" stroke="{g}" stroke-width="2"/><rect x="60" y="48" width="58" height="12" rx="6" fill="{b}"/><circle cx="128" cy="53" r="7" fill="{m}"/><rect x="40" y="52" width="22" height="6" rx="3" fill="{m}"/><rect x="34" y="36" width="104" height="30" rx="3" fill="none" stroke="{c}" stroke-width="2"/><rect x="34" y="24" width="56" height="12" fill="{c}"/><text x="38" y="33" font-size="9" font-weight="600" fill="#101114">Fall 93%</text><text x="150" y="40" font-size="10" fill="#242424">Alert</text><text x="150" y="54" font-size="9" fill="{m}">Site team</text></svg>'
+    if kind == 'report':
+        rows = [('14:32', 'No hard hat · Dock B', c), ('11:05', 'Zone entry · Yard', c), ('09:48', 'Proximity · Aisle 3', '#73C4C5')]
+        return '<svg viewBox="0 0 220 72" aria-hidden="true"><rect x="0" y="0" width="220" height="72" rx="8" fill="#fff"/>' + ''.join(f'<circle cx="12" cy="{i * 22 + 13}" r="4" fill="{col}"/><text x="22" y="{i * 22 + 16}" font-size="9" fill="{m}">{tm}</text><text x="52" y="{i * 22 + 16}" font-size="10" fill="#242424">{t}</text><rect x="178" y="{i * 22 + 6}" width="34" height="14" rx="3" fill="{g}"/><text x="195" y="{i * 22 + 16}" text-anchor="middle" font-size="8" fill="{m}">CLIP</text>' for i, (tm, t, col) in enumerate(rows)) + '</svg>'
+    if kind == 'dash':
+        vals = [40, 52, 46, 61, 58, 70, 64]
+        bars = ''.join(f'<path d="{_bar(8 + i * 20, 66 - h * .8, 14, h * .8)}" fill="{b}" opacity="{.5 + i * .07:.2f}"/>' for i, h in enumerate(vals))
+        rows = ''.join(f'<rect x="160" y="{6 + i * 22}" width="200" height="16" rx="8" fill="#fff"/><circle cx="172" cy="{14 + i * 22}" r="4" fill="{col}"/><text x="182" y="{17 + i * 22}" font-size="9" fill="#242424">{t}</text>' for i, (t, col) in enumerate([('Missing vest · Dock A', c), ('Zone entry · Yard', c), ('Resolved · Aisle 3', '#73C4C5')]))
+        return f'<svg viewBox="0 0 370 72" aria-hidden="true">{bars}{rows}</svg>'
+    raise ValueError(kind)
+
+
+def ks_types_chart():
+    rows = [('Missing hard hat', 12), ('Missing hi-vis vest', 9), ('Restricted zone entry', 7), ('Human-vehicle proximity', 5), ('Fall or incident', 1), ('Fire or smoke', 0)]
+    W, rowh, lab = 360, 30, 150
+    out = [f'<svg class="chart" viewBox="0 0 {W} {rowh * len(rows) + 6}" role="img" aria-label="Safety violations this week by type">']
+    for i, (n, v) in enumerate(rows):
+        y = i * rowh + 6
+        bw = max(v / 12 * (W - lab - 34), 2)
+        out.append(f'<text x="0" y="{y + 13}" fill="#c9cbd6" font-size="11">{n}</text><rect x="{lab}" y="{y + 3}" width="{W - lab - 34}" height="14" rx="3" fill="#24262d"/>')
+        out.append(f'<rect x="{lab}" y="{y + 3}" width="{bw:.1f}" height="14" rx="3" fill="#5b7cff" data-tip="{n} · {v} this week"/><text x="{W}" y="{y + 14}" text-anchor="end" fill="#e9e9ec" font-size="11" font-weight="600">{v}</text>')
+    out.append('</svg>')
+    return ''.join(out)
+
+
+def ks_trend_chart():
+    vals = [89, 90, 88, 91, 92, 90, 93, 92, 94, 93, 95, 94, 96, 94]
+    W, H, ml, mb, mt = 560, 200, 34, 26, 14
+    pw, ph = W - ml - 6, H - mb - mt
+    lo, hi = 85, 100
+    X = lambda i: ml + i * pw / (len(vals) - 1)
+    Y = lambda v: mt + ph - (v - lo) / (hi - lo) * ph
+    pts = ' '.join(f'{X(i):.1f},{Y(v):.1f}' for i, v in enumerate(vals))
+    out = [f'<svg class="chart" viewBox="0 0 {W} {H}" role="img" aria-label="PPE compliance over the last 14 days, rising from 89% to 94% against a 95% target.">']
+    for gv in (85, 90, 95, 100):
+        out.append(f'<line x1="{ml}" x2="{W - 6}" y1="{Y(gv):.1f}" y2="{Y(gv):.1f}" stroke="#2a2c33"/><text x="{ml - 8}" y="{Y(gv) + 3:.1f}" text-anchor="end" fill="#9b9daf" font-size="10">{gv}%</text>')
+    out.append(f'<line x1="{ml}" x2="{W - 6}" y1="{Y(95):.1f}" y2="{Y(95):.1f}" stroke="#73C4C5" stroke-dasharray="5 4" stroke-width="1.5"/><text x="{ml + 6}" y="{Y(95) - 6:.1f}" text-anchor="start" fill="#9fe0e1" font-size="10" font-weight="600">Target 95%</text>')
+    out.append(f'<polygon points="{ml},{Y(lo):.1f} {pts} {X(len(vals) - 1):.1f},{Y(lo):.1f}" fill="rgba(91,124,255,.14)"/><polyline points="{pts}" fill="none" stroke="#5b7cff" stroke-width="2" stroke-linejoin="round"/>')
+    for i, v in enumerate(vals):
+        out.append(f'<circle cx="{X(i):.1f}" cy="{Y(v):.1f}" r="{4 if i == len(vals) - 1 else 2.5}" fill="#5b7cff" stroke="#16171b" stroke-width="2" data-tip="Day {i + 1} · {v}% compliant"/>')
+    out.append(f'<text x="{X(len(vals) - 1) - 4:.1f}" y="{Y(vals[-1]) + 20:.1f}" text-anchor="end" fill="#e9e9ec" font-size="11" font-weight="600">Today {vals[-1]}%</text>')
+    for i, lab in ((0, '14 days ago'), (13, 'Today')):
+        out.append(f'<text x="{X(i):.1f}" y="{H - 8}" text-anchor="{"start" if i == 0 else "end"}" fill="#9b9daf" font-size="10">{lab}</text>')
+    out.append('</svg>')
+    return ''.join(out)
+
+
+def ks_matrix():
+    zones = ['Dock A', 'Dock B', 'Aisle 3', 'Yard', 'Production']
+    hours = ['06', '08', '10', '12', '14', '16', '18', '20']
+    data = [[0, 1, 2, 1, 3, 2, 1, 0], [1, 2, 4, 2, 5, 3, 2, 1], [0, 1, 1, 2, 2, 3, 1, 0], [0, 0, 1, 1, 2, 1, 0, 0], [1, 1, 2, 3, 2, 2, 1, 1]]
+    W, lab, cw, ch = 560, 82, (560 - 82) / 8, 26
+    out = [f'<svg class="chart" viewBox="0 0 {W} {ch * len(zones) + 30}" role="img" aria-label="Safety events by zone and hour. Dock B at 14:00 has the most.">']
+    for r, z in enumerate(zones):
+        out.append(f'<text x="0" y="{r * ch + 17}" fill="#c9cbd6" font-size="11">{z}</text>')
+        for col, hv in enumerate(hours):
+            v = data[r][col]
+            op = .08 + v / 5 * .82
+            out.append(f'<rect x="{lab + col * cw + 1:.1f}" y="{r * ch + 2}" width="{cw - 2:.1f}" height="{ch - 4}" rx="4" fill="#7C28E9" fill-opacity="{op:.2f}" data-tip="{z} · {hv}:00 · {v} events"/>')
+    for col, hv in enumerate(hours):
+        out.append(f'<text x="{lab + col * cw + cw / 2:.1f}" y="{ch * len(zones) + 16}" text-anchor="middle" fill="#9b9daf" font-size="10">{hv}:00</text>')
+    out.append('</svg>')
+    return ''.join(out)
+
+
+KS_FAQ = [
+    ('What is AI workplace safety monitoring?', 'AI workplace safety monitoring uses artificial intelligence and computer vision to analyse camera feeds for safety-related events, such as missing protective equipment, restricted-zone entry and selected hazards. It helps safety teams identify potential issues without relying entirely on manual camera monitoring.'),
+    ('What is KenSafety?', "KenSafety is Intelense's AI-powered safety monitoring solution. It uses compatible camera feeds to help detect PPE violations, restricted-zone entry, human-vehicle safety risks, fire, smoke and supported incidents, with alerts and reporting capabilities."),
+    ('What is AI PPE detection?', 'AI PPE detection uses computer vision to identify whether workers appear to be wearing required personal protective equipment, such as helmets, high-visibility vests, gloves and boots, within camera-visible areas.'),
+    ('Can KenSafety work with existing CCTV cameras?', 'Yes, KenSafety is designed to integrate with compatible existing CCTV cameras and recording systems. The exact compatibility depends on the camera setup, video streams and deployment requirements.'),
+    ('Can KenSafety detect restricted-area entry?', 'KenSafety can monitor configured restricted zones and flag unauthorised entry when the relevant capability is enabled. This helps teams identify potential access and safety violations.'),
+    ('Can KenSafety detect fire, smoke and falls?', 'KenSafety supports configured fire, smoke and fall-related detection capabilities. Performance depends on camera positioning, visibility, environmental conditions and deployment configuration. Alerts should complement established emergency procedures and safety systems.'),
+    ('Which industries can use KenSafety?', 'KenSafety is suited to use cases in construction, manufacturing, warehouses, logistics, ports, infrastructure and other environments where monitoring safety conditions through cameras is useful.'),
+    ('Does KenSafety replace safety officers?', 'No. KenSafety is designed to support safety teams, not replace them. AI detection, alerts and reports help teams identify potential issues, but people remain responsible for assessment, intervention and safety decisions.'),
+    ('Does KenSafety provide compliance reports?', 'KenSafety supports incident records and safety reporting to help teams review events and monitor compliance trends. The specific reports available depend on the deployment.'),
+    ('How can I get started with KenSafety?', 'Book a demo with Intelense. Share your industry, main safety concerns and existing camera setup so the team can explain how KenSafety may fit your requirements.'),
+]
+
+
+def page_kensafety():
+    m = MOD['kensafety']
+    hero = f'''<section class="page-hero kv-hero" style="--mod:{m["color"]}">
+    <div class="wash wash-a" aria-hidden="true"></div>
+    <div class="wash wash-b" aria-hidden="true"></div>
+    <div class="cursor-grid" aria-hidden="true"></div>
+    <div class="wrap kv-hero-grid">
+      <div class="kv-hero-copy">
+        {crumbs(('modules.html', 'Modules'), (None, 'KenSafety'))}
+        <span class="eyebrow">AI safety intelligence by Intelense</span>
+        {logo_img(m, 0.36, 'hero-logo')}
+        <h1>Spot Safety Risks Before They Become Bigger Problems.</h1>
+        <p class="lede">KenSafety uses AI-powered video analytics to monitor workplace safety through compatible existing CCTV cameras. Detect missing protective equipment, identify restricted-zone entry, flag potential hazards and alert your team when something needs attention.</p>
+        <p class="lede kv-sub">Help your team move from manually checking footage to more proactive safety monitoring.</p>
+        <div class="hero-ctas"><a class="btn btn-blue" href="contact.html">Book a Free Demo</a><a class="btn btn-ghost" href="#features">Explore Features</a></div>
+        <p class="kv-tagline">AI-powered workplace safety monitoring for construction, manufacturing, warehouses and industrial facilities.</p>
+      </div>
+      <div class="kv-hero-visual">
+        <div class="tile-solo" role="img" aria-label="Loading dock camera flagging a worker without a hard hat inside a restricted zone, next to a moving forklift">
+          <canvas class="cctv" data-scene="dock" width="960" height="540"></canvas>
+        </div>
+        <div class="kv-chips"><span><b>94%</b> PPE compliance today</span><span class="hot"><b>1</b> restricted-zone alert</span><span><b>3</b> people tracked</span></div>
+        <p class="demo-note">Simulated camera feed and example data</p>
+      </div>
+    </div>
+  </section>'''
+
+    problem = f'''<section class="block" id="problem">
+    <div class="wrap">
+      {head_block('The problem', "Safety Shouldn't Depend on Someone Watching Every Screen.", 'On a busy construction site, factory floor or warehouse, things can change in seconds.')}
+      <div class="kv-problem">
+        <div class="kv-questions">
+          <p class="kv-answer" style="font-size:17px;color:#e9e6e3">A worker may enter a restricted area, operate without the required protective equipment or move too close to heavy machinery.</p>
+          <p class="kv-answer" style="font-size:17px;color:#e9e6e3">Traditional CCTV records what happens. But reviewing every camera feed continuously is difficult, especially across large sites.</p>
+          <p class="kv-q" style="border:0;padding:0;margin-top:8px">KenSafety uses AI to help identify potential safety risks as they appear on camera.</p>
+        </div>
+        <ul class="kv-points">
+          <li>{icon('hardhat')}<div><b>Missing protective equipment?</b><span>Identify potential PPE violations, such as missing helmets or high-visibility vests.</span></div></li>
+          <li>{icon('zone')}<div><b>Workers entering dangerous areas?</b><span>Monitor restricted zones and flag unauthorised entry.</span></div></li>
+          <li>{icon('forklift')}<div><b>People and machinery working too close?</b><span>Detect configured human-vehicle safety-zone violations.</span></div></li>
+          <li>{icon('fall')}<div><b>Fire, smoke or a potential fall?</b><span>Flag supported visual events so the relevant team can respond.</span></div></li>
+          <li>{icon('text')}<div><b>Too much paperwork after an incident?</b><span>Maintain incident records and reports to support safety reviews and compliance documentation.</span></div></li>
+        </ul>
+      </div>
+    </div>
+  </section>'''
+
+    feats = [
+        ('ppe', 'AI PPE Detection &amp; Compliance', 'Make protective equipment checks more consistent.', ['Use AI PPE detection to identify when workers may be missing required safety equipment, including hard hats, high-visibility vests, gloves, boots and other configured PPE.', 'Monitor compliance across camera-covered work areas and help safety teams identify recurring violations.']),
+        ('zone', 'Hazard Zone &amp; Restricted Area Detection', "Know when someone enters an area they shouldn't.", ['Define restricted areas and hazardous zones within camera views. KenSafety can flag unauthorised entry and configured zone violations, helping teams respond before a situation escalates.']),
+        ('proximity', 'Human-Vehicle Safety Monitoring', 'Help keep workers and moving vehicles apart.', ['Monitor designated areas where pedestrians and vehicles such as forklifts or other site machinery operate near one another. Detect configured proximity risks and alert the relevant team when safety boundaries are breached.']),
+        ('fire', 'AI Fire &amp; Smoke Detection', 'Identify potential fire hazards through camera feeds.', ['Use AI-powered visual detection to flag signs of fire or smoke in camera-visible areas. Give designated teams an additional way to identify potential hazards and investigate them promptly.']),
+        ('fall', 'Fall &amp; Incident Detection', 'Flag potential incidents that need attention.', ['Detect supported events such as falls and other configured safety incidents from video feeds. Help teams identify situations that may require immediate investigation or assistance.']),
+        ('report', 'Automated Safety Reports', 'Spend less time putting incident records together.', ['Maintain timestamped incident records, event details and available visual evidence. Review recurring violations and safety patterns to support audits, internal reviews and corrective action.']),
+    ]
+    feat_cards = ''.join(f'<article class="kv-feat"><div class="kv-mini">{ks_mini(k)}</div><span class="kv-num">{i + 1:02d}</span><h3>{t}</h3><p class="kv-strap">{s}</p>{"".join(f"<p>{p}</p>" for p in ps)}</article>' for i, (k, t, s, ps) in enumerate(feats))
+    feat_cards += f'''<article class="kv-feat kv-feat-wide"><div class="kv-mini">{ks_mini('dash')}</div><div><span class="kv-num">07</span><h3>Safety Dashboard &amp; Alerts</h3><p class="kv-strap">Know where attention is needed.</p><p>Bring safety events and compliance information into a central dashboard. Help supervisors review alerts, identify recurring issues and monitor activity across supported camera feeds and locations.</p></div></article>'''
+    features = f'''<section class="block" id="features">
+    <div class="wrap">
+      {head_block('Features', 'Everything You Need for Smarter Workplace Safety Monitoring', 'KenSafety combines AI video analytics, hazard detection and safety reporting to help teams understand risks across their work environments.')}
+      <div class="kv-feats">{feat_cards}</div>
+    </div>
+  </section>'''
+
+    steps = [('Connect Your Existing Cameras', 'Integrate compatible CCTV cameras and recording systems with KenSafety. Reuse your current setup where supported instead of replacing your entire camera infrastructure.'),
+             ('Let AI Monitor for Safety Risks', 'AI analyses video feeds for configured safety conditions, such as missing PPE, restricted-zone entry, unsafe proximity between people and vehicles, and supported incident events.'),
+             ('Alert Teams &amp; Record Events', 'When a configured event is detected, KenSafety can notify the relevant team through supported alert channels and create incident records for review.'),
+             ('Review &amp; Improve Safety Practices', 'Use dashboards and reports to understand recurring violations, review incidents and identify areas where safety procedures may need attention.')]
+    how = f'''<section class="block" id="how">
+    <div class="wrap">
+      {head_block('How it works', 'From Camera Footage to Actionable Safety Insights', 'KenSafety adds an AI-powered safety monitoring layer to your existing camera infrastructure.')}
+      <ol class="kv-steps four">{''.join(f'<li><span>{i + 1:02d}</span><h3>{t}</h3><p>{d}</p></li>' for i, (t, d) in enumerate(steps))}</ol>
+      <p style="margin-top:36px"><a class="btn btn-black" href="#example">See KenSafety in Action</a></p>
+    </div>
+  </section>'''
+
+    inds = [('hardhat', 'Construction Sites', 'Monitor hard hat and high-visibility vest compliance, restricted areas, scaffolding zones, heavy machinery activity and potential falls.', 'industrial'),
+            ('wrench', 'Manufacturing &amp; Industrial Facilities', 'Monitor PPE compliance, machine-adjacent safety zones and configured hazard areas across production floors.', 'industrial'),
+            ('forklift', 'Warehouses &amp; Logistics', 'Identify potential risks around forklifts, pedestrian walkways, loading bays and restricted storage areas.', 'industrial'),
+            ('route', 'Ports &amp; Transportation Hubs', 'Monitor designated operational zones, vehicle movement areas, restricted access points and camera-visible safety events.', 'smart-cities'),
+            ('bolt', 'Energy &amp; Infrastructure', 'Support safety monitoring around designated high-risk areas, equipment zones and restricted operational spaces.', 'smart-cities'),
+            ('layers', 'Commercial &amp; Large Facilities', 'Monitor selected areas for restricted entry, crowd-density concerns and configured fire or smoke events.', 'retail')]
+    industries = f'''<section class="block" id="industries">
+    <div class="wrap">
+      {head_block('Industry applications', 'AI Safety Monitoring for High-Risk Work Environments', 'Different workplaces face different risks. KenSafety helps teams monitor camera-visible safety conditions across a range of industrial and commercial environments.')}
+      <div class="caps">{''.join(f'<div class="cap">{icon(ic)}<h3>{t}</h3><p>{d}</p><a class="kv-link" href="industries.html#{a}">More on {IND[a]["name"].lower()} →</a></div>' for ic, t, d, a in inds)}</div>
+    </div>
+  </section>'''
+
+    example = f'''<section class="block" id="example">
+    <div class="wrap kv-split" style="align-items:start">
+      <div>
+        <span class="eyebrow">Real-world example</span>
+        <h2 style="margin-top:18px">A Small Safety Violation Can Become a Serious Incident.</h2>
+        <p class="lede" style="margin-top:20px">Imagine a busy warehouse where forklifts move between storage racks while workers handle incoming shipments.</p>
+        <p class="kv-body">A pedestrian enters a designated vehicle movement zone. At the same time, another worker is operating without the required high-visibility vest.</p>
+        <p class="kv-body">If no one notices immediately, the risks can increase.</p>
+        <p class="kv-body">With KenSafety, AI video analytics can help identify configured human-vehicle zone violations and potential PPE non-compliance from compatible camera feeds.</p>
+        <p class="kv-body">The relevant team can receive alerts, review the event and take corrective action.</p>
+        <p class="kv-body"><b style="color:var(--off-black);font-weight:600">Instead of relying only on manual inspections or reviewing footage after an incident, your team gains another layer of visibility into everyday workplace risks.</b></p>
+      </div>
+      <div>
+        <div class="tile-solo" role="img" aria-label="Warehouse camera flagging a pedestrian inside the forklift lane and a worker without a high-visibility vest">
+          <canvas class="cctv" data-scene="whse" width="960" height="540"></canvas>
+        </div>
+        <ol class="ks-timeline">
+          <li><time>14:32:07</time><div><b>Person in vehicle zone</b><span>CAM-09 · Aisle 3. Alert sent to the floor supervisor.</span></div><em class="bad">Alert</em></li>
+          <li><time>14:32:09</time><div><b>No hi-vis vest detected</b><span>CAM-09 · Aisle 3. Added to today's PPE log.</span></div><em class="bad">Alert</em></li>
+          <li><time>14:32:41</time><div><b>Supervisor acknowledged</b><span>Clip reviewed, worker reminded, incident record created.</span></div><em>Resolved</em></li>
+        </ol>
+        <p class="demo-note">Simulated camera feed and example events</p>
+      </div>
+    </div>
+  </section>'''
+
+    why = [('plug', 'Use Your Existing Camera Infrastructure', 'Integrate compatible CCTV cameras and recording systems to extend safety monitoring without necessarily installing a completely new camera network.'),
+           ('clock', 'Monitor Beyond Scheduled Inspections', 'Use AI to monitor configured safety conditions across supported camera feeds, including outside scheduled manual inspection rounds.'),
+           ('chart', 'Identify Recurring Safety Issues', 'Review incident records and compliance trends to understand where violations occur and which areas may require attention.'),
+           ('bell', 'Respond to Potential Risks Sooner', 'Receive alerts for supported safety events and help the appropriate teams investigate and respond promptly.'),
+           ('text', 'Support Safety Audits &amp; Reporting', 'Maintain structured incident records and reports to support internal reviews, compliance processes and corrective action.'),
+           ('layers', 'Monitor Multiple Areas', 'Use centralised dashboards to review safety events across supported cameras, zones and locations.')]
+    benefits = f'''<section class="block" id="why">
+    <div class="wrap">
+      {head_block('Why KenSafety?', 'More Visibility. More Consistent Safety Monitoring.', '')}
+      <div class="caps">{''.join(f'<div class="cap">{icon(ic)}<h3>{t}</h3><p>{d}</p></div>' for ic, t, d in why)}</div>
+    </div>
+  </section>'''
+
+    dash = f'''<section class="block" id="dashboard">
+    <div class="wrap">
+      {head_block('Dashboard', 'A Clearer View of Workplace Safety.', 'Bring important safety information into one place. Review PPE compliance, restricted-zone violations, detected incidents and safety trends through a central dashboard.')}
+      <div class="kv-dash">
+        <div class="c-top">
+          <img class="c-logo" src="assets/logos/kensafety-light.png" alt="KenSafety" width="79" height="30">
+          <span class="c-site">Distribution Centre · Site 2</span>
+          <div class="c-tabs"><span class="on">Today</span><span>7 days</span><span>30 days</span></div>
+          <div class="c-right"><span class="c-live">Live</span><span id="clock">14:32:09</span></div>
+        </div>
+        <div class="kv-kpis">
+          <div><span>PPE compliance today</span><b>94%</b><em class="up">▲ 2 pts vs last week</em></div>
+          <div><span>Open alerts</span><b>3</b><em class="down">1 high priority</em></div>
+          <div><span>Zone violations today</span><b>7</b><em>Most at Dock B</em></div>
+          <div><span>Incidents this week</span><b>2</b><em>Both reviewed</em></div>
+        </div>
+        <div class="kv-grid">
+          <div class="kv-card kv-wide"><h4>PPE compliance · last 14 days</h4>{ks_trend_chart()}</div>
+          <div class="kv-card"><h4>Violations this week by type</h4>{ks_types_chart()}</div>
+          <div class="kv-card kv-wide"><h4>Safety events by zone and hour</h4>{ks_matrix()}<p class="ks-legend"><span>Fewer</span><i></i><span>More</span></p></div>
+          <div class="kv-card"><h4>Recent alerts</h4>
+            <ul class="alerts">
+              <li class="sev-high"><canvas class="thumb" data-from="whse" data-crop=".5,.38,.3,.3" width="224" height="126"></canvas><div><span class="sev">High</span><span class="a-title">Person in vehicle zone</span><span class="a-meta">CAM-09 · 14:32:07</span></div></li>
+              <li class="sev-high"><canvas class="thumb" data-from="dock" data-crop=".56,.30,.36,.36" width="224" height="126"></canvas><div><span class="sev">High</span><span class="a-title">No hard hat in restricted zone</span><span class="a-meta">CAM-04 · 14:31:55</span></div></li>
+              <li class="sev-low"><canvas class="thumb" data-from="whse" data-crop=".08,.22,.3,.3" width="224" height="126"></canvas><div><span class="sev">Review</span><span class="a-title">No hi-vis vest</span><span class="a-meta">CAM-09 · 14:32:09</span></div></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <p class="demo-note">Example dashboard with simulated data. Not a real site.</p>
+      <p class="kv-body" style="max-width:62ch">Understand where events are occurring, identify recurring problems and give your team the information it needs to take action.</p>
+      <p style="margin-top:28px"><a class="btn btn-blue" href="contact.html">Request a KenSafety Demo</a></p>
+    </div>
+  </section>'''
+
+    final = final_cta('Safer Workplaces Start with Better Visibility.',
+                      ['From PPE compliance to hazard-zone monitoring, KenSafety helps you identify potential safety risks through your existing camera infrastructure.',
+                       "Give your safety team better visibility into what's happening across your workplace."],
+                      'Book a Free Demo',
+                      "Tell us about your site, your safety requirements and your camera setup. We'll help you explore the right AI safety monitoring solution.",
+                      'KenSafety by Intelense | Intelligence at the Edge.')
+
+    body = '\n\n  '.join([hero, problem, features, how, industries, example, benefits, dash, faq_block(KS_FAQ), related_block(m), final, faq_schema(KS_FAQ)])
+    return dict(file='kensafety.html', title='KenSafety: AI Workplace Safety Monitoring | Intelense',
+                desc='KenSafety uses AI video analytics on your existing CCTV to detect missing PPE, restricted-zone entry, human-vehicle risks, fire, smoke and falls, with alerts and safety reports.',
+                active='kensafety', body=body, cctv=True)
+
+
+PAGES = [page_index, page_platform, page_modules, page_kenvision, page_kensafety, *[(lambda m: (lambda: page_module(m)))(m) for m in MODULES[2:]], page_industries, page_about, page_contact]
 
 # ---------------------------------------------------------------- output
 

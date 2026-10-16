@@ -617,3 +617,29 @@ footer a:hover { color: var(--parchment); }
   .kv-feats, .kv-steps, .kv-bens, .kv-grid { grid-template-columns: minmax(0, 1fr); }
   .kv-defs li { grid-template-columns: minmax(0, 1fr); gap: 4px; }
 }
+
+/* ===== KenSafety page ===== */
+.kv-feat-wide { grid-column: 1 / -1; display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: 28px; align-items: center; }
+.kv-feat-wide .kv-mini { margin: 0; }
+.kv-feat-wide > div:last-child { display: flex; flex-direction: column; gap: 8px; }
+.kv-steps.four { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.ks-timeline { list-style: none; margin: 16px 0 0; padding: 0; display: grid; gap: 10px; }
+.ks-timeline li { display: grid; grid-template-columns: 70px minmax(0, 1fr) auto; gap: 14px; align-items: center; padding: 14px 16px; border: 1px solid var(--ash); border-radius: 18px; background: var(--white); }
+.ks-timeline time { font-size: 12px; color: var(--smoke); font-variant-numeric: tabular-nums; }
+.ks-timeline b { display: block; font-weight: 600; font-size: 14px; }
+.ks-timeline span { font-size: 13px; color: var(--graphite); }
+.ks-timeline em { font-style: normal; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; padding: 4px 9px; border-radius: 9999px; background: #e6f4f4; color: #1e5f60; }
+.ks-timeline em.bad { background: #ffe9e2; color: #9a3412; }
+.ks-legend { display: flex; align-items: center; gap: 8px; margin-top: 10px; font-size: 10px; color: #9b9daf; }
+.ks-legend i { width: 110px; height: 8px; border-radius: 4px; background: linear-gradient(90deg, rgba(124,40,233,.1), rgba(124,40,233,.9)); }
+.kv-card .alerts li { grid-template-columns: 96px minmax(0, 1fr); padding: 8px; }
+.kv-card .alerts .thumb { width: 96px; height: 54px; }
+@media (max-width: 1080px) {
+  .kv-steps.four { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .kv-feat-wide { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 640px) {
+  .kv-steps.four { grid-template-columns: minmax(0, 1fr); }
+  .ks-timeline li { grid-template-columns: minmax(0, 1fr) auto; }
+  .ks-timeline time { grid-column: 1 / -1; }
+}
