@@ -101,6 +101,16 @@
     if (!reduce) setInterval(function () { pts.shift(); pts.push(sample(t++)); draw(); }, 90);
   });
 
+  // Live conversation reveal (KenVoice): lines and insights appear in order, then loop
+  document.querySelectorAll('[data-convo]').forEach(function (box) {
+    var lines = [].slice.call(box.querySelectorAll('[data-step]'));
+    var max = lines.reduce(function (m, el) { return Math.max(m, +el.dataset.step); }, 0);
+    function show(n) { lines.forEach(function (el) { el.classList.toggle('on', +el.dataset.step <= n); }); }
+    if (reduce) { show(max); return; }
+    var n = 0; show(0);
+    setInterval(function () { n = n >= max + 2 ? 0 : n + 1; show(n); }, 1700);
+  });
+
   // Contact form: validates in the page; not wired to a mail service yet
   var form = document.getElementById('demo-form');
   if (form) {

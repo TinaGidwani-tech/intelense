@@ -170,8 +170,8 @@ MODULES = [
                ('smart-cities', 'Infrastructure inspection', 'Bridges, tunnels, substations and pipelines.'),
                ('agriculture', 'Field robotics', 'Drones and ground robots across large farms.')],
          visual='robotics', related=['kenvision', 'kenagri', 'keniot']),
-    dict(key='kenvoice', name='KenVoice', kind='Voice AI', color='#5466DD', logo='kenvoice.png', size=(792, 300), new=True,
-         card='Brings voice into the platform: spoken alerts, hands-free commands and call transcription that feed the same incident timeline.',
+    dict(key='kenvoice', name='KenVoice', kind='Conversation intelligence', color='#5466DD', logo='kenvoice.png', size=(792, 300), new=True,
+         card='Uses on-device AI audio analytics to turn customer and staff conversations at the counter into service, coaching and sales insights.',
          h1='Let your sites speak, and listen.',
          lede='KenVoice, our newest module, adds voice to the Ken platform. It speaks alerts, takes hands-free commands, and turns calls and radio traffic into searchable text on the same incident timeline.',
          caps=[('speaker', 'Spoken alerts', 'Plays clear voice alerts on site speakers and radios when an event fires.'),
@@ -183,31 +183,28 @@ MODULES = [
          steps=[('Connect audio', 'Link speakers, radios, phone lines or microphones.'),
                 ('Choose the words', 'Set the keywords, commands and alerts that matter on each site.'),
                 ('Close the loop', 'Every spoken alert and response is logged with the incident.')],
-         uses=[('public-safety', 'Dispatch and response', 'Transcribed calls and radio linked to camera events.'),
-               ('industrial', 'Industrial sites', 'Hands-free alerts and commands for workers.'),
-               ('healthcare', 'Healthcare', 'Staff calls and distress keywords on wards.'),
-               ('residential', 'Smart homes', 'Spoken alerts and voice control with KenHome.')],
-         visual='voice', related=['kenvision', 'kenhome', 'kensafety']),
+         uses=[('retail', 'Retail counters', 'Greetings, upsells, sentiment and staff coaching.')],
+         visual='voice', related=['kenvision', 'kensafety', 'keniot']),
 ]
 MOD = {m['key']: m for m in MODULES}
 
 INDUSTRIES = [
     dict(id='public-safety', name='Public safety', title='Public safety and emergency response',
          text='Police, fire, campus and municipal teams watch hundreds of feeds with small teams. Intelense surfaces the moments that matter and links them to calls and radio traffic, so responders arrive informed.',
-         uses=[('Intrusion and after-hours alerts', 'Parks, schools and municipal buildings.'), ('Crowd and incident detection', 'Events, transit hubs and public squares.'), ('Calls linked to cameras', 'Transcribed calls next to the matching video.')],
-         mods=['kenvision', 'kenvoice', 'kenrobotics']),
+         uses=[('Intrusion and after-hours alerts', 'Parks, schools and municipal buildings.'), ('Crowd and incident detection', 'Events, transit hubs and public squares.'), ('Faster video review', 'Search footage instead of scrubbing through hours.')],
+         mods=['kenvision', 'kensafety', 'kenrobotics']),
     dict(id='smart-cities', name='Smart cities', title='Smart cities and infrastructure',
          text='Streets, transit and utilities generate more data than any team can watch. Intelense turns cameras and sensors into live signals for traffic, crowds and asset health.',
          uses=[('Traffic and crowd flow', 'Intersections, stations and busy streets.'), ('Infrastructure health', 'Pumps, HVAC and remote equipment.'), ('Inspection at scale', 'Drones and robots on bridges, tunnels and substations.')],
          mods=['kenvision', 'keniot', 'kenrobotics']),
     dict(id='retail', name='Retail', title='Retail and commercial spaces',
          text='Stores and malls already have cameras. Intelense uses them to cut losses, shorten queues and keep staff and shoppers safe.',
-         uses=[('Loss prevention', 'Suspicious behaviour and after-hours intrusion.'), ('Queues and footfall', 'Queue length and busy-hour staffing.'), ('Safety on the floor', 'Slips, blocked exits and stockroom hazards.')],
-         mods=['kenvision', 'kensafety']),
+         uses=[('Footfall and queues', 'Visitor traffic, dwell time and billing queues.'), ('Counter conversations', 'Greetings, upsells and staff coaching.'), ('Safety on the floor', 'Slips, blocked exits and stockroom hazards.')],
+         mods=['kenvision', 'kenvoice', 'kensafety']),
     dict(id='healthcare', name='Healthcare', title='Hospitals and care facilities',
          text='Care teams cannot watch every corridor. Intelense flags falls, restricted-area access and calls for help so staff can respond quickly.',
-         uses=[('Falls and wandering', 'Corridors, wards and exits.'), ('Restricted areas', 'Pharmacies, labs and staff-only zones.'), ('Calls for help', 'Distress keywords and staff calls.')],
-         mods=['kenvision', 'kensafety', 'kenvoice']),
+         uses=[('Falls and wandering', 'Corridors, wards and exits.'), ('Restricted areas', 'Pharmacies, labs and staff-only zones.'), ('Facility systems', 'Environmental and equipment sensors.')],
+         mods=['kenvision', 'kensafety', 'keniot']),
     dict(id='industrial', name='Industrial', title='Industrial sites and workplaces',
          text='Warehouses, plants and construction sites combine people, vehicles and heavy machines. Intelense watches all three and warns before accidents and breakdowns.',
          uses=[('PPE and hazard zones', 'Hard hats, vests and machinery exclusion zones.'), ('Forklift safety', 'Close calls between vehicles and pedestrians.'), ('Predictive maintenance', 'Motors, conveyors and compressors.')],
@@ -218,8 +215,8 @@ INDUSTRIES = [
          mods=['kenagri', 'keniot', 'kenrobotics']),
     dict(id='residential', name='Residential', title='Homes and residential buildings',
          text='Families and property managers want alerts they can trust. Intelense watches entrances, living spaces and driveways and flags the events that matter.',
-         uses=[('Front door and packages', 'Visitors, deliveries and porch activity.'), ('Building entrances', 'Lobbies, garages and shared spaces.'), ('Voice alerts', 'Spoken alerts and hands-free control.')],
-         mods=['kenhome', 'kenvoice', 'kenvision']),
+         uses=[('Front door and packages', 'Visitors, deliveries and porch activity.'), ('Building entrances', 'Lobbies, garages and shared spaces.'), ('Driveways and vehicles', 'Activity around parked cars at night.')],
+         mods=['kenhome', 'kenvision']),
 ]
 IND = {i['id']: i for i in INDUSTRIES}
 
@@ -457,7 +454,7 @@ def page_index():
       </div>
     </div>
   </section>'''
-    faq = FAQ.replace('<p>Book a demo. We', '<p><a href="contact.html">Book a demo</a>. We').replace('<summary>What is KenVoice?</summary>\n          <p>KenVoice is our newest module.', '<summary>What is KenVoice?</summary>\n          <p><a href="kenvoice.html">KenVoice</a> is our newest module.')
+    faq = FAQ.replace('<p>Book a demo. We', '<p><a href="contact.html">Book a demo</a>. We').replace('<summary>What is KenVoice?</summary>\n          <p>KenVoice is our newest module. It adds voice to the Ken platform, so spoken alerts, hands-free commands and call audio sit in the same timeline as your video and sensor events.</p>', '<summary>What is KenVoice?</summary>\n          <p><a href="kenvoice.html">KenVoice</a> is our newest module. It uses AI audio analytics to turn customer and staff conversations at retail counters into service, coaching and sales insights, with audio processed on-device.</p>')
     body = '\n\n  '.join([HERO, platform, live, modules, sectors, faq, cta_band()])
     return dict(file='index.html', title='Intelense | AI Video Analytics & Intelligence at the Edge',
                 desc='Intelense turns live video, sensor and voice data into real-time alerts. Seven Ken modules on one AI platform.',
@@ -491,7 +488,7 @@ def page_platform():
       <p class="demo-note">Simulated camera feeds and example data. Not a real site or customer.</p>
     </div>
   </section>'''
-    chips = ['IP cameras (RTSP / ONVIF)', 'Video management systems', 'Drones and body cams', 'IoT and industrial sensors', 'Radios, speakers and phone lines', 'Access control', 'Email, SMS and push alerts', 'Webhooks and APIs']
+    chips = ['IP cameras (RTSP / ONVIF)', 'Video management systems', 'Drones and body cams', 'IoT and industrial sensors', 'Counter tablets for in-store audio', 'Access control', 'Email, SMS and push alerts', 'Webhooks and APIs']
     integ = f'''<section class="block" id="integrations">
     <div class="wrap">
       {head_block('Integrations', 'Works with what you already run.', 'No rip-and-replace. Intelense is built to connect to common cameras, sensors and alerting tools.')}
@@ -527,11 +524,11 @@ def page_modules():
     rows = []
     watch = {'kenvision': 'Existing CCTV and IP cameras', 'kensafety': 'Cameras on floors, docks and sites', 'kenhome': 'Indoor, outdoor, doorbell and driveway cameras',
              'kenagri': 'Satellite and drone imagery, soil sensors, weather data', 'keniot': 'Temperature, vibration, pressure, humidity and power sensors',
-             'kenrobotics': 'Robot and drone cameras', 'kenvoice': 'Speakers, radios, phones and microphones'}
+             'kenrobotics': 'Robot and drone cameras', 'kenvoice': 'Counter tablet audio, processed on-device'}
     alerts = {'kenvision': 'Footfall, heatmaps, dwell time, queue build-up', 'kensafety': 'Missing PPE, restricted zones, human-vehicle proximity, fire and smoke, falls',
               'kenhome': 'Intrusion, falls and inactivity, restricted zones, pets, vehicles', 'kenagri': 'Crop stress, pest and disease risk, irrigation needs, yield estimates',
               'keniot': 'Anomalies, threshold breaches, predicted failures, work orders', 'kenrobotics': 'Obstacles, patrol findings, inspection issues',
-              'kenvoice': 'Keywords, calls for help, spoken alerts'}
+              'kenvoice': 'Missed greetings and upsells, walk-aways, sentiment, staff scores'}
     best = {m['key']: sorted({u[0] for u in m['uses']}, key=[i['id'] for i in INDUSTRIES].index) for m in MODULES}
     for m in MODULES:
         inds = ', '.join(f'<a href="industries.html#{i}">{IND[i]["name"]}</a>' for i in best[m['key']])
@@ -695,7 +692,7 @@ def page_about():
         <li><b>2018</b><div><h3>Founded in Markham, Ontario</h3><p>Intelense starts with a mission to make public spaces safer using AI and data analytics.</p></div></li>
         <li><b>Growth</b><div><h3>Supported by CENGN and VentureLab</h3><p>Canadian innovation programmes help us test and scale the platform.</p></div></li>
         <li><b>Today</b><div><h3>Seven Ken modules on one platform</h3><p>From <a href="kenvision.html">video analytics</a> to <a href="kenagri.html">agriculture</a> and <a href="keniot.html">predictive maintenance</a>, all on the same engine.</p></div></li>
-        <li><b>New</b><div><h3>KenVoice joins the platform</h3><p><a href="kenvoice.html">KenVoice</a> brings spoken alerts, hands-free commands and transcription to the Ken platform.</p></div></li>
+        <li><b>New</b><div><h3>KenVoice joins the platform</h3><p><a href="kenvoice.html">KenVoice</a> brings AI conversation intelligence to retail counters, with audio processed on-device.</p></div></li>
       </ol>
     </div>
   </section>'''
@@ -2274,7 +2271,271 @@ def page_keniot():
                 active='keniot', body=body)
 
 
-PAGES = [page_index, page_platform, page_modules, page_kenvision, page_kensafety, page_kenagri, page_kenhome, page_keniot, *[(lambda m: (lambda: page_module(m)))(m) for m in MODULES if m['key'] not in ('kenvision', 'kensafety', 'kenagri', 'kenhome', 'keniot')], page_industries, page_about, page_contact]
+# ---------------------------------------------------------------- KenVoice page (retail conversation intelligence)
+
+def kc_mini(kind):
+    b, m, c, ash, t, v = '#0A34ED', '#6C6E82', '#FF7953', '#e4e2dc', '#73C4C5', '#5466DD'
+    if kind == 'greeting':
+        return f'<svg viewBox="0 0 220 72" aria-hidden="true"><rect x="0" y="10" width="140" height="22" rx="11" fill="{t}" fill-opacity=".2"/><text x="10" y="25" font-size="10" fill="#242424">Staff: "Hi, welcome in!"</text><circle cx="180" cy="34" r="26" fill="none" stroke="{ash}" stroke-width="5"/><circle cx="180" cy="34" r="26" fill="none" stroke="{t}" stroke-width="5" stroke-dasharray="40 164" transform="rotate(-90 180 34)"/><text x="180" y="38" text-anchor="middle" font-size="12" font-weight="600" fill="#242424">4s</text><text x="0" y="56" font-size="10" font-weight="600" fill="#1e5f60">Greeted</text><text x="0" y="68" font-size="9" fill="{m}">time to first greeting</text></svg>'
+    if kind == 'upsell':
+        rows = [('Screen protector', True), ('Charging cable', True), ('Extended warranty', False)]
+        return '<svg viewBox="0 0 220 72" aria-hidden="true">' + ''.join(f'<rect x="0" y="{i * 24 + 2}" width="220" height="20" rx="10" fill="{"#e6f4f4" if ok else "#ffe9e2"}"/><text x="12" y="{i * 24 + 16}" font-size="10" fill="#242424">{n}</text><text x="210" y="{i * 24 + 16}" text-anchor="end" font-size="9" font-weight="600" fill="{"#1e5f60" if ok else "#9a3412"}">{"Offered" if ok else "Missed"}</text>' for i, (n, ok) in enumerate(rows)) + '</svg>'
+    if kind == 'walkaway':
+        return f'<svg viewBox="0 0 220 72" aria-hidden="true"><rect x="10" y="8" width="44" height="60" rx="3" fill="none" stroke="{m}" stroke-width="2"/><circle cx="46" cy="40" r="2.5" fill="{m}"/><circle cx="92" cy="22" r="7" fill="{c}"/><path d="M92 30v18M92 36l-10 8M92 36l10 4M92 48l-8 16M92 48l8 16" stroke="{c}" stroke-width="3" stroke-linecap="round"/><path d="M70 40H58" stroke="{c}" stroke-width="2"/><path d="M62 36l-5 4 5 4" fill="none" stroke="{c}" stroke-width="2"/><text x="118" y="34" font-size="10" font-weight="600" fill="#242424">Walk-away</text><text x="118" y="48" font-size="9" fill="{m}">No purchase · 14:12</text></svg>'
+    if kind == 'sentiment':
+        segs = [('Positive', .62, t), ('Neutral', .26, '#b8b8c0'), ('Negative', .12, c)]
+        x, out = 0, []
+        for n, p_, col in segs:
+            out.append(f'<rect x="{x:.0f}" y="12" width="{220 * p_ - 2:.0f}" height="18" rx="4" fill="{col}"/>')
+            x += 220 * p_
+        lab = ''.join(f'<circle cx="{4 + i * 70}" cy="52" r="4" fill="{col}"/><text x="{11 + i * 70}" y="56" font-size="8.5" fill="#242424">{n} {int(p_ * 100)}%</text>' for i, (n, p_, col) in enumerate(segs))
+        return f'<svg viewBox="0 0 220 72" aria-hidden="true">{"".join(out)}{lab}</svg>'
+    if kind == 'score':
+        return f'<svg viewBox="0 0 220 72" aria-hidden="true"><circle cx="34" cy="36" r="28" fill="none" stroke="{ash}" stroke-width="6"/><circle cx="34" cy="36" r="28" fill="none" stroke="{b}" stroke-width="6" stroke-dasharray="{176 * .86:.0f} 176" transform="rotate(-90 34 36)"/><text x="34" y="41" text-anchor="middle" font-size="15" font-weight="600" fill="#242424">86</text><rect x="74" y="8" width="146" height="56" rx="8" fill="#fff"/><text x="84" y="24" font-size="9" fill="{m}">Evidence</text><text x="84" y="38" font-size="9" fill="#242424">"Would you like a screen</text><text x="84" y="50" font-size="9" fill="#242424">protector as well?"</text></svg>'
+    if kind == 'scorecard':
+        rows = [('Chloe M.', 91), ('Aisha K.', 88), ('Daniel R.', 68)]
+        return '<svg viewBox="0 0 220 72" aria-hidden="true">' + ''.join(f'<text x="0" y="{i * 24 + 14}" font-size="10" fill="#242424">{n}</text><rect x="64" y="{i * 24 + 5}" width="126" height="10" rx="5" fill="{ash}"/><rect x="64" y="{i * 24 + 5}" width="{126 * s / 100:.0f}" height="10" rx="5" fill="{c if s < 75 else v}"/><text x="220" y="{i * 24 + 14}" text-anchor="end" font-size="10" font-weight="600" fill="#242424">{s}</text>' for i, (n, s) in enumerate(rows)) + '</svg>'
+    raise ValueError(kind)
+
+
+def kc_privacy_diagram():
+    return '''<svg class="plan" viewBox="0 0 640 250" role="img" aria-label="Audio is processed on the counter tablet and discarded. Only text transcripts and structured insights sync to the cloud dashboard, which uses role-based access, audit logs and configurable retention.">
+  <rect x="10" y="20" width="270" height="200" rx="18" fill="#101114"/>
+  <text x="30" y="50" font-size="12" font-weight="600" fill="#e9e9ec">Counter tablet</text>
+  <text x="30" y="68" font-size="10" fill="#9b9daf">On-device processing</text>
+  <g font-size="10" fill="#e9e9ec">
+    <rect x="30" y="86" width="230" height="30" rx="8" fill="#1d1f24"/><text x="44" y="105">Audio in</text>
+    <rect x="30" y="124" width="230" height="30" rx="8" fill="#1d1f24"/><text x="44" y="143">Speech to text · voices separated</text>
+    <rect x="30" y="162" width="230" height="30" rx="8" fill="#3d2620"/><text x="44" y="181" fill="#ffb39b">Audio discarded after processing</text>
+  </g>
+  <path d="M280 120 H360" stroke="#5466DD" stroke-width="2.5"/><path d="M352 113l10 7-10 7" fill="none" stroke="#5466DD" stroke-width="2.5"/>
+  <text x="320" y="106" text-anchor="middle" font-size="10" font-weight="600" fill="#242424">Text and</text>
+  <text x="320" y="144" text-anchor="middle" font-size="10" font-weight="600" fill="#242424">insights only</text>
+  <rect x="360" y="20" width="270" height="200" rx="18" fill="#ffffff" stroke="#d8d8dc"/>
+  <text x="380" y="50" font-size="12" font-weight="600" fill="#242424">Cloud dashboard</text>
+  <text x="380" y="68" font-size="10" fill="#6C6E82">Transcripts and structured insights</text>
+  <g font-size="10" fill="#242424">
+    <rect x="380" y="86" width="230" height="30" rx="8" fill="#f5f5f5"/><text x="394" y="105">Role-based permissions</text>
+    <rect x="380" y="124" width="230" height="30" rx="8" fill="#f5f5f5"/><text x="394" y="143">Audit logs</text>
+    <rect x="380" y="162" width="230" height="30" rx="8" fill="#f5f5f5"/><text x="394" y="181">Configurable transcript retention</text>
+  </g>
+</svg>'''
+
+
+def kc_sentiment_chart():
+    days = [('Mon', 64, 26, 10), ('Tue', 68, 24, 8), ('Wed', 61, 27, 12), ('Thu', 70, 22, 8), ('Fri', 66, 23, 11), ('Sat', 58, 26, 16), ('Sun', 72, 20, 8)]
+    cols = (('Positive', '#73C4C5'), ('Neutral', '#6b6e7a'), ('Negative', '#FF7953'))
+    W, H, ml, mb = 560, 190, 40, 44
+    ph = H - mb - 8
+    bw = (W - ml) / len(days)
+    out = [f'<svg class="chart" viewBox="0 0 {W} {H}" role="img" aria-label="Customer sentiment share by day, mostly positive, with the most negative conversations on Saturday">']
+    for gv in (0, 50, 100):
+        y = 8 + ph - gv / 100 * ph
+        out.append(f'<text x="{ml - 6}" y="{y + 3:.1f}" text-anchor="end" fill="#9b9daf" font-size="10">{gv}%</text>')
+    for i, (d, *vals) in enumerate(days):
+        x, y = ml + i * bw + 6, 8 + ph
+        for (name, col), v in zip(cols, vals):
+            h = v / 100 * ph
+            y -= h
+            out.append(f'<rect x="{x:.1f}" y="{y + 1:.1f}" width="{bw - 12:.1f}" height="{max(h - 2, 1):.1f}" rx="3" fill="{col}" data-tip="{d} · {name} {v}%"/>')
+        out.append(f'<text x="{x + (bw - 12) / 2:.1f}" y="{8 + ph + 16}" text-anchor="middle" fill="#9b9daf" font-size="10">{d}</text>')
+    out.append(''.join(f'<circle cx="{ml + i * 100 + 6}" cy="{H - 8}" r="5" fill="{col}"/><text x="{ml + i * 100 + 16}" y="{H - 4}" fill="#c9cbd6" font-size="11">{n}</text>' for i, (n, col) in enumerate(cols)))
+    out.append('</svg>')
+    return ''.join(out)
+
+
+KC_FAQ = [
+    ('What is KenVoice?', 'KenVoice is an AI audio analytics platform for physical retail stores. It analyses customer and staff conversations to identify service patterns, sales opportunities, and coaching insights.'),
+    ('How is KenVoice different from call-centre analytics?', 'Call-centre tools typically analyse phone calls or digital meetings. KenVoice is designed for face-to-face conversations at retail counters, using a tablet-based setup and retail-specific analytics.'),
+    ('Does KenVoice record and store customer audio?', 'KenVoice processes audio on the device and discards it after processing. Text transcripts and insights may be synced to the cloud according to the configured system and retention settings.'),
+    ('Do we need to change our POS or phone system?', 'KenVoice is designed to operate from a tablet placed at the counter, without requiring phone-system integration. Confirm any deployment-specific requirements with the Intelense team.'),
+    ('How does KenVoice identify staff and customer speech?', 'Its speech-processing workflow separates staff and customer voices to help structure conversations and generate interaction insights. Identification and configuration depend on the deployment.'),
+    ('Can KenVoice help improve staff performance?', 'KenVoice provides conversation tags, scores, transcripts, and staff scorecards that managers can use to identify coaching opportunities and review service patterns.'),
+    ('Can KenVoice be used across multiple stores?', 'The platform describes dashboards for retail teams and management. Ask the Intelense team about the multi-store setup, permissions, and reporting options for your requirements.'),
+]
+
+
+def page_kenvoice():
+    m = MOD['kenvoice']
+    convo = [(1, 'staff', 'Hi there, welcome in! Anything I can help you find today?'),
+             (2, 'cust', "I'm looking for a case for this phone."),
+             (3, 'staff', 'These ones fit your model. Would you like a screen protector as well? It comes with a discount when you buy a case.'),
+             (4, 'cust', 'Maybe. How much is it?'),
+             (5, 'staff', 'It is a small add-on, and we can fit it for you right now.'),
+             (6, 'cust', "Great, I'll take both.")]
+    lines = ''.join(f'<li data-step="{n}" class="{who}"><b>{"Staff" if who == "staff" else "Customer"}</b><span>{txt}</span></li>' for n, who, txt in convo)
+    insights = [(1, 'ok', 'Greeting', 'Detected · 4s'), (2, '', 'Customer need', 'Phone case'), (3, 'ok', 'Upsell offered', 'Screen protector'), (6, 'ok', 'Sentiment', 'Positive'), (6, 'ok', 'Outcome', 'Sale with add-on'), (7, 'score', 'Conversation score', '86 / 100')]
+    ins = ''.join(f'<li data-step="{n}" class="{cls}"><span>{k}</span><b>{v}</b></li>' for n, cls, k, v in insights)
+    bars = ''.join(f'<i style="--h:{round(10 + 26 * abs(math.sin(i * 0.7) * math.cos(i * 0.23)))}px;--d:-{(i % 9) * 0.13:.2f}s"></i>' for i in range(40))
+    hero = f'''<section class="page-hero kv-hero" style="--mod:{m["color"]}">
+    <div class="wash wash-a" aria-hidden="true"></div>
+    <div class="wash wash-b" aria-hidden="true"></div>
+    <div class="cursor-grid" aria-hidden="true"></div>
+    <div class="wrap kv-hero-grid">
+      <div class="kv-hero-copy">
+        {crumbs(('modules.html', 'Modules'), (None, 'KenVoice'))}
+        <span class="eyebrow">Retail conversation intelligence by Intelense <span class="tag-new" style="margin-left:6px">New</span></span>
+        {logo_img(m, 0.36, 'hero-logo')}
+        <h1>Know What Happens at the Counter.</h1>
+        <p class="lede">KenVoice uses AI audio analytics to turn customer and staff conversations into insights that help retailers improve service, coach teams, and identify missed sales opportunities.</p>
+        <div class="hero-ctas"><a class="btn btn-blue" href="contact.html">Book a Free Demo</a><a class="btn btn-ghost" href="#how">See How It Works</a></div>
+        <p class="kv-tagline">AI-powered conversation insights. Audio processed on-device.</p>
+      </div>
+      <div class="kv-hero-visual">
+        <div class="kc-tablet" data-convo role="img" aria-label="Counter tablet showing a live staff and customer conversation with insights: greeting detected in 4 seconds, upsell offered, positive sentiment, conversation score 86">
+          <div class="kc-top"><img src="assets/logos/kenvoice-light.png" alt="" width="66" height="25"><span>Counter 2 · Store 014</span><span class="kc-device">On-device processing</span></div>
+          <div class="wave kc-wave">{bars}</div>
+          <div class="kc-body">
+            <ul class="kc-lines">{lines}</ul>
+            <ul class="kc-ins"><li class="kc-ins-h">Live insights</li>{ins}</ul>
+          </div>
+        </div>
+        <p class="demo-note">Example conversation and insights</p>
+      </div>
+    </div>
+  </section>'''
+
+    caps = [('greeting', 'Greeting Detection', 'Understand whether customers are greeted and how quickly.'),
+            ('upsell', 'Upsell and Cross-sell Tracking', 'Identify product recommendations, additional offers, and missed opportunities.'),
+            ('walkaway', 'Walk-away Detection', 'Flag conversations where a customer leaves without completing a purchase, based on supported signals.'),
+            ('sentiment', 'Customer Sentiment', 'Classify conversations as positive, neutral, or negative.'),
+            ('score', 'Conversation Scoring', 'Review interaction quality through scores linked to conversation evidence.'),
+            ('scorecard', 'Staff Scorecards', 'Compare performance patterns and identify coaching opportunities.')]
+    what = f'''<section class="block" id="what">
+    <div class="wrap">
+      {head_block('What KenVoice does', 'Understand More Than What Your Customers Buy', "Sales reports show what customers purchased. They don't always show what happened during the conversation before a sale — or why a customer walked away.")}
+      <div class="kv-split" style="margin-bottom:40px;align-items:start">
+        <p class="kv-body" style="margin:0;font-size:17px">KenVoice analyses in-store conversations to help retailers understand how staff greet customers, recommend products, handle questions, and identify opportunities to upsell or cross-sell.</p>
+        <p class="kv-body" style="margin:0;font-size:17px">With conversation insights and staff scorecards, managers can make coaching more specific and identify areas for improvement.</p>
+      </div>
+      <h3 class="kc-sub">Key capabilities</h3>
+      <div class="kv-feats">{''.join(f'<article class="kv-feat"><div class="kv-mini">{kc_mini(k)}</div><span class="kv-num">{i + 1:02d}</span><h3>{t}</h3><p>{d}</p></article>' for i, (k, t, d) in enumerate(caps))}</div>
+    </div>
+  </section>'''
+
+    steps = [('Set Up at the Counter', 'Place a compatible tablet at the point of sale. KenVoice is designed for in-person retail conversations, without requiring headsets or phone-system integration.'),
+             ('AI Analyses the Conversation', 'On-device AI processes speech, separates staff and customer voices, and converts the conversation into text and structured insights.'),
+             ('Review Insights on Your Dashboard', 'Managers can review conversation tags, scores, staff performance, and potential missed sales opportunities through dashboards and reports.'),
+             ('Coach with Context', 'Use conversation transcripts and interaction scores to give staff specific feedback, recognise effective selling behaviours, and improve customer service.')]
+    how = f'''<section class="block" id="how">
+    <div class="wrap">
+      {head_block('How it works', 'From Conversation to Actionable Insights', '')}
+      <ol class="kv-steps four">{''.join(f'<li><span>{i + 1:02d}</span><h3>{t}</h3><p>{d}</p></li>' for i, (t, d) in enumerate(steps))}</ol>
+    </div>
+  </section>'''
+
+    bens = [('users', 'Improve Customer Service', 'Understand greeting quality, response patterns, and how consistently customers are being assisted.'),
+            ('search', 'Identify Missed Sales Opportunities', 'Spot conversations where relevant product recommendations, upsells, or cross-sells may have been missed.'),
+            ('text', 'Give Better Staff Feedback', 'Use conversation evidence to support more focused coaching instead of relying only on general observations.'),
+            ('chart', 'See Patterns Across Your Store', 'Review conversation trends over time to understand recurring service issues and opportunities for improvement.'),
+            ('layers', 'Support Consistent Retail Standards', 'Give store managers and regional teams a clearer view of how customer interactions are handled across their teams.')]
+    benefits = f'''<section class="block" id="benefits">
+    <div class="wrap">
+      {head_block('Benefits', 'Make Every Customer Interaction More Informative', '')}
+      <div class="kv-bens">{''.join(f'<div class="cap">{icon(ic)}<h3>{t}</h3><p>{d}</p></div>' for ic, t, d in bens)}</div>
+    </div>
+  </section>'''
+
+    retail = [('tag', 'Fashion Retail', 'Review greetings, product recommendations, outfit pairing, and cross-selling opportunities.'),
+              ('plug', 'Electronics Stores', 'Understand how staff explain product features, respond to budget concerns, and recommend suitable alternatives or accessories.'),
+              ('eye', 'Jewellery Retail', 'Review customer engagement, product explanations, complementary recommendations, and service quality.'),
+              ('patrol', 'Pharmacies', "Support consistent customer assistance and review how product-related questions are handled, subject to your store's privacy and compliance requirements."),
+              ('box', 'Supermarkets and Department Stores', 'Understand service patterns at counters and identify opportunities to improve customer interactions.')]
+    built = f'''<section class="block" id="retail">
+    <div class="wrap">
+      {head_block('Built for retail', 'Conversation Intelligence for In-Store Teams', '')}
+      <div class="caps ag-caps">{''.join(f'<div class="cap">{icon(ic)}<h3>{t}</h3><p>{d}</p></div>' for ic, t, d in retail)}<div class="cap ag-more"><h3>Retail and commercial spaces</h3><p>Pair KenVoice with KenVision footfall, dwell time and queue analytics for a fuller view of the store.</p><a class="kv-link" href="kenvision.html">Explore KenVision →</a><a class="kv-link" href="industries.html#retail" style="padding-top:0">More on retail →</a></div></div>
+    </div>
+  </section>'''
+
+    COACH = ' <span class="st warn">Coach</span>'
+    staff = [('Chloe M.', 41, 98, 52, 91), ('Aisha K.', 48, 96, 44, 88), ('Emma S.', 36, 90, 40, 84), ('Ben T.', 52, 92, 31, 79), ('Daniel R.', 37, 81, 22, 68)]
+    staff_rows = ''.join(f'<tr><td><b>{n}</b></td><td>{c}</td><td>{g}%</td><td>{u}%</td><td><span class="ki-bar"><i style="width:{s}%;background:{"#FF7953" if s < 75 else "#5466DD"}"></i></span> {s}{COACH if s < 75 else ""}</td></tr>' for n, c, g, u, s in staff)
+    feed = [('14:31', 'Counter 2', 86, ['Greeted 4s', 'Upsell offered', 'Positive'], ''),
+            ('14:12', 'Counter 1', 54, ['Not greeted', 'Walk-away', 'Negative'], 'bad'),
+            ('13:58', 'Counter 2', 77, ['Greeted 9s', 'Accessory missed', 'Neutral'], 'warn'),
+            ('13:40', 'Counter 3', 92, ['Greeted 3s', 'Cross-sell', 'Positive'], '')]
+    feed_html = ''.join(f'<li class="{cls}"><div><b>{t} · {ctr}</b><div class="kc-tags">{"".join(f"<span>{x}</span>" for x in tags)}</div></div><em>{sc}</em></li>' for t, ctr, sc, tags, cls in feed)
+    missed = [('Screen protector with a new phone', 14), ('Charging cable with headphones', 9), ('Extended warranty on laptops', 6), ('Case with a tablet', 4)]
+    dash = f'''<section class="block" id="dashboard">
+    <div class="wrap">
+      <div class="kv-split" style="align-items:start;margin-bottom:40px">
+        <div>
+          <span class="eyebrow">Dashboards and scorecards</span>
+          <h2 style="margin-top:18px">Turn Conversations into Clearer Coaching Decisions</h2>
+          <p class="lede" style="margin-top:20px">KenVoice organises conversation insights so managers can review patterns without manually listening to every interaction.</p>
+        </div>
+        <div>
+          <ul class="kc-list">
+            <li>Conversation-level scores and tags</li><li>Staff performance scorecards</li><li>Greeting and response indicators</li>
+            <li>Upsell and cross-sell opportunities</li><li>Customer sentiment classifications</li><li>Trends across selected time periods</li>
+          </ul>
+          <p class="kv-body">The result is a more structured way to review service quality, identify coaching needs, and understand what is happening during customer interactions.</p>
+        </div>
+      </div>
+      <div class="kv-dash">
+        <div class="c-top">
+          <img class="c-logo" src="assets/logos/kenvoice-light.png" alt="KenVoice" width="79" height="30">
+          <span class="c-site">Store 014 · Downtown</span>
+          <div class="c-tabs"><span class="on">Today</span><span>7 days</span><span>30 days</span></div>
+          <div class="c-right"><span>3 counters</span></div>
+        </div>
+        <div class="kv-kpis">
+          <div><span>Conversations today</span><b>214</b><em>Across 3 counters</em></div>
+          <div><span>Customers greeted</span><b>91%</b><em class="up">▲ 3 pts vs last week</em></div>
+          <div><span>Upsell offered</span><b>38%</b><em class="down">14 missed accessory offers</em></div>
+          <div><span>Positive sentiment</span><b>66%</b><em>11% negative</em></div>
+        </div>
+        <div class="kv-grid">
+          <div class="kv-card kv-wide"><h4>Staff scorecards · this week</h4><table class="ag-table"><thead><tr><th>Staff</th><th>Conversations</th><th>Greeted</th><th>Upsell offered</th><th>Score</th></tr></thead><tbody>{staff_rows}</tbody></table></div>
+          <div class="kv-card"><h4>Recent conversations</h4><ul class="kc-feed">{feed_html}</ul></div>
+          <div class="kv-card kv-wide"><h4>Customer sentiment by day</h4>{kc_sentiment_chart()}</div>
+          <div class="kv-card"><h4>Top missed opportunities</h4><ul class="kc-missed">{''.join(f'<li><span>{n}</span><b>{v}</b></li>' for n, v in missed)}</ul></div>
+        </div>
+      </div>
+      <p class="demo-note">Example dashboard with illustrative data. Names are fictional.</p>
+    </div>
+  </section>'''
+
+    privacy = f'''<section class="block" id="privacy">
+    <div class="wrap">
+      {head_block('Privacy', 'Conversation Intelligence with Privacy in Mind', 'KenVoice is designed to process audio on the device rather than upload raw recordings to the cloud.')}
+      <div class="kv-split" style="align-items:center">
+        <div>
+          <ul class="kc-list kc-checks">
+            <li>Audio is processed on the tablet and discarded after processing.</li>
+            <li>Text transcripts and structured insights can be synced to the cloud.</li>
+            <li>Staff voiceprints are encrypted and treated as biometric data.</li>
+            <li>Access is controlled through role-based permissions and audit logs.</li>
+            <li>Transcript retention can be configured.</li>
+          </ul>
+          <p class="kv-body kc-note">Retailers should establish appropriate staff and customer notices, consent processes, access policies, and retention settings for their deployment and applicable local requirements.</p>
+        </div>
+        <figure class="panel" style="margin:0">{kc_privacy_diagram()}</figure>
+      </div>
+    </div>
+  </section>'''
+
+    final = f'''<section class="cta">
+    <div class="wash wash-b" aria-hidden="true" style="top:10%;right:20%"></div>
+    <div class="wash wash-a" aria-hidden="true" style="top:30%;left:20%"></div>
+    <div class="wrap">
+      <span class="eyebrow">Get started</span>
+      <h2 style="margin-top:20px">Hear What Your Store Has Been Missing</h2>
+      <p class="lede" style="margin:18px auto 0">Understand the conversations behind customer experiences and sales outcomes.</p>
+      <p class="lede" style="margin:12px auto 0">See how KenVoice can help your retail team identify missed opportunities, improve service quality, and coach with clearer evidence.</p>
+      <div class="hero-ctas"><a class="btn btn-blue" href="contact.html">Book a Free Demo</a></div>
+      <p class="kv-sign">KenVoice by Intelense — AI-powered conversation intelligence for retail.</p>
+    </div>
+  </section>'''
+
+    body = '\n\n  '.join([hero, what, how, benefits, built, dash, privacy, faq_block(KC_FAQ), related_block(m), final, faq_schema(KC_FAQ)])
+    return dict(file='kenvoice.html', title='KenVoice: Retail Conversation Intelligence | Intelense',
+                desc='KenVoice uses on-device AI audio analytics to turn customer and staff conversations at the counter into service, coaching and sales insights for retailers.',
+                active='kenvoice', body=body)
+
+
+PAGES = [page_index, page_platform, page_modules, page_kenvision, page_kensafety, page_kenagri, page_kenhome, page_keniot, page_kenvoice, *[(lambda m: (lambda: page_module(m)))(m) for m in MODULES if m['key'] not in ('kenvision', 'kensafety', 'kenagri', 'kenhome', 'keniot', 'kenvoice')], page_industries, page_about, page_contact]
 
 # ---------------------------------------------------------------- output
 
