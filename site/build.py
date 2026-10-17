@@ -99,7 +99,7 @@ MODULES = [
                ('healthcare', 'Healthcare facilities', 'Staff and patient falls in corridors and wards.')],
          visual='safety', related=['kenvision', 'keniot', 'kenrobotics']),
     dict(key='kenhome', name='KenHome', kind='Smart home security', color='#78AFCF', logo='kenhome.png', size=(793, 300),
-         card='Knows a family member from a stranger at the door and cuts the false alarms that make people ignore alerts.',
+         card='Turns your existing home cameras into AI-powered monitoring for home security, elderly falls, children, pets and your driveway.',
          h1="Know who's at the door, not just that someone is.",
          lede='KenHome adds real understanding to home cameras and doorbells. It tells household members from visitors, spots packages, and stays quiet when a car or a cat goes by.',
          caps=[('users', 'Household and visitors', 'Recognises the household members you enrol and flags unknown visitors.'),
@@ -217,7 +217,7 @@ INDUSTRIES = [
          uses=[('Crop health', 'Stress and disease patches, spotted early.'), ('Livestock', 'Counts, behaviour and predators.'), ('Property and equipment', 'Fence lines, yards and fuel storage.')],
          mods=['kenagri', 'keniot', 'kenrobotics']),
     dict(id='residential', name='Residential', title='Homes and residential buildings',
-         text='Homeowners and property managers want alerts they can trust. Intelense tells residents from visitors and ignores the motion that does not matter.',
+         text='Families and property managers want alerts they can trust. Intelense watches entrances, living spaces and driveways and flags the events that matter.',
          uses=[('Front door and packages', 'Visitors, deliveries and porch activity.'), ('Building entrances', 'Lobbies, garages and shared spaces.'), ('Voice alerts', 'Spoken alerts and hands-free control.')],
          mods=['kenhome', 'kenvoice', 'kenvision']),
 ]
@@ -525,11 +525,11 @@ def page_modules():
     </div>
   </section>'''
     rows = []
-    watch = {'kenvision': 'Existing CCTV and IP cameras', 'kensafety': 'Cameras on floors, docks and sites', 'kenhome': 'Doorbells and home cameras',
+    watch = {'kenvision': 'Existing CCTV and IP cameras', 'kensafety': 'Cameras on floors, docks and sites', 'kenhome': 'Indoor, outdoor, doorbell and driveway cameras',
              'kenagri': 'Satellite and drone imagery, soil sensors, weather data', 'keniot': 'Vibration, temperature, power and air sensors',
              'kenrobotics': 'Robot and drone cameras', 'kenvoice': 'Speakers, radios, phones and microphones'}
     alerts = {'kenvision': 'Footfall, heatmaps, dwell time, queue build-up', 'kensafety': 'Missing PPE, restricted zones, human-vehicle proximity, fire and smoke, falls',
-              'kenhome': 'Unknown visitors, packages, night activity', 'kenagri': 'Crop stress, pest and disease risk, irrigation needs, yield estimates',
+              'kenhome': 'Intrusion, falls and inactivity, restricted zones, pets, vehicles', 'kenagri': 'Crop stress, pest and disease risk, irrigation needs, yield estimates',
               'keniot': 'Drift, overheating, predicted failures', 'kenrobotics': 'Obstacles, patrol findings, inspection issues',
               'kenvoice': 'Keywords, calls for help, spoken alerts'}
     best = {m['key']: sorted({u[0] for u in m['uses']}, key=[i['id'] for i in INDUSTRIES].index) for m in MODULES}
@@ -1756,7 +1756,261 @@ def page_kenagri():
                 active='kenagri', body=body)
 
 
-PAGES = [page_index, page_platform, page_modules, page_kenvision, page_kensafety, page_kenagri, *[(lambda m: (lambda: page_module(m)))(m) for m in MODULES if m['key'] not in ('kenvision', 'kensafety', 'kenagri')], page_industries, page_about, page_contact]
+# ---------------------------------------------------------------- KenHome page
+
+def kh_mini(kind):
+    b, m, c, ash, t = '#0A34ED', '#6C6E82', '#FF7953', '#e4e2dc', '#73C4C5'
+    if kind == 'intrusion':
+        return f'<svg viewBox="0 0 220 72" aria-hidden="true"><path d="M20 40L60 12L100 40V68H20Z" fill="none" stroke="{m}" stroke-width="2"/><rect x="50" y="46" width="20" height="22" fill="{ash}"/><rect x="112" y="18" width="96" height="50" rx="6" fill="none" stroke="{c}" stroke-width="2" stroke-dasharray="5 4"/><text x="118" y="14" font-size="9" fill="{m}">Garden boundary</text><circle cx="168" cy="40" r="7" fill="{c}"/><rect x="161" y="48" width="14" height="16" rx="4" fill="{c}"/><rect x="152" y="28" width="32" height="40" fill="none" stroke="{c}" stroke-width="1.5"/></svg>'
+    if kind == 'fall':
+        return f'<svg viewBox="0 0 220 72" aria-hidden="true"><line x1="10" y1="62" x2="210" y2="62" stroke="{ash}" stroke-width="2"/><rect x="60" y="48" width="58" height="12" rx="6" fill="#7a6a8a"/><circle cx="128" cy="53" r="7" fill="#b9a99a"/><rect x="40" y="52" width="22" height="6" rx="3" fill="{m}"/><rect x="34" y="36" width="104" height="30" rx="3" fill="none" stroke="{c}" stroke-width="2"/><rect x="34" y="24" width="86" height="12" fill="{c}"/><text x="38" y="33" font-size="9" font-weight="600" fill="#101114">Inactive 2m 10s</text><text x="150" y="40" font-size="10" fill="#242424">Alert</text><text x="150" y="54" font-size="9" fill="{m}">Caregiver</text></svg>'
+    if kind == 'child':
+        hatch = ''.join(f'<line x1="{x}" y1="68" x2="{x + 50}" y2="8" stroke="{c}" stroke-opacity=".3" stroke-width="3"/>' for x in range(90, 230, 12))
+        return f'<svg viewBox="0 0 220 72" aria-hidden="true"><defs><clipPath id="khc"><rect x="120" y="8" width="96" height="60" rx="6"/></clipPath></defs><g clip-path="url(#khc)">{hatch}</g><rect x="120" y="8" width="96" height="60" rx="6" fill="none" stroke="{c}" stroke-dasharray="5 4" stroke-width="2"/><text x="168" y="44" text-anchor="middle" font-size="10" font-weight="600" fill="#242424">Pool gate</text><rect x="8" y="8" width="96" height="60" rx="6" fill="{t}" fill-opacity=".15" stroke="{t}" stroke-width="2"/><text x="56" y="62" text-anchor="middle" font-size="9" fill="{m}">Safe zone</text><circle cx="86" cy="30" r="6" fill="{b}"/><rect x="81" y="37" width="10" height="13" rx="4" fill="{b}"/><path d="M96 40h18" stroke="{c}" stroke-width="2" marker-end=""/></svg>'
+    if kind == 'pet':
+        return f'<svg viewBox="0 0 220 72" aria-hidden="true"><rect x="100" y="10" width="112" height="22" rx="4" fill="{ash}"/><text x="156" y="25" text-anchor="middle" font-size="9" fill="{m}">Kitchen counter</text><rect x="96" y="6" width="120" height="30" rx="6" fill="none" stroke="{c}" stroke-dasharray="5 4" stroke-width="2"/><g fill="#7a5a3a"><ellipse cx="60" cy="50" rx="22" ry="12"/><circle cx="84" cy="40" r="9"/><path d="M80 32l2-8 5 7zM88 32l4-7 1 8z"/><rect x="42" y="56" width="5" height="12" rx="2"/><rect x="70" y="56" width="5" height="12" rx="2"/></g><text x="10" y="18" font-size="10" font-weight="600" fill="#242424">Pet · near zone</text></svg>'
+    if kind == 'drive':
+        return f'<svg viewBox="0 0 220 72" aria-hidden="true"><path d="M60 0H160L190 72H30Z" fill="{ash}"/><rect x="88" y="16" width="44" height="46" rx="10" fill="{m}"/><rect x="94" y="22" width="32" height="10" rx="3" fill="#2b2d30"/><rect x="84" y="12" width="52" height="54" fill="none" stroke="{t}" stroke-width="1.5"/><circle cx="168" cy="40" r="6" fill="{c}"/><rect x="163" y="47" width="10" height="13" rx="4" fill="{c}"/><rect x="156" y="30" width="24" height="34" fill="none" stroke="{c}" stroke-width="1.5"/></svg>'
+    if kind == 'alerts':
+        return f'<svg viewBox="0 0 220 72" aria-hidden="true"><rect x="46" y="2" width="128" height="68" rx="12" fill="#101114"/><rect x="54" y="12" width="112" height="24" rx="6" fill="#26282e"/><circle cx="64" cy="24" r="5" fill="{c}"/><text x="74" y="22" font-size="8" font-weight="600" fill="#fff">KenHome · Front door</text><text x="74" y="31" font-size="7" fill="#b9bbc8">Person at door · 14:31</text><rect x="54" y="40" width="54" height="22" rx="4" fill="#3a3c44"/><text x="81" y="54" text-anchor="middle" font-size="7" fill="#fff">View clip</text><rect x="112" y="40" width="54" height="22" rx="4" fill="#3a3c44"/><text x="139" y="54" text-anchor="middle" font-size="7" fill="#fff">Dismiss</text></svg>'
+    if kind == 'grid':
+        cells = ''.join(f'<rect x="{8 + (i % 4) * 44}" y="{6 + (i // 4) * 32}" width="40" height="28" rx="4" fill="#2b2d33"/>' for i in range(8))
+        dots = f'<circle cx="44" cy="12" r="3" fill="{c}"/><circle cx="132" cy="44" r="3" fill="{c}"/>'
+        rows = ''.join(f'<rect x="190" y="{6 + i * 20}" width="170" height="16" rx="8" fill="#fff"/><circle cx="202" cy="{14 + i * 20}" r="4" fill="{col}"/><text x="212" y="{17 + i * 20}" font-size="9" fill="#242424">{txt}</text>' for i, (txt, col) in enumerate([('Front door · person at door', c), ('Living room · all OK', t), ('Driveway · vehicle parked', t)]))
+        return f'<svg viewBox="0 0 370 72" aria-hidden="true">{cells}{dots}{rows}</svg>'
+    raise ValueError(kind)
+
+
+def kh_types_chart():
+    rows = [('Person at entrance', 9), ('Driveway activity', 6), ('Pet in restricted zone', 4), ('Child near restricted zone', 2), ('Unusual inactivity', 1), ('Possible fall', 1)]
+    W, rowh, lab = 360, 30, 150
+    out = [f'<svg class="chart" viewBox="0 0 {W} {rowh * len(rows) + 6}" role="img" aria-label="Home alerts this week by type">']
+    for i, (n, v) in enumerate(rows):
+        y = i * rowh + 6
+        out.append(f'<text x="0" y="{y + 13}" fill="#c9cbd6" font-size="11">{n}</text><rect x="{lab}" y="{y + 3}" width="{W - lab - 34}" height="14" rx="3" fill="#24262d"/>')
+        out.append(f'<rect x="{lab}" y="{y + 3}" width="{max(v / 9 * (W - lab - 34), 3):.1f}" height="14" rx="3" fill="#5b7cff" data-tip="{n} · {v} this week"/><text x="{W}" y="{y + 14}" text-anchor="end" fill="#e9e9ec" font-size="11" font-weight="600">{v}</text>')
+    out.append('</svg>')
+    return ''.join(out)
+
+
+KH_FAQ = [
+    ('What is KenHome?', "KenHome is Intelense's AI-powered home security and monitoring solution. It uses compatible camera feeds to help identify configured security and safety events involving property access, elderly monitoring, children, pets and vehicles."),
+    ('How is KenHome different from a regular home security camera?', 'A traditional security camera primarily records footage and may provide basic motion notifications. KenHome adds AI-powered event analysis to help identify selected activities and provide more context about what may need attention.'),
+    ('Can KenHome work with my existing security cameras?', 'KenHome is designed to work with compatible existing cameras, including supported indoor, outdoor and driveway setups. The exact compatibility depends on the camera model, video stream and deployment configuration.'),
+    ('Can KenHome detect falls in elderly people?', 'KenHome supports camera-based fall monitoring in compatible setups. Detection depends on camera placement, visibility and configuration. Alerts should supplement regular care arrangements and must not be treated as a replacement for emergency response or medical monitoring.'),
+    ('Can KenHome help keep children safe at home?', 'KenHome can monitor configured zones and flag supported events, such as entry into a designated restricted area. It provides an additional layer of awareness, not a guarantee that every unsafe situation will be detected.'),
+    ('Can I use KenHome to monitor my pets?', 'Yes, supported pet-monitoring features can help you review activity in camera-covered areas and receive configured alerts for selected events or restricted-zone entry.'),
+    ('Can KenHome monitor my driveway and parked car?', 'KenHome supports driveway and vehicle monitoring through compatible cameras and configured detection capabilities. Available alerts depend on the setup and events the system is configured to recognise.'),
+    ('How quickly does KenHome send alerts?', 'Alert speed depends on the event type, deployment configuration, network connectivity and notification channel. Contact Intelense for the expected performance of your proposed setup.'),
+    ('Does KenHome use facial recognition?', "KenHome's published configuration describes zone-based rules and behaviour patterns rather than facial recognition for distinguishing expected activity from potential threats. Confirm the exact configuration and privacy settings with Intelense before deployment."),
+    ('Can multiple family members receive alerts?', 'KenHome supports configurable family access according to the published product information. Available permissions, notification channels and access controls depend on the deployed configuration.'),
+    ('Does KenHome replace a professional security system or caregiver?', 'No. KenHome is intended to support home security and family awareness. It does not replace professional security arrangements, direct supervision, caregiving or emergency services.'),
+    ('How much does KenHome cost?', "Pricing depends on factors such as the number of cameras, monitored zones, required features and deployment configuration. Contact Intelense for a quote based on your home's needs."),
+    ('How can I get started with KenHome?', 'Book a demo with Intelense. Share your home layout, existing camera setup and monitoring priorities so the team can help you understand the suitable configuration.'),
+]
+
+
+def page_kenhome():
+    m = MOD['kenhome']
+    hero = f'''<section class="page-hero kv-hero" style="--mod:{m["color"]}">
+    <div class="wash wash-a" aria-hidden="true"></div>
+    <div class="wash wash-b" aria-hidden="true"></div>
+    <div class="cursor-grid" aria-hidden="true"></div>
+    <div class="wrap kv-hero-grid">
+      <div class="kv-hero-copy">
+        {crumbs(('modules.html', 'Modules'), (None, 'KenHome'))}
+        <span class="eyebrow">AI-powered home monitoring by Intelense</span>
+        {logo_img(m, 0.36, 'hero-logo')}
+        <h1>Your Home, Always Protected. Even When You Can't Be There.</h1>
+        <p class="lede">KenHome turns compatible existing home cameras into an intelligent monitoring system that helps you keep an eye on what matters most.</p>
+        <p class="lede kv-sub">From unexpected visitors and suspicious activity to elderly fall detection, child safety and pet monitoring, KenHome helps you stay informed when something needs your attention.</p>
+        <div class="hero-ctas"><a class="btn btn-blue" href="contact.html">Book a Free Demo</a><a class="btn btn-ghost" href="#features">Explore Features</a></div>
+        <p class="kv-tagline">AI home security and safety monitoring for families, homes and residential properties.</p>
+      </div>
+      <div class="kv-hero-visual">
+        <div class="tile-solo" role="img" aria-label="Front door camera flagging a person at the door and a package on the step">
+          <canvas class="cctv" data-scene="porch" width="960" height="540"></canvas>
+        </div>
+        <div class="kv-chips"><span class="hot"><b>Front door</b> person at door</span><span><b>Living room</b> all OK</span><span><b>Driveway</b> vehicle parked</span></div>
+        <p class="demo-note">Simulated camera feed and example alerts</p>
+      </div>
+    </div>
+  </section>'''
+
+    problem = f'''<section class="block" id="problem">
+    <div class="wrap">
+      {head_block('The problem', "Your Cameras Record What Happens. But Who's Watching?", "You may already have cameras at your front door, in your living room or across your driveway. But when you're at work, travelling or asleep, reviewing every camera feed isn't practical.")}
+      <div class="kv-problem">
+        <div class="kv-questions">
+          <p class="kv-q">A family member could fall.</p>
+          <p class="kv-q">A child could enter an unsafe area.</p>
+          <p class="kv-q">An unfamiliar person could linger near your property.</p>
+          <p class="kv-q">Your pet could get into trouble.</p>
+          <p class="kv-answer">KenHome uses AI-powered video monitoring to help identify selected events and notify you when something may need attention.</p>
+        </div>
+        <ul class="kv-points">
+          <li>{icon('users')}<div><b>Worried about elderly parents at home?</b><span>Receive alerts for supported fall events or unusual inactivity.</span></div></li>
+          <li>{icon('zone')}<div><b>Want to keep children safer?</b><span>Set up designated safe and restricted zones to help monitor activity.</span></div></li>
+          <li>{icon('paw')}<div><b>Concerned about your pets?</b><span>Monitor their activity and receive alerts for configured events or restricted-area entry.</span></div></li>
+          <li>{icon('patrol')}<div><b>Want better home security?</b><span>Get notified about suspicious activity, unauthorised entry or unexpected movement in monitored areas.</span></div></li>
+          <li>{icon('car')}<div><b>Park your car outside?</b><span>Monitor your driveway and receive alerts for supported vehicle-access or suspicious-activity events.</span></div></li>
+        </ul>
+      </div>
+    </div>
+  </section>'''
+
+    feats = [
+        ('intrusion', 'AI Home Security &amp; Intrusion Detection', 'Know when something unusual happens around your home.', 'Monitor camera-covered entrances, outdoor areas and property boundaries. KenHome can identify configured intrusion events, restricted-area entry and suspicious activity, helping you investigate potential security concerns.'),
+        ('fall', 'Elderly Monitoring &amp; Fall Detection', 'Extra peace of mind for the people you care about.', 'Use compatible cameras to monitor designated living areas and identify supported fall events or unusual inactivity. Alerts can help family members or designated caregivers check on a loved one when something may be wrong.'),
+        ('child', 'Child Safety Monitoring', 'Keep an eye on the areas that matter most.', 'Define safe and restricted zones around your home. KenHome can alert you when configured activity, such as a child entering a restricted area, is detected by compatible cameras.'),
+        ('pet', 'AI Pet Monitoring', 'Know what your pets are getting into.', "Monitor designated areas and receive alerts for supported activity, restricted-zone entry or potential hazards. Stay informed about your pet's activity even when you're not in the same room."),
+        ('drive', 'Driveway &amp; Vehicle Security', "Keep an eye on your vehicle, even when you're indoors.", "Monitor your driveway and parking areas for unexpected vehicle access, suspicious activity and supported tampering-related events. Receive alerts so you can review what's happening around your vehicle."),
+        ('alerts', 'Real-Time Alerts &amp; Video Evidence', 'Get the context you need when an alert arrives.', 'Receive notifications for configured events through supported alert channels. Review available timestamps, camera details and video clips to better understand what triggered the alert.'),
+    ]
+    cards = ''.join(f'<article class="kv-feat"><div class="kv-mini">{kh_mini(k)}</div><span class="kv-num">{i + 1:02d}</span><h3>{t}</h3><p class="kv-strap">{s}</p><p>{d}</p></article>' for i, (k, t, s, d) in enumerate(feats))
+    cards += f'<article class="kv-feat kv-feat-wide"><div class="kv-mini" style="background:#16171b">{kh_mini("grid")}</div><div><span class="kv-num">07</span><h3>One View for Your Home</h3><p class="kv-strap">Keep your cameras and important alerts in one place.</p><p>Review activity across supported cameras and monitored zones through a central dashboard. Help family members and designated caregivers stay informed without manually checking every feed.</p></div></article>'
+    features = f'''<section class="block" id="features">
+    <div class="wrap">
+      {head_block('Features', 'One Smarter Way to Monitor Your Home', 'KenHome brings AI home security and safety monitoring into one solution, helping families keep track of important activity across camera-covered areas.')}
+      <div class="kv-feats">{cards}</div>
+    </div>
+  </section>'''
+
+    steps = [('Connect Your Existing Cameras', 'Integrate compatible indoor, outdoor, doorbell or driveway cameras with KenHome. Reuse your current setup where supported, subject to camera compatibility and deployment requirements.'),
+             ('Set Up Your Monitoring Zones', 'Choose the areas you want to monitor, such as entrances, living spaces, driveways or designated restricted zones. Configure the events and alerts relevant to your household.'),
+             ('Let AI Monitor for Selected Events', 'KenHome analyses supported camera feeds to identify configured events, such as potential falls, unusual inactivity, restricted-zone entry and suspicious activity.'),
+             ('Receive Alerts When Something Needs Attention', 'When a configured event is detected, KenHome can notify designated family members or caregivers through supported channels. Review the available event information and decide what action is needed.')]
+    how = f'''<section class="block" id="how">
+    <div class="wrap">
+      {head_block('How it works', 'From Your Existing Cameras to Smarter Home Monitoring', 'KenHome adds AI-powered monitoring to compatible cameras, helping you identify selected events without having to watch every screen yourself.')}
+      <ol class="kv-steps four">{''.join(f'<li><span>{i + 1:02d}</span><h3>{t}</h3><p>{d}</p></li>' for i, (t, d) in enumerate(steps))}</ol>
+      <p style="margin-top:36px"><a class="btn btn-black" href="#example">See KenHome in Action</a></p>
+    </div>
+  </section>'''
+
+    who = [('users', 'Families with Children', 'Monitor selected areas, establish restricted zones and receive alerts when configured safety events occur.'),
+           ('home', 'Families Caring for Elderly Parents', 'Get additional visibility into selected living spaces and receive alerts for supported fall events or unusual inactivity, helping you check in when needed.'),
+           ('paw', 'Pet Owners', 'Monitor pet activity in camera-covered areas and receive notifications for supported events or entry into designated restricted zones.'),
+           ('patrol', 'Homeowners', 'Monitor entrances, property boundaries and outdoor areas to identify unexpected activity and potential security concerns.'),
+           ('car', 'Vehicle Owners', 'Keep track of activity around driveways and parking areas through compatible cameras and configured alerts.'),
+           ('route', 'Families Who Travel Frequently', "Stay informed about selected activity around your property while you're away, subject to your camera setup, connectivity and monitoring configuration.")]
+    whos = f'''<section class="block" id="who">
+    <div class="wrap">
+      {head_block("Who it's for", 'Smart Home Monitoring for the People and Places You Care About', '')}
+      <div class="caps">{''.join(f'<div class="cap">{icon(ic)}<h3>{t}</h3><p>{d}</p></div>' for ic, t, d in who)}</div>
+      <p style="margin-top:28px"><a class="link-arrow" href="industries.html#residential">More on residential</a></p>
+    </div>
+  </section>'''
+
+    example = f'''<section class="block" id="example">
+    <div class="wrap kv-split" style="align-items:start">
+      <div>
+        <span class="eyebrow">Real-world example</span>
+        <h2 style="margin-top:18px">You Can't Be Everywhere at Once. Your Home Monitoring Can Be Smarter.</h2>
+        <p class="lede" style="margin-top:20px">Imagine you're at work while an elderly parent is home alone.</p>
+        <p class="kv-body">You can't keep checking a live camera feed throughout the day. But you still want to know if something happens that requires your attention.</p>
+        <p class="kv-body">With KenHome, compatible cameras can monitor designated living areas for supported events, such as a potential fall or unusual inactivity.</p>
+        <p class="kv-body">If a configured event is detected, the system can notify a designated family member or caregiver, who can check the available video context and decide what to do next.</p>
+        <p class="kv-body">The same approach can help you monitor restricted areas for children, activity around pets or unexpected movement near your driveway.</p>
+        <p class="kv-body"><b style="color:var(--off-black);font-weight:600">Instead of constantly checking cameras, receive relevant alerts when configured events need your attention.</b></p>
+      </div>
+      <div class="kh-example">
+        <div class="tile-solo" role="img" aria-label="Living room camera: a person walks across the room, then a possible fall and inactivity alert appears">
+          <canvas class="cctv" data-scene="living" width="960" height="540"></canvas>
+        </div>
+        <div class="kh-row">
+        <div class="kh-phone" aria-label="Example phone notification">
+          <div class="kh-notch"></div>
+          <p class="kh-time">10:42</p>
+          <div class="kh-note">
+            <div class="kh-note-top"><img src="assets/logos/kenhome-light.png" alt="" width="58" height="22"><span>now</span></div>
+            <b>Possible fall · Living room</b>
+            <p>No movement for 2 minutes after a possible fall. Tap to view the clip.</p>
+            <div class="kh-acts"><span class="pri">View clip</span><span>Call Mum</span></div>
+          </div>
+          <div class="kh-note dim"><b>Driveway · vehicle parked</b><p>No activity since 08:15.</p></div>
+        </div>
+        <ol class="ks-timeline" style="margin:0">
+          <li><time>10:40:12</time><div><b>Possible fall detected</b><span>Living room camera</span></div><em class="bad">Alert</em></li>
+          <li><time>10:42:12</time><div><b>No movement for 2 minutes</b><span>Caregiver and family notified</span></div><em class="bad">Alert</em></li>
+          <li><time>10:43:05</time><div><b>Family member reviews clip</b><span>Calls to check in</span></div><em>Action</em></li>
+        </ol>
+        </div>
+        <p class="demo-note">Simulated camera feed and example notification</p>
+      </div>
+    </div>
+  </section>'''
+
+    why = [('plug', 'Make More of Your Existing Cameras', 'Use compatible cameras you already have instead of necessarily replacing your entire home monitoring setup.'),
+           ('bell', 'Get Alerts Instead of Watching Every Feed', 'Automate supported event detection and reduce the need to continuously check live camera footage.'),
+           ('layers', 'Monitor More Than Intruders', 'Go beyond traditional home security with supported monitoring for elderly family members, children, pets and vehicles.'),
+           ('users', 'Keep Family Members Informed', 'Configure supported notifications for designated family members or caregivers so the right people can respond when needed.'),
+           ('clock', 'Review Events with Context', 'Use available timestamps and video evidence to understand what triggered an alert and decide on the appropriate response.'),
+           ('zone', 'Configure Monitoring Around Your Home', "Set up supported cameras, zones and event rules according to your household's needs and deployment capabilities.")]
+    benefits = f'''<section class="block" id="why">
+    <div class="wrap">
+      {head_block('Why KenHome?', 'More Than Home Security. More Awareness of Everyday Life.', '')}
+      <div class="caps">{''.join(f'<div class="cap">{icon(ic)}<h3>{t}</h3><p>{d}</p></div>' for ic, t, d in why)}</div>
+    </div>
+  </section>'''
+
+    zones = [('Front door', 'Entrance', 'Alert', 'bad'), ('Living room', 'Fall and inactivity', 'Active', ''), ('Pool gate', 'Child restricted zone', 'Active', ''), ('Kitchen counter', 'Pet restricted zone', 'Active', ''), ('Driveway', 'Vehicle and night activity', 'Active', ''), ('Back garden', 'Boundary', 'Paused', 'warn')]
+    dash = f'''<section class="block" id="dashboard">
+    <div class="wrap">
+      {head_block('Dashboard', 'Your Home at a Glance. Important Alerts in One Place.', 'Bring your supported camera feeds, monitored zones and safety events into one view.')}
+      <div class="kv-dash">
+        <div class="c-top">
+          <img class="c-logo" src="assets/logos/kenhome-light.png" alt="KenHome" width="79" height="30">
+          <span class="c-site">Home · 4 cameras</span>
+          <div class="c-tabs"><span class="on">Live</span><span>Events</span><span>Zones</span><span>Family</span></div>
+          <div class="c-right"><span class="c-live">Live</span><span id="clock">14:32:09</span></div>
+        </div>
+        <div class="kv-kpis">
+          <div><span>Cameras online</span><b>4 / 4</b><em class="up">All connected</em></div>
+          <div><span>Alerts today</span><b>3</b><em class="down">1 needs review</em></div>
+          <div><span>Zones monitored</span><b>6</b><em>1 paused</em></div>
+          <div><span>Family notified</span><b>3 people</b><em>Push and SMS</em></div>
+        </div>
+        <div class="kv-grid">
+          <div class="kv-card"><h4>Front door</h4><div class="tile-solo" style="border-radius:12px"><canvas class="cctv" data-scene="porch" width="480" height="270"></canvas></div></div>
+          <div class="kv-card"><h4>Living room</h4><div class="tile-solo" style="border-radius:12px"><canvas class="cctv" data-scene="living" width="480" height="270"></canvas></div></div>
+          <div class="kv-card"><h4>Driveway</h4><div class="tile-solo" style="border-radius:12px"><canvas class="cctv" data-scene="drive" width="480" height="270"></canvas></div></div>
+          <div class="kv-card"><h4>Today's events</h4>
+            <ul class="alerts">
+              <li class="sev-high"><canvas class="thumb" data-from="porch" data-crop=".55,.12,.3,.3" width="224" height="126"></canvas><div><span class="sev">Alert</span><span class="a-title">Person at front door</span><span class="a-meta">Front door · 14:31</span></div></li>
+              <li class="sev-low"><canvas class="thumb" data-from="drive" data-crop=".35,.35,.45,.45" width="224" height="126"></canvas><div><span class="sev">Info</span><span class="a-title">Person near vehicle</span><span class="a-meta">Driveway · 02:14</span></div></li>
+              <li class="sev-low"><canvas class="thumb" data-from="porch" data-crop=".55,.55,.3,.3" width="224" height="126"></canvas><div><span class="sev">Info</span><span class="a-title">Package on step</span><span class="a-meta">Front door · 14:32</span></div></li>
+            </ul>
+          </div>
+          <div class="kv-card"><h4>Monitored zones</h4>
+            <table class="ag-table"><thead><tr><th>Zone</th><th>Rule</th><th>Status</th></tr></thead><tbody>
+            {''.join(f'<tr><td><b>{z}</b></td><td>{r}</td><td><span class="st {cls}">{st}</span></td></tr>' for z, r, st, cls in zones)}
+            </tbody></table>
+          </div>
+          <div class="kv-card"><h4>Alerts this week by type</h4>{kh_types_chart()}</div>
+        </div>
+      </div>
+      <p class="demo-note">Example dashboard with simulated feeds and data. Not a real home.</p>
+      <p class="kv-body" style="max-width:62ch">Review notifications, understand where an event occurred and access available video context without having to search through hours of recordings.</p>
+      <p class="kv-body" style="max-width:62ch">KenHome helps make home monitoring more useful, more organised and easier to manage.</p>
+      <p style="margin-top:28px"><a class="btn btn-blue" href="contact.html">Request a KenHome Demo</a></p>
+    </div>
+  </section>'''
+
+    final = final_cta('More Peace of Mind for the People Who Matter Most.',
+                      ['From home security and driveway monitoring to elderly, child and pet safety, KenHome helps you stay informed about important events at home.',
+                       'Make your existing cameras more useful with AI-powered monitoring and alerts.'],
+                      'Book a Free Demo',
+                      "Tell us about your home, your existing cameras and what you want to monitor. We'll help you explore the right KenHome setup.",
+                      'KenHome by Intelense | Intelligence at the Edge.')
+
+    body = '\n\n  '.join([hero, problem, features, how, whos, example, benefits, dash, faq_block(KH_FAQ), related_block(m), final, faq_schema(KH_FAQ)])
+    return dict(file='kenhome.html', title='KenHome: AI Home Security & Smart Monitoring | Intelense',
+                desc='KenHome turns compatible home cameras into AI-powered monitoring for home security, elderly fall detection, child safety, pets and driveways, with real-time alerts.',
+                active='kenhome', body=body, cctv=True)
+
+
+PAGES = [page_index, page_platform, page_modules, page_kenvision, page_kensafety, page_kenagri, page_kenhome, *[(lambda m: (lambda: page_module(m)))(m) for m in MODULES if m['key'] not in ('kenvision', 'kensafety', 'kenagri', 'kenhome')], page_industries, page_about, page_contact]
 
 # ---------------------------------------------------------------- output
 

@@ -289,7 +289,7 @@
       var u = w / 480, d = [], cyc = (t % 14) / 14, q = Math.min(1, cyc / .7);
       var x = lerp(w * .5, w * .52, q), y = lerp(h * .3, h * .76, q), H = lerp(28, 150, q * q) * u;
       d.push({ b: cuboid(c, w * .63, h * .76, w * .07, 20 * u, 8 * u, '#8b7457', '#a08867', '#6c5a44') || [w * .63, h * .76 - 30 * u, w * .1, 32 * u], l: 'Package', p: 91, k: 'object' });
-      d.push({ b: person(c, x, y, H, { vest: '#3f4a5c', arm: '#3f4a5c', hat: null, phase: q < 1 ? t * 6 : 0, walk: q < 1 }), l: 'Visitor · unknown', p: 95, k: 'alert' });
+      d.push({ b: person(c, x, y, H, { vest: '#3f4a5c', arm: '#3f4a5c', hat: null, phase: q < 1 ? t * 6 : 0, walk: q < 1 }), l: 'Person at door', p: 95, k: 'alert' });
       return d;
     }
   };
@@ -464,6 +464,68 @@
       items.push({ y: h * .5, f: function () { d.push({ b: person(c, bx, h * .5, 62 * u, { vest: '#3a3f47', arm: '#3a3f47', hat: '#e8e4d6', phase: 0, walk: false }), l: 'No hi-vis vest', p: 91, k: 'alert' }); } });
       items.sort(function (a, b) { return a.y - b.y; }).forEach(function (i) { i.f(); });
       d.push({ zone: [0.005, .52, .99, .2], l: 'Vehicle zone', k: 'crowd' });
+      return d;
+    }
+  };
+
+  // Living room camera with a fall and inactivity event (KenHome)
+  SCENES.living = {
+    osd: 'LIVING ROOM',
+    bg: function (c, w, h) {
+      var R = rng(71), u = w / 480, hz = h * .55, g, i;
+      g = c.createLinearGradient(0, 0, 0, hz); g.addColorStop(0, '#b9ad9c'); g.addColorStop(1, '#a89c8b'); c.fillStyle = g; c.fillRect(0, 0, w, hz);
+      c.fillStyle = '#efeee8'; c.fillRect(w * .06, h * .08, w * .22, h * .32); c.fillStyle = '#d9dcd6'; c.fillRect(w * .07, h * .09, w * .2, h * .3);
+      c.fillStyle = '#8d8274'; c.fillRect(w * .169, h * .08, 3 * u, h * .32); c.fillRect(w * .06, h * .235, w * .22, 3 * u);
+      c.globalCompositeOperation = 'lighter'; glow(c, w * .17, h * .24, w * .22, .18); c.globalCompositeOperation = 'source-over';
+      c.fillStyle = '#6f6556'; c.fillRect(w * .58, h * .12, w * .16, h * .14); c.fillStyle = '#a99a7d'; c.fillRect(w * .59, h * .13, w * .14, h * .12);
+      g = c.createLinearGradient(0, hz, 0, h); g.addColorStop(0, '#7a5f45'); g.addColorStop(1, '#94765a'); c.fillStyle = g; c.fillRect(0, hz, w, h - hz);
+      c.strokeStyle = 'rgba(40,28,18,.35)'; c.lineWidth = 1;
+      for (i = -8; i <= 16; i++) { c.beginPath(); c.moveTo(w * .5 + i * w * .04, hz); c.lineTo(w * .5 + i * w * .12, h); c.stroke(); }
+      speckle(c, w, h, hz, 900, R, .08);
+      c.fillStyle = 'rgba(160,150,135,.85)'; c.beginPath(); c.ellipse(w * .5, h * .8, w * .3, h * .11, 0, 0, 7); c.fill();
+      c.fillStyle = '#2d2f33'; c.fillRect(w * .03, h * .42, w * .18, h * .16); c.fillStyle = '#121315'; c.fillRect(w * .05, h * .27, w * .14, h * .14);
+      c.fillStyle = '#5d6b78'; c.fillRect(w * .66, h * .5, w * .32, h * .2); c.fillStyle = '#6c7b88'; c.fillRect(w * .66, h * .42, w * .32, h * .1); c.fillStyle = '#4e5a65'; c.fillRect(w * .64, h * .44, w * .04, h * .26); c.fillRect(w * .96, h * .44, w * .04, h * .26);
+      cuboid(c, w * .44, h * .7, w * .14, 14 * u, 8 * u, '#6b5440', '#7d644d', '#544232');
+      c.fillStyle = '#3b3a37'; c.fillRect(w * .9, h * .2, 2 * u, h * .3); c.fillStyle = '#e8dcc0'; c.beginPath(); c.moveTo(w * .875, h * .2); c.lineTo(w * .93, h * .2); c.lineTo(w * .915, h * .13); c.lineTo(w * .89, h * .13); c.fill();
+    },
+    frame: function (c, w, h, t) {
+      var u = w / 480, d = [], cyc = (t % 16) / 16, H = 96 * u;
+      var o = { vest: '#7a6a8a', arm: '#7a6a8a', legs: '#4b4f57', hat: null, phase: t * 4 };
+      if (cyc < .5) {
+        var x = lerp(w * .22, w * .52, cyc / .5), y = h * .82;
+        d.push({ b: person(c, x, y, H, o), l: 'Person', p: 97, k: 'person' });
+      } else {
+        var lx = w * .52, ly = h * .86, secs = Math.floor((cyc - .5) * 16 * 15);
+        c.save(); c.translate(lx, ly); c.rotate(-Math.PI / 2 + .08); o.walk = false; o.phase = 0; person(c, 0, 0, H, o); c.restore();
+        d.push({ b: [lx - H * 1.02, ly - H * .26, H * 1.08, H * .4], l: 'Possible fall · inactive ' + secs + 's', p: 92, k: 'alert' });
+      }
+      return d;
+    }
+  };
+
+  // Driveway camera at night (KenHome)
+  SCENES.drive = {
+    osd: 'DRIVEWAY', ir: true,
+    bg: function (c, w, h) {
+      var R = rng(81), u = w / 480, g, i;
+      c.fillStyle = '#5b5c58'; c.fillRect(0, 0, w, h * .34);
+      c.fillStyle = '#7a7b77'; c.fillRect(w * .3, h * .06, w * .4, h * .28);
+      c.strokeStyle = 'rgba(0,0,0,.25)'; for (i = 1; i < 7; i++) { c.beginPath(); c.moveTo(w * .3, h * (.06 + i * .04)); c.lineTo(w * .7, h * (.06 + i * .04)); c.stroke(); }
+      c.fillStyle = '#4a4b48'; c.fillRect(w * .76, h * .1, w * .08, h * .24); c.fillStyle = '#e9e9dc'; c.fillRect(w * .86, h * .12, 4 * u, 6 * u);
+      c.globalCompositeOperation = 'lighter'; glow(c, w * .865, h * .14, w * .2, .25); c.globalCompositeOperation = 'source-over';
+      c.fillStyle = '#3e4a3c'; c.fillRect(0, h * .34, w, h * .66);
+      speckle(c, w, h, h * .34, 1800, R, .16);
+      g = c.createLinearGradient(0, h * .34, 0, h); g.addColorStop(0, '#77776f'); g.addColorStop(1, '#8a8a82'); c.fillStyle = g;
+      c.beginPath(); c.moveTo(w * .28, h * .34); c.lineTo(w * .72, h * .34); c.lineTo(w * .86, h); c.lineTo(w * .14, h); c.fill();
+      c.fillStyle = '#9a9a92'; c.beginPath(); c.moveTo(w * .76, h * .34); c.lineTo(w * .84, h * .34); c.lineTo(w * .98, h); c.lineTo(w * .92, h); c.fill();
+      for (i = 0; i < 6; i++) { c.fillStyle = 'rgba(40,52,38,.9)'; c.beginPath(); c.arc(w * (.05 + i * .04), h * .4, 12 * u, 0, 7); c.fill(); }
+      car(c, w * .42, h * .45, w * .16, h * .34, '#6c6e70');
+    },
+    frame: function (c, w, h, t) {
+      var u = w / 480, d = [], cyc = (t % 14) / 14, q = cyc < .6 ? cyc / .6 : 1;
+      d.push({ b: [w * .41, h * .44, w * .18, h * .38], l: 'Vehicle · parked', p: 98, k: 'vehicle' });
+      var x = lerp(w * .04, w * .36, q), y = lerp(h * .95, h * .72, q), near = q > .7;
+      d.push({ b: person(c, x, y, 70 * u, { vest: '#3c3f44', arm: '#3c3f44', hat: null, phase: q < 1 ? t * 6 : 0, walk: q < 1 }), l: near ? 'Person near vehicle' : 'Person', p: 94, k: near ? 'alert' : 'person' });
       return d;
     }
   };
