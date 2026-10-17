@@ -111,6 +111,71 @@
     setInterval(function () { n = n >= max + 2 ? 0 : n + 1; show(n); }, 1700);
   });
 
+  // Fleet map (KenRobotics): robots follow planned routes, detour around an obstacle and slow near a person
+  document.querySelectorAll('canvas[data-fleet]').forEach(function (cv) {
+    var c = cv.getContext('2d'), W = cv.width, H = cv.height, sx = W / 100, sy = H / 60;
+    var ROUTES = [
+      { id: 'R-01', col: '#5b7cff', sp: 7, pts: [[8, 6], [92, 6], [92, 30], [80, 30], [76, 32.6], [68, 32.6], [64, 30], [8, 30]] },
+      { id: 'R-02', col: '#a98bf5', sp: 6, pts: [[50, 54], [50, 18], [92, 18], [92, 54]] },
+      { id: 'R-03', col: '#73C4C5', sp: 6.5, pts: [[8, 42], [50, 42], [50, 6], [8, 6]] },
+      { id: 'R-04', col: '#78AFCF', sp: 5.5, pts: [[8, 54], [86, 54], [86, 42], [8, 42]] }
+    ];
+    ROUTES.forEach(function (r) {
+      r.seg = []; r.len = 0;
+      for (var i = 0; i < r.pts.length; i++) { var a = r.pts[i], b = r.pts[(i + 1) % r.pts.length], d = Math.hypot(b[0] - a[0], b[1] - a[1]); r.seg.push(d); r.len += d; }
+      r.d = Math.random() * r.len;
+    });
+    function at(r, dist) {
+      dist = ((dist % r.len) + r.len) % r.len;
+      for (var i = 0; i < r.seg.length; i++) {
+        if (dist <= r.seg[i]) { var a = r.pts[i], b = r.pts[(i + 1) % r.pts.length], k = dist / r.seg[i]; return [a[0] + (b[0] - a[0]) * k, a[1] + (b[1] - a[1]) * k, Math.atan2(b[1] - a[1], b[0] - a[0])]; }
+        dist -= r.seg[i];
+      }
+      return [r.pts[0][0], r.pts[0][1], 0];
+    }
+    var person = { t: 0 };
+    function X(v) { return v * sx; } function Y(v) { return v * sy; }
+    function frame(dt) {
+      person.t += dt;
+      var py = 30 + Math.sin(person.t * .35) * 11, px = 50 + Math.sin(person.t * .9) * .6;
+      c.fillStyle = '#16171b'; c.fillRect(0, 0, W, H);
+      c.strokeStyle = 'rgba(255,255,255,.04)'; c.lineWidth = 1;
+      for (var g = 0; g <= 100; g += 4) { c.beginPath(); c.moveTo(X(g), 0); c.lineTo(X(g), H); c.stroke(); }
+      for (g = 0; g <= 60; g += 4) { c.beginPath(); c.moveTo(0, Y(g)); c.lineTo(W, Y(g)); c.stroke(); }
+      [[10, 14], [22, 26], [34, 38], [46, 50]].forEach(function (row) {
+        [[15, 46], [54, 85]].forEach(function (span) { c.fillStyle = '#2c2e35'; c.fillRect(X(span[0]), Y(row[0]), X(span[1] - span[0]), Y(row[1] - row[0])); c.fillStyle = '#3a3c44'; for (var k = span[0] + 1; k < span[1]; k += 3) c.fillRect(X(k), Y(row[0] + .6), X(2), Y(row[1] - row[0] - 1.2)); });
+      });
+      c.save(); c.beginPath(); c.rect(X(88), Y(44), X(11), Y(14)); c.clip(); c.strokeStyle = 'rgba(255,121,83,.35)'; c.lineWidth = 3;
+      for (var hx = -60; hx < 100; hx += 2.4) { c.beginPath(); c.moveTo(X(hx), Y(60)); c.lineTo(X(hx + 20), Y(40)); c.stroke(); } c.restore();
+      c.strokeStyle = '#FF7953'; c.setLineDash([6, 4]); c.lineWidth = 1.5; c.strokeRect(X(88), Y(44), X(11), Y(14)); c.setLineDash([]);
+      c.fillStyle = 'rgba(115,196,197,.12)'; c.fillRect(X(1), Y(46), X(5), Y(12)); c.strokeStyle = 'rgba(115,196,197,.6)'; c.strokeRect(X(1), Y(46), X(5), Y(12));
+      c.font = '600 ' + Math.round(H / 26) + 'px Montserrat, system-ui, sans-serif';
+      c.fillStyle = '#ffb39b'; c.textAlign = 'right'; c.fillText('Restricted', X(99), Y(43)); c.textAlign = 'left';
+      c.fillStyle = '#9fe0e1'; c.fillText('Charging', X(1), Y(45));
+      c.fillStyle = '#7a5f45'; c.fillRect(X(70), Y(28.6), X(3.2), Y(2.8)); c.strokeStyle = '#FF7953'; c.lineWidth = 1.5; c.strokeRect(X(69.4), Y(28), X(4.4), Y(4)); c.fillStyle = '#ffb39b'; c.fillText('Obstacle', X(66), Y(27.2));
+      c.strokeStyle = 'rgba(255,121,83,.55)'; c.setLineDash([4, 4]); c.beginPath(); c.arc(X(px), Y(py), X(3.2), 0, 7); c.stroke(); c.setLineDash([]);
+      c.strokeStyle = 'rgba(115,196,197,.5)'; c.beginPath(); c.arc(X(px), Y(py), X(6.5), 0, 7); c.stroke();
+      c.fillStyle = '#e9e9ec'; c.beginPath(); c.arc(X(px), Y(py), X(.9), 0, 7); c.fill();
+      c.fillStyle = '#e9e9ec'; c.fillText('Person', X(px + 1.6), Y(py - 1.2));
+      ROUTES.forEach(function (r) {
+        var p = at(r, r.d), near = Math.hypot(p[0] - px, (p[1] - py) * 1) < 6.5;
+        r.speed = near ? r.sp * .3 : r.sp; r.d += r.speed * dt; r.near = near;
+        c.strokeStyle = r.col; c.globalAlpha = .55; c.setLineDash([5, 5]); c.lineWidth = 1.5; c.beginPath();
+        for (var k = 0; k <= 26; k += 1) { var q = at(r, r.d + k); if (k === 0) c.moveTo(X(q[0]), Y(q[1])); else c.lineTo(X(q[0]), Y(q[1])); }
+        c.stroke(); c.setLineDash([]); c.globalAlpha = 1;
+        p = at(r, r.d);
+        c.fillStyle = r.col; c.beginPath(); c.arc(X(p[0]), Y(p[1]), X(1.5), 0, 7); c.fill();
+        c.strokeStyle = '#101114'; c.lineWidth = 2; c.beginPath(); c.moveTo(X(p[0]), Y(p[1])); c.lineTo(X(p[0] + Math.cos(p[2]) * 1.5), Y(p[1] + Math.sin(p[2]) * 1.5)); c.stroke();
+        c.fillStyle = '#e9e9ec'; c.fillText(r.id, X(p[0] + 1.8), Y(p[1] - 1.6));
+        var el = document.querySelector('[data-fleet-status="' + r.id + '"]');
+        if (el) { el.textContent = near ? 'Slowing' : (Math.abs(p[1] - 30) < 3 && p[0] > 62 && p[0] < 82 ? 'Rerouting' : 'On route'); el.className = near ? 'warn' : ''; }
+      });
+    }
+    var last = performance.now();
+    frame(0);
+    if (!reduce) (function loop(now) { var dt = Math.min(.05, (now - last) / 1000); last = now; frame(dt); requestAnimationFrame(loop); })(last);
+  });
+
   // Contact form: validates in the page; not wired to a mail service yet
   var form = document.getElementById('demo-form');
   if (form) {

@@ -152,8 +152,8 @@ MODULES = [
                ('smart-cities', 'Buildings and HVAC', 'Air handling, chillers and indoor air quality.'),
                ('smart-cities', 'Utilities', 'Pumping stations and remote equipment.')],
          visual='iot', related=['kensafety', 'kenvision', 'kenrobotics']),
-    dict(key='kenrobotics', name='KenRobotics', kind='Autonomous systems', color='#6C6E82', logo='kenrobotics.png', size=(919, 300),
-         card='Gives robots and drones the vision to navigate, inspect and patrol on their own.',
+    dict(key='kenrobotics', name='KenRobotics', kind='Autonomous robotics', color='#6C6E82', logo='kenrobotics.png', size=(919, 300),
+         card='AI perception, dynamic path planning and fleet coordination that help autonomous robots work safely alongside people.',
          h1='Vision that lets machines find their own way.',
          lede='KenRobotics gives robots and drones the perception they need to move safely, patrol and inspect, and reports what they see to the same dashboard as your cameras.',
          caps=[('robot', 'Obstacle detection', 'Sees pallets, people and vehicles in the path and reacts in time.'),
@@ -169,7 +169,7 @@ MODULES = [
                ('public-safety', 'Security patrol', 'Robot and drone rounds of large sites.'),
                ('smart-cities', 'Infrastructure inspection', 'Bridges, tunnels, substations and pipelines.'),
                ('agriculture', 'Field robotics', 'Drones and ground robots across large farms.')],
-         visual='robotics', related=['kenvision', 'kenagri', 'keniot']),
+         visual='robotics', related=['keniot', 'kensafety', 'kenagri']),
     dict(key='kenvoice', name='KenVoice', kind='Conversation intelligence', color='#5466DD', logo='kenvoice.png', size=(792, 300), new=True,
          card='Uses on-device AI audio analytics to turn customer and staff conversations at the counter into service, coaching and sales insights.',
          h1='Let your sites speak, and listen.',
@@ -524,10 +524,10 @@ def page_modules():
     rows = []
     watch = {'kenvision': 'Existing CCTV and IP cameras', 'kensafety': 'Cameras on floors, docks and sites', 'kenhome': 'Indoor, outdoor, doorbell and driveway cameras',
              'kenagri': 'Satellite and drone imagery, soil sensors, weather data', 'keniot': 'Temperature, vibration, pressure, humidity and power sensors',
-             'kenrobotics': 'Robot and drone cameras', 'kenvoice': 'Counter tablet audio, processed on-device'}
+             'kenrobotics': 'Robot sensor inputs and fleet status', 'kenvoice': 'Counter tablet audio, processed on-device'}
     alerts = {'kenvision': 'Footfall, heatmaps, dwell time, queue build-up', 'kensafety': 'Missing PPE, restricted zones, human-vehicle proximity, fire and smoke, falls',
               'kenhome': 'Intrusion, falls and inactivity, restricted zones, pets, vehicles', 'kenagri': 'Crop stress, pest and disease risk, irrigation needs, yield estimates',
-              'keniot': 'Anomalies, threshold breaches, predicted failures, work orders', 'kenrobotics': 'Obstacles, patrol findings, inspection issues',
+              'keniot': 'Anomalies, threshold breaches, predicted failures, work orders', 'kenrobotics': 'Obstacles, route conflicts, safety-zone events, task status',
               'kenvoice': 'Missed greetings and upsells, walk-aways, sentiment, staff scores'}
     best = {m['key']: sorted({u[0] for u in m['uses']}, key=[i['id'] for i in INDUSTRIES].index) for m in MODULES}
     for m in MODULES:
@@ -2535,7 +2535,236 @@ def page_kenvoice():
                 active='kenvoice', body=body)
 
 
-PAGES = [page_index, page_platform, page_modules, page_kenvision, page_kensafety, page_kenagri, page_kenhome, page_keniot, page_kenvoice, *[(lambda m: (lambda: page_module(m)))(m) for m in MODULES if m['key'] not in ('kenvision', 'kensafety', 'kenagri', 'kenhome', 'keniot', 'kenvoice')], page_industries, page_about, page_contact]
+# ---------------------------------------------------------------- KenRobotics page
+
+def kr_mini(kind):
+    b, m, c, ash, t, v = '#0A34ED', '#6C6E82', '#FF7953', '#e4e2dc', '#73C4C5', '#7C28E9'
+    robot = lambda x, y, col=b: f'<circle cx="{x}" cy="{y}" r="9" fill="{col}"/><path d="M{x} {y}h9" stroke="#fff" stroke-width="2"/>'
+    if kind == 'perception':
+        import math, random
+        rnd = random.Random(3)
+        pts = ''.join(f'<circle cx="{110 + math.cos(a) * r:.1f}" cy="{36 + math.sin(a) * r * .55:.1f}" r="1.6" fill="{t}"/>' for a, r in ((i * .21, 30 + rnd.uniform(-3, 3) if i % 9 else 18) for i in range(30)))
+        return f'<svg viewBox="0 0 220 72" aria-hidden="true">{pts}<rect x="126" y="24" width="14" height="12" rx="2" fill="none" stroke="{c}" stroke-width="2"/>{robot(110, 36)}<text x="0" y="14" font-size="9" fill="{m}">Sensor sweep</text><text x="150" y="20" font-size="9" fill="#9a3412">Obstacle</text></svg>'
+    if kind == 'path':
+        return f'<svg viewBox="0 0 220 72" aria-hidden="true"><path d="M20 50H200" stroke="{ash}" stroke-width="3" stroke-dasharray="6 5"/><rect x="100" y="40" width="22" height="20" rx="3" fill="#7a5f45"/><path d="M20 50H80Q90 50 92 36H130Q134 36 140 50H200" fill="none" stroke="{b}" stroke-width="2.5"/>{robot(20, 50)}<circle cx="200" cy="50" r="5" fill="{t}"/><text x="140" y="24" font-size="9" fill="{m}">Route updated</text></svg>'
+    if kind == 'avoid':
+        return f'<svg viewBox="0 0 220 72" aria-hidden="true"><rect x="0" y="6" width="220" height="10" fill="{ash}"/><rect x="0" y="58" width="220" height="10" fill="{ash}"/><rect x="120" y="22" width="24" height="24" rx="3" fill="#7a5f45"/><circle cx="132" cy="34" r="22" fill="none" stroke="{c}" stroke-dasharray="4 3"/><path d="M30 36C70 36 90 52 132 52S190 36 210 36" fill="none" stroke="{b}" stroke-width="2" stroke-dasharray="5 4"/>{robot(30, 36)}</svg>'
+    if kind == 'fleet':
+        return f'<svg viewBox="0 0 220 72" aria-hidden="true"><path d="M10 36H210M110 4V68" stroke="{ash}" stroke-width="10"/>{robot(70, 36)}{robot(110, 16, v)}{robot(160, 36, t)}<rect x="94" y="44" width="34" height="14" rx="7" fill="#fff" stroke="{ash}"/><text x="111" y="54" text-anchor="middle" font-size="8" fill="{m}">Yield</text></svg>'
+    if kind == 'tasks':
+        rows = [('Pick · Aisle 4', 'R-01', b), ('Move · Dock B', 'R-03', t), ('Charge', 'R-02', v)]
+        return '<svg viewBox="0 0 220 72" aria-hidden="true">' + ''.join(f'<rect x="0" y="{i * 24 + 2}" width="220" height="20" rx="10" fill="#fff"/><text x="12" y="{i * 24 + 16}" font-size="10" fill="#242424">{n}</text><circle cx="168" cy="{i * 24 + 12}" r="5" fill="{col}"/><text x="210" y="{i * 24 + 16}" text-anchor="end" font-size="10" font-weight="600" fill="#242424">{r}</text>' for i, (n, r, col) in enumerate(rows)) + '</svg>'
+    if kind == 'safety':
+        return f'<svg viewBox="0 0 220 72" aria-hidden="true"><circle cx="70" cy="36" r="32" fill="{t}" fill-opacity=".14" stroke="{t}" stroke-dasharray="4 3"/><circle cx="70" cy="36" r="16" fill="{c}" fill-opacity=".14" stroke="{c}" stroke-dasharray="4 3"/>{robot(70, 36)}<circle cx="114" cy="30" r="6" fill="#242424"/><text x="128" y="26" font-size="10" font-weight="600" fill="#242424">Slow zone</text><text x="128" y="40" font-size="9" fill="{m}">Stop zone inside</text><text x="128" y="54" font-size="9" fill="{m}">Configurable</text></svg>'
+    raise ValueError(kind)
+
+
+def kr_safety_diagram():
+    return '''<svg class="plan" viewBox="0 0 520 300" role="img" aria-label="A robot with a configurable slow zone and stop zone. A person entering the slow zone makes the robot reduce speed; entering the stop zone makes it stop.">
+  <rect width="520" height="300" rx="16" fill="#ffffff"/>
+  <path d="M20 150 H500" stroke="#e4e2dc" stroke-width="44"/>
+  <circle cx="210" cy="150" r="118" fill="#73C4C5" fill-opacity=".12" stroke="#73C4C5" stroke-width="2" stroke-dasharray="7 6"/>
+  <circle cx="210" cy="150" r="58" fill="#FF7953" fill-opacity=".12" stroke="#FF7953" stroke-width="2" stroke-dasharray="7 6"/>
+  <circle cx="210" cy="150" r="20" fill="#0A34ED"/><path d="M210 150h22" stroke="#fff" stroke-width="3"/>
+  <path d="M232 150 H340" stroke="#0A34ED" stroke-width="2" stroke-dasharray="6 5"/>
+  <circle cx="318" cy="96" r="9" fill="#242424"/><rect x="311" y="107" width="14" height="22" rx="5" fill="#242424"/>
+  <text x="210" y="24" text-anchor="middle" font-size="13" font-weight="600" fill="#1e5f60">Slow zone</text>
+  <text x="210" y="84" text-anchor="middle" font-size="12" font-weight="600" fill="#9a3412">Stop zone</text>
+  <rect x="340" y="196" width="164" height="78" rx="12" fill="#101114"/>
+  <text x="356" y="220" font-size="12" font-weight="600" fill="#e9e9ec">R-03 · Aisle 4</text>
+  <text x="356" y="240" font-size="11" fill="#ffb39b">Person in slow zone</text>
+  <text x="356" y="258" font-size="11" fill="#9b9daf">Speed reduced to 30%</text>
+</svg>'''
+
+
+def kr_stack_diagram():
+    layers = [('Robot platforms', 'Mobile robots, robotic arms, drones and inspection robots', '#f5f5f5', '#242424'),
+              ('Integration interfaces', 'Available SDKs and integration methods, including ROS 2 where supported', '#e8ecfd', '#0A34ED'),
+              ('KenRobotics', 'Perception · path planning · fleet coordination · safety zones', '#101114', '#e9e9ec'),
+              ('Ken ecosystem', 'Insights from other Ken modules where relevant', '#f1eafd', '#5a1fb0')]
+    out = ['<svg class="plan" viewBox="0 0 520 330" role="img" aria-label="Integration stack: robot platforms connect through interfaces such as ROS 2 where supported to KenRobotics, which can connect with other Ken modules.">']
+    for i, (t, d, bg, ink) in enumerate(layers):
+        y = i * 80
+        out.append(f'<rect x="{i * 10}" y="{y + 4}" width="{520 - i * 20}" height="66" rx="14" fill="{bg}" stroke="#d8d8dc"/>')
+        out.append(f'<text x="{i * 10 + 20}" y="{y + 30}" font-size="13" font-weight="600" fill="{ink}">{t}</text>')
+        out.append(f'<text x="{i * 10 + 20}" y="{y + 52}" font-size="10.5" fill="{"#9b9daf" if bg == "#101114" else "#4e4d4d"}">{d}</text>')
+        if i < 3:
+            out.append(f'<path d="M260 {y + 70} V{y + 84}" stroke="#7C28E9" stroke-width="2"/>')
+    out.append('</svg>')
+    return ''.join(out)
+
+
+KR_FAQ = [
+    ('What is KenRobotics?', 'KenRobotics is an AI robotics platform designed to support robot perception, autonomous path planning, obstacle avoidance, and coordination across connected robot fleets.'),
+    ('What is robot fleet coordination?', 'Robot fleet coordination involves managing multiple robots operating in the same environment. It can include assigning tasks, managing routes, and reducing conflicts between robots.'),
+    ('Can KenRobotics work with existing robots?', 'KenRobotics is designed to integrate with compatible robot platforms. Support depends on the robot hardware, available interfaces, and integration requirements.'),
+    ('What is ROS 2, and why does it matter?', 'ROS 2 is a software framework commonly used to build robotics applications. Where supported, ROS 2 integration can help connect robotic systems with navigation, perception, and coordination software.'),
+    ('How does KenRobotics help robots avoid obstacles?', "The system uses sensor inputs and AI-based environment understanding to support obstacle detection and route planning. Actual performance depends on the robot's sensors, environment, and safety configuration."),
+    ('Can KenRobotics coordinate robots from different manufacturers?', 'Multi-platform integration depends on the available interfaces, supported robot models, and compatibility of their control systems. Contact the Intelense team to confirm support for your fleet.'),
+    ('Can KenRobotics be used around people?', 'KenRobotics supports configurable human-robot safety zones and navigation logic. Deployments must also use appropriate hardware-level safety mechanisms, risk assessments, and applicable safety standards.'),
+    ('Which industries can use KenRobotics?', 'Potential applications include warehousing, logistics, manufacturing, construction, agriculture, healthcare, and security. The available functions depend on the robot platform and deployment.'),
+]
+
+
+def page_kenrobotics():
+    m = MOD['kenrobotics']
+    fleet = ''.join(f'<li><i style="background:{col}"></i><b>{rid}</b><span data-fleet-status="{rid}">On route</span></li>' for rid, col in (('R-01', '#5b7cff'), ('R-02', '#a98bf5'), ('R-03', '#73C4C5'), ('R-04', '#78AFCF')))
+    hero = f'''<section class="page-hero kv-hero" style="--mod:{m["color"]}">
+    <div class="wash wash-a" aria-hidden="true"></div>
+    <div class="wash wash-b" aria-hidden="true"></div>
+    <div class="cursor-grid" aria-hidden="true"></div>
+    <div class="wrap kv-hero-grid">
+      <div class="kv-hero-copy">
+        {crumbs(('modules.html', 'Modules'), (None, 'KenRobotics'))}
+        <span class="eyebrow">AI for autonomous robotics by Intelense</span>
+        {logo_img(m, 0.36, 'hero-logo')}
+        <h1>Smarter Robots. Better Coordination.</h1>
+        <p class="lede">KenRobotics helps autonomous robots understand their surroundings, navigate changing environments, avoid obstacles, and coordinate tasks across robot fleets.</p>
+        <div class="hero-ctas"><a class="btn btn-blue" href="contact.html">Book a Demo</a><a class="btn btn-ghost" href="#capabilities">Explore Capabilities</a></div>
+        <p class="kv-tagline">AI-powered perception, path planning, and fleet coordination.</p>
+      </div>
+      <div class="kv-hero-visual">
+        <div class="kr-console" role="img" aria-label="Live fleet map of a warehouse: four robots follow planned routes, one detours around an obstacle, and robots slow down near a person">
+          <div class="iot-top"><b style="color:#e9e9ec;font-size:14px">Fleet map · Warehouse A</b><span class="c-live">Live</span></div>
+          <div class="kr-body">
+            <canvas data-fleet width="900" height="540"></canvas>
+            <ul class="kr-fleet"><li class="kr-h">Fleet · 4 robots</li>{fleet}</ul>
+          </div>
+        </div>
+        <p class="demo-note">Simulated fleet and example data</p>
+      </div>
+    </div>
+  </section>'''
+
+    caps = [('perception', 'AI Perception', 'Process sensor inputs to understand surroundings and detect obstacles.'),
+            ('path', 'Dynamic Path Planning', 'Calculate routes and adapt when conditions or obstacles change.'),
+            ('avoid', 'Obstacle Avoidance', 'Help robots navigate around objects and respond to changing environments.'),
+            ('fleet', 'Fleet Coordination', 'Coordinate tasks and movements across multiple robots.'),
+            ('tasks', 'Task Scheduling', 'Allocate work based on operational priorities and fleet availability.'),
+            ('safety', 'Human-Robot Safety', 'Support configurable safety zones for environments shared by people and robots.')]
+    what = f'''<section class="block" id="what">
+    <div class="wrap">
+      {head_block('What KenRobotics does', 'Give Your Robots the Intelligence to Work Together', 'Autonomous robots need more than the ability to move. They need to understand their surroundings, respond to changing conditions, and work efficiently alongside people and other machines.')}
+      <div class="kv-split" style="margin-bottom:40px;align-items:start">
+        <p class="kv-body" style="margin:0;font-size:17px">KenRobotics brings AI perception, dynamic path planning, and fleet coordination together to help robots navigate real-world environments and manage operational tasks.</p>
+        <p class="kv-body" style="margin:0;font-size:17px">From warehouse robots moving goods to inspection robots operating in complex environments, KenRobotics helps teams coordinate autonomous operations more effectively.</p>
+      </div>
+      <h3 class="kc-sub" id="capabilities">Key capabilities</h3>
+      <div class="kv-feats">{''.join(f'<article class="kv-feat"><div class="kv-mini">{kr_mini(k)}</div><span class="kv-num">{i + 1:02d}</span><h3>{t}</h3><p>{d}</p></article>' for i, (k, t, d) in enumerate(caps))}</div>
+    </div>
+  </section>'''
+
+    steps = [('Integrate Your Robots', 'Connect compatible robot platforms through supported integrations and interfaces. Configure the environment, operating zones, and workflow requirements for your deployment.'),
+             ('Perceive, Plan, and Navigate', 'AI processes sensor data to build an understanding of the surroundings. Robots use this information to plan routes, identify obstacles, and adapt their movements.'),
+             ('Coordinate Your Fleet', 'Coordinate tasks across connected robots, manage route conflicts, and allocate work based on operational priorities.'),
+             ('Monitor and Scale', 'Monitor fleet activity and add compatible robots as operational needs grow, subject to platform and integration requirements.')]
+    how = f'''<section class="block" id="how">
+    <div class="wrap">
+      {head_block('How it works', 'From Robot Integration to Coordinated Operations', '')}
+      <ol class="kv-steps four">{''.join(f'<li><span>{i + 1:02d}</span><h3>{t}</h3><p>{d}</p></li>' for i, (t, d) in enumerate(steps))}</ol>
+    </div>
+  </section>'''
+
+    core = [('eye', 'Real-Time Environment Understanding', 'Use sensor inputs to help robots interpret their surroundings and respond to changes in their operating environment.'),
+            ('route', 'Adaptive Navigation', 'Plan and adjust routes around obstacles, restricted areas, and changing conditions.'),
+            ('robot', 'Multi-Robot Coordination', 'Help multiple robots work within the same environment while managing task allocation and movement conflicts.'),
+            ('zone', 'Human-Robot Safety Zones', 'Configure operating boundaries and safety rules for environments where people and robots work near one another.'),
+            ('timeline', 'Intelligent Task Allocation', 'Prioritise and distribute tasks across a connected fleet according to operational requirements.'),
+            ('plug', 'Flexible Robot Integration', 'Connect supported robot platforms through available SDKs and integration methods, including ROS 2 where supported.')]
+    corecaps = f'''<section class="block" id="core">
+    <div class="wrap">
+      {head_block('Core capabilities', 'Intelligence for Real-World Robotics', '')}
+      <div class="caps">{''.join(f'<div class="cap">{icon(ic)}<h3>{t}</h3><p>{d}</p></div>' for ic, t, d in core)}</div>
+    </div>
+  </section>'''
+
+    uses = [('forklift', 'Warehousing and Logistics', 'Coordinate autonomous mobile robots for material movement, picking support, sorting, and internal logistics.', 'industrial.html#industrial', 'industrial'),
+            ('wrench', 'Manufacturing', 'Support automated material handling, repetitive movement tasks, and coordination between robotic systems on production floors.', '', 'industrial'),
+            ('patrol', 'Defence and Security', 'Support autonomous patrol, inspection, and other robotic operations in environments that require carefully configured safety and access controls.', '', 'public-safety'),
+            ('hardhat', 'Construction', 'Enable robotic and drone-based site inspection, surveying, and progress monitoring, depending on the platform and integration.', '', 'industrial'),
+            ('leaf', 'Agriculture', 'Support field robots for crop scouting, spraying, and other precision operations, with opportunities to integrate insights from KenAgri.', 'kenagri', 'agriculture'),
+            ('plug', 'Healthcare', 'Support compatible autonomous systems used for internal delivery and transport tasks in healthcare facilities.', '', 'healthcare')]
+    where = f'''<section class="block" id="industries">
+    <div class="wrap">
+      {head_block('Where KenRobotics can be used', 'Autonomous Intelligence Across Industries', '')}
+      <div class="caps">{''.join(f'<div class="cap">{icon(ic)}<h3>{t}</h3><p>{d}</p>' + (f'<a class="kv-link" href="kenagri.html">Explore KenAgri →</a>' if extra == 'kenagri' else '') + f'<a class="kv-link" href="industries.html#{a}"{" style=padding-top:0" if extra == "kenagri" else ""}>More on {IND[a]["name"].lower()} →</a></div>' for ic, t, d, extra, a in uses)}</div>
+    </div>
+  </section>'''
+
+    collab = f'''<section class="block" id="collaboration">
+    <div class="wrap kv-split" style="align-items:start">
+      <div>
+        <span class="eyebrow">Human-robot collaboration</span>
+        <h2 style="margin-top:18px">Designed for Dynamic Work Environments</h2>
+        <p class="lede" style="margin-top:20px">Robots often operate in spaces where people, vehicles, and other machines are moving at the same time.</p>
+        <p class="kv-body">KenRobotics supports configurable safety zones and dynamic navigation to help robots respond to obstacles and changing conditions.</p>
+        <p class="kv-body">Teams can define operating areas, restricted zones, and workflow rules according to their environment and deployment requirements.</p>
+        <p class="kv-body">The goal is to make autonomous operations more coordinated and predictable while keeping safety requirements central to deployment planning.</p>
+        <p class="kv-body kc-note"><b style="color:var(--off-black)">Note:</b> AI-based detection and navigation should complement, not replace, certified robot safety systems and site-specific safety procedures.</p>
+      </div>
+      <div class="kr-collab">
+        <div class="tile-solo" role="img" aria-label="Robot front camera in a warehouse aisle: a pallet blocks the path, a person is detected ahead, and the planned route bends around the obstacle">
+          <canvas class="cctv" data-scene="robot" data-osd="R-03  FRONT CAMERA" width="960" height="540"></canvas>
+        </div>
+        <figure class="panel" style="margin:12px 0 0;padding:12px">{kr_safety_diagram()}</figure>
+        <p class="demo-note">Simulated camera feed and example safety zones</p>
+      </div>
+    </div>
+  </section>'''
+
+    integ = f'''<section class="block" id="integration">
+    <div class="wrap">
+      {head_block('Integration and scalability', 'Start with Your Robots. Build from There.', 'Integrating autonomous robotics into existing operations can involve different hardware platforms, sensors, layouts, and workflows.')}
+      <div class="kv-split" style="align-items:center">
+        <div>
+          <p class="kv-body" style="margin-top:0">KenRobotics is designed to support compatible robot platforms and integration methods, helping teams build toward coordinated fleet operations.</p>
+          <ul class="kv-defs">
+            <li><b>Robot Integration</b><span>Connect supported robot platforms through available interfaces.</span></li>
+            <li><b>Environment Mapping</b><span>Configure floor plans, operating areas, and restricted zones.</span></li>
+            <li><b>Fleet Management</b><span>Coordinate tasks and movements across connected robots.</span></li>
+            <li><b>Expandable Operations</b><span>Extend deployments as robot fleets and workflows grow.</span></li>
+            <li><b>Platform Integration</b><span>Explore connections with other Intelense AI modules where relevant.</span></li>
+          </ul>
+          <p class="kv-body kc-note">Integration timelines and supported capabilities depend on the robot model, hardware, and deployment requirements.</p>
+        </div>
+        <figure class="panel" style="margin:0">{kr_stack_diagram()}</figure>
+      </div>
+    </div>
+  </section>'''
+
+    eco_txt = [('kenvision', 'AI video analytics for footfall, movement, queues, and operational visibility.'),
+               ('kensafety', 'AI-powered workplace safety monitoring and hazard detection.'),
+               ('keniot', 'Sensor analytics, anomaly detection, and predictive maintenance.'),
+               ('kenagri', 'AI-powered precision agriculture and crop intelligence.'),
+               ('kenhome', 'AI-powered monitoring for homes and connected spaces.'),
+               ('kenvoice', 'AI audio analytics for retail conversations.')]
+    eco = f'''<section class="block" id="ecosystem">
+    <div class="wrap">
+      {head_block('The Ken ecosystem', 'One AI Platform. Connected Intelligence.', 'KenRobotics is part of the Intelense Ken ecosystem, designed to bring AI capabilities across different operational environments.')}
+      <div class="kr-eco">{''.join(f'<a class="kr-eco-card" href="{k}.html" style="--mod:{MOD[k]["color"]}">{logo_img(MOD[k], 0.2)}<span><b>{MOD[k]["name"]}:</b> {d}</span></a>' for k, d in eco_txt)}</div>
+      <p class="kv-body" style="max-width:62ch">Together, these modules can help businesses connect insights from their physical environments, equipment, and operations.</p>
+    </div>
+  </section>'''
+
+    final = f'''<section class="cta">
+    <div class="wash wash-b" aria-hidden="true" style="top:10%;right:20%"></div>
+    <div class="wash wash-a" aria-hidden="true" style="top:30%;left:20%"></div>
+    <div class="wrap">
+      <span class="eyebrow">Get started</span>
+      <h2 style="margin-top:20px">Ready to Make Your Robot Fleet Smarter?</h2>
+      <p class="lede" style="margin:18px auto 0">Explore how KenRobotics can support autonomous navigation, fleet coordination, and intelligent operations for your environment.</p>
+      <div class="hero-ctas"><a class="btn btn-blue" href="contact.html">Book a Demo</a></div>
+      <p class="kv-sign">KenRobotics by Intelense — Intelligence for autonomous systems.</p>
+    </div>
+  </section>'''
+
+    body = '\n\n  '.join([hero, what, how, corecaps, where, collab, integ, eco, faq_block(KR_FAQ), final, faq_schema(KR_FAQ)])
+    return dict(file='kenrobotics.html', title='KenRobotics: AI for Autonomous Robotics | Intelense',
+                desc='KenRobotics helps autonomous robots understand their surroundings, navigate changing environments, avoid obstacles and coordinate tasks across robot fleets.',
+                active='kenrobotics', body=body, cctv=True)
+
+
+PAGES = [page_index, page_platform, page_modules, page_kenvision, page_kensafety, page_kenagri, page_kenhome, page_keniot, page_kenvoice, page_kenrobotics, page_industries, page_about, page_contact]
 
 # ---------------------------------------------------------------- output
 

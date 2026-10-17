@@ -772,3 +772,24 @@ footer a:hover { color: var(--parchment); }
 .kc-missed li:first-child { border-top: 0; }
 .kc-missed b { color: #ffb39b; font-weight: 600; }
 @media (max-width: 640px) { .kc-body { grid-template-columns: minmax(0, 1fr); } .kc-lines { min-height: 0; } }
+
+/* ===== KenRobotics page ===== */
+.kr-console { background: var(--screen); color: #e9e9ec; border-radius: 28px; padding: 18px; position: relative; overflow: hidden; }
+.kr-console::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 3px; background: var(--brand-gradient); }
+.kr-body { display: grid; grid-template-columns: minmax(0, 1fr) 128px; gap: 10px; align-items: start; }
+.kr-body canvas { display: block; width: 100%; height: auto; border-radius: 14px; border: 1px solid #25262c; }
+.kr-fleet { list-style: none; margin: 0; padding: 10px; display: grid; gap: 8px; align-content: start; border-radius: 14px; background: #16171b; border: 1px solid #25262c; }
+.kr-h { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: #9b9daf; }
+.kr-fleet li:not(.kr-h) { display: grid; grid-template-columns: 10px minmax(0, 1fr); gap: 0 8px; align-items: center; padding: 7px 8px; border-radius: 10px; background: #1d1f24; }
+.kr-fleet i { width: 10px; height: 10px; border-radius: 50%; }
+.kr-fleet b { font-size: 12px; font-weight: 600; }
+.kr-fleet span { grid-column: 2; font-size: 11px; color: #9fe0e1; }
+.kr-fleet span.warn { color: #ffb39b; }
+.kr-eco { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin-bottom: 24px; }
+.kr-eco-card { display: grid; gap: 12px; padding: 22px; border-radius: 24px; border: 1px solid var(--ash); background: var(--white); text-decoration: none; transition: border-color .2s; }
+.kr-eco-card:hover { border-color: var(--mod); }
+.kr-eco-card img { height: auto; width: 150px; max-width: 100%; }
+.kr-eco-card span { font-size: 15px; color: var(--graphite); }
+.kr-eco-card b { color: var(--off-black); font-weight: 600; }
+@media (max-width: 1080px) { .kr-eco { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 640px) { .kr-body, .kr-eco { grid-template-columns: minmax(0, 1fr); } }
