@@ -70,6 +70,37 @@
   });
   document.addEventListener('pointermove', function (e) { if (tip && !tip.hidden) { tip.style.left = e.clientX + 'px'; tip.style.top = e.clientY + 'px'; } });
 
+  // Live sensor stream (KenIoT): signal inside an expected band, with periodic drift outside it
+  document.querySelectorAll('canvas[data-iotstream]').forEach(function (cv) {
+    var c = cv.getContext('2d'), W = cv.width, H = cv.height, N = 160, pts = [], t = 0, dark = cv.dataset.iotstream === 'dark';
+    var mid = H * .6, band = H * .16;
+    function sample(i) {
+      var cyc = (i % 420) / 420, drift = cyc > .62 ? Math.sin((cyc - .62) / .38 * Math.PI) * band * 2.1 : 0;
+      return mid - drift + Math.sin(i * .35) * band * .35 + Math.sin(i * 1.7) * band * .18 + (Math.random() - .5) * band * .3;
+    }
+    for (var i = 0; i < N; i++) pts.push(sample(i));
+    t = N;
+    function draw() {
+      c.clearRect(0, 0, W, H);
+      c.fillStyle = dark ? 'rgba(115,196,197,.10)' : 'rgba(115,196,197,.16)'; c.fillRect(0, mid - band, W, band * 2);
+      c.strokeStyle = dark ? 'rgba(115,196,197,.5)' : 'rgba(30,95,96,.45)'; c.setLineDash([5, 5]); c.lineWidth = 1;
+      c.beginPath(); c.moveTo(0, mid - band); c.lineTo(W, mid - band); c.moveTo(0, mid + band); c.lineTo(W, mid + band); c.stroke(); c.setLineDash([]);
+      c.font = '600 11px Montserrat, system-ui, sans-serif'; c.fillStyle = dark ? '#9fe0e1' : '#1e5f60'; c.fillText('Expected range', 8, mid - band - 6);
+      c.lineWidth = 2; c.lineJoin = 'round';
+      for (var k = 1; k < N; k++) {
+        var x0 = (k - 1) / (N - 1) * W, x1 = k / (N - 1) * W, out = Math.abs(pts[k] - mid) > band;
+        c.strokeStyle = out ? '#FF7953' : (dark ? '#5b7cff' : '#0A34ED');
+        c.beginPath(); c.moveTo(x0, pts[k - 1]); c.lineTo(x1, pts[k]); c.stroke();
+      }
+      var last = pts[N - 1], anomaly = Math.abs(last - mid) > band;
+      c.fillStyle = anomaly ? '#FF7953' : (dark ? '#5b7cff' : '#0A34ED'); c.beginPath(); c.arc(W - 4, last, 4, 0, 7); c.fill();
+      var tag = cv.parentElement && cv.parentElement.querySelector('[data-iotstatus]');
+      if (tag) { tag.textContent = anomaly ? 'Anomaly detected' : 'Within expected range'; tag.classList.toggle('bad', anomaly); }
+    }
+    draw();
+    if (!reduce) setInterval(function () { pts.shift(); pts.push(sample(t++)); draw(); }, 90);
+  });
+
   // Contact form: validates in the page; not wired to a mail service yet
   var form = document.getElementById('demo-form');
   if (form) {

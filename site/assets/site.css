@@ -693,3 +693,35 @@ footer a:hover { color: var(--parchment); }
 .kh-acts span { flex: 1; text-align: center; font-size: 11px; font-weight: 600; padding: 6px 4px; border-radius: 10px; background: #2c2e35; }
 .kh-acts span.pri { background: var(--g-blue); }
 @media (max-width: 640px) { .kh-row { grid-template-columns: minmax(0, 1fr); } .kh-phone { max-width: 260px; justify-self: center; } }
+
+/* ===== KenIoT page ===== */
+.kv-feats.four { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.kv-feats.four .kv-feat { padding: 22px; }
+.kv-feats.four .kv-feat h3 { font-size: 18px; }
+.ki-stream { position: relative; border-radius: 14px; background: #16171b; border: 1px solid #25262c; overflow: hidden; }
+.ki-stream canvas { display: block; width: 100%; height: auto; }
+.ki-status { position: absolute; right: 10px; top: 10px; font-size: 11px; font-weight: 600; padding: 5px 10px; border-radius: 9999px; background: #2a3a3a; color: #9fe0e1; }
+.ki-status.bad { background: #3d2620; color: #ffb39b; }
+.ki-live .iot-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.ki-live .sensor { padding: 10px 12px; }
+.ki-live .sensor .val { font-size: 20px; }
+.ki-live .sensor svg { height: 30px; }
+.ki-four { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.ki-bar { display: inline-block; width: 60px; height: 6px; border-radius: 3px; background: #25262c; vertical-align: middle; margin-right: 6px; overflow: hidden; }
+.ki-bar i { display: block; height: 100%; border-radius: 3px; }
+.ag-table small { color: #9b9daf; font-size: 10px; }
+.ki-wo { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.ki-wo li { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 2px 8px; padding: 10px 12px; border-radius: 12px; background: #1d1f24; border: 1px solid #25262c; }
+.ki-wo b { font-size: 11px; color: #9b9daf; font-weight: 600; }
+.ki-wo span { grid-column: 1; font-size: 13px; color: #e9e9ec; }
+.ki-wo em { grid-column: 2; grid-row: 1 / span 2; align-self: center; font-style: normal; font-size: 10px; font-weight: 600; padding: 3px 8px; border-radius: 9999px; background: #2a3a3a; color: #9fe0e1; }
+.ki-wo em.bad { background: #3d2620; color: #ffb39b; }
+.ki-wo em.warn { background: #3a3424; color: #f2d28a; }
+.ki-steps { grid-template-columns: repeat(4, minmax(0, 1fr)); margin-top: 16px; }
+.ki-steps li { grid-template-columns: minmax(0, 1fr) auto; }
+.ki-steps time { grid-column: 1 / -1; }
+@media (max-width: 1080px) {
+  .kv-feats.four, .ki-steps { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .ki-live .iot-grid, .ki-four { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 640px) { .kv-feats.four, .ki-steps { grid-template-columns: minmax(0, 1fr); } }

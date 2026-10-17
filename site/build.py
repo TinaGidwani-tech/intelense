@@ -135,7 +135,7 @@ MODULES = [
                ('agriculture', 'Orchards and vineyards', 'Perimeter security and canopy checks.')],
          visual='agri', related=['keniot', 'kenrobotics', 'kenvision']),
     dict(key='keniot', name='KenIoT', kind='Predictive monitoring', color='#7C28E9', logo='keniot.png', size=(643, 287),
-         card='Reads equipment and environmental sensors to predict failures and send maintenance teams before anything breaks.',
+         card='Turns data from connected sensors and equipment into real-time monitoring, anomaly detection and predictive maintenance insights.',
          h1='Hear the machine before it fails.',
          lede='KenIoT reads vibration, temperature, power and environmental sensors, learns what normal looks like, and warns you when something starts to drift.',
          caps=[('pulse', 'Vibration and temperature', 'Continuous readings from motors, pumps, compressors and conveyors.'),
@@ -526,11 +526,11 @@ def page_modules():
   </section>'''
     rows = []
     watch = {'kenvision': 'Existing CCTV and IP cameras', 'kensafety': 'Cameras on floors, docks and sites', 'kenhome': 'Indoor, outdoor, doorbell and driveway cameras',
-             'kenagri': 'Satellite and drone imagery, soil sensors, weather data', 'keniot': 'Vibration, temperature, power and air sensors',
+             'kenagri': 'Satellite and drone imagery, soil sensors, weather data', 'keniot': 'Temperature, vibration, pressure, humidity and power sensors',
              'kenrobotics': 'Robot and drone cameras', 'kenvoice': 'Speakers, radios, phones and microphones'}
     alerts = {'kenvision': 'Footfall, heatmaps, dwell time, queue build-up', 'kensafety': 'Missing PPE, restricted zones, human-vehicle proximity, fire and smoke, falls',
               'kenhome': 'Intrusion, falls and inactivity, restricted zones, pets, vehicles', 'kenagri': 'Crop stress, pest and disease risk, irrigation needs, yield estimates',
-              'keniot': 'Drift, overheating, predicted failures', 'kenrobotics': 'Obstacles, patrol findings, inspection issues',
+              'keniot': 'Anomalies, threshold breaches, predicted failures, work orders', 'kenrobotics': 'Obstacles, patrol findings, inspection issues',
               'kenvoice': 'Keywords, calls for help, spoken alerts'}
     best = {m['key']: sorted({u[0] for u in m['uses']}, key=[i['id'] for i in INDUSTRIES].index) for m in MODULES}
     for m in MODULES:
@@ -2010,7 +2010,271 @@ def page_kenhome():
                 active='kenhome', body=body, cctv=True)
 
 
-PAGES = [page_index, page_platform, page_modules, page_kenvision, page_kensafety, page_kenagri, page_kenhome, *[(lambda m: (lambda: page_module(m)))(m) for m in MODULES if m['key'] not in ('kenvision', 'kensafety', 'kenagri', 'kenhome')], page_industries, page_about, page_contact]
+# ---------------------------------------------------------------- KenIoT page
+
+def ki_mini(kind):
+    b, m, c, ash, t, v = '#0A34ED', '#6C6E82', '#FF7953', '#e4e2dc', '#73C4C5', '#7C28E9'
+    if kind == 'realtime':
+        vals = [('Temp', '71°C'), ('Vibration', '4.2'), ('Pressure', '6.1 bar'), ('Power', '18 kW')]
+        return '<svg viewBox="0 0 220 72" aria-hidden="true">' + ''.join(f'<rect x="{(i % 2) * 112}" y="{(i // 2) * 37}" width="106" height="32" rx="8" fill="#fff"/><circle cx="{(i % 2) * 112 + 12}" cy="{(i // 2) * 37 + 16}" r="4" fill="{c if i == 1 else t}"/><text x="{(i % 2) * 112 + 22}" y="{(i // 2) * 37 + 14}" font-size="8" fill="{m}">{n}</text><text x="{(i % 2) * 112 + 22}" y="{(i // 2) * 37 + 26}" font-size="11" font-weight="600" fill="#242424">{val}</text>' for i, (n, val) in enumerate(vals)) + '</svg>'
+    if kind == 'anomaly':
+        import math
+        pts = ' '.join(f'{x},{36 - 6 * math.sin(x / 9) - (22 if 140 < x < 170 else 0) * math.sin((x - 140) / 30 * math.pi)}' for x in range(0, 221, 5))
+        return f'<svg viewBox="0 0 220 72" aria-hidden="true"><rect x="0" y="24" width="220" height="24" fill="{t}" fill-opacity=".18"/><polyline points="{pts}" fill="none" stroke="{b}" stroke-width="2"/><circle cx="155" cy="16" r="12" fill="none" stroke="{c}" stroke-width="2"/><text x="172" y="66" font-size="9" fill="{m}">Anomaly</text></svg>'
+    if kind == 'predict':
+        return f'<svg viewBox="0 0 220 72" aria-hidden="true"><line x1="0" y1="56" x2="220" y2="56" stroke="{c}" stroke-dasharray="4 3"/><text x="2" y="68" font-size="8" fill="{m}">Failure threshold</text><path d="M0 14 C60 16 100 20 130 28" fill="none" stroke="{b}" stroke-width="2"/><path d="M130 28 C160 36 180 46 200 56" fill="none" stroke="{b}" stroke-width="2" stroke-dasharray="4 3"/><circle cx="130" cy="28" r="4" fill="{b}"/><text x="140" y="20" font-size="10" font-weight="600" fill="#242424">~9 days</text><text x="140" y="32" font-size="8" fill="{m}">to threshold</text></svg>'
+    if kind == 'health':
+        rows = [('Motor M-14', .62, c), ('Pump P-03', .86, t), ('Compressor C-3', .91, t)]
+        return '<svg viewBox="0 0 220 72" aria-hidden="true">' + ''.join(f'<text x="0" y="{i * 24 + 14}" font-size="10" fill="{m}">{n}</text><rect x="92" y="{i * 24 + 5}" width="100" height="10" rx="5" fill="{ash}"/><rect x="92" y="{i * 24 + 5}" width="{100 * p:.0f}" height="10" rx="5" fill="{col}"/><text x="220" y="{i * 24 + 14}" text-anchor="end" font-size="10" font-weight="600" fill="#242424">{int(p * 100)}</text>' for i, (n, p, col) in enumerate(rows)) + '</svg>'
+    if kind == 'alerts':
+        return f'<svg viewBox="0 0 220 72" aria-hidden="true"><rect x="10" y="6" width="200" height="40" rx="10" fill="#101114"/><circle cx="28" cy="26" r="6" fill="{c}"/><text x="42" y="22" font-size="9" font-weight="600" fill="#fff">Vibration above range</text><text x="42" y="35" font-size="8" fill="#b9bbc8">Motor M-14 · Line 2 · 09:42</text><rect x="30" y="52" width="160" height="16" rx="8" fill="#fff"/><text x="110" y="63" text-anchor="middle" font-size="8" fill="{m}">Threshold 4.0 mm/s · rule active</text></svg>'
+    if kind == 'integrate':
+        nodes = ''.join(f'<rect x="0" y="{4 + i * 23}" width="60" height="18" rx="9" fill="#fff" stroke="{ash}"/><text x="30" y="{16 + i * 23}" text-anchor="middle" font-size="8" fill="#242424">{n}</text><path d="M60 {13 + i * 23} C80 {13 + i * 23} 80 36 98 36" fill="none" stroke="{t}" stroke-width="1.5"/>' for i, n in enumerate(['Sensors', 'PLCs', 'Meters']))
+        return f'<svg viewBox="0 0 220 72" aria-hidden="true">{nodes}<rect x="98" y="24" width="50" height="24" rx="6" fill="{m}"/><text x="123" y="40" text-anchor="middle" font-size="8" fill="#fff">Gateway</text><path d="M148 36H168" stroke="{t}" stroke-width="1.5"/><rect x="168" y="22" width="52" height="28" rx="8" fill="{v}"/><text x="194" y="40" text-anchor="middle" font-size="9" font-weight="600" fill="#fff">KenIoT</text></svg>'
+    if kind == 'workflow':
+        return f'<svg viewBox="0 0 220 72" aria-hidden="true"><rect x="0" y="22" width="62" height="28" rx="8" fill="#ffe9e2"/><text x="31" y="40" text-anchor="middle" font-size="9" font-weight="600" fill="#9a3412">Anomaly</text><path d="M62 36H84" stroke="{m}" stroke-width="1.5"/><path d="M80 32l5 4-5 4" fill="none" stroke="{m}" stroke-width="1.5"/><rect x="86" y="6" width="134" height="60" rx="8" fill="#fff" stroke="{ash}"/><text x="96" y="22" font-size="9" font-weight="600" fill="#242424">Work order WO-1042</text><text x="96" y="36" font-size="8" fill="{m}">Inspect bearing, motor M-14</text><rect x="96" y="44" width="52" height="14" rx="7" fill="#e6f4f4"/><text x="122" y="54" text-anchor="middle" font-size="8" fill="#1e5f60">Assigned</text></svg>'
+    if kind == 'trends':
+        import math
+        pts = ' '.join(f'{x},{50 - x * .12 - 5 * math.sin(x / 11)}' for x in range(0, 221, 5))
+        marks = ''.join(f'<circle cx="{x}" cy="{50 - x * .12 - 5 * math.sin(x / 11):.1f}" r="4" fill="{c}"/>' for x in (60, 150, 205))
+        gl = ''.join(f'<line x1="{x}" y1="4" x2="{x}" y2="66" stroke="{ash}"/>' for x in (55, 110, 165))
+        return f'<svg viewBox="0 0 220 72" aria-hidden="true">{gl}<polyline points="{pts}" fill="none" stroke="{b}" stroke-width="2"/>{marks}<text x="2" y="70" font-size="8" fill="{m}">12 weeks · 3 recurring anomalies</text></svg>'
+    raise ValueError(kind)
+
+
+def ki_example_chart():
+    import math
+    weeks = 10
+    n = weeks * 7
+    vals = []
+    for d in range(n):
+        base = 2.3 + .15 * math.sin(d * .9) + .08 * math.sin(d * 2.3)
+        if d > 38:
+            base += (d - 38) * .045
+        vals.append(round(base, 2))
+    W, H, ml, mb, mt = 640, 240, 40, 30, 16
+    pw, ph = W - ml - 10, H - mb - mt
+    lo, hi = 1.5, 4.5
+    X = lambda i: ml + i * pw / (n - 1)
+    Y = lambda v: mt + ph - (v - lo) / (hi - lo) * ph
+    alert_i = next(i for i, v in enumerate(vals) if v > 3.0)
+    out = [f'<svg class="chart" viewBox="0 0 {W} {H}" role="img" aria-label="Motor vibration over ten weeks: steady inside the normal range until week six, then rising until an alert at {vals[alert_i]} mm/s triggers an inspection.">']
+    for gv in (2, 3, 4):
+        out.append(f'<line x1="{ml}" x2="{W - 10}" y1="{Y(gv):.1f}" y2="{Y(gv):.1f}" stroke="#e4e2dc"/><text x="{ml - 8}" y="{Y(gv) + 3:.1f}" text-anchor="end" fill="#6C6E82" font-size="10">{gv}</text>')
+    out.append(f'<rect x="{ml}" y="{Y(2.8):.1f}" width="{pw}" height="{Y(1.9) - Y(2.8):.1f}" fill="#73C4C5" fill-opacity=".16"/><text x="{ml + 8}" y="{Y(2.8) + 14:.1f}" fill="#1e5f60" font-size="10" font-weight="600">Normal operating range</text>')
+    out.append(f'<line x1="{ml}" x2="{W - 10}" y1="{Y(3.0):.1f}" y2="{Y(3.0):.1f}" stroke="#FF7953" stroke-dasharray="5 4"/><text x="{ml + 8}" y="{Y(3.0) - 6:.1f}" fill="#9a3412" font-size="10" font-weight="600">Alert threshold 3.0 mm/s</text>')
+    pts_ok = ' '.join(f'{X(i):.1f},{Y(v):.1f}' for i, v in enumerate(vals[:alert_i + 1]))
+    pts_bad = ' '.join(f'{X(i):.1f},{Y(v):.1f}' for i, v in enumerate(vals) if i >= alert_i)
+    out.append(f'<polyline points="{pts_ok}" fill="none" stroke="#0A34ED" stroke-width="2" stroke-linejoin="round"/><polyline points="{pts_bad}" fill="none" stroke="#FF7953" stroke-width="2" stroke-linejoin="round"/>')
+    for i in range(0, n, 7):
+        out.append(f'<circle cx="{X(i):.1f}" cy="{Y(vals[i]):.1f}" r="7" fill="transparent" data-tip="Week {i // 7 + 1} · {vals[i]} mm/s"/>')
+    drift_i = 39
+    for i, lab, col in ((drift_i, 'Drift begins', '#6C6E82'), (alert_i, 'Alert sent', '#FF7953')):
+        out.append(f'<line x1="{X(i):.1f}" x2="{X(i):.1f}" y1="{mt}" y2="{mt + ph}" stroke="{col}" stroke-opacity=".6"/><circle cx="{X(i):.1f}" cy="{Y(vals[i]):.1f}" r="5" fill="{col}" stroke="#fff" stroke-width="2"/><text x="{X(i) - 6:.1f}" y="{mt + 10}" text-anchor="end" fill="{col}" font-size="10" font-weight="600">{lab}</text>')
+    for w in range(weeks):
+        out.append(f'<text x="{X(w * 7 + 3):.1f}" y="{H - 10}" text-anchor="middle" fill="#6C6E82" font-size="10">Wk {w + 1}</text>')
+    out.append(f'<text x="{ml}" y="{mt - 4}" fill="#6C6E82" font-size="10">mm/s</text></svg>')
+    return ''.join(out)
+
+
+KI_FAQ = [
+    ('What is an IoT monitoring platform?', 'An IoT monitoring platform connects to compatible devices and sensors to collect, display and analyse data. It helps businesses monitor operating conditions, identify unusual readings and understand how connected equipment is performing.'),
+    ('What is KenIoT?', "KenIoT is Intelense's IoT and sensor intelligence solution. It brings together data from compatible sensors and industrial systems to support real-time monitoring, anomaly detection and predictive maintenance."),
+    ('What is predictive maintenance?', 'Predictive maintenance uses equipment data and condition indicators to identify signs of potential failure. It helps maintenance teams investigate problems and plan servicing based on equipment condition rather than relying only on fixed schedules or waiting for a breakdown.'),
+    ('How does AI anomaly detection work?', 'AI anomaly detection learns or uses expected operating patterns and compares them with incoming sensor data. When readings deviate from those patterns, the system can flag the change for investigation. Not every anomaly indicates a fault, so alerts may require human review.'),
+    ('What types of sensors can KenIoT monitor?', 'Depending on supported integrations, KenIoT can work with sensors that measure variables such as temperature, vibration, pressure, humidity, soil moisture and electrical current. The exact range depends on the devices and communication protocols supported by the deployment.'),
+    ('Can KenIoT work with existing industrial equipment?', 'KenIoT is designed to integrate with compatible existing sensors and industrial systems. For older equipment without digital outputs, additional retrofit sensors or gateways may be required.'),
+    ('How does KenIoT help reduce equipment downtime?', 'KenIoT can identify unusual sensor patterns that may indicate developing equipment issues. This gives teams an opportunity to investigate and plan maintenance earlier. Actual downtime reduction depends on the equipment, data quality, detection performance and maintenance response.'),
+    ('Does KenIoT automatically create maintenance tickets?', 'Maintenance tickets or work orders can be created through supported integrations and configured workflows. Availability depends on the maintenance management system and deployment setup.'),
+    ('Can KenIoT monitor multiple sites?', 'KenIoT is designed to support connected asset monitoring across different operational environments. Multi-site visibility, user permissions and reporting capabilities depend on the deployed configuration.'),
+    ('How long does KenIoT take to identify potential equipment failures?', 'The time required to identify an anomaly or predict a potential failure varies by equipment type, failure mode, sensor availability and historical data quality. Some abnormal readings may be identified quickly, while reliable failure prediction may require a longer learning period and sufficient operating data.'),
+    ('How can I get started with KenIoT?', 'Book a demo with Intelense. Share your equipment types, existing sensors, communication protocols and maintenance challenges so the team can help you explore a suitable IoT monitoring setup.'),
+]
+
+
+def page_keniot():
+    m = MOD['keniot']
+    gauges = [('Temperature', '71', '°C', 'Normal', '', [66, 67, 66, 68, 67, 69, 68, 70, 69, 71, 70, 71]),
+              ('Vibration', '4.2', 'mm/s', 'Rising', 'warn', [2.2, 2.3, 2.2, 2.4, 2.6, 2.8, 3.1, 3.4, 3.7, 3.9, 4.1, 4.2]),
+              ('Pressure', '6.1', 'bar', 'Normal', '', [6.0, 6.1, 6.0, 6.2, 6.1, 6.0, 6.1, 6.2, 6.1, 6.0, 6.1, 6.1]),
+              ('Power', '18.4', 'kW', 'Watch', 'warn', [16.8, 17.0, 16.9, 17.2, 17.4, 17.3, 17.7, 17.9, 18.0, 18.2, 18.3, 18.4])]
+    gauge_html = ''.join(f'<div class="sensor{" warn" if cls else ""}"><div class="lbl"><span>{n}</span></div><div class="val">{v} <small>{u}</small></div>{sparkline(series, "#FF7953" if cls else "#73C4C5")}</div>' for n, v, u, st, cls, series in gauges)
+    hero = f'''<section class="page-hero kv-hero" style="--mod:{m["color"]}">
+    <div class="wash wash-a" aria-hidden="true"></div>
+    <div class="wash wash-b" aria-hidden="true"></div>
+    <div class="cursor-grid" aria-hidden="true"></div>
+    <div class="wrap kv-hero-grid">
+      <div class="kv-hero-copy">
+        {crumbs(('modules.html', 'Modules'), (None, 'KenIoT'))}
+        <span class="eyebrow">Intelligent sensor analytics by Intelense</span>
+        {logo_img(m, 0.36, 'hero-logo')}
+        <h1>Know When Something Is Wrong Before It Becomes a Bigger Problem.</h1>
+        <p class="lede">KenIoT turns data from connected sensors and equipment into useful operational insights. Monitor equipment health, detect unusual behaviour and identify potential failures before they lead to unexpected downtime.</p>
+        <p class="lede kv-sub">Whether you manage a factory, railway system, fleet or agricultural operation, KenIoT helps you understand what's happening across your connected assets and make better-informed maintenance decisions.</p>
+        <div class="hero-ctas"><a class="btn btn-blue" href="contact.html">Book a Free Demo</a><a class="btn btn-ghost" href="#features">Explore Features</a></div>
+        <p class="kv-tagline">AI-powered IoT monitoring, sensor analytics and predictive maintenance for industrial operations.</p>
+      </div>
+      <div class="kv-hero-visual">
+        <div class="iot ki-live" role="img" aria-label="Live sensor monitor for motor M-14 on line 2: vibration streams against its expected range and is flagged when it drifts outside it">
+          <div class="iot-top"><b style="color:#e9e9ec;font-size:14px">Line 2 · Motor M-14</b><span class="c-live">Live</span></div>
+          <div class="ki-stream"><canvas data-iotstream="dark" width="720" height="170"></canvas><span class="ki-status" data-iotstatus>Within expected range</span></div>
+          <div class="iot-grid" style="margin-top:12px">{gauge_html}</div>
+        </div>
+        <p class="demo-note">Simulated sensor data</p>
+      </div>
+    </div>
+  </section>'''
+
+    problem = f'''<section class="block" id="problem">
+    <div class="wrap">
+      {head_block('The problem', 'Your Equipment Gives You Signals. Are You Catching Them?', "Machines rarely go from working perfectly to failing without any warning signs. Changes in temperature, vibration, pressure or power consumption can indicate that something isn't operating as expected.")}
+      <div class="kv-problem">
+        <div class="kv-questions">
+          <p class="kv-answer" style="font-size:17px;color:#e9e6e3">But when sensor data is spread across different systems, identifying these changes and understanding what they mean can be difficult.</p>
+          <p class="kv-q" style="border:0;padding:0;margin-top:8px">KenIoT brings sensor intelligence together to help your team spot unusual patterns and investigate potential problems earlier.</p>
+        </div>
+        <ul class="kv-points">
+          <li>{icon('wrench')}<div><b>Unexpected equipment breakdowns?</b><span>Monitor equipment behaviour and identify patterns that may indicate a developing fault.</span></div></li>
+          <li>{icon('layers')}<div><b>Too much data, not enough clarity?</b><span>Bring sensor readings together to understand how connected assets are performing.</span></div></li>
+          <li>{icon('clock')}<div><b>Maintenance always happening after something goes wrong?</b><span>Use predictive maintenance insights to help plan inspections and servicing before a potential failure.</span></div></li>
+          <li>{icon('route')}<div><b>Problems difficult to spot across multiple sites?</b><span>Monitor connected assets through a centralised view of available sensor data.</span></div></li>
+          <li>{icon('bolt')}<div><b>Unnecessary maintenance and operating costs?</b><span>Use equipment health information to help prioritise maintenance based on actual operating conditions.</span></div></li>
+        </ul>
+      </div>
+    </div>
+  </section>'''
+
+    feats = [
+        ('realtime', 'Real-Time IoT Monitoring', "Know what's happening across your connected assets.", 'Collect and monitor data from compatible sensors and industrial systems. Track available readings such as temperature, vibration, pressure, humidity and power consumption to understand operating conditions as they change.'),
+        ('anomaly', 'AI-Powered Anomaly Detection', 'Spot unusual behaviour before it becomes a bigger concern.', 'KenIoT analyses sensor readings to identify patterns that differ from expected equipment behaviour. Detect unusual changes, investigate potential issues and help your team respond before a small problem develops into a major disruption.'),
+        ('predict', 'Predictive Maintenance', 'Move from fixing breakdowns to planning ahead.', 'Use equipment data, historical patterns and anomaly detection to identify signs of potential equipment failure. Help maintenance teams prioritise inspections, plan servicing and reduce dependence on reactive repairs.'),
+        ('health', 'Equipment Health Monitoring', 'Understand how your assets are performing.', 'Monitor equipment conditions through available sensor data and asset-specific indicators. Compare current readings with expected operating patterns to help identify equipment that may need inspection or maintenance.'),
+        ('alerts', 'Smart Alerts &amp; Notifications', 'Know when a reading needs your attention.', 'Configure alerts for supported anomalies, operating thresholds and equipment conditions. Help the relevant team investigate unusual readings without continuously checking every sensor dashboard.'),
+        ('integrate', 'Sensor Data Integration', 'Bring different data sources into one view.', 'Connect compatible sensors, industrial equipment and monitoring systems through supported communication protocols and integrations. Build a more complete picture of your operations without necessarily replacing existing equipment.'),
+        ('workflow', 'Automated Maintenance Workflows', 'Turn potential problems into planned action.', 'Use detected anomalies and configured rules to support maintenance workflows, including work-order or maintenance-ticket creation where integrated. Help teams document issues, assign follow-ups and track corrective action.'),
+        ('trends', 'Historical Trends &amp; Reporting', "Understand what's changing over time.", 'Review historical sensor readings, equipment behaviour and detected anomalies. Use trends and reports to investigate recurring issues, understand operating patterns and support maintenance planning.'),
+    ]
+    features = f'''<section class="block" id="features">
+    <div class="wrap">
+      {head_block('Features', 'Turn Sensor Data into Decisions That Keep Operations Moving.', 'KenIoT combines IoT connectivity, AI-powered sensor analytics and predictive maintenance capabilities to help you understand the condition of your equipment and infrastructure.')}
+      <div class="kv-feats four">{''.join(f'<article class="kv-feat"><div class="kv-mini">{ki_mini(k)}</div><span class="kv-num">{i + 1:02d}</span><h3>{t}</h3><p class="kv-strap">{s}</p><p>{d}</p></article>' for i, (k, t, s, d) in enumerate(feats))}</div>
+    </div>
+  </section>'''
+
+    steps = [('Connect Your Sensors &amp; Systems', 'Integrate compatible sensors, industrial equipment and existing monitoring systems. Support for specific devices and communication protocols depends on your infrastructure and deployment requirements.'),
+             ('Learn Normal Operating Behaviour', 'KenIoT analyses available sensor readings and operating history to establish expected behaviour for monitored assets. The initial learning period and baseline quality depend on the available data and equipment conditions.'),
+             ('Detect Anomalies &amp; Potential Risks', 'AI models compare incoming readings with expected patterns and configured conditions. When unusual behaviour is identified, the system can flag the issue for investigation.'),
+             ('Take Action Before Downtime Escalates', 'Review alerts, investigate potential faults and use supported maintenance integrations to plan the next steps. Your team can make informed decisions about inspections, repairs and equipment servicing.')]
+    how = f'''<section class="block" id="how">
+    <div class="wrap">
+      {head_block('How it works', 'From Connected Sensors to Predictive Insights', 'KenIoT turns incoming equipment data into information your team can use.')}
+      <ol class="kv-steps four">{''.join(f'<li><span>{i + 1:02d}</span><h3>{t}</h3><p>{d}</p></li>' for i, (t, d) in enumerate(steps))}</ol>
+      <p style="margin-top:36px"><a class="btn btn-black" href="#example">See KenIoT in Action</a></p>
+    </div>
+  </section>'''
+
+    inds = [('wrench', 'Manufacturing &amp; Industrial Facilities', 'Monitor machine temperature, vibration, pressure and other available readings. Identify unusual operating patterns and support predictive maintenance across production equipment.', 'industrial'),
+            ('route', 'Railways &amp; Transportation Infrastructure', 'Monitor compatible railway equipment, signalling systems and infrastructure sensors. Identify unusual readings that may require inspection and help maintenance teams prioritise potential issues.', 'smart-cities'),
+            ('leaf', 'Agriculture &amp; Smart Irrigation', 'Connect compatible soil moisture, weather and irrigation sensors to understand field conditions. Use sensor insights to support irrigation planning and identify abnormal equipment or system behaviour.', 'agriculture'),
+            ('car', 'Fleet &amp; Transportation', 'Monitor available vehicle health data, including engine-related readings and other connected sensor information. Identify unusual operating patterns and support proactive vehicle maintenance.', 'smart-cities'),
+            ('plug', 'Healthcare Facilities', 'Monitor connected facility systems and compatible equipment sensors. Track available environmental or operational readings and alert relevant teams when configured conditions require attention.', 'healthcare'),
+            ('bolt', 'Energy &amp; Critical Infrastructure', 'Monitor compatible equipment and environmental sensors across connected infrastructure. Identify unusual readings and support maintenance planning for critical assets.', 'smart-cities')]
+    industries = f'''<section class="block" id="industries">
+    <div class="wrap">
+      {head_block('Industry applications', 'One IoT Intelligence Platform. Multiple Industrial Applications.', 'Different industries rely on different types of equipment, sensors and operating conditions. KenIoT helps teams monitor connected assets and understand changes that may affect performance.')}
+      <div class="caps">{''.join(f'<div class="cap">{icon(ic)}<h3>{t}</h3><p>{d}</p><a class="kv-link" href="industries.html#{a}">More on {IND[a]["name"].lower()} →</a></div>' for ic, t, d, a in inds)}</div>
+    </div>
+  </section>'''
+
+    example = f'''<section class="block" id="example">
+    <div class="wrap">
+      <div class="kv-split" style="align-items:start">
+        <div>
+          <span class="eyebrow">Real-world example</span>
+          <h2 style="margin-top:18px">A Machine Doesn't Have to Break Down Before You Notice a Problem.</h2>
+          <p class="lede" style="margin-top:20px">Imagine a motor running continuously on a factory production line.</p>
+          <p class="kv-body">For weeks, it operates within its normal temperature and vibration ranges. Then its vibration readings begin changing, even though the machine is still running.</p>
+          <p class="kv-body">Without continuous monitoring, the change may go unnoticed until the motor overheats, production slows or the equipment fails.</p>
+        </div>
+        <div>
+          <p class="kv-body" style="margin-top:0">With KenIoT, sensor data can be analysed against the motor's expected operating behaviour. An unusual pattern can trigger an alert, giving the maintenance team a reason to inspect the equipment.</p>
+          <p class="kv-body">The team can investigate the cause and decide whether maintenance is needed before the problem escalates.</p>
+          <p class="kv-body"><b style="color:var(--off-black);font-weight:600">The goal isn't to predict every breakdown perfectly. It's to identify meaningful warning signs earlier and give your team more time to act.</b></p>
+        </div>
+      </div>
+      <div class="panel" style="margin-top:32px"><h3 style="font-size:16px;margin-bottom:12px">Motor M-14 · vibration over 10 weeks</h3>{ki_example_chart()}</div>
+      <ol class="ks-timeline ki-steps">
+        <li><time>Weeks 1 to 5</time><div><b>Normal operation</b><span>Vibration stays inside the learned operating range.</span></div><em>Normal</em></li>
+        <li><time>Week 6</time><div><b>Readings start to drift</b><span>KenIoT notes a sustained change from expected behaviour.</span></div><em class="bad">Watch</em></li>
+        <li><time>Week 8</time><div><b>Alert sent to maintenance</b><span>Vibration crosses the configured threshold; a work order is raised.</span></div><em class="bad">Alert</em></li>
+        <li><time>Week 8</time><div><b>Inspection planned</b><span>The team checks the motor during the next scheduled stop.</span></div><em>Action</em></li>
+      </ol>
+      <p class="demo-note">Illustrative example and data</p>
+    </div>
+  </section>'''
+
+    why = [('plug', 'Make Better Use of Existing Equipment', 'Integrate compatible sensors and industrial systems instead of necessarily replacing your entire infrastructure.'),
+           ('search', 'Identify Problems Earlier', 'Use AI-powered anomaly detection to highlight unusual equipment behaviour that may otherwise go unnoticed.'),
+           ('clock', 'Reduce Unplanned Downtime', 'Use early warning signals to help plan inspections and maintenance before potential faults disrupt operations.'),
+           ('chart', 'Prioritise Maintenance Efforts', 'Use equipment health indicators and detected anomalies to help teams decide which assets need attention first.'),
+           ('layers', 'Monitor Assets from One Place', 'Bring available sensor data, alerts and equipment information into a central monitoring view.'),
+           ('timeline', 'Make Decisions with Historical Context', 'Review trends and past anomalies to understand recurring issues and support longer-term maintenance planning.')]
+    benefits = f'''<section class="block" id="why">
+    <div class="wrap">
+      {head_block('Why KenIoT?', 'Less Reactive Maintenance. More Control Over Your Operations.', '')}
+      <div class="caps">{''.join(f'<div class="cap">{icon(ic)}<h3>{t}</h3><p>{d}</p></div>' for ic, t, d in why)}</div>
+    </div>
+  </section>'''
+
+    assets = [('Motor M-14', 'Line 2', 62, 'Anomaly', 'bad'), ('Freezer F-1', 'Cold store', 74, 'Watch', 'warn'), ('Pump P-03', 'Line 1', 86, 'Healthy', ''), ('Compressor C-3', 'Utilities', 91, 'Healthy', ''), ('Conveyor B', 'Packing', 88, 'Healthy', ''), ('HVAC unit 4', 'Building A', 93, 'Healthy', '')]
+    asset_rows = ''.join(f'<tr><td><b>{a}</b><br><small>{site}</small></td><td><span class="ki-bar"><i style="width:{h}%;background:{"#FF7953" if cls == "bad" else "#f2d28a" if cls == "warn" else "#73C4C5"}"></i></span> {h}</td><td><span class="st {cls}">{st}</span></td></tr>' for a, site, h, st, cls in assets)
+    sens = [('Bearing temp', '68', '°C', [61, 62, 61, 63, 62, 64, 63, 65, 64, 66, 67, 68], True), ('Humidity', '44', '%', [44, 43, 45, 44, 42, 43, 44, 45, 43, 44, 44, 43], False), ('Current', '31', 'A', [30, 31, 30, 31, 32, 31, 30, 31, 31, 32, 31, 31], False), ('Line pressure', '6.1', 'bar', [6.0, 6.1, 6.0, 6.2, 6.1, 6.0, 6.1, 6.2, 6.1, 6.0, 6.1, 6.1], False)]
+    sens_html = ''.join(f'<div class="sensor{" warn" if w else ""}"><div class="lbl"><span>{n}</span><span class="tag">{"Watch" if w else "Normal"}</span></div><div class="val">{v} <small>{u}</small></div>{sparkline(s, "#FF7953" if w else "#73C4C5")}</div>' for n, v, u, s, w in sens)
+    wos = [('WO-1042', 'Inspect bearing · Motor M-14', 'Assigned', 'bad'), ('WO-1039', 'Check door seal · Freezer F-1', 'Scheduled', 'warn'), ('WO-1031', 'Replace filter · HVAC unit 4', 'Done', '')]
+    dash = f'''<section class="block" id="dashboard">
+    <div class="wrap">
+      {head_block('Dashboard', 'Every Sensor Has a Signal. See What It Means.', 'Bring your connected equipment and sensor information into one view.')}
+      <div class="kv-dash">
+        <div class="c-top">
+          <img class="c-logo" src="assets/logos/keniot-light.png" alt="KenIoT" width="67" height="30">
+          <span class="c-site">Plant 1 · Markham</span>
+          <div class="c-tabs"><span class="on">Assets</span><span>Anomalies</span><span>Work orders</span><span>Reports</span></div>
+          <div class="c-right"><span class="c-live">Live</span><span id="clock">14:32:09</span></div>
+        </div>
+        <div class="kv-kpis">
+          <div><span>Assets monitored</span><b>128</b><em>412 sensors</em></div>
+          <div><span>Healthy</span><b>119</b><em class="up">93% of assets</em></div>
+          <div><span>Open anomalies</span><b>4</b><em class="down">1 rising fast</em></div>
+          <div><span>Work orders this week</span><b>3</b><em>Created from alerts</em></div>
+        </div>
+        <div class="kv-grid">
+          <div class="kv-card kv-wide"><h4>Live · Motor M-14 vibration</h4><div class="ki-stream"><canvas data-iotstream="dark" width="900" height="330"></canvas><span class="ki-status" data-iotstatus>Within expected range</span></div></div>
+          <div class="kv-card"><h4>Asset health</h4><table class="ag-table"><thead><tr><th>Asset</th><th>Health</th><th>Status</th></tr></thead><tbody>{asset_rows}</tbody></table></div>
+          <div class="kv-card kv-wide"><h4>Sensor readings · Line 2</h4><div class="iot-grid ki-four">{sens_html}</div></div>
+          <div class="kv-card"><h4>Maintenance queue</h4><ul class="ki-wo">{''.join(f'<li><b>{i}</b><span>{t}</span><em class="st {c}">{s}</em></li>' for i, t, s, c in wos)}</ul></div>
+        </div>
+      </div>
+      <p class="demo-note">Example dashboard with simulated data. Not a real site.</p>
+      <p class="kv-body" style="max-width:62ch">Monitor available readings, review unusual patterns, track equipment health indicators and investigate alerts across your connected assets.</p>
+      <p class="kv-body" style="max-width:62ch">KenIoT helps your team move beyond isolated sensor readings to a clearer understanding of what's happening across your operations.</p>
+      <p style="margin-top:28px"><a class="btn btn-blue" href="contact.html">Request a KenIoT Demo</a></p>
+    </div>
+  </section>'''
+
+    final = final_cta('Connect Your Sensors. Understand Your Operations. Plan Ahead.',
+                      ['From real-time sensor monitoring to AI-powered anomaly detection and predictive maintenance, KenIoT helps you turn equipment data into actionable operational insights.',
+                       'Give your team a clearer view of asset health and more opportunities to address potential problems before they lead to unexpected downtime.'],
+                      'Book a Free Demo',
+                      "Tell us about your equipment, existing sensors and operational challenges. We'll help you explore how KenIoT can fit your infrastructure.",
+                      'KenIoT by Intelense | Intelligence at the Edge.')
+
+    body = '\n\n  '.join([hero, problem, features, how, industries, example, benefits, dash, faq_block(KI_FAQ), related_block(m), final, faq_schema(KI_FAQ)])
+    return dict(file='keniot.html', title='KenIoT: AI-Powered IoT Monitoring & Predictive Maintenance | Intelense',
+                desc='KenIoT turns data from connected sensors and equipment into real-time monitoring, AI anomaly detection and predictive maintenance insights.',
+                active='keniot', body=body)
+
+
+PAGES = [page_index, page_platform, page_modules, page_kenvision, page_kensafety, page_kenagri, page_kenhome, page_keniot, *[(lambda m: (lambda: page_module(m)))(m) for m in MODULES if m['key'] not in ('kenvision', 'kensafety', 'kenagri', 'kenhome', 'keniot')], page_industries, page_about, page_contact]
 
 # ---------------------------------------------------------------- output
 
