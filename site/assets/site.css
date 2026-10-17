@@ -643,3 +643,36 @@ footer a:hover { color: var(--parchment); }
   .ks-timeline li { grid-template-columns: minmax(0, 1fr) auto; }
   .ks-timeline time { grid-column: 1 / -1; }
 }
+
+/* ===== KenAgri page ===== */
+.ag-panel { padding: 14px; }
+.agmap { border-radius: 14px; overflow: hidden; }
+.agscan { animation: agscan 5s linear infinite; }
+@keyframes agscan { from { transform: translateY(0); } to { transform: translateY(397px); } }
+.ag-legend { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 10px; margin-top: 12px; font-size: 11px; color: var(--smoke); }
+.kv-card .ag-legend { color: #9b9daf; }
+.ag-legend i { width: 90px; height: 8px; border-radius: 4px; }
+.ag-legend b { flex: 1; }
+.ag-legend .ag-sen::before, .ag-legend .ag-str::before { content: ""; display: inline-block; width: 9px; height: 9px; border-radius: 50%; margin-right: 6px; vertical-align: -1px; }
+.ag-legend .ag-sen::before { border: 2px solid #73C4C5; }
+.ag-legend .ag-str::before { border: 2px dashed #FF7953; border-radius: 3px; }
+.ag-caps .ag-more { background: var(--off-black); color: var(--parchment); border-color: var(--off-black); }
+.ag-caps .ag-more p { color: #c9c5c2; }
+.ag-caps .ag-more .kv-link { color: #b9c2ff; }
+.ag-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+.ag-table th { text-align: left; font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: #9b9daf; padding: 0 6px 8px 0; }
+.ag-table td { padding: 9px 6px 9px 0; border-top: 1px solid #25262c; color: #c9cbd6; font-variant-numeric: tabular-nums; }
+.ag-table td b { color: #e9e9ec; font-weight: 600; }
+.ag-table .st { font-size: 10px; font-weight: 600; padding: 3px 8px; border-radius: 9999px; background: #2a3a3a; color: #9fe0e1; white-space: nowrap; }
+.ag-table .st.bad { background: #3d2620; color: #ffb39b; }
+.ag-table .st.warn { background: #3a3424; color: #f2d28a; }
+.ag-weather { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 8px; }
+.ag-weather > div { background: #1d1f24; border: 1px solid #25262c; border-radius: 12px; padding: 10px; display: grid; gap: 4px; justify-items: start; min-width: 0; }
+.ag-weather b { font-size: 12px; font-weight: 600; }
+.ag-weather .t { font-size: 18px; font-weight: 600; color: #e9e9ec; font-variant-numeric: tabular-nums; }
+.ag-weather .t small { font-size: 12px; color: #9b9daf; margin-left: 4px; font-weight: 500; }
+.ag-weather .r { height: 34px; display: flex; align-items: flex-end; }
+.ag-weather .r i { display: block; width: 18px; border-radius: 3px 3px 0 0; background: #5b7cff; }
+.ag-weather > div > small { font-size: 11px; color: #9b9daf; }
+@media (max-width: 640px) { .ag-weather { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+@media (prefers-reduced-motion: reduce) { .agscan { display: none; } }

@@ -117,7 +117,7 @@ MODULES = [
                ('residential', 'Short-term rentals', 'Know when guests arrive and leave, without watching footage.')],
          visual='home', related=['kenvision', 'kenvoice', 'keniot']),
     dict(key='kenagri', name='KenAgri', kind='Precision agriculture', color='#368736', logo='kenagri.png', size=(673, 300),
-         card='Watches crops, livestock and field perimeters to flag stress, disease and intrusions early.',
+         card='Uses AI with satellite, drone, sensor and weather data to monitor crop health, flag pests and disease, predict yields and guide irrigation.',
          h1='Eyes on every field, pen and fence line.',
          lede='KenAgri turns farm cameras and drones into an early-warning system for crops, livestock and property, day and night.',
          caps=[('leaf', 'Crop stress and disease', 'Flags patches that look different from the rest of the field so you can check them early.'),
@@ -526,10 +526,10 @@ def page_modules():
   </section>'''
     rows = []
     watch = {'kenvision': 'Existing CCTV and IP cameras', 'kensafety': 'Cameras on floors, docks and sites', 'kenhome': 'Doorbells and home cameras',
-             'kenagri': 'Farm cameras, thermal and drones', 'keniot': 'Vibration, temperature, power and air sensors',
+             'kenagri': 'Satellite and drone imagery, soil sensors, weather data', 'keniot': 'Vibration, temperature, power and air sensors',
              'kenrobotics': 'Robot and drone cameras', 'kenvoice': 'Speakers, radios, phones and microphones'}
     alerts = {'kenvision': 'Footfall, heatmaps, dwell time, queue build-up', 'kensafety': 'Missing PPE, restricted zones, human-vehicle proximity, fire and smoke, falls',
-              'kenhome': 'Unknown visitors, packages, night activity', 'kenagri': 'Crop stress, livestock, wildlife, intruders',
+              'kenhome': 'Unknown visitors, packages, night activity', 'kenagri': 'Crop stress, pest and disease risk, irrigation needs, yield estimates',
               'keniot': 'Drift, overheating, predicted failures', 'kenrobotics': 'Obstacles, patrol findings, inspection issues',
               'kenvoice': 'Keywords, calls for help, spoken alerts'}
     best = {m['key']: sorted({u[0] for u in m['uses']}, key=[i['id'] for i in INDUSTRIES].index) for m in MODULES}
@@ -1431,7 +1431,332 @@ def page_kensafety():
                 active='kensafety', body=body, cctv=True)
 
 
-PAGES = [page_index, page_platform, page_modules, page_kenvision, page_kensafety, *[(lambda m: (lambda: page_module(m)))(m) for m in MODULES[2:]], page_industries, page_about, page_contact]
+# ---------------------------------------------------------------- KenAgri page (precision agriculture)
+
+AG_FIELDS = [
+    # name, crop, polygon (fractions), row angle, health base
+    ('A', 'Wheat', [(.04, .06), (.36, .05), (.37, .44), (.05, .46)], 0, .82),
+    ('B', 'Corn', [(.40, .05), (.70, .06), (.69, .40), (.41, .43)], 90, .78),
+    ('C', 'Soybean', [(.05, .52), (.37, .50), (.38, .94), (.06, .95)], 0, .74),
+    ('D', 'Wheat', [(.42, .48), (.69, .45), (.70, .94), (.43, .95)], 90, .80),
+    ('E', 'Corn', [(.74, .06), (.96, .07), (.95, .54), (.74, .55)], 0, .69),
+    ('F', 'Orchard', [(.74, .60), (.95, .60), (.95, .94), (.74, .95)], 45, .84),
+]
+AG_STRESS = (.11, .58, .17, .22)  # x, y, w, h in map fractions, inside field C
+
+
+def _ag_health(x, y, base, seed):
+    import math
+    v = base + .08 * math.sin(x * 23 + seed) * math.cos(y * 19 - seed) + .05 * math.sin((x + y) * 41 + seed * 2)
+    sx, sy, sw, sh = AG_STRESS
+    if sx <= x <= sx + sw and sy <= y <= sy + sh:
+        cx, cy = sx + sw / 2, sy + sh / 2
+        d = math.hypot((x - cx) / (sw / 2), (y - cy) / (sh / 2))
+        v -= .42 * max(0, 1 - d * .8)
+    return max(.15, min(.98, v))
+
+
+def farm_map(dark=False, uid='m', labels=True, scan=False):
+    W, H = 600, 400
+    base, road, tree, ink, chip, rowc = ('#1c211b', '#3b3f3a', '#1f3a22', '#e9e9ec', 'rgba(16,17,20,.82)', 'rgba(255,255,255,.06)') if dark else ('#b9b08f', '#9e9a8e', '#3f5a36', '#101114', 'rgba(255,255,255,.9)', 'rgba(0,0,0,.08)')
+    hc = '#6fdc6f' if dark else '#2e7d32'
+    out = [f'<svg class="plan agmap" viewBox="0 0 {W} {H}" role="img" aria-label="Aerial farm map with crop-health overlay. Most fields are healthy; a section of block C shows lower crop health and is flagged for inspection.">', '<defs>']
+    for i, (n, crop, poly, ang, hb) in enumerate(AG_FIELDS):
+        pts = ' '.join(f'{x * W:.1f},{y * H:.1f}' for x, y in poly)
+        out.append(f'<clipPath id="cf-{uid}-{n}"><polygon points="{pts}"/></clipPath>')
+        out.append(f'<pattern id="rw-{uid}-{n}" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate({ang})"><rect width="7" height="3" fill="{rowc}"/></pattern>')
+    out.append('</defs>')
+    out.append(f'<rect width="{W}" height="{H}" fill="{base}"/>')
+    out.append(f'<path d="M0 {H * .475} H{W}" stroke="{road}" stroke-width="9"/><path d="M{W * .72} 0 V{H}" stroke="{road}" stroke-width="8"/><path d="M{W * .395} 0 V{H}" stroke="{road}" stroke-width="5"/>')
+    for i, (n, crop, poly, ang, hb) in enumerate(AG_FIELDS):
+        pts = ' '.join(f'{x * W:.1f},{y * H:.1f}' for x, y in poly)
+        xs, ys = [p[0] for p in poly], [p[1] for p in poly]
+        cells = []
+        step = .022
+        y = min(ys)
+        while y < max(ys):
+            x = min(xs)
+            while x < max(xs):
+                v = _ag_health(x + step / 2, y + step / 2, hb, i * 1.7)
+                cells.append(f'<rect x="{x * W:.1f}" y="{y * H:.1f}" width="{step * W + .6:.1f}" height="{step * H + .6:.1f}" fill="{hc}" fill-opacity="{.12 + v * .78:.2f}"/>')
+                x += step
+            y += step
+        out.append(f'<g clip-path="url(#cf-{uid}-{n})"><rect x="0" y="0" width="{W}" height="{H}" fill="{"#283126" if dark else "#d9d2b4"}"/>{"".join(cells)}<rect width="{W}" height="{H}" fill="url(#rw-{uid}-{n})"/></g>')
+        out.append(f'<polygon points="{pts}" fill="none" stroke="{"#4a5048" if dark else "#f4f1e6"}" stroke-width="1.5"/>')
+    import random
+    rnd = random.Random(7)
+    for _ in range(46):
+        x, y = rnd.choice([(rnd.uniform(.0, 1), rnd.uniform(.465, .485)), (rnd.uniform(.715, .727), rnd.uniform(0, 1)), (rnd.uniform(0, .03), rnd.uniform(0, 1))])
+        out.append(f'<circle cx="{x * W:.1f}" cy="{y * H:.1f}" r="{rnd.uniform(4, 8):.1f}" fill="{tree}" opacity=".9"/>')
+    out.append(f'<rect x="{W * .78}" y="{H * .555}" width="26" height="16" rx="2" fill="{"#555a5c" if dark else "#e9e5da"}"/><rect x="{W * .83}" y="{H * .56}" width="16" height="12" rx="2" fill="{"#44494b" if dark else "#c9c3b4"}"/>')
+    sx, sy, sw, sh = AG_STRESS
+    out.append(f'<rect x="{sx * W:.1f}" y="{sy * H:.1f}" width="{sw * W:.1f}" height="{sh * H:.1f}" rx="6" fill="none" stroke="#FF7953" stroke-width="2.5" stroke-dasharray="7 5"/>')
+    out.append(f'<rect x="{sx * W:.1f}" y="{(sy + sh) * H + 4:.1f}" width="160" height="18" rx="3" fill="#FF7953"/><text x="{sx * W + 7:.1f}" y="{(sy + sh) * H + 17:.1f}" font-size="11" font-weight="600" fill="#101114">Low moisture · Block C3</text>')
+    for x, y, v in ((.17, .66, '18%'), (.28, .78, '29%'), (.55, .7, '33%'), (.2, .25, '34%'), (.85, .3, '27%')):
+        out.append(f'<circle cx="{x * W:.0f}" cy="{y * H:.0f}" r="9" fill="none" stroke="#73C4C5" stroke-width="2"/><circle cx="{x * W:.0f}" cy="{y * H:.0f}" r="4" fill="#73C4C5" data-tip="Soil sensor · moisture {v}"/>')
+    if labels:
+        for n, crop, poly, ang, hb in AG_FIELDS:
+            x, y = poly[0][0] * W + 8, poly[0][1] * H + 8
+            out.append(f'<rect x="{x:.0f}" y="{y:.0f}" width="{len(crop) * 6.6 + 54:.0f}" height="20" rx="10" fill="{chip}"/><text x="{x + 10:.0f}" y="{y + 14:.0f}" font-size="11" font-weight="600" fill="{ink}">{n} · {crop}</text>')
+    if scan:
+        out.append(f'<rect class="agscan" x="0" y="0" width="{W}" height="3" fill="#73C4C5" opacity=".7"/>')
+    out.append('</svg>')
+    return ''.join(out)
+
+
+def ag_legend(dark=False):
+    c = '#6fdc6f' if dark else '#2e7d32'
+    return f'<p class="ag-legend"><span>Lower crop health</span><i style="background:linear-gradient(90deg,{c}22,{c})"></i><span>Higher</span><b></b><span class="ag-sen">Soil sensor</span><span class="ag-str">Flagged area</span></p>'
+
+
+def ag_moisture(dark=True):
+    avg = [34, 33, 32, 33, 31, 30, 32, 31, 30, 31, 32, 31, 30, 31]
+    c3 = [33, 31, 29, 27, 25, 23, 22, 21, 20, 19, 19, 18, 18, 18]
+    W, H, ml, mb, mt = 560, 210, 34, 26, 14
+    pw, ph = W - ml - 100, H - mb - mt
+    lo, hi = 10, 40
+    ink, mute, grid, card = ('#e9e9ec', '#9b9daf', '#2a2c33', '#16171b') if dark else ('#242424', '#6C6E82', '#e4e2dc', '#ffffff')
+    ca, cc = ('#5b7cff' if dark else '#0A34ED'), '#FF7953'
+    X = lambda i: ml + i * pw / 13
+    Y = lambda v: mt + ph - (v - lo) / (hi - lo) * ph
+    out = [f'<svg class="chart" viewBox="0 0 {W} {H}" role="img" aria-label="Soil moisture over 14 days: block C3 falls from 33% to 18% while the field average stays near 31%.">']
+    for gv in (10, 20, 30, 40):
+        out.append(f'<line x1="{ml}" x2="{ml + pw}" y1="{Y(gv):.1f}" y2="{Y(gv):.1f}" stroke="{grid}"/><text x="{ml - 8}" y="{Y(gv) + 3:.1f}" text-anchor="end" fill="{mute}" font-size="10">{gv}%</text>')
+    out.append(f'<line x1="{ml}" x2="{ml + pw}" y1="{Y(25):.1f}" y2="{Y(25):.1f}" stroke="{mute}" stroke-dasharray="4 4"/><text x="{ml + 6}" y="{Y(25) + 14:.1f}" fill="{mute}" font-size="10">Irrigation threshold 25%</text>')
+    for vals, col, lab in ((avg, ca, 'Average'), (c3, cc, 'Block C3')):
+        pts = ' '.join(f'{X(i):.1f},{Y(v):.1f}' for i, v in enumerate(vals))
+        out.append(f'<polyline points="{pts}" fill="none" stroke="{col}" stroke-width="2" stroke-linejoin="round"/>')
+        for i, v in enumerate(vals):
+            out.append(f'<circle cx="{X(i):.1f}" cy="{Y(v):.1f}" r="{3.5 if i == 13 else 2.2}" fill="{col}" stroke="{card}" stroke-width="2" data-tip="{lab} · day {i + 1} · {v}%"/>')
+        out.append(f'<text x="{X(13) + 8:.1f}" y="{Y(vals[-1]) + 4:.1f}" fill="{ink}" font-size="11" font-weight="600">{lab} {vals[-1]}%</text>')
+    out.append(f'<text x="{ml}" y="{H - 8}" fill="{mute}" font-size="10">14 days ago</text><text x="{ml + pw}" y="{H - 8}" text-anchor="end" fill="{mute}" font-size="10">Today</text>')
+    out.append('</svg>')
+    return ''.join(out)
+
+
+def ag_yield():
+    rows = [('A · Wheat', 4.9, .3), ('B · Corn', 9.8, .6), ('C · Soybean', 2.6, .4), ('D · Wheat', 5.1, .3), ('E · Corn', 8.7, .7)]
+    W, rowh, lab, mx = 360, 30, 96, 11
+    out = [f'<svg class="chart" viewBox="0 0 {W} {rowh * len(rows) + 22}" role="img" aria-label="Estimated yield by field in tonnes per hectare, with forecast ranges">']
+    span = W - lab - 50
+    for i, (n, v, e) in enumerate(rows):
+        y = i * rowh + 6
+        out.append(f'<text x="0" y="{y + 13}" fill="#c9cbd6" font-size="11">{n}</text><rect x="{lab}" y="{y + 3}" width="{span}" height="14" rx="3" fill="#24262d"/>')
+        out.append(f'<rect x="{lab}" y="{y + 3}" width="{v / mx * span:.1f}" height="14" rx="3" fill="#5fbf5f" data-tip="{n} · {v} t/ha (±{e})"/>')
+        x1, x2 = lab + (v - e) / mx * span, lab + (v + e) / mx * span
+        out.append(f'<path d="M{x1:.1f} {y + 10}H{x2:.1f}M{x1:.1f} {y + 5}V{y + 15}M{x2:.1f} {y + 5}V{y + 15}" stroke="#e9e9ec" stroke-width="1.5"/>')
+        out.append(f'<text x="{W}" y="{y + 14}" text-anchor="end" fill="#e9e9ec" font-size="11" font-weight="600">{v} t/ha</text>')
+    out.append(f'<text x="{lab}" y="{rowh * len(rows) + 16}" fill="#9b9daf" font-size="10">Bar = estimate · whisker = forecast range</text></svg>')
+    return ''.join(out)
+
+
+def ag_weather():
+    days = [('Fri', 22, 13, 10), ('Sat', 24, 14, 5), ('Sun', 21, 12, 60), ('Mon', 18, 10, 80), ('Tue', 19, 11, 30), ('Wed', 23, 13, 10), ('Thu', 25, 15, 0)]
+    return '<div class="ag-weather">' + ''.join(f'<div data-tip="{d} · high {hi}° · low {lo}° · rain {r}%"><b>{d}</b><span class="t">{hi}°<small>{lo}°</small></span><span class="r"><i style="height:{max(r, 4) * .4:.0f}px"></i></span><small>{r}% rain</small></div>' for d, hi, lo, r in days) + '</div>'
+
+
+def ag_mini(kind):
+    g, m, c, b, ash = '#2e7d32', '#6C6E82', '#FF7953', '#0A34ED', '#e4e2dc'
+    if kind == 'health':
+        import math
+        cells = ''.join(f'<rect x="{col * 22 + 1}" y="{r * 24 + 1}" width="20" height="22" rx="4" fill="{g}" opacity="{.25 + .7 * (.82 + .1 * math.sin(col * 1.3 + r) - (.55 if col in (6, 7) and r in (1, 2) else 0)):.2f}"/>' for r in range(3) for col in range(10))
+        return f'<svg viewBox="0 0 220 72" aria-hidden="true">{cells}<rect x="131" y="24" width="46" height="48" rx="6" fill="none" stroke="{c}" stroke-width="2" stroke-dasharray="4 3"/></svg>'
+    if kind == 'pest':
+        return f'<svg viewBox="0 0 220 72" aria-hidden="true"><path d="M30 60C30 30 60 10 100 12C98 46 70 64 30 60Z" fill="{g}" opacity=".85"/><path d="M30 60L92 18" stroke="#fff" stroke-width="1.5" opacity=".7"/><circle cx="62" cy="34" r="4" fill="#7a5a2c"/><circle cx="72" cy="42" r="3" fill="#7a5a2c"/><circle cx="56" cy="46" r="2.5" fill="#7a5a2c"/><circle cx="64" cy="40" r="20" fill="none" stroke="{c}" stroke-width="2" stroke-dasharray="4 3"/><text x="118" y="34" font-size="11" font-weight="600" fill="#242424">Possible blight</text><text x="118" y="50" font-size="10" fill="{m}">Inspect block C</text></svg>'
+    if kind == 'yield':
+        past = [3.9, 4.3, 4.1, 4.4]
+        bars = ''.join(f'<path d="{_bar(12 + i * 34, 66 - v * 11, 22, v * 11)}" fill="{ash}"/>' for i, v in enumerate(past))
+        return f'<svg viewBox="0 0 220 72" aria-hidden="true">{bars}<path d="{_bar(148, 66 - 4.6 * 11, 22, 4.6 * 11)}" fill="{g}"/><path d="M159 10V24M153 10H165M153 24H165" stroke="#242424" stroke-width="1.5"/><text x="176" y="30" font-size="10" font-weight="600" fill="#242424">4.6 t/ha</text><text x="176" y="44" font-size="9" fill="{m}">forecast</text></svg>'
+    if kind == 'irrigation':
+        pts = [(0, 30), (20, 36), (40, 42), (60, 48), (70, 22), (90, 28), (110, 34), (130, 40), (150, 46), (160, 20), (180, 26), (200, 32), (220, 38)]
+        poly = ' '.join(f'{x},{y}' for x, y in pts)
+        drops = ''.join(f'<path d="M{x} 6c-4 6-6 8-6 11a6 6 0 0012 0c0-3-2-5-6-11z" fill="{b}"/>' for x in (66, 156))
+        return f'<svg viewBox="0 0 220 72" aria-hidden="true"><line x1="0" x2="220" y1="46" y2="46" stroke="{m}" stroke-dasharray="3 3"/><text x="2" y="62" font-size="9" fill="{m}">Moisture threshold</text><polyline points="{poly}" fill="none" stroke="{g}" stroke-width="2"/>{drops}</svg>'
+    if kind == 'soil':
+        stats = [('Soil temp', '18°C', .55), ('Moisture', '31%', .62), ('Rain 24h', '4 mm', .2)]
+        return '<svg viewBox="0 0 220 72" aria-hidden="true">' + ''.join(f'<text x="0" y="{i * 24 + 14}" font-size="10" fill="{m}">{n}</text><rect x="66" y="{i * 24 + 5}" width="110" height="10" rx="5" fill="{ash}"/><rect x="66" y="{i * 24 + 5}" width="{110 * p:.0f}" height="10" rx="5" fill="{g}"/><text x="220" y="{i * 24 + 14}" text-anchor="end" font-size="10" font-weight="600" fill="#242424">{v}</text>' for i, (n, v, p) in enumerate(stats)) + '</svg>'
+    if kind == 'aerial':
+        grid = ''.join(f'<rect x="{60 + col * 16}" y="{40 + r * 10}" width="15" height="9" rx="2" fill="{g}" opacity="{.35 + ((col * 7 + r * 3) % 5) * .12:.2f}"/>' for r in range(3) for col in range(8))
+        return f'<svg viewBox="0 0 220 72" aria-hidden="true"><path d="M110 18L64 70H188Z" fill="#73C4C5" opacity=".18"/>{grid}<rect x="98" y="8" width="24" height="8" rx="3" fill="#242424"/><path d="M90 8h-8M138 8h-8M86 6v4M134 6v4" stroke="#242424" stroke-width="2"/><text x="0" y="16" font-size="9" fill="{m}">Drone</text><text x="0" y="28" font-size="9" fill="{m}">+ satellite</text></svg>'
+    raise ValueError(kind)
+
+
+KA_FAQ = [
+    ('What is precision agriculture?', 'Precision agriculture uses data, technology and field-level analysis to help farmers manage crops and resources more effectively. It can include satellite imagery, drones, soil sensors, weather data and AI.'),
+]
+
+
+def page_kenagri():
+    m = MOD['kenagri']
+    hero = f'''<section class="page-hero kv-hero" style="--mod:{m["color"]}">
+    <div class="wash wash-a" aria-hidden="true"></div>
+    <div class="wash wash-b" aria-hidden="true"></div>
+    <div class="cursor-grid" aria-hidden="true"></div>
+    <div class="wrap kv-hero-grid">
+      <div class="kv-hero-copy">
+        {crumbs(('modules.html', 'Modules'), (None, 'KenAgri'))}
+        <span class="eyebrow">AI-powered precision agriculture by Intelense</span>
+        {logo_img(m, 0.36, 'hero-logo')}
+        <h1>Smarter Farming Starts with Better Information.</h1>
+        <p class="lede">KenAgri uses AI to help farmers and agricultural businesses understand crop health, identify potential pest and disease problems, predict yields and make smarter irrigation decisions.</p>
+        <p class="lede kv-sub">By bringing together available satellite imagery, drone images, ground sensors and weather data, KenAgri turns field information into practical insights that help you manage your crops with greater confidence.</p>
+        <div class="hero-ctas"><a class="btn btn-blue" href="contact.html">Get a Free Crop Health Assessment</a><a class="btn btn-ghost" href="#features">Explore KenAgri</a></div>
+        <p class="kv-tagline">AI agriculture solutions for crop monitoring, precision farming and smarter resource management.</p>
+      </div>
+      <div class="kv-hero-visual">
+        <div class="panel ag-panel">{farm_map(False, 'hero', True, True)}{ag_legend()}</div>
+        <div class="kv-chips"><span><b>0.78</b> average crop health</span><span><b>31%</b> soil moisture</span><span class="hot"><b>1</b> area to inspect</span></div>
+        <p class="demo-note">Illustrative field map and example data</p>
+      </div>
+    </div>
+  </section>'''
+
+    problem = f'''<section class="block" id="problem">
+    <div class="wrap">
+      {head_block('The problem', 'Your Crops Tell a Story. Are You Seeing the Early Signs?', "A healthy-looking field doesn't always tell the whole story.")}
+      <div class="kv-problem">
+        <div class="kv-questions">
+          <p class="kv-answer" style="font-size:17px;color:#e9e6e3">Water stress, nutrient deficiencies, pests and diseases can develop across different parts of a farm, sometimes before the symptoms become obvious.</p>
+          <p class="kv-answer" style="font-size:17px;color:#e9e6e3">Checking every field manually takes time, and decisions based on limited information can lead to unnecessary resource use or missed warning signs.</p>
+          <p class="kv-q" style="border:0;padding:0;margin-top:8px">KenAgri helps you understand what's happening across your fields using AI-powered crop monitoring and agricultural data analytics.</p>
+        </div>
+        <ul class="kv-points">
+          <li>{icon('leaf')}<div><b>Crop problems going unnoticed?</b><span>Monitor crop conditions and identify areas that may need closer inspection.</span></div></li>
+          <li>{icon('air')}<div><b>Not sure when to irrigate?</b><span>Use available soil moisture, weather and crop information to support irrigation planning.</span></div></li>
+          <li>{icon('chart')}<div><b>Uncertain about your upcoming harvest?</b><span>Use yield prediction to help estimate potential production and plan ahead.</span></div></li>
+          <li>{icon('search')}<div><b>Pests or diseases spreading across fields?</b><span>Identify potential problem areas earlier and prioritise field inspections.</span></div></li>
+          <li>{icon('layers')}<div><b>Managing multiple fields or large estates?</b><span>Bring available field data into one view to understand conditions across different areas.</span></div></li>
+        </ul>
+      </div>
+    </div>
+  </section>'''
+
+    feats = [
+        ('health', 'AI Crop Health Monitoring', 'Know which parts of your field need attention.', ['Analyse available satellite and drone imagery to monitor crop conditions across different field areas. Identify unusual patterns and potential signs of crop stress so you can prioritise inspections and take action where needed.']),
+        ('pest', 'AI Pest &amp; Disease Detection', 'Spot potential crop problems earlier.', ['Use AI to analyse available crop imagery and sensor data for patterns associated with potential pests, diseases and crop stress. Identify areas that need closer inspection and help your team investigate problems before they spread further.']),
+        ('yield', 'Crop Yield Prediction', 'Plan ahead with a clearer picture of your harvest.', ['Use available crop health information, historical yield records, weather conditions and other field data to estimate potential harvest output.', 'Yield predictions can help agricultural businesses plan harvesting, labour, storage, transport and market supply more effectively.']),
+        ('irrigation', 'Smart Irrigation Management', 'Give your crops water based on what they need.', ['Use soil moisture readings, weather information and crop requirements to support irrigation planning. Where compatible sensors and irrigation equipment are integrated, KenAgri can support automated irrigation workflows.', 'For farms without connected irrigation hardware, available insights can help guide manual watering schedules.']),
+        ('soil', 'Soil &amp; Weather Analytics', 'Understand the conditions shaping your crops.', ['Bring together available soil, temperature, moisture and weather data to understand how growing conditions change across your fields.', 'Use these insights to support irrigation planning, crop care and decisions about field management.']),
+        ('aerial', 'Satellite &amp; Drone Crop Analysis', 'Monitor more land without checking every field on foot.', ['Use satellite imagery and drone-based crop analysis to assess large areas, identify unusual patterns and focus field visits where they are most useful.', 'Combine aerial observations with ground-level data for a more complete understanding of crop conditions.']),
+    ]
+    features = f'''<section class="block" id="features">
+    <div class="wrap">
+      {head_block('Features', 'Everything You Need to Understand Your Fields Better', 'KenAgri combines AI crop monitoring, predictive analytics and agricultural data to help you make informed decisions throughout the growing season.')}
+      <div class="kv-feats">{''.join(f'<article class="kv-feat"><div class="kv-mini">{ag_mini(k)}</div><span class="kv-num">{i + 1:02d}</span><h3>{t}</h3><p class="kv-strap">{s}</p>{"".join(f"<p>{p}</p>" for p in ps)}</article>' for i, (k, t, s, ps) in enumerate(feats))}</div>
+    </div>
+  </section>'''
+
+    steps = [('Connect Your Field Data', 'Bring in available satellite imagery, drone images, ground sensor readings, weather information and historical farm records. The data sources used depend on your farm and deployment setup.'),
+             ('Let AI Analyse Your Crops', 'AI analyses the available information to identify crop stress patterns, potential pest and disease risks, changing field conditions and factors that may affect yield.'),
+             ('Get Insights for Your Next Step', 'Review crop health information, yield estimates and irrigation recommendations through available dashboards, reports and alerts. Use these insights to prioritise inspections and plan field operations.'),
+             ('Monitor and Adjust Throughout the Season', 'Continue reviewing field conditions as new imagery and data become available. Use updated insights to support decisions as your crops grow and conditions change.')]
+    how = f'''<section class="block" id="how">
+    <div class="wrap">
+      {head_block('How it works', 'From Field Data to Better Farming Decisions', 'KenAgri brings available agricultural data together and turns it into insights you can use.')}
+      <ol class="kv-steps four">{''.join(f'<li><span>{i + 1:02d}</span><h3>{t}</h3><p>{d}</p></li>' for i, (t, d) in enumerate(steps))}</ol>
+      <p style="margin-top:36px"><a class="btn btn-black" href="#example">See KenAgri in Action</a></p>
+    </div>
+  </section>'''
+
+    inds = [('leaf', 'Row Crops', 'Monitor crops such as wheat, corn, soybeans and other field crops. Identify areas showing signs of stress and support decisions about irrigation, crop care and input planning.'),
+            ('tractor', 'Horticulture &amp; Orchards', 'Monitor crop conditions across orchards, fruit farms and horticultural operations. Identify areas that may require closer inspection and track changes throughout the growing season.'),
+            ('layers', 'Plantation Agriculture', 'Support monitoring across large tea, rubber, palm oil, cocoa and other plantation estates. Compare conditions across field blocks and prioritise areas that need attention.'),
+            ('air', 'Paddy &amp; Rice Farming', 'Use available water-level, soil moisture, weather and crop information to support water management and monitor changing field conditions throughout the growing cycle.'),
+            ('home', 'Greenhouses &amp; Protected Cultivation', 'Monitor available environmental and crop data across greenhouse operations. Support decisions around irrigation, growing conditions and potential pest or disease concerns.')]
+    industries = f'''<section class="block" id="industries">
+    <div class="wrap">
+      {head_block('Industry applications', 'Precision Agriculture for Different Crops and Growing Environments', 'Every crop has different needs. KenAgri helps agricultural businesses use available field data to monitor crop conditions and make better-informed decisions across different farming environments.')}
+      <div class="caps ag-caps">{''.join(f'<div class="cap">{icon(ic)}<h3>{t}</h3><p>{d}</p></div>' for ic, t, d in inds)}<div class="cap ag-more"><h3>Farms and agriculture</h3><p>See how Intelense supports agricultural businesses across the platform.</p><a class="kv-link" href="industries.html#agriculture">More on agriculture →</a></div></div>
+    </div>
+  </section>'''
+
+    example = f'''<section class="block" id="example">
+    <div class="wrap kv-split" style="align-items:start">
+      <div>
+        <span class="eyebrow">Real-world example</span>
+        <h2 style="margin-top:18px">A Field Can Look Fine from a Distance and Still Need Attention.</h2>
+        <p class="lede" style="margin-top:20px">Imagine you manage a large farm. Most of your crops appear healthy, but a section of the field is receiving less water than expected.</p>
+        <p class="kv-body">Without detailed field information, the issue may go unnoticed until the crops begin showing visible signs of stress.</p>
+        <p class="kv-body">With KenAgri, available satellite or drone imagery and ground sensor data can help identify unusual patterns in that section.</p>
+        <p class="kv-body">Your team can then inspect the affected area, investigate the cause and decide whether irrigation or another corrective action is needed.</p>
+        <p class="kv-body">The same approach can help you monitor potential pest and disease concerns, compare crop conditions across fields and plan for the upcoming harvest.</p>
+        <p class="kv-body"><b style="color:var(--off-black);font-weight:600">Instead of treating every part of the farm the same way, use field-level insights to focus attention where it matters most.</b></p>
+      </div>
+      <div>
+        <div class="panel ag-panel">{farm_map(False, 'ex', True)}</div>
+        <div class="panel" style="margin-top:12px"><h3 style="font-size:16px;margin-bottom:10px">Soil moisture · last 14 days</h3>{ag_moisture(False)}</div>
+        <ol class="ks-timeline">
+          <li><time>Day 9</time><div><b>Imagery flags block C3</b><span>Crop health in one section falls below the field average.</span></div><em class="bad">Flagged</em></li>
+          <li><time>Day 10</time><div><b>Sensors confirm low moisture</b><span>Soil moisture in C3 drops below the irrigation threshold.</span></div><em class="bad">Alert</em></li>
+          <li><time>Day 11</time><div><b>Team inspects and adjusts irrigation</b><span>Section C3 added to the next watering schedule.</span></div><em>Action</em></li>
+        </ol>
+        <p class="demo-note">Illustrative example and data</p>
+      </div>
+    </div>
+  </section>'''
+
+    why = [('leaf', 'A Clearer Picture of Crop Health', 'Understand field conditions through available imagery and sensor data instead of relying only on occasional visual inspections.'),
+           ('search', 'Earlier Visibility into Potential Problems', 'Identify unusual crop patterns and potential stress indicators so your team can investigate areas that may need attention.'),
+           ('air', 'Better Use of Water and Other Resources', 'Use available soil, crop and weather information to support irrigation planning and field management decisions.'),
+           ('chart', 'Plan for the Harvest', 'Use yield estimates and crop monitoring insights to support harvesting schedules, labour planning and supply preparation.'),
+           ('layers', 'Monitor Large Areas More Efficiently', 'Bring information from multiple fields or farm blocks into a central view and prioritise inspections where they are most useful.'),
+           ('timeline', 'Adapt as Conditions Change', 'Review updated field information as new data becomes available and adjust farm management decisions throughout the growing season.')]
+    benefits = f'''<section class="block" id="why">
+    <div class="wrap">
+      {head_block('Why KenAgri?', 'Less Guesswork. More Informed Farming Decisions.', '')}
+      <div class="caps">{''.join(f'<div class="cap">{icon(ic)}<h3>{t}</h3><p>{d}</p></div>' for ic, t, d in why)}</div>
+    </div>
+  </section>'''
+
+    table_rows = [('A', 'Wheat', '0.82', '34%', 'Healthy', ''), ('B', 'Corn', '0.78', '31%', 'Healthy', ''), ('C', 'Soybean', '0.64', '18%', 'Inspect C3', 'bad'), ('D', 'Wheat', '0.80', '33%', 'Healthy', ''), ('E', 'Corn', '0.69', '27%', 'Watch', 'warn'), ('F', 'Orchard', '0.84', '30%', 'Healthy', '')]
+    dash = f'''<section class="block" id="dashboard">
+    <div class="wrap">
+      {head_block('Dashboard', "See What's Happening Across Your Fields.", 'Bring available crop health indicators, field conditions, yield estimates and irrigation insights into one place.')}
+      <div class="kv-dash">
+        <div class="c-top">
+          <img class="c-logo" src="assets/logos/kenagri-light.png" alt="KenAgri" width="67" height="30">
+          <span class="c-site">North Farm · 6 fields</span>
+          <div class="c-tabs"><span class="on">This week</span><span>Season</span><span>Last year</span></div>
+          <div class="c-right"><span>Imagery updated 2 days ago</span></div>
+        </div>
+        <div class="kv-kpis">
+          <div><span>Fields monitored</span><b>6</b><em>412 ha in total</em></div>
+          <div><span>Average crop health</span><b>0.76</b><em class="up">▲ 0.03 vs last week</em></div>
+          <div><span>Fields needing attention</span><b>2</b><em class="down">C3 low moisture, E watch</em></div>
+          <div><span>Next irrigation</span><b>Thu</b><em>Rain likely Sun to Mon</em></div>
+        </div>
+        <div class="kv-grid">
+          <div class="kv-card kv-wide"><h4>Crop health map</h4>{farm_map(True, 'dash', True)}{ag_legend(True)}</div>
+          <div class="kv-card"><h4>Field status</h4>
+            <table class="ag-table"><thead><tr><th>Field</th><th>Health</th><th>Moisture</th><th>Status</th></tr></thead><tbody>
+            {''.join(f'<tr><td><b>{f}</b> {c}</td><td>{h}</td><td>{mo}</td><td><span class="st {cls}">{st}</span></td></tr>' for f, c, h, mo, st, cls in table_rows)}
+            </tbody></table>
+          </div>
+          <div class="kv-card kv-wide"><h4>Soil moisture · block C3 vs field average</h4>{ag_moisture(True)}</div>
+          <div class="kv-card"><h4>Estimated yield by field</h4>{ag_yield()}</div>
+          <div class="kv-card" style="grid-column:1 / -1"><h4>Weather · next 7 days</h4>{ag_weather()}</div>
+        </div>
+      </div>
+      <p class="demo-note">Example dashboard with illustrative data. Not a real farm.</p>
+      <p class="kv-body" style="max-width:62ch">Compare different areas of your farm, identify potential problem zones and understand which fields may need closer attention.</p>
+      <p class="kv-body" style="max-width:62ch">With a clearer view of your agricultural data, you can spend less time piecing together information and more time making informed decisions.</p>
+      <p style="margin-top:28px"><a class="btn btn-blue" href="contact.html">Request a KenAgri Demo</a></p>
+    </div>
+  </section>'''
+
+    final = final_cta('Smarter Farming Starts with Better Information.',
+                      ['See how KenAgri can bring your satellite, drone, sensor and weather data together into practical field insights.'],
+                      'Get a Free Crop Health Assessment',
+                      'Tell us about your farm, your crops and the data you already have.',
+                      'KenAgri by Intelense | Intelligence at the Edge.')
+
+    body = '\n\n  '.join([hero, problem, features, how, industries, example, benefits, dash, faq_block(KA_FAQ), related_block(m), final, faq_schema(KA_FAQ)])
+    return dict(file='kenagri.html', title='KenAgri: AI-Powered Precision Agriculture | Intelense',
+                desc='KenAgri uses AI with satellite imagery, drone images, ground sensors and weather data to monitor crop health, flag pests and disease, predict yields and guide irrigation.',
+                active='kenagri', body=body)
+
+
+PAGES = [page_index, page_platform, page_modules, page_kenvision, page_kensafety, page_kenagri, *[(lambda m: (lambda: page_module(m)))(m) for m in MODULES if m['key'] not in ('kenvision', 'kensafety', 'kenagri')], page_industries, page_about, page_contact]
 
 # ---------------------------------------------------------------- output
 
