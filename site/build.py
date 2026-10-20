@@ -10,6 +10,8 @@ import shutil
 import sys
 from pathlib import Path
 
+import appui as ap
+
 ROOT = Path(__file__).resolve().parent
 ASSETS = ROOT / 'assets'
 HOME_SOURCE = ROOT.parent / 'design' / 'mockups' / 'homepage-monad-style.html'
@@ -60,6 +62,13 @@ ICONS = {
 
 def icon(name):
     return '<svg viewBox="0 0 24 24" aria-hidden="true">' + ICONS[name] + '</svg>'
+
+
+ap.icon = icon
+
+
+def mmss(sec):
+    return f'{sec // 60}m {sec % 60:02d}s'
 
 
 MODULES = [
@@ -904,6 +913,46 @@ KV_FAQ = [
 ]
 
 
+KV_HERO = dict(
+    uid='kv', logo='kenvision', site='Store 014 · CAM-02 store floor',
+    aria='Overhead store camera counting people at the entrance, tracking a checkout queue and measuring dwell time at a promo display',
+    media='<div class="tile-solo"><canvas class="cctv" data-scene="store" width="960" height="540"></canvas></div>',
+    kpis=[('users', 'Footfall today', '1,284', '↗ 8%', 'pos', 'vs last Tue', [40, 46, 44, 52, 58, 55, 63, 70, 68, 76, 84, 90]),
+          ('clock', 'Avg dwell time', '6m 12s', '↗ 24s', 'pos', 'vs last week', [5.2, 5.5, 5.4, 5.6, 5.5, 5.8, 5.7, 5.9, 6.0, 6.1, 6.0, 6.2])],
+    alert=('Queue alert', 'neg', 'timeline', '<b>4 waiting</b> at Checkout 2. Open another till.', '14:32'))
+
+
+def kv_dash():
+    hours = [f'{h:02d}:00' for h in range(8, 22)]
+    vals = [32, 58, 84, 96, 121, 148, 132, 118, 126, 152, 188, 201, 164, 96]
+    prev = [28, 50, 70, 92, 110, 130, 126, 112, 120, 140, 170, 182, 150, 90]
+    main = ap.card('Footfall by hour', '<div class="ap-mhead"><b>1,284</b>' + ap.pill('↗ 8%', 'pos') + '<span class="ap-vs">visitors today</span>'
+                   '<span class="ap-legend"><span><i></i>Today</span><span><i class="prev"></i>Last Tuesday</span></span></div>'
+                   + ap.line_chart(hours, vals, 11, '19:00 · 201 visitors', 'kv', (0, 80, 160, 240), prev, every=2), cls='ap-mainc')
+    side = ap.feed([('timeline', 'neg', '<b>Queue alert</b> at Checkout 2 · 4 waiting', '14:32'),
+                    ('users', 'info', '<b>Busy period</b> started · 148 visitors in the last hour', '13:00'),
+                    ('clock', 'violet', '<b>Promo display</b> dwell time up 18% on yesterday', '12:40'),
+                    ('eye', 'pos', '<b>CAM-04</b> back online at the side entrance', '11:05'),
+                    ('chart', 'mute', '<b>Weekly report</b> is ready to download', '09:00')])
+    evs = ap.events([('Footfall', 'info', 'users', 'Entrance A · peak hour', '201', 'Visitors between 19:00 and 20:00'),
+                     ('Queue', 'neg', 'timeline', 'Checkout 2', '4 waiting', 'Over the 3 minute wait target'),
+                     ('Dwell', 'violet', 'clock', 'Promo display', '4m 10s', 'Average time spent today'),
+                     ('Conversion', 'pos', 'cart', 'Store-wide', '24%', 'With POS data · up 2 pts')])
+    zones = [('Promo', 250), ('Electr.', 185), ('Checkout', 160), ('Apparel', 140), ('Grocery', 105)]
+    bottom = [ap.media('CAM-02 · Store floor', '<div class="tile-solo"><canvas class="cctv" data-scene="store" width="480" height="270"></canvas></div>', foot=(('Entry · IN 415', 'pos'), ('Queue · 4', 'neg'), ('Promo · 1m 42s', 'violet'))),
+              ap.card('Dwell time by zone', ap.bar_chart([z for z, _ in zones], [v for _, v in zones], 0, mmss, 'kv'), sub='Average per visitor, today'),
+              ap.card('Store right now', '<div class="ap-rings">' + ap.ring(62, '62%', 'Occupancy', 'kv1') + ap.ring(24, '24%', 'Conversion', 'kv2') + '</div>'
+                      '<div class="ap-split" style="margin-top:14px"><div class="ap-stat"><span>In store</span><b>37</b></div><div class="ap-stat"><span>Queue wait</span><b>2m 40s</b></div></div>')]
+    return dict(uid='kv', logo='kenvision', alt='KenVision', me='DT', nav=['eye', 'chart', 'users', 'clock', 'bell', 'cog'],
+                hello='Good afternoon, Downtown team', sub='Store 014 · Tuesday 14 October · 6 cameras online', range='Today',
+                aria='KenVision dashboard for Store 014 with footfall, dwell time, queue and conversion analytics',
+                kpis=[('users', 'Footfall today', '1,284', '↗ 8%', 'pos', 'vs last Tuesday', [40, 46, 44, 52, 58, 55, 63, 70, 68, 76, 84, 90]),
+                      ('eye', 'In store now', '37', 'Live', 'info', 'Updated every minute', [22, 26, 31, 28, 34, 30, 36, 33, 39, 35, 38, 37]),
+                      ('clock', 'Avg dwell time', '6m 12s', '↗ 7%', 'pos', 'vs last week', [5.2, 5.5, 5.4, 5.6, 5.5, 5.8, 5.7, 5.9, 6.0, 6.1, 6.0, 6.2]),
+                      ('timeline', 'Avg queue wait', '2m 40s', '↘ 12%', 'pos', 'shorter than last week', [3.4, 3.2, 3.3, 3.0, 3.1, 2.9, 3.0, 2.8, 2.9, 2.7, 2.8, 2.7])],
+                main=main, side=side, events=evs, bottom=bottom)
+
+
 def page_kenvision():
     import json
     m = MOD['kenvision']
@@ -923,10 +972,7 @@ def page_kenvision():
         <p class="kv-tagline">AI video analytics for retail, commercial spaces and business operations.</p>
       </div>
       <div class="kv-hero-visual">
-        <div class="tile-solo" role="img" aria-label="Overhead store camera counting people at the entrance, tracking a checkout queue and measuring dwell time at a promo display">
-          <canvas class="cctv" data-scene="store" width="960" height="540"></canvas>
-        </div>
-        <div class="kv-chips"><span><b>1,284</b> footfall today</span><span><b>37</b> in store now</span><span class="hot"><b>4</b> in queue</span></div>
+        {ap.hero(KV_HERO)}
         <p class="demo-note">Simulated camera feed and example data</p>
       </div>
     </div>
@@ -1030,27 +1076,7 @@ def page_kenvision():
     dash = f'''<section class="block" id="dashboard">
     <div class="wrap">
       {head_block('Dashboard', 'See the Numbers Behind What You See.', 'Bring important video analytics into one view. Monitor footfall, review activity across zones, understand dwell time and track queue patterns through an analytics dashboard.')}
-      <div class="kv-dash">
-        <div class="c-top">
-          <img class="c-logo" src="assets/logos/kenvision-light.png" alt="KenVision" width="82" height="30">
-          <span class="c-site">Store 014 · Downtown</span>
-          <div class="c-tabs"><span class="on">Today</span><span>7 days</span><span>30 days</span></div>
-          <div class="c-right"><span class="c-live">Live</span><span id="clock">14:32:09</span></div>
-        </div>
-        <div class="kv-kpis">
-          <div><span>Footfall today</span><b>1,284</b><em class="up">▲ 8% vs last Tuesday</em></div>
-          <div><span>In store now</span><b>37</b><em>Updated live</em></div>
-          <div><span>Average dwell time</span><b>6m 12s</b><em class="up">▲ 24s vs last week</em></div>
-          <div><span>Average queue wait</span><b>2m 40s</b><em class="down">Peak 17:30 to 18:00</em></div>
-        </div>
-        <div class="kv-grid">
-          <div class="kv-card kv-wide"><h4>Footfall by hour</h4>{footfall_chart()}</div>
-          <div class="kv-card"><h4>Zone activity</h4>{heat_plan(True, 'dark')}</div>
-          <div class="kv-card"><h4>Average dwell time by zone</h4>{dwell_chart()}</div>
-          <div class="kv-card"><h4>Checkout queue length</h4>{queue_chart()}</div>
-          <div class="kv-card"><h4>Live · CAM-02 store floor</h4><div class="tile-solo" style="border-radius:12px"><canvas class="cctv" data-scene="store" width="480" height="270"></canvas></div></div>
-        </div>
-      </div>
+      {ap.dash(kv_dash())}
       <p class="demo-note">Example dashboard with simulated data. Not a real store.</p>
       <p class="kv-body" style="max-width:62ch">Move from watching camera footage to understanding what the activity means for your business.</p>
       <p style="margin-top:28px"><a class="btn btn-blue" href="contact.html">Request a KenVision Demo</a></p>
@@ -1252,6 +1278,45 @@ KS_FAQ = [
 ]
 
 
+
+KS_HERO = dict(
+    uid='ks', logo='kensafety', site='Distribution Centre · CAM-04 loading dock',
+    aria='Loading dock camera flagging a worker without a hard hat inside a restricted zone, next to a moving forklift',
+    media='<div class="tile-solo"><canvas class="cctv" data-scene="dock" width="960" height="540"></canvas></div>',
+    kpis=[('hardhat', 'PPE compliance', '94%', '↗ 2 pts', 'pos', 'vs last week', [88, 90, 89, 91, 90, 92, 91, 93, 90, 92, 93, 94]),
+          ('zone', 'Zone violations', '7', '↘ 30%', 'pos', 'vs yesterday', [12, 11, 13, 10, 11, 9, 10, 8, 9, 8, 7, 7])],
+    alert=('High priority', 'neg', 'hardhat', '<b>No hard hat</b> in the restricted zone at Dock B.', '14:31'))
+
+
+def ks_dash():
+    days = [f'{d} Oct' for d in range(1, 15)]
+    vals = [88, 90, 89, 91, 90, 92, 91, 93, 90, 92, 93, 96, 94, 94]
+    main = ap.main('PPE compliance · last 14 days', '94%', '↗ 2 pts', 'pos', 'today', [('Compliance', False)],
+                   ap.line_chart(days, vals, 11, '12 Oct · 96%', 'ks', (80, 85, 90, 95, 100), every=2))
+    side = ap.feed([('hardhat', 'neg', '<b>No hard hat</b> in restricted zone · Dock B', '14:31'),
+                    ('forklift', 'neg', '<b>Person in vehicle lane</b> · Aisle 3', '14:32'),
+                    ('eye', 'warn', '<b>No hi-vis vest</b> · CAM-09, sent for review', '14:32'),
+                    ('fall', 'violet', '<b>Slip incident</b> reviewed and closed by a supervisor', '11:20'),
+                    ('doc', 'mute', '<b>Daily safety report</b> sent to 3 managers', '08:00')], title='Recent alerts')
+    evs = ap.events([('PPE', 'neg', 'hardhat', 'Dock B', '3 alerts', 'Missing hard hats today'),
+                     ('Zone', 'warn', 'zone', 'Forklift lane', '4 entries', 'Restricted-zone violations'),
+                     ('Incident', 'violet', 'fall', 'Aisle 3', '1 slip', 'Reviewed · no injury'),
+                     ('Compliance', 'pos', 'check', 'Site-wide', '94%', 'Up 2 pts on last week')])
+    types = [('Hard hat', 12), ('Hi-vis', 8), ('Zone', 7), ('Vehicle', 4), ('Fall', 1)]
+    bottom = [ap.media('CAM-04 · Loading dock', '<div class="tile-solo"><canvas class="cctv" data-scene="dock" width="480" height="270"></canvas></div>', foot=(('No hard hat', 'neg'), ('Restricted zone', 'warn'), ('Forklift moving', 'info'))),
+              ap.card('Violations by type', ap.bar_chart([t for t, _ in types], [v for _, v in types], 0, lambda v: f'{v} alerts', 'ks'), sub='This week'),
+              ap.card('Safety score', '<div class="ap-rings">' + ap.ring(88, '88', 'Site score', 'ks1') + ap.ring(92, '92%', 'Alerts reviewed', 'ks2') + '</div>'
+                      '<div class="ap-split" style="margin-top:14px"><div class="ap-stat"><span>Open alerts</span><b>3</b></div><div class="ap-stat"><span>Incidents</span><b>2</b></div></div>')]
+    return dict(uid='ks', logo='kensafety', alt='KenSafety', me='ST', nav=['hardhat', 'chart', 'zone', 'bell', 'doc', 'cog'],
+                hello='Good afternoon, Safety team', sub='Distribution Centre · Site 2 · 14 cameras online', range='Today',
+                aria='KenSafety dashboard with PPE compliance, restricted-zone violations, incidents and recent alerts',
+                kpis=[('hardhat', 'PPE compliance', '94%', '↗ 2 pts', 'pos', 'vs last week', [88, 90, 89, 91, 90, 92, 91, 93, 90, 92, 93, 94]),
+                      ('bell', 'Open alerts', '3', '1 high', 'neg', 'priority to review', [5, 4, 6, 3, 4, 5, 2, 4, 3, 4, 2, 3]),
+                      ('zone', 'Zone violations', '7', '↘ 30%', 'pos', 'vs yesterday', [12, 11, 13, 10, 11, 9, 10, 8, 9, 8, 7, 7]),
+                      ('fall', 'Incidents this week', '2', 'Reviewed', 'info', 'both closed', [1, 0, 1, 2, 1, 0, 1, 1, 0, 2, 1, 2])],
+                main=main, side=side, events=evs, bottom=bottom)
+
+
 def page_kensafety():
     m = MOD['kensafety']
     hero = f'''<section class="page-hero kv-hero" style="--mod:{m["color"]}">
@@ -1270,10 +1335,7 @@ def page_kensafety():
         <p class="kv-tagline">AI-powered workplace safety monitoring for construction, manufacturing, warehouses and industrial facilities.</p>
       </div>
       <div class="kv-hero-visual">
-        <div class="tile-solo" role="img" aria-label="Loading dock camera flagging a worker without a hard hat inside a restricted zone, next to a moving forklift">
-          <canvas class="cctv" data-scene="dock" width="960" height="540"></canvas>
-        </div>
-        <div class="kv-chips"><span><b>94%</b> PPE compliance today</span><span class="hot"><b>1</b> restricted-zone alert</span><span><b>3</b> people tracked</span></div>
+        {ap.hero(KS_HERO)}
         <p class="demo-note">Simulated camera feed and example data</p>
       </div>
     </div>
@@ -1383,32 +1445,7 @@ def page_kensafety():
     dash = f'''<section class="block" id="dashboard">
     <div class="wrap">
       {head_block('Dashboard', 'A Clearer View of Workplace Safety.', 'Bring important safety information into one place. Review PPE compliance, restricted-zone violations, detected incidents and safety trends through a central dashboard.')}
-      <div class="kv-dash">
-        <div class="c-top">
-          <img class="c-logo" src="assets/logos/kensafety-light.png" alt="KenSafety" width="79" height="30">
-          <span class="c-site">Distribution Centre · Site 2</span>
-          <div class="c-tabs"><span class="on">Today</span><span>7 days</span><span>30 days</span></div>
-          <div class="c-right"><span class="c-live">Live</span><span id="clock">14:32:09</span></div>
-        </div>
-        <div class="kv-kpis">
-          <div><span>PPE compliance today</span><b>94%</b><em class="up">▲ 2 pts vs last week</em></div>
-          <div><span>Open alerts</span><b>3</b><em class="down">1 high priority</em></div>
-          <div><span>Zone violations today</span><b>7</b><em>Most at Dock B</em></div>
-          <div><span>Incidents this week</span><b>2</b><em>Both reviewed</em></div>
-        </div>
-        <div class="kv-grid">
-          <div class="kv-card kv-wide"><h4>PPE compliance · last 14 days</h4>{ks_trend_chart()}</div>
-          <div class="kv-card"><h4>Violations this week by type</h4>{ks_types_chart()}</div>
-          <div class="kv-card kv-wide"><h4>Safety events by zone and hour</h4>{ks_matrix()}<p class="ks-legend"><span>Fewer</span><i></i><span>More</span></p></div>
-          <div class="kv-card"><h4>Recent alerts</h4>
-            <ul class="alerts">
-              <li class="sev-high"><canvas class="thumb" data-from="whse" data-crop=".5,.38,.3,.3" width="224" height="126"></canvas><div><span class="sev">High</span><span class="a-title">Person in vehicle zone</span><span class="a-meta">CAM-09 · 14:32:07</span></div></li>
-              <li class="sev-high"><canvas class="thumb" data-from="dock" data-crop=".56,.30,.36,.36" width="224" height="126"></canvas><div><span class="sev">High</span><span class="a-title">No hard hat in restricted zone</span><span class="a-meta">CAM-04 · 14:31:55</span></div></li>
-              <li class="sev-low"><canvas class="thumb" data-from="whse" data-crop=".08,.22,.3,.3" width="224" height="126"></canvas><div><span class="sev">Review</span><span class="a-title">No hi-vis vest</span><span class="a-meta">CAM-09 · 14:32:09</span></div></li>
-            </ul>
-          </div>
-        </div>
-      </div>
+      {ap.dash(ks_dash())}
       <p class="demo-note">Example dashboard with simulated data. Not a real site.</p>
       <p class="kv-body" style="max-width:62ch">Understand where events are occurring, identify recurring problems and give your team the information it needs to take action.</p>
       <p style="margin-top:28px"><a class="btn btn-blue" href="contact.html">Request a KenSafety Demo</a></p>
@@ -1583,6 +1620,48 @@ KA_FAQ = [
 ]
 
 
+
+def ka_hero():
+    return dict(
+        uid='ka', logo='kenagri', site='North Farm · Crop health map',
+        aria='Crop health map of six fields with one low-health block highlighted for inspection',
+        media=f'<div class="ap-map">{farm_map(True, "hero", True, True)}{ag_legend(True)}</div>',
+        kpis=[('leaf', 'Avg crop health', '0.78', '↗ 0.03', 'pos', 'vs last week', [0.70, 0.71, 0.72, 0.72, 0.73, 0.74, 0.75, 0.75, 0.76, 0.77, 0.77, 0.78]),
+              ('drop', 'Soil moisture', '31%', '↘ 4 pts', 'neg', 'this week', [36, 35, 35, 34, 34, 33, 33, 32, 32, 31, 31, 31])],
+        alert=('Inspect', 'neg', 'leaf', '<b>Block C3</b> health dropped to 0.64 with low soil moisture.', '2 days ago'))
+
+
+def ka_dash():
+    weeks = [f'W{i}' for i in range(1, 15)]
+    vals = [0.42, 0.48, 0.55, 0.61, 0.66, 0.70, 0.73, 0.75, 0.77, 0.79, 0.81, 0.79, 0.77, 0.76]
+    prev = [0.40, 0.45, 0.51, 0.57, 0.62, 0.66, 0.69, 0.71, 0.73, 0.75, 0.76, 0.75, 0.74, 0.73]
+    main = ap.main('Average crop health · this season', '0.76', '↗ 0.03', 'pos', 'vs last season', [('This season', False), ('Last season', True)],
+                   ap.line_chart(weeks, vals, 10, 'Week 11 · 0.81', 'ka', (0.4, 0.5, 0.6, 0.7, 0.8, 0.9), prev, every=2))
+    side = ap.feed([('leaf', 'neg', '<b>Field C3</b> health down 0.06 this week', 'Mon'),
+                    ('drop', 'warn', '<b>Soil moisture</b> below 20% in block C3', 'Mon'),
+                    ('sun', 'info', '<b>Rain likely</b> Sunday to Monday · 18 mm', 'Mon'),
+                    ('drone', 'violet', '<b>Drone survey</b> uploaded for fields A to D', 'Sun'),
+                    ('chart', 'pos', '<b>Yield estimate</b> updated for the season', 'Sat')])
+    evs = ap.events([('Crop health', 'neg', 'leaf', 'Field C · Soybean', '0.64', 'Inspect block C3'),
+                     ('Moisture', 'warn', 'drop', 'Field E · Corn', '27%', 'Watch over the next 3 days'),
+                     ('Weather', 'info', 'sun', 'Next 7 days', '18 mm', 'Rain likely Sunday to Monday'),
+                     ('Irrigation', 'pos', 'tractor', 'Next window', 'Thu', 'Skip C3 rotation after rain')])
+    yld = [('A', 4.1), ('B', 9.8), ('C', 2.6), ('D', 4.3), ('E', 8.9), ('F', 6.2)]
+    rows = [('Field A', 'Wheat', 'Health 0.82', 'pos', 82, 'Healthy', 'pos'), ('Field C', 'Soybean · block C3', 'Health 0.64', 'neg', 64, 'Inspect', 'neg'),
+            ('Field E', 'Corn', 'Health 0.69', 'warn', 69, 'Watch', 'warn'), ('Field F', 'Orchard', 'Health 0.84', 'pos', 84, 'Healthy', 'pos')]
+    bottom = [ap.media('Crop health map', f'<div class="ap-map">{farm_map(True, "dash", True)}{ag_legend(True)}</div>', tag=('Imagery 2 days ago', 'mute'), cls='ap-wide'),
+              ap.card('Estimated yield', ap.bar_chart([f'Field {f}' for f, _ in yld], [v for _, v in yld], 1, lambda v: f'{v:g} t/ha', 'ka'), sub='Tonnes per hectare, by field'),
+              ap.tasks(rows, 'Field status', 'Six fields', cls='ap-full')]
+    return dict(uid='ka', logo='kenagri', alt='KenAgri', me='NF', nav=['leaf', 'chart', 'drone', 'drop', 'bell', 'cog'],
+                hello='Good morning, North Farm', sub='6 fields · 412 ha · Imagery updated 2 days ago', range='This week',
+                aria='KenAgri dashboard with crop health, soil moisture, weather, yield estimates and field status',
+                kpis=[('layers', 'Fields monitored', '6', '412 ha', 'info', 'in total', None),
+                      ('leaf', 'Avg crop health', '0.76', '↗ 0.03', 'pos', 'vs last week', [0.70, 0.71, 0.72, 0.72, 0.73, 0.74, 0.75, 0.75, 0.74, 0.75, 0.76, 0.76]),
+                      ('alert', 'Need attention', '2', 'C3 · E', 'neg', 'low moisture, watch', [0, 0, 1, 1, 1, 0, 1, 1, 2, 1, 2, 2]),
+                      ('drop', 'Next irrigation', 'Thu', 'Rain Sun', 'info', '18 mm expected', None)],
+                main=main, side=side, events=evs, bottom=bottom)
+
+
 def page_kenagri():
     m = MOD['kenagri']
     hero = f'''<section class="page-hero kv-hero" style="--mod:{m["color"]}">
@@ -1601,8 +1680,7 @@ def page_kenagri():
         <p class="kv-tagline">AI agriculture solutions for crop monitoring, precision farming and smarter resource management.</p>
       </div>
       <div class="kv-hero-visual">
-        <div class="panel ag-panel">{farm_map(False, 'hero', True, True)}{ag_legend()}</div>
-        <div class="kv-chips"><span><b>0.78</b> average crop health</span><span><b>31%</b> soil moisture</span><span class="hot"><b>1</b> area to inspect</span></div>
+        {ap.hero(ka_hero())}
         <p class="demo-note">Illustrative field map and example data</p>
       </div>
     </div>
@@ -1709,31 +1787,7 @@ def page_kenagri():
     dash = f'''<section class="block" id="dashboard">
     <div class="wrap">
       {head_block('Dashboard', "See What's Happening Across Your Fields.", 'Bring available crop health indicators, field conditions, yield estimates and irrigation insights into one place.')}
-      <div class="kv-dash">
-        <div class="c-top">
-          <img class="c-logo" src="assets/logos/kenagri-light.png" alt="KenAgri" width="67" height="30">
-          <span class="c-site">North Farm · 6 fields</span>
-          <div class="c-tabs"><span class="on">This week</span><span>Season</span><span>Last year</span></div>
-          <div class="c-right"><span>Imagery updated 2 days ago</span></div>
-        </div>
-        <div class="kv-kpis">
-          <div><span>Fields monitored</span><b>6</b><em>412 ha in total</em></div>
-          <div><span>Average crop health</span><b>0.76</b><em class="up">▲ 0.03 vs last week</em></div>
-          <div><span>Fields needing attention</span><b>2</b><em class="down">C3 low moisture, E watch</em></div>
-          <div><span>Next irrigation</span><b>Thu</b><em>Rain likely Sun to Mon</em></div>
-        </div>
-        <div class="kv-grid">
-          <div class="kv-card kv-wide"><h4>Crop health map</h4>{farm_map(True, 'dash', True)}{ag_legend(True)}</div>
-          <div class="kv-card"><h4>Field status</h4>
-            <table class="ag-table"><thead><tr><th>Field</th><th>Health</th><th>Moisture</th><th>Status</th></tr></thead><tbody>
-            {''.join(f'<tr><td><b>{f}</b> {c}</td><td>{h}</td><td>{mo}</td><td><span class="st {cls}">{st}</span></td></tr>' for f, c, h, mo, st, cls in table_rows)}
-            </tbody></table>
-          </div>
-          <div class="kv-card kv-wide"><h4>Soil moisture · block C3 vs field average</h4>{ag_moisture(True)}</div>
-          <div class="kv-card"><h4>Estimated yield by field</h4>{ag_yield()}</div>
-          <div class="kv-card" style="grid-column:1 / -1"><h4>Weather · next 7 days</h4>{ag_weather()}</div>
-        </div>
-      </div>
+      {ap.dash(ka_dash())}
       <p class="demo-note">Example dashboard with illustrative data. Not a real farm.</p>
       <p class="kv-body" style="max-width:62ch">Compare different areas of your farm, identify potential problem zones and understand which fields may need closer attention.</p>
       <p class="kv-body" style="max-width:62ch">With a clearer view of your agricultural data, you can spend less time piecing together information and more time making informed decisions.</p>
@@ -1807,6 +1861,45 @@ KH_FAQ = [
 ]
 
 
+
+KH_HERO = dict(
+    uid='kh', logo='kenhome', site='Home · Front door camera',
+    aria='Front door camera flagging a person at the door and a package on the step',
+    media='<div class="tile-solo"><canvas class="cctv" data-scene="porch" width="960" height="540"></canvas></div>',
+    kpis=[('cam', 'Cameras online', '4 / 4', 'All OK', 'pos', 'connected', None),
+          ('bell', 'Alerts today', '3', '1 to review', 'neg', '', [1, 0, 2, 1, 0, 1, 3, 1, 2, 1, 2, 3])],
+    alert=('Person at door', 'neg', 'users', '<b>Front door</b> · someone is at the door and a package is on the step.', '14:31'))
+
+
+def kh_dash():
+    cams = ('<div class="ap-cams"><figure><div class="tile-solo"><canvas class="cctv" data-scene="porch" width="640" height="360"></canvas></div><figcaption>Front door ' + ap.pill('Person', 'neg') + '</figcaption></figure>'
+            '<figure><div class="tile-solo"><canvas class="cctv" data-scene="living" width="480" height="270"></canvas></div><figcaption>Living room ' + ap.pill('All OK', 'pos') + '</figcaption></figure>'
+            '<figure><div class="tile-solo"><canvas class="cctv" data-scene="drive" width="480" height="270"></canvas></div><figcaption>Driveway ' + ap.pill('Vehicle', 'info') + '</figcaption></figure></div>')
+    main = ap.card('Cameras', cams, action='4 online')
+    side = ap.feed([('users', 'neg', '<b>Person at front door</b> · notified 3 people', '14:31'),
+                    ('box', 'info', '<b>Package</b> left on the front step', '14:32'),
+                    ('fall', 'pos', '<b>Living room</b> · no falls or inactivity today', '12:00'),
+                    ('car', 'violet', '<b>Person near vehicle</b> at night · driveway', '02:14'),
+                    ('fence', 'warn', '<b>Back garden</b> boundary zone paused', 'Mon')], title="Today's events")
+    evs = ap.events([('Person', 'neg', 'users', 'Front door', '14:31', 'Person at the door, family notified'),
+                     ('Package', 'info', 'box', 'Front door', '14:32', 'Package left on the step'),
+                     ('Night', 'violet', 'moon', 'Driveway', '02:14', 'Person near the vehicle'),
+                     ('Wellbeing', 'pos', 'fall', 'Living room', 'All OK', 'No falls or inactivity today')])
+    days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+    zones = [('Front door', 'Entrance', 'Alerts', 'neg', None, 'Alert', 'neg'), ('Pool gate', 'Child restricted zone', 'Children', 'violet', None, 'Active', 'pos'),
+             ('Kitchen counter', 'Pet restricted zone', 'Pets', 'info', None, 'Active', 'pos'), ('Back garden', 'Boundary', 'Night', 'mute', None, 'Paused', 'warn')]
+    bottom = [ap.tasks(zones, 'Monitored zones', '6 zones'),
+              ap.card('Alerts this week', ap.bar_chart(days, [2, 1, 4, 2, 3, 6, 3], 5, lambda v: f'{v} alerts', 'kh'), sub='Saturday was busiest')]
+    return dict(uid='kh', logo='kenhome', alt='KenHome', me='AC', nav=['home', 'cam', 'bell', 'zone', 'users', 'cog'],
+                hello='Good afternoon, welcome home', sub='4 cameras · 6 zones · 3 family members notified', range='Today',
+                aria='KenHome dashboard with live cameras, today\'s alerts, monitored zones and alerts by day',
+                kpis=[('cam', 'Cameras online', '4 / 4', 'All OK', 'pos', 'connected', None),
+                      ('bell', 'Alerts today', '3', '1 to review', 'neg', '', [1, 0, 2, 1, 0, 1, 3, 1, 2, 1, 2, 3]),
+                      ('zone', 'Zones monitored', '6', '1 paused', 'warn', 'back garden', None),
+                      ('users', 'Family notified', '3', 'Push · SMS', 'info', 'people', None)],
+                main=main, side=side, events=evs, bottom=bottom)
+
+
 def page_kenhome():
     m = MOD['kenhome']
     hero = f'''<section class="page-hero kv-hero" style="--mod:{m["color"]}">
@@ -1825,10 +1918,7 @@ def page_kenhome():
         <p class="kv-tagline">AI home security and safety monitoring for families, homes and residential properties.</p>
       </div>
       <div class="kv-hero-visual">
-        <div class="tile-solo" role="img" aria-label="Front door camera flagging a person at the door and a package on the step">
-          <canvas class="cctv" data-scene="porch" width="960" height="540"></canvas>
-        </div>
-        <div class="kv-chips"><span class="hot"><b>Front door</b> person at door</span><span><b>Living room</b> all OK</span><span><b>Driveway</b> vehicle parked</span></div>
+        {ap.hero(KH_HERO)}
         <p class="demo-note">Simulated camera feed and example alerts</p>
       </div>
     </div>
@@ -1955,38 +2045,7 @@ def page_kenhome():
     dash = f'''<section class="block" id="dashboard">
     <div class="wrap">
       {head_block('Dashboard', 'Your Home at a Glance. Important Alerts in One Place.', 'Bring your supported camera feeds, monitored zones and safety events into one view.')}
-      <div class="kv-dash">
-        <div class="c-top">
-          <img class="c-logo" src="assets/logos/kenhome-light.png" alt="KenHome" width="79" height="30">
-          <span class="c-site">Home · 4 cameras</span>
-          <div class="c-tabs"><span class="on">Live</span><span>Events</span><span>Zones</span><span>Family</span></div>
-          <div class="c-right"><span class="c-live">Live</span><span id="clock">14:32:09</span></div>
-        </div>
-        <div class="kv-kpis">
-          <div><span>Cameras online</span><b>4 / 4</b><em class="up">All connected</em></div>
-          <div><span>Alerts today</span><b>3</b><em class="down">1 needs review</em></div>
-          <div><span>Zones monitored</span><b>6</b><em>1 paused</em></div>
-          <div><span>Family notified</span><b>3 people</b><em>Push and SMS</em></div>
-        </div>
-        <div class="kv-grid">
-          <div class="kv-card"><h4>Front door</h4><div class="tile-solo" style="border-radius:12px"><canvas class="cctv" data-scene="porch" width="480" height="270"></canvas></div></div>
-          <div class="kv-card"><h4>Living room</h4><div class="tile-solo" style="border-radius:12px"><canvas class="cctv" data-scene="living" width="480" height="270"></canvas></div></div>
-          <div class="kv-card"><h4>Driveway</h4><div class="tile-solo" style="border-radius:12px"><canvas class="cctv" data-scene="drive" width="480" height="270"></canvas></div></div>
-          <div class="kv-card"><h4>Today's events</h4>
-            <ul class="alerts">
-              <li class="sev-high"><canvas class="thumb" data-from="porch" data-crop=".55,.12,.3,.3" width="224" height="126"></canvas><div><span class="sev">Alert</span><span class="a-title">Person at front door</span><span class="a-meta">Front door · 14:31</span></div></li>
-              <li class="sev-low"><canvas class="thumb" data-from="drive" data-crop=".35,.35,.45,.45" width="224" height="126"></canvas><div><span class="sev">Info</span><span class="a-title">Person near vehicle</span><span class="a-meta">Driveway · 02:14</span></div></li>
-              <li class="sev-low"><canvas class="thumb" data-from="porch" data-crop=".55,.55,.3,.3" width="224" height="126"></canvas><div><span class="sev">Info</span><span class="a-title">Package on step</span><span class="a-meta">Front door · 14:32</span></div></li>
-            </ul>
-          </div>
-          <div class="kv-card"><h4>Monitored zones</h4>
-            <table class="ag-table"><thead><tr><th>Zone</th><th>Rule</th><th>Status</th></tr></thead><tbody>
-            {''.join(f'<tr><td><b>{z}</b></td><td>{r}</td><td><span class="st {cls}">{st}</span></td></tr>' for z, r, st, cls in zones)}
-            </tbody></table>
-          </div>
-          <div class="kv-card"><h4>Alerts this week by type</h4>{kh_types_chart()}</div>
-        </div>
-      </div>
+      {ap.dash(kh_dash())}
       <p class="demo-note">Example dashboard with simulated feeds and data. Not a real home.</p>
       <p class="kv-body" style="max-width:62ch">Review notifications, understand where an event occurred and access available video context without having to search through hours of recordings.</p>
       <p class="kv-body" style="max-width:62ch">KenHome helps make home monitoring more useful, more organised and easier to manage.</p>
@@ -2089,6 +2148,46 @@ KI_FAQ = [
 ]
 
 
+
+KI_HERO = dict(
+    uid='ki', logo='keniot', site='Plant 1 · Line 2 · Motor M-14',
+    aria='Live sensor monitor for motor M-14 on line 2: vibration streams against its expected range and is flagged when it drifts outside it',
+    media='<div class="ap-ch" style="margin:4px 6px 8px"><h4>Vibration · mm/s</h4><span class="ap-act">Expected range shaded</span></div><div class="ki-stream"><canvas data-iotstream="dark" width="720" height="250"></canvas><span class="ki-status" data-iotstatus>Within expected range</span></div>',
+    kpis=[('pulse', 'Vibration', '4.2', '↗ 18%', 'neg', 'mm/s since 06:00', [2.2, 2.3, 2.2, 2.4, 2.6, 2.8, 3.1, 3.4, 3.7, 3.9, 4.1, 4.2]),
+          ('gauge', 'Asset health', '93%', '119 / 128', 'pos', 'healthy', [90, 91, 91, 92, 92, 91, 92, 93, 92, 93, 93, 93])],
+    alert=('Anomaly', 'neg', 'wrench', '<b>Motor M-14</b> bearing vibration is rising. Work order WO-1042 created.', '14:30'))
+
+
+def ki_dash():
+    hours = [f'{h:02d}:00' for h in range(0, 24, 2)] + ['Now']
+    vals = [2.2, 2.3, 2.2, 2.4, 2.3, 2.6, 2.9, 3.2, 3.5, 3.8, 4.0, 4.1, 4.2]
+    exp = [2.4] * 13
+    main = ap.main('Motor M-14 · vibration, last 24 hours', '4.2 mm/s', '↗ 18%', 'neg', 'above the expected 2.4', [('Vibration', False), ('Expected', True)],
+                   ap.line_chart(hours, vals, 12, 'Now · 4.2 mm/s', 'ki', (0, 1.5, 3, 4.5, 6), exp, every=2))
+    side = ap.feed([('pulse', 'neg', '<b>Motor M-14</b> vibration above expected range', '14:30'),
+                    ('wrench', 'violet', '<b>WO-1042</b> created · inspect bearing', '14:31'),
+                    ('thermo', 'warn', '<b>Freezer F-1</b> temperature drifting up', '13:05'),
+                    ('check', 'pos', '<b>HVAC unit 4</b> filter replaced · back to normal', '10:20'),
+                    ('doc', 'mute', '<b>Weekly asset report</b> sent', '08:00')], title='Anomalies')
+    evs = ap.events([('Vibration', 'neg', 'pulse', 'Motor M-14', '4.2 mm/s', 'Above expected 2.4'),
+                     ('Temperature', 'warn', 'thermo', 'Freezer F-1', '-14 °C', 'Check the door seal'),
+                     ('Power', 'violet', 'bolt', 'Line 2 drive', '18.4 kW', 'Up 9% on last week'),
+                     ('Healthy', 'pos', 'check', 'Line 1', '42 / 42', 'All assets normal')])
+    wos = [('WO-1042', 'Inspect bearing · Motor M-14', 'High', 'neg', 30, 'Assigned', 'info'), ('WO-1039', 'Check door seal · Freezer F-1', 'Medium', 'warn', 10, 'Scheduled', 'warn'),
+           ('WO-1031', 'Replace filter · HVAC unit 4', 'Low', 'mute', 100, 'Done', 'pos')]
+    bottom = [ap.tasks(wos, 'Maintenance queue', '3 open this week'),
+              ap.card('Fleet health', '<div class="ap-rings">' + ap.ring(93, '93%', 'Healthy assets', 'ki1') + ap.ring(99, '99.2%', 'Sensor uptime', 'ki2') + '</div>'
+                      '<div class="ap-split" style="margin-top:14px"><div class="ap-stat"><span>Assets</span><b>128</b></div><div class="ap-stat"><span>Sensors</span><b>412</b></div></div>')]
+    return dict(uid='ki', logo='keniot', alt='KenIoT', me='MT', nav=['pulse', 'gauge', 'wrench', 'bell', 'doc', 'cog'],
+                hello='Good afternoon, Maintenance team', sub='Plant 1 · Markham · 128 assets · 412 sensors', range='Last 24 hours',
+                aria='KenIoT dashboard with asset health, a vibration anomaly on motor M-14, recent anomalies and the maintenance queue',
+                kpis=[('layers', 'Assets monitored', '128', '412 sensors', 'info', '', [120, 121, 121, 122, 124, 124, 125, 126, 126, 127, 128, 128]),
+                      ('check', 'Healthy', '119', '93%', 'pos', 'of assets', [116, 117, 118, 117, 118, 119, 118, 119, 120, 119, 119, 119]),
+                      ('alert', 'Open anomalies', '4', '1 rising', 'neg', 'fast', [2, 2, 3, 2, 3, 3, 2, 3, 4, 3, 4, 4]),
+                      ('wrench', 'Work orders', '3', 'This week', 'info', 'created from alerts', None)],
+                main=main, side=side, events=evs, bottom=bottom)
+
+
 def page_keniot():
     m = MOD['keniot']
     gauges = [('Temperature', '71', '°C', 'Normal', '', [66, 67, 66, 68, 67, 69, 68, 70, 69, 71, 70, 71]),
@@ -2112,11 +2211,7 @@ def page_keniot():
         <p class="kv-tagline">AI-powered IoT monitoring, sensor analytics and predictive maintenance for industrial operations.</p>
       </div>
       <div class="kv-hero-visual">
-        <div class="iot ki-live" role="img" aria-label="Live sensor monitor for motor M-14 on line 2: vibration streams against its expected range and is flagged when it drifts outside it">
-          <div class="iot-top"><b style="color:#e9e9ec;font-size:14px">Line 2 · Motor M-14</b><span class="c-live">Live</span></div>
-          <div class="ki-stream"><canvas data-iotstream="dark" width="720" height="170"></canvas><span class="ki-status" data-iotstatus>Within expected range</span></div>
-          <div class="iot-grid" style="margin-top:12px">{gauge_html}</div>
-        </div>
+        {ap.hero(KI_HERO)}
         <p class="demo-note">Simulated sensor data</p>
       </div>
     </div>
@@ -2231,26 +2326,7 @@ def page_keniot():
     dash = f'''<section class="block" id="dashboard">
     <div class="wrap">
       {head_block('Dashboard', 'Every Sensor Has a Signal. See What It Means.', 'Bring your connected equipment and sensor information into one view.')}
-      <div class="kv-dash">
-        <div class="c-top">
-          <img class="c-logo" src="assets/logos/keniot-light.png" alt="KenIoT" width="67" height="30">
-          <span class="c-site">Plant 1 · Markham</span>
-          <div class="c-tabs"><span class="on">Assets</span><span>Anomalies</span><span>Work orders</span><span>Reports</span></div>
-          <div class="c-right"><span class="c-live">Live</span><span id="clock">14:32:09</span></div>
-        </div>
-        <div class="kv-kpis">
-          <div><span>Assets monitored</span><b>128</b><em>412 sensors</em></div>
-          <div><span>Healthy</span><b>119</b><em class="up">93% of assets</em></div>
-          <div><span>Open anomalies</span><b>4</b><em class="down">1 rising fast</em></div>
-          <div><span>Work orders this week</span><b>3</b><em>Created from alerts</em></div>
-        </div>
-        <div class="kv-grid">
-          <div class="kv-card kv-wide"><h4>Live · Motor M-14 vibration</h4><div class="ki-stream"><canvas data-iotstream="dark" width="900" height="330"></canvas><span class="ki-status" data-iotstatus>Within expected range</span></div></div>
-          <div class="kv-card"><h4>Asset health</h4><table class="ag-table"><thead><tr><th>Asset</th><th>Health</th><th>Status</th></tr></thead><tbody>{asset_rows}</tbody></table></div>
-          <div class="kv-card kv-wide"><h4>Sensor readings · Line 2</h4><div class="iot-grid ki-four">{sens_html}</div></div>
-          <div class="kv-card"><h4>Maintenance queue</h4><ul class="ki-wo">{''.join(f'<li><b>{i}</b><span>{t}</span><em class="st {c}">{s}</em></li>' for i, t, s, c in wos)}</ul></div>
-        </div>
-      </div>
+      {ap.dash(ki_dash())}
       <p class="demo-note">Example dashboard with simulated data. Not a real site.</p>
       <p class="kv-body" style="max-width:62ch">Monitor available readings, review unusual patterns, track equipment health indicators and investigate alerts across your connected assets.</p>
       <p class="kv-body" style="max-width:62ch">KenIoT helps your team move beyond isolated sensor readings to a clearer understanding of what's happening across your operations.</p>
@@ -2355,6 +2431,50 @@ KC_FAQ = [
 ]
 
 
+
+def kc_hero(lines, ins, bars):
+    media = f'''<div class="kc-tablet" data-convo role="img" aria-label="Counter tablet showing a live staff and customer conversation with insights: greeting detected in 4 seconds, upsell offered, positive sentiment, conversation score 86">
+          <div class="wave kc-wave">{bars}</div>
+          <div class="kc-body">
+            <ul class="kc-lines">{lines}</ul>
+            <ul class="kc-ins"><li class="kc-ins-h">Live insights</li>{ins}</ul>
+          </div>
+        </div>'''
+    return dict(uid='kc', logo='kenvoice', site='Store 014 · Counter 2 · on-device', media=media,
+                kpis=[('users', 'Customers greeted', '91%', '↗ 3 pts', 'pos', 'vs last week', [84, 85, 87, 86, 88, 87, 89, 88, 90, 89, 90, 91]),
+                      ('cart', 'Upsell offered', '38%', '14 missed', 'neg', 'today', [34, 36, 35, 37, 36, 38, 37, 39, 37, 38, 37, 38])],
+                alert=('Score 86', 'pos', 'mic', '<b>Counter 2</b> · greeted in 4s, upsell offered, sale with add-on.', '14:32'))
+
+
+def kc_dash():
+    hours = [f'{h:02d}:00' for h in range(9, 21)]
+    vals = [6, 12, 18, 22, 27, 24, 16, 14, 20, 24, 18, 13]
+    prev = [5, 10, 15, 20, 23, 22, 15, 13, 18, 21, 16, 12]
+    main = ap.main('Conversations by hour', '214', '↗ 9%', 'pos', 'conversations today', [('Today', False), ('Last week', True)],
+                   ap.line_chart(hours, vals, 4, '13:00 · 27 conversations', 'kc', (0, 10, 20, 30, 40), prev, every=2))
+    side = ap.feed([('mic', 'pos', '<b>Counter 2</b> · upsell offered, sale with add-on · 86', '14:32'),
+                    ('mic', 'neg', '<b>Counter 1</b> · walk-away, not greeted · 52', '14:20'),
+                    ('mic', 'info', '<b>Counter 3</b> · return handled, positive · 81', '14:11'),
+                    ('star', 'violet', '<b>Coaching note</b> added for Daniel R.', '13:40'),
+                    ('doc', 'mute', '<b>Weekly scorecards</b> ready to review', '09:00')], title='Recent conversations')
+    evs = ap.events([('Greeting', 'pos', 'users', 'Greeted within 10s', '91%', 'Up 3 pts on last week'),
+                     ('Missed upsell', 'neg', 'cart', 'Screen protector', '14', 'With a new phone today'),
+                     ('Sentiment', 'info', 'star', 'Positive', '66%', '11% negative'),
+                     ('Coaching', 'violet', 'doc', 'Staff to review', '2', 'Scores under 75 this week')])
+    staff = [('Chloe M.', '41 conversations', 'Greeted 98%', 'pos', 91, 'On track', 'pos'), ('Aisha K.', '48 conversations', 'Greeted 96%', 'pos', 88, 'On track', 'pos'),
+             ('Ben T.', '52 conversations', 'Upsell 31%', 'warn', 79, 'On track', 'pos'), ('Daniel R.', '37 conversations', 'Upsell 22%', 'neg', 68, 'Coach', 'neg')]
+    bottom = [ap.tasks(staff, 'Staff scorecards', 'This week'),
+              ap.card('Positive sentiment', ap.bar_chart(['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'], [61, 64, 62, 66, 68, 72, 66], 5, lambda v: f'{v}%', 'kc'), sub='Share of conversations, by day')]
+    return dict(uid='kc', logo='kenvoice', alt='KenVoice', me='SM', nav=['mic', 'chart', 'users', 'star', 'doc', 'cog'],
+                hello='Good afternoon, Store 014', sub='Downtown · 3 counters · audio processed on-device', range='Today',
+                aria='KenVoice dashboard with conversations by hour, greeting and upsell rates, sentiment and staff scorecards',
+                kpis=[('mic', 'Conversations', '214', '3 counters', 'info', 'today', [150, 162, 170, 168, 180, 176, 190, 186, 198, 204, 210, 214]),
+                      ('users', 'Customers greeted', '91%', '↗ 3 pts', 'pos', 'vs last week', [84, 85, 87, 86, 88, 87, 89, 88, 90, 89, 90, 91]),
+                      ('cart', 'Upsell offered', '38%', '14 missed', 'neg', 'accessory offers', [34, 36, 35, 37, 36, 38, 37, 39, 37, 38, 37, 38]),
+                      ('star', 'Positive sentiment', '66%', '11% neg.', 'info', '', [60, 62, 61, 63, 64, 62, 65, 64, 66, 65, 67, 66])],
+                main=main, side=side, events=evs, bottom=bottom)
+
+
 def page_kenvoice():
     m = MOD['kenvoice']
     convo = [(1, 'staff', 'Hi there, welcome in! Anything I can help you find today?'),
@@ -2382,14 +2502,7 @@ def page_kenvoice():
         <p class="kv-tagline">AI-powered conversation insights. Audio processed on-device.</p>
       </div>
       <div class="kv-hero-visual">
-        <div class="kc-tablet" data-convo role="img" aria-label="Counter tablet showing a live staff and customer conversation with insights: greeting detected in 4 seconds, upsell offered, positive sentiment, conversation score 86">
-          <div class="kc-top"><img src="assets/logos/kenvoice-light.png" alt="" width="66" height="25"><span>Counter 2 · Store 014</span><span class="kc-device">On-device processing</span></div>
-          <div class="wave kc-wave">{bars}</div>
-          <div class="kc-body">
-            <ul class="kc-lines">{lines}</ul>
-            <ul class="kc-ins"><li class="kc-ins-h">Live insights</li>{ins}</ul>
-          </div>
-        </div>
+        {ap.hero(kc_hero(lines, ins, bars))}
         <p class="demo-note">Example conversation and insights</p>
       </div>
     </div>
@@ -2473,26 +2586,7 @@ def page_kenvoice():
           <p class="kv-body">The result is a more structured way to review service quality, identify coaching needs, and understand what is happening during customer interactions.</p>
         </div>
       </div>
-      <div class="kv-dash">
-        <div class="c-top">
-          <img class="c-logo" src="assets/logos/kenvoice-light.png" alt="KenVoice" width="79" height="30">
-          <span class="c-site">Store 014 · Downtown</span>
-          <div class="c-tabs"><span class="on">Today</span><span>7 days</span><span>30 days</span></div>
-          <div class="c-right"><span>3 counters</span></div>
-        </div>
-        <div class="kv-kpis">
-          <div><span>Conversations today</span><b>214</b><em>Across 3 counters</em></div>
-          <div><span>Customers greeted</span><b>91%</b><em class="up">▲ 3 pts vs last week</em></div>
-          <div><span>Upsell offered</span><b>38%</b><em class="down">14 missed accessory offers</em></div>
-          <div><span>Positive sentiment</span><b>66%</b><em>11% negative</em></div>
-        </div>
-        <div class="kv-grid">
-          <div class="kv-card kv-wide"><h4>Staff scorecards · this week</h4><table class="ag-table"><thead><tr><th>Staff</th><th>Conversations</th><th>Greeted</th><th>Upsell offered</th><th>Score</th></tr></thead><tbody>{staff_rows}</tbody></table></div>
-          <div class="kv-card"><h4>Recent conversations</h4><ul class="kc-feed">{feed_html}</ul></div>
-          <div class="kv-card kv-wide"><h4>Customer sentiment by day</h4>{kc_sentiment_chart()}</div>
-          <div class="kv-card"><h4>Top missed opportunities</h4><ul class="kc-missed">{''.join(f'<li><span>{n}</span><b>{v}</b></li>' for n, v in missed)}</ul></div>
-        </div>
-      </div>
+      {ap.dash(kc_dash())}
       <p class="demo-note">Example dashboard with illustrative data. Names are fictional.</p>
     </div>
   </section>'''
@@ -2606,6 +2700,20 @@ KR_FAQ = [
 ]
 
 
+
+def kr_hero(fleet):
+    media = f'''<div class="kr-console" role="img" aria-label="Live fleet map of a warehouse: four robots follow planned routes, one detours around an obstacle, and robots slow down near a person">
+          <div class="kr-body">
+            <canvas data-fleet width="900" height="540"></canvas>
+            <ul class="kr-fleet"><li class="kr-h">Fleet · 4 robots</li>{fleet}</ul>
+          </div>
+        </div>'''
+    return dict(uid='kr', logo='kenrobotics', site='Warehouse A · Fleet map', media=media,
+                kpis=[('robot', 'Robots active', '4 / 4', 'On route', 'pos', '', None),
+                      ('check', 'Tasks done today', '128', '↗ 12%', 'pos', 'vs yesterday', [60, 68, 72, 80, 86, 92, 98, 104, 110, 116, 122, 128])],
+                alert=('Safety zone', 'warn', 'users', '<b>R-02</b> slowed down near a person in aisle 4.', 'Live'))
+
+
 def page_kenrobotics():
     m = MOD['kenrobotics']
     fleet = ''.join(f'<li><i style="background:{col}"></i><b>{rid}</b><span data-fleet-status="{rid}">On route</span></li>' for rid, col in (('R-01', '#5b7cff'), ('R-02', '#a98bf5'), ('R-03', '#73C4C5'), ('R-04', '#78AFCF')))
@@ -2624,13 +2732,7 @@ def page_kenrobotics():
         <p class="kv-tagline">AI-powered perception, path planning, and fleet coordination.</p>
       </div>
       <div class="kv-hero-visual">
-        <div class="kr-console" role="img" aria-label="Live fleet map of a warehouse: four robots follow planned routes, one detours around an obstacle, and robots slow down near a person">
-          <div class="iot-top"><b style="color:#e9e9ec;font-size:14px">Fleet map · Warehouse A</b><span class="c-live">Live</span></div>
-          <div class="kr-body">
-            <canvas data-fleet width="900" height="540"></canvas>
-            <ul class="kr-fleet"><li class="kr-h">Fleet · 4 robots</li>{fleet}</ul>
-          </div>
-        </div>
+        {ap.hero(kr_hero(fleet))}
         <p class="demo-note">Simulated fleet and example data</p>
       </div>
     </div>
