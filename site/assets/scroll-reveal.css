@@ -1,0 +1,19 @@
+/* Subtle scroll reveal (index.html). Everything here sits under .js-reveal, which scroll-reveal.js adds only
+   when JS runs and prefers-reduced-motion is off, so the page is fully visible without JS or with reduced motion.
+   Only opacity and translate animate. Timing lives in the two variables below. */
+:root {
+  --rv-ease: cubic-bezier(.2, .7, .2, 1);
+  --rv-dur: 600ms;
+  --rv-dist: 16px;
+}
+.js-reveal .rv {
+  opacity: 0; translate: 0 var(--rv-dist);
+  transition: opacity var(--rv-dur) var(--rv-ease), translate var(--rv-dur) var(--rv-ease);
+  transition-delay: var(--d, 0ms);
+}
+.js-reveal .rv.is-in { opacity: 1; translate: 0 0; }
+/* Module cards keep their hover border transition */
+.js-reveal .card.rv {
+  transition: opacity var(--rv-dur) var(--rv-ease), translate var(--rv-dur) var(--rv-ease), border-color .2s;
+  transition-delay: var(--d, 0ms), var(--d, 0ms), 0s;
+}
