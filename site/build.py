@@ -2952,6 +2952,13 @@ def page_kenrobotics():
                 active='kenrobotics', body=body, cctv=True)
 
 
+def page_404():
+    hero = page_hero(crumbs((None, 'Page not found')), 'Error 404', 'We could not find that page.',
+                     'The address may have changed or the page may have been removed. These links will get you back on track.',
+                     '<a class="btn btn-blue" href="index.html">Go to the home page</a><a class="btn btn-ghost" href="modules.html">Explore the modules</a><a class="btn btn-ghost" href="contact.html">Contact us</a>')
+    return dict(file='404.html', title='Page not found | Intelense', desc='This page could not be found.', active='', body=hero, noindex=True)
+
+
 # The old www.intelense.com pages with no equivalent in the new design (text is verbatim from content/old-pages.json)
 import types
 import legacy_pages
@@ -3098,6 +3105,8 @@ ICON_LINKS = ('<link rel="icon" href="assets/icons/favicon.ico" sizes="any">\n<l
 def seo_head(p):
     """Canonical, social share tags and (home page) Organization data. The text matches the page's own title and description."""
     import html as _h, json as _j
+    if p.get('noindex'):
+        return '<meta name="robots" content="noindex">'
     url = SITE_URL + PUBLIC[p['file']]
     title, desc = _h.escape(p.get('og_title') or p['title'], quote=True), _h.escape(p.get('og_desc') or p['desc'], quote=True)
     out = [f'<link rel="canonical" href="{url}">',
@@ -3174,7 +3183,7 @@ def deploy_build(pages, out):
         h = _re.sub(r'''(href=|src=|poster=|data-src=)(["'])assets/''', r'\1\2/assets/', h).replace('url(assets/', 'url(/assets/').replace("from './assets/", "from '/assets/")
         h = _re.sub(r'((?:href|src)="/assets/[a-z-]+\.(?:css|js))"', lambda m: m.group(1) + '?v=' + ASSET_VERSION + '"', h)
         h = h.replace("from '/assets/cursor-grid.js'", "from '/assets/cursor-grid.js?v=" + ASSET_VERSION + "'")
-        path = PUBLIC[p['file']]
+        path = PUBLIC.get(p['file'], '/404')
         # flat files (/kenvision -> kenvision.html, /blogs/x -> blogs/x.html): the layout the old site used, so a host that already
         # rewrites clean URLs to .html (the old .htaccess) serves them without redirecting /x to /x/
         dest = out / 'index.html' if path == '/' else out / (path.strip('/') + '.html')
@@ -3185,7 +3194,7 @@ def deploy_build(pages, out):
     for f in ('site.css', 'site.js', 'cctv.js', 'cursor-grid.js', 'scroll-reveal.css', 'scroll-reveal.js'):
         shutil.copy(ASSETS / f, out / 'assets' / f)
     today = datetime.date.today().isoformat()
-    urls = ''.join(f'  <url><loc>{SITE_URL}{PUBLIC[p["file"]]}</loc><lastmod>{today}</lastmod></url>\n' for p in pages)
+    urls = ''.join(f'  <url><loc>{SITE_URL}{PUBLIC[p["file"]]}</loc><lastmod>{today}</lastmod></url>\n' for p in pages if p['file'] in PUBLIC)
     (out / 'sitemap.xml').write_text(f'<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n{urls}</urlset>\n')
     (out / 'robots.txt').write_text(f'User-agent: *\nAllow: /\nDisallow: /.git/\n\nSitemap: {SITE_URL}/sitemap.xml\n\n# llms.txt: {SITE_URL}/llms.txt\n')
     write_redirects(out, pages)
@@ -3217,7 +3226,7 @@ def apply_old_seo(pages):
 def write_redirects(out, pages):
     """Old URLs that were only redirect stubs. Written as add-on files, never as .htaccess: the host's own .htaccess stays in charge."""
     rules = dict(legacy_pages.REDIRECTS)
-    lines = ['# Add these lines to the host .htaccess, directly after "RewriteEngine On" and before the clean-URL rules.\n',
+    lines = ['# Add these lines to the host .htaccess, right after the "Force www" rule (the RewriteRule ... https://www.intelense.com/$1 line)\n# and before the "Redirect .html URLs to clean URLs" comment. Delete this file from the server afterwards.\n',
              '# They send the old redirect-stub addresses to the page that replaced them (301 = permanent, keeps search rankings).\n']
     lines += [f'RewriteRule ^{src.strip("/")}/?$ {dst} [R=301,L]\n' for src, dst in rules.items()]
     (out / 'htaccess-add-these-lines.txt').write_text(''.join(lines))
@@ -3229,9 +3238,11 @@ def main():
     apply_old_seo(pages)
     for p in pages:
         (ROOT / p['file']).write_text(render(p))
+    p404 = page_404()
+    (ROOT / '404.html').write_text(render(p404))
     print('wrote', len(pages), 'pages to', ROOT)
     if '--deploy' in sys.argv:
-        deploy_build(pages, Path(sys.argv[sys.argv.index('--deploy') + 1]))
+        deploy_build(pages + [p404], Path(sys.argv[sys.argv.index('--deploy') + 1]))
     if '--inline' in sys.argv:
         out = Path(sys.argv[sys.argv.index('--inline') + 1])
         out.mkdir(parents=True, exist_ok=True)
