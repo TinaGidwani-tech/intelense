@@ -1011,3 +1011,20 @@ footer a:hover { color: var(--parchment); }
 .client-sectors span { display: inline-flex; align-items: baseline; gap: 10px; padding: 10px 18px; border: 1px solid var(--ash); border-radius: 9999px; font-size: 13px; text-transform: uppercase; letter-spacing: .06em; color: var(--graphite); }
 .client-sectors b { font-size: 18px; font-weight: 600; letter-spacing: -.02em; color: var(--off-black); font-variant-numeric: tabular-nums; }
 @media (prefers-reduced-motion: reduce) { .marquee { animation: none; flex-wrap: wrap; width: auto; justify-content: center; } .marquee ul[aria-hidden] { display: none; } .marquee ul { flex-wrap: wrap; justify-content: center; } .clients::after { display: none; } }
+
+/* ===== Leadership and advisory board ===== */
+.founder { display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr); gap: clamp(28px, 5vw, 80px); align-items: center; }
+.founder img { width: 100%; height: auto; display: block; border-radius: 32px; box-shadow: 0 30px 70px -40px rgba(10, 52, 237, .45); }
+.founder h2 { margin-top: 18px; font-size: clamp(34px, 4.4vw, 56px); }
+.founder-role { margin-top: 10px; color: var(--smoke); font-size: clamp(16px, 1.4vw, 19px); }
+.founder-bio { margin-top: 26px; display: grid; gap: 14px; color: var(--graphite); font-size: clamp(16px, 1.4vw, 19px); line-height: 1.6; max-width: 56ch; }
+.founder-chip { display: inline-flex; margin-top: 28px; padding: 11px 18px; border: 1px solid var(--ash); border-radius: 9999px; background: var(--white); font-size: 13px; font-weight: 600; }
+.advisors { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+.advisor { display: grid; grid-template-columns: 72px minmax(0, 1fr); gap: 22px; align-items: start; padding: 28px; border: 1px solid var(--ash); border-radius: 28px; background: var(--white); }
+.advisor img { width: 72px; height: 72px; border-radius: 50%; object-fit: cover; box-shadow: 0 0 0 3px var(--parchment), 0 0 0 4px var(--ash); }
+.advisor h3 { font-size: 20px; }
+.advisor p { color: var(--graphite); font-size: 15px; margin-top: 8px; }
+.advisor .adv-role { color: var(--smoke); margin-top: 4px; }
+.adv-loc { display: inline-block; margin-top: 12px; font-size: 12px; text-transform: uppercase; letter-spacing: .06em; color: var(--smoke); font-weight: 500; }
+@media (max-width: 900px) { .founder { grid-template-columns: minmax(0, 1fr); } .founder img { max-width: 420px; } }
+@media (max-width: 760px) { .advisors { grid-template-columns: minmax(0, 1fr); } .advisor { padding: 22px; gap: 16px; } }

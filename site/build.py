@@ -724,6 +724,43 @@ def page_industries():
                 active='industries.html', body=body)
 
 
+FOUNDER = dict(name='Dinesh Prasanna', role='Founder & CEO \u00b7 Intelense (est. 2018)', photo='founder.jpg',
+               bio=['Experienced AI entrepreneur across healthtech, analytics, and robotics with GTM track record in North America and India.',
+                    'Founded Intelense in 2018 with a conviction that enterprise AI should deploy in days, not months.'],
+               chip='MIT Technical Leadership Program \u00b7 Cambridge, US')
+ADVISORS = [('Dr. Huggy Rao', 'Professor, Stanford University Graduate School of Business', "World's leading expert on scaling mobilization, innovation, and talent in organisations.", 'Stanford, USA', 'huggy-rao.jpg'),
+            ('Toby Lennox, LLB', 'Former CEO, Toronto Global \u00b7 Former VP, GTAA', 'Extensive experience in corporate governance, privacy law, and international relations.', 'Toronto, Canada', 'toby-lennox.jpg'),
+            ('Poonam Puri, LLB, LLM', 'Professor, Osgoode Hall Law School, York University', "Canada's leading expert in corporate governance, corporate law, and securities regulation.", 'Toronto, Canada', 'poonam-puri.jpg'),
+            ('Bradford Wilson Cook', 'Chief Operating Officer, Accern', 'Fintech executive advising global clients and driving financial results across capital markets.', 'New York, USA', 'bradford-cook.jpg')]
+
+
+def leadership_section():
+    f = FOUNDER
+    bio = ''.join(f'<p>{p}</p>' for p in f['bio'])
+    cards = ''.join(f'''<article class="advisor"><img src="assets/people/{img}" alt="{n}" width="72" height="72" loading="lazy">
+          <div><h3>{n}</h3><p class="adv-role">{role}</p><p>{desc}</p><span class="adv-loc">{loc}</span></div></article>''' for n, role, desc, loc, img in ADVISORS)
+    return f'''<section class="block" id="leadership">
+    <div class="wrap">
+      <div class="founder">
+        <img src="assets/people/{f['photo']}" alt="{f['name']}, {f['role']}" width="576" height="722" loading="lazy">
+        <div>
+          <span class="eyebrow">Leadership</span>
+          <h2>{f['name']}</h2>
+          <p class="founder-role">{f['role']}</p>
+          <div class="founder-bio">{bio}</div>
+          <span class="founder-chip">{f['chip']}</span>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section class="block" id="advisory">
+    <div class="wrap">
+      {head_block('Advisory board', 'Backed by <span style="white-space:nowrap">world-class</span> expertise.', 'Deep authority in scaling organisations, governance, and financial markets.')}
+      <div class="advisors">{cards}</div>
+    </div>
+  </section>'''
+
+
 def page_about():
     hero = page_hero(crumbs((None, 'Company')), 'About Intelense', 'A safer world, starting with public safety.',
                      'Intelense is an artificial intelligence and data analytics company based in Markham, Ontario. We turn the video, sensor and voice data organisations already have into alerts people can act on.',
@@ -764,7 +801,7 @@ def page_about():
       {credits_html()}
     </div>
   </section>'''
-    body = '\n\n  '.join([hero, story, values, proof, credits, cta_band('Want to work with us?', ('industries.html', 'See industries'))])
+    body = '\n\n  '.join([hero, leadership_section(), story, values, proof, credits, cta_band('Want to work with us?', ('industries.html', 'See industries'))])
     return dict(file='about.html', title='About | Intelense', desc='Intelense is an AI and data analytics company in Markham, Ontario, with a mission to create a safer world.',
                 active='about.html', body=body)
 
@@ -3058,6 +3095,7 @@ def main():
             (out / p['file']).write_text(render(p, inline=True, bare=p['file'] == 'index.html'))
         shutil.copytree(ASSETS / 'logos', out / 'assets' / 'logos', dirs_exist_ok=True)
         shutil.copytree(FOOTAGE, out / 'assets' / 'footage', dirs_exist_ok=True)
+        shutil.copytree(ASSETS / 'people', out / 'assets' / 'people', dirs_exist_ok=True)
         print('wrote inline copy to', out)
 
 
