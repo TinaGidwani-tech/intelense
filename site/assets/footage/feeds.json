@@ -554,13 +554,23 @@
   ]
  },
  "industry-public-safety": {
-  "src": "industry-public-safety.jpg",
-  "credit": "tommy picone",
-  "source": "https://www.pexels.com/photo/urban-traffic-surveillance-with-cctv-camera-30546987/",
+  "src": "plaza.jpg",
+  "credit": "Valeria Drozdova",
+  "source": "https://www.pexels.com/photo/aerial-view-of-piazza-del-duomo-in-milan-35707711/",
   "licence": "Pexels License",
-  "desc": "CCTV camera over a city road",
-  "alt": "CCTV camera over a city road",
-  "plain": true
+  "desc": "City square crowd seen from above",
+  "alt": "Crowd in a city square seen from above",
+  "plain": true,
+  "boxes": [
+   {
+    "x": 0.62,
+    "y": 0.5,
+    "w": 0.3,
+    "h": 0.4,
+    "label": "Crowd density · monitored",
+    "tone": "info"
+   }
+  ]
  },
  "industry-retail": {
   "src": "industry-retail.jpg",
