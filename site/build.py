@@ -3067,10 +3067,37 @@ def swap_feeds(html):
                   lambda m: feed_html(m.group(1)) if m.group(1) in FEEDS else m.group(0), html)
 
 
+SITE_URL = 'https://www.intelense.com'
+LINKEDIN_URL = 'https://www.linkedin.com/company/intelense/'
+# Public path of every page. The paths that already existed on the old site keep their old address.
+PUBLIC = {'index.html': '/', 'platform.html': '/ken360', 'modules.html': '/modules', 'industries.html': '/industries', 'about.html': '/about', 'contact.html': '/contact',
+          'kenvision.html': '/kenvision', 'kensafety.html': '/kensafety', 'kenhome.html': '/kenhome', 'kenagri.html': '/kenagri', 'keniot.html': '/keniot',
+          'kenrobotics.html': '/kenrobotics', 'kenvoice.html': '/kenvoice'}
+OG_IMAGE = '/assets/footage/video-home-poster.jpg'
+
+
+def seo_head(p):
+    """Canonical, social share tags and (home page) Organization data. The text matches the page's own title and description."""
+    import html as _h, json as _j
+    url = SITE_URL + PUBLIC[p['file']]
+    title, desc = _h.escape(p['title'], quote=True), _h.escape(p['desc'], quote=True)
+    out = [f'<link rel="canonical" href="{url}">',
+           '<meta property="og:type" content="website">', '<meta property="og:site_name" content="Intelense">',
+           f'<meta property="og:title" content="{title}">', f'<meta property="og:description" content="{desc}">',
+           f'<meta property="og:url" content="{url}">', f'<meta property="og:image" content="{SITE_URL}{OG_IMAGE}">',
+           '<meta name="twitter:card" content="summary_large_image">', f'<meta name="twitter:title" content="{title}">', f'<meta name="twitter:description" content="{desc}">',
+           f'<meta name="twitter:image" content="{SITE_URL}{OG_IMAGE}">']
+    if p['file'] == 'index.html':
+        org = {'@context': 'https://schema.org', '@type': 'Organization', 'name': 'Intelense', 'url': SITE_URL + '/', 'logo': SITE_URL + '/assets/logos/intelense.png',
+               'email': 'enquiries@intelense.ca', 'sameAs': [LINKEDIN_URL]}
+        out.append('<script type="application/ld+json">' + _j.dumps(org) + '</script>')
+    return '\n'.join(out)
+
+
 def render(p, inline=False, bare=False):
     css = (ASSETS / 'site.css').read_text()
     style = f'<style>\n{css}</style>' if inline else '<link rel="stylesheet" href="assets/site.css">'
-    head = f'<title>{p["title"]}</title>\n<meta name="description" content="{p["desc"]}">\n{FONTS}\n{style}'
+    head = f'<title>{p["title"]}</title>\n<meta name="description" content="{p["desc"]}">\n{seo_head(p)}\n{FONTS}\n{style}'
     if p.get('reveal'):
         if inline:
             head += f'\n<style>\n{(ASSETS / "scroll-reveal.css").read_text()}</style>\n<script>\n{(ASSETS / "scroll-reveal.js").read_text()}</script>'
@@ -3091,11 +3118,41 @@ def render(p, inline=False, bare=False):
     return f'<!doctype html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">\n{head}\n</head>\n<body>\n{content}</body>\n</html>\n'
 
 
+def deploy_build(pages, out):
+    """Deployable copy: clean URLs (/kenvision, /ken360 ...), root-relative assets, sitemap.xml and robots.txt."""
+    import re as _re, datetime
+    out.mkdir(parents=True, exist_ok=True)
+    key = {f: f for f in PUBLIC}
+
+    def link(m):
+        f, frag = m.group(1) + '.html', m.group(2) or ''
+        return f'href="{PUBLIC[f]}{frag}"' if f in PUBLIC else m.group(0)
+    for p in pages:
+        h = render(p)
+        h = _re.sub(r'href="([a-z0-9]+)\.html(#[^"]*)?"', link, h)
+        h = _re.sub(r'''(href=|src=|poster=|data-src=)(["'])assets/''', r'\1\2/assets/', h).replace('url(assets/', 'url(/assets/').replace("from './assets/", "from '/assets/")
+        path = PUBLIC[p['file']]
+        dest = out / 'index.html' if path == '/' else out / path.strip('/') / 'index.html'
+        dest.parent.mkdir(parents=True, exist_ok=True)
+        dest.write_text(h)
+    for d in ('logos', 'footage', 'people', 'clients', 'certificates'):
+        shutil.copytree(ASSETS / d, out / 'assets' / d, dirs_exist_ok=True)
+    for f in ('site.css', 'site.js', 'cctv.js', 'cursor-grid.js', 'scroll-reveal.css', 'scroll-reveal.js'):
+        shutil.copy(ASSETS / f, out / 'assets' / f)
+    today = datetime.date.today().isoformat()
+    urls = ''.join(f'  <url><loc>{SITE_URL}{PUBLIC[p["file"]]}</loc><lastmod>{today}</lastmod></url>\n' for p in pages)
+    (out / 'sitemap.xml').write_text(f'<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n{urls}</urlset>\n')
+    (out / 'robots.txt').write_text(f'User-agent: *\nAllow: /\n\nSitemap: {SITE_URL}/sitemap.xml\n')
+    print('wrote deployable site to', out)
+
+
 def main():
     pages = [f() for f in PAGES]
     for p in pages:
         (ROOT / p['file']).write_text(render(p))
     print('wrote', len(pages), 'pages to', ROOT)
+    if '--deploy' in sys.argv:
+        deploy_build(pages, Path(sys.argv[sys.argv.index('--deploy') + 1]))
     if '--inline' in sys.argv:
         out = Path(sys.argv[sys.argv.index('--inline') + 1])
         out.mkdir(parents=True, exist_ok=True)

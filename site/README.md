@@ -13,13 +13,16 @@ Page content lives in `build.py` (module and industry copy is in the `MODULES` a
 ```
 python3 site/build.py                 # regenerate site/*.html
 python3 -m http.server -d site 8000   # preview at http://localhost:8000
+python3 site/build.py --deploy dist   # deployable copy with clean URLs, sitemap.xml and robots.txt
 ```
+
+See `SEO-MIGRATION.md` for the old-to-new URL map.
 
 The home page reuses sections from `design/mockups/homepage-monad-style.html`.
 
 ## Assets
 - `assets/site.js`: mobile menu, sensor diagram, console clock, contact form
-- `assets/footage/`: real Pexels/Unsplash photos and clips, described in `feeds.json` (credit, source, overlays). `build.py` swaps them in for the simulated canvases, and `about.html#credits` lists every credit.
+- `assets/footage/`: real Pexels/Unsplash photos and clips, described in `feeds.json` (credit, source, overlays). `build.py` swaps them in for the simulated canvases.
 - `assets/cctv.js`: simulated camera feeds, used only for scenes that have no footage
 - `assets/cursor-grid.js`: cursor-reactive grid in each page hero (`initCursorGrid(container, options)`)
 
