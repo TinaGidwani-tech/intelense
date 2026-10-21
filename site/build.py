@@ -499,7 +499,7 @@ def page_index():
     faq = FAQ.replace('<p>Book a demo. We', '<p><a href="contact.html">Book a demo</a>. We').replace('<summary>What is KenVoice?</summary>\n          <p>KenVoice is our newest module. It adds voice to the Ken platform, so spoken alerts, hands-free commands and call audio sit in the same timeline as your video and sensor events.</p>', '<summary>What is KenVoice?</summary>\n          <p><a href="kenvoice.html">KenVoice</a> is our newest module. It uses AI audio analytics to turn customer and staff conversations at retail counters into service, coaching and sales insights, with audio processed on-device.</p>')
     hero = HERO
     if 'video-home' in FEEDS:
-        hero = hero[:hero.rindex('</section>')] + f'<div class="wrap hero-media">{photo("video-home")}<p class="demo-note">Example footage and data</p></div>\n  </section>'
+        hero = hero[:hero.rindex('</section>')] + f'<div class="wrap hero-media">{photo("video-home")}</div>\n  </section>'
     body = '\n\n  '.join([hero, platform, modules, clients_section(), sectors, faq, cta_band()])
     return dict(file='index.html', title='Intelense | AI Video Analytics & Intelligence at the Edge',
                 desc='Intelense turns live video, sensor and voice data into real-time alerts. Seven Ken modules on one AI platform.',
@@ -1069,7 +1069,6 @@ def page_kenvision():
       </div>
       <div class="kv-hero-visual">
         {photo('store')}
-        <p class="demo-note">Example footage and data</p>
       </div>
     </div>
   </section>'''
@@ -1432,7 +1431,6 @@ def page_kensafety():
       </div>
       <div class="kv-hero-visual">
         {photo('dock')}
-        <p class="demo-note">Example footage and data</p>
       </div>
     </div>
   </section>'''
@@ -3018,14 +3016,14 @@ def feat(mod, kind, fallback):
     return photo(key) if key in FEEDS else fallback
 
 
-def photo_band(name, eyebrow, title, text, note='Example footage and data'):
+def photo_band(name, eyebrow, title, text, note=''):
     if name not in FEEDS:
         return ''
     return f'''<section class="block photo-band">
     <div class="wrap">
       <div class="photo-band-grid">
         <div><span class="eyebrow">{eyebrow}</span><h2>{title}</h2><p class="lede">{text}</p></div>
-        <div>{photo(name)}<p class="demo-note">{note}</p></div>
+        <div>{photo(name)}{f'<p class="demo-note">{note}</p>' if note else ''}</div>
       </div>
     </div>
   </section>'''
