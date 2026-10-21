@@ -1,0 +1,46 @@
+{
+ "index.html": {
+  "title": "Intelense | AI Video Analytics Platform for Retail, Safety & Smart Monitoring",
+  "keywords": "AI video analytics, AI video analytics retail, AI powered retail analytics, video analytics software for CCTV, AI software for CCTV cameras, real time camera monitoring system, AI video analytics for security, AI video analytics for workplace safety, real time alert system, building smart cities with AI video analytics, AI powered visual analytics, real time surveillance camera, AI solutions for retail, AI automation company India, digital solutions provider India, real time monitoring and analytics for workplace safety",
+  "desc": "Intelense is an AI platform powering seven industry modules KenVision for video analytics, KenSafety for workplace safety, KenHome for smart home security, KenAgri for precision agriculture, KenIoT for predictive sensor monitoring, KenRobotics for autonomous systems, and KenVoice for retail conversation intelligence. One platform, built for the real world."
+ },
+ "platform.html": {
+  "title": "Ken 360 The Unified AI Platform | Intelense",
+  "desc": "Ken 360 is the unified intelligence platform that powers all seven Ken modules. One API, one dashboard, one data layer complete operational visibility."
+ },
+ "kenvision.html": {
+  "title": "KenVision Video Intelligence | Intelense",
+  "keywords": "AI video analytics retail, video analytics software for CCTV, AI software for CCTV cameras, AI powered retail analytics, AI solutions for retail, AI for retail, AI for malls, real time camera AI, real time camera monitoring, real time surveillance camera, motion detection camera with alarm, real time alert system, AI video analytics solution, AI video analytics software, AI video analytics for security, AI powered visual analytics, advanced threat prevention, AI video analytics for workplace safety, AI security camera for business, AI driven data analytics"
+ },
+ "kensafety.html": {
+  "title": "KenSafety Safety Intelligence | Intelense",
+  "keywords": "AI based monitoring system for construction sites, construction site safety monitoring, AI surveillance system for construction site safety, AI powered PPE monitoring system, AI powered PPE monitoring, PPE compliance AI system, PPE detection software, AI hazard detection, restricted and hazard zone intrusion detection, real time hazard detection, real time fall detection, AI workplace safety analytics, AI video analytics for workplace safety, AI powered workplace safety, industrial safety monitoring AI, industrial AI for manufacturing, construction site security camera, AI in construction safety, enhancing construction safety with AI"
+ },
+ "kenhome.html": {
+  "title": "KenHome Smart Home Security AI | Intelense",
+  "keywords": "AI home security system, AI home security camera, AI smart home security, real time home security camera, AI home automation, AI monitoring system, AI for elderly care, AI home monitoring for elderly, AI child safety monitoring, smart home safety AI, AI pet monitoring system, real time pet monitoring system, baby monitoring system with real time AI detection, kids monitoring camera, theft detection system, car anti theft system, AI based monitoring system, AI monitoring tools"
+ },
+ "kenagri.html": {
+  "title": "KenAgri Precision Agriculture AI | Intelense",
+  "keywords": "AI precision farming analytics, AI in farming, AI in farming and agriculture, artificial intelligence in agriculture, smart farming sensors, smart agriculture sensors, AI crop disease detection, AI powered crop disease detection, early crop disease detection with AI, AI crop monitoring, crop pest and disease detection, plant disease detection using drones in precision agriculture, drone based crop detection, AI farm management software, climate resilient farming AI, agriculture data analytics platform, AI IoT in agriculture, agriculture data analysis software, AI farming companies, global digital agriculture solutions"
+ },
+ "keniot.html": {
+  "title": "KenIoT IoT & Sensor Analytics | Intelense",
+  "keywords": "IoT analytics AI, AI driven predictive maintenance, AI powered predictive maintenance, AI based predictive maintenance system, predictive maintenance using IoT, industrial IoT analysis, IoT based safety monitoring, real time activity monitoring, industrial safety monitoring system using IoT, IoT based worker safety monitoring, smart manufacturing with IoT, smart factory management, IoT energy monitoring system, cloud analytics for IoT application, centralized surveillance using IoT, enterprise IoT solutions, easy remote monitoring"
+ },
+ "kenrobotics.html": {
+  "title": "KenRobotics Autonomous Systems AI | Intelense",
+  "keywords": "AI robotics, warehouse automation AI, warehouse robotics, warehouse automation, smart warehouse technology, automated warehouse, robotic inspection systems, AI driven automated inspection, inspection robots for industrial facilities, AI powered analytics, AI data analytics, automate data analysis, AI powered real time insights, warehouse robotics in India, AI robotics companies in India, AI and data analytics smarter warehouse decision making, automatic inspection and sorting"
+ },
+ "about.html": {
+  "title": "About Intelense AI Company Founded by Dinesh Prasanna | MIT TLP",
+  "desc": "Intelense builds AI products for the real world. Meet the founder and advisors behind KenVision, KenSafety, KenHome, KenAgri, KenIoT, and KenRobotics."
+ },
+ "contact.html": {
+  "title": "Contact Intelense Book a Demo or Talk to Sales",
+  "desc": "Get in touch with Intelense. Book a 30-minute demo, talk to our sales team, or reach us at enquiries@intelense.ca."
+ },
+ "kenvoice.html": {
+  "title": "KenVoice Retail Conversation Intelligence | Intelense"
+ }
+}

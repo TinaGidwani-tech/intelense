@@ -14,44 +14,44 @@ The old site's sitemap lists 44 URLs. Search engines have ranked these addresses
 | `/kenagri` | Same URL on the new site: KenAgri |
 | `/keniot` | Same URL on the new site: KenIoT |
 | `/kenrobotics` | Same URL on the new site: KenRobotics |
-| `/retail-analytics` | **No equivalent page yet** |
-| `/video-analytics-retail` | **No equivalent page yet** |
-| `/footfall-analytics` | **No equivalent page yet** |
-| `/queue-analytics` | **No equivalent page yet** |
-| `/heatmap-analytics` | **No equivalent page yet** |
-| `/cctv-analytics-retail` | **No equivalent page yet** |
-| `/casestudies` | **No equivalent page yet** |
-| `/kensafety-construction` | **No equivalent page yet** |
-| `/kenvision-retail` | **No equivalent page yet** |
-| `/kenhome-safety` | **No equivalent page yet** |
-| `/blog` | **No equivalent page yet** |
-| `/blogs/generative-ai-rewriting-business` | **No equivalent page yet** |
-| `/blogs/ai-video-surveillance` | **No equivalent page yet** |
-| `/blogs/ai-changing-how-we-work` | **No equivalent page yet** |
-| `/blogs/ai-across-every-sector` | **No equivalent page yet** |
-| `/blogs/ai-digital-billboards` | **No equivalent page yet** |
-| `/blogs/ai-construction-safety` | **No equivalent page yet** |
-| `/blogs/ai-smart-buildings` | **No equivalent page yet** |
+| `/retail-analytics` | Same URL on the new site: rebuilt from the old text |
+| `/video-analytics-retail` | 301 to `/retail-analytics` (the old page was only a redirect stub) |
+| `/footfall-analytics` | 301 to `/retail-analytics` (the old page was only a redirect stub) |
+| `/queue-analytics` | 301 to `/retail-analytics` (the old page was only a redirect stub) |
+| `/heatmap-analytics` | 301 to `/retail-analytics` (the old page was only a redirect stub) |
+| `/cctv-analytics-retail` | 301 to `/retail-analytics` (the old page was only a redirect stub) |
+| `/casestudies` | Same URL on the new site: rebuilt from the old text |
+| `/kensafety-construction` | Same URL on the new site: rebuilt from the old text |
+| `/kenvision-retail` | Same URL on the new site: rebuilt from the old text |
+| `/kenhome-safety` | Same URL on the new site: rebuilt from the old text |
+| `/blog` | Same URL on the new site: rebuilt from the old text |
+| `/blogs/generative-ai-rewriting-business` | Same URL on the new site: rebuilt from the old text |
+| `/blogs/ai-video-surveillance` | Same URL on the new site: rebuilt from the old text |
+| `/blogs/ai-changing-how-we-work` | Same URL on the new site: rebuilt from the old text |
+| `/blogs/ai-across-every-sector` | Same URL on the new site: rebuilt from the old text |
+| `/blogs/ai-digital-billboards` | Same URL on the new site: rebuilt from the old text |
+| `/blogs/ai-construction-safety` | Same URL on the new site: rebuilt from the old text |
+| `/blogs/ai-smart-buildings` | Same URL on the new site: rebuilt from the old text |
 | `/about` | Same URL on the new site: About |
 | `/contact` | Same URL on the new site: Contact |
-| `/faq` | **No equivalent page yet** |
-| `/privacy` | **No equivalent page yet** |
-| `/terms` | **No equivalent page yet** |
-| `/llms/index.md` | **No equivalent page yet** |
-| `/llms/kenvision.md` | **No equivalent page yet** |
-| `/llms/kensafety.md` | **No equivalent page yet** |
-| `/llms/kenhome.md` | **No equivalent page yet** |
-| `/llms/kenagri.md` | **No equivalent page yet** |
-| `/llms/keniot.md` | **No equivalent page yet** |
-| `/llms/kenrobotics.md` | **No equivalent page yet** |
-| `/llms/ken360.md` | **No equivalent page yet** |
-| `/llms/retail-analytics.md` | **No equivalent page yet** |
-| `/llms/about.md` | **No equivalent page yet** |
-| `/llms/casestudies.md` | **No equivalent page yet** |
-| `/llms/faq.md` | **No equivalent page yet** |
-| `/llms/contact.md` | **No equivalent page yet** |
+| `/faq` | Same URL on the new site: rebuilt from the old text |
+| `/privacy` | Same URL on the new site: rebuilt from the old text |
+| `/terms` | Same URL on the new site: rebuilt from the old text |
+| `/llms/index.md` | Same file, copied from the old site (site/content/llms/) |
+| `/llms/kenvision.md` | Same file, copied from the old site (site/content/llms/) |
+| `/llms/kensafety.md` | Same file, copied from the old site (site/content/llms/) |
+| `/llms/kenhome.md` | Same file, copied from the old site (site/content/llms/) |
+| `/llms/kenagri.md` | Same file, copied from the old site (site/content/llms/) |
+| `/llms/keniot.md` | Same file, copied from the old site (site/content/llms/) |
+| `/llms/kenrobotics.md` | Same file, copied from the old site (site/content/llms/) |
+| `/llms/ken360.md` | Same file, copied from the old site (site/content/llms/) |
+| `/llms/retail-analytics.md` | Same file, copied from the old site (site/content/llms/) |
+| `/llms/about.md` | Same file, copied from the old site (site/content/llms/) |
+| `/llms/casestudies.md` | Same file, copied from the old site (site/content/llms/) |
+| `/llms/faq.md` | Same file, copied from the old site (site/content/llms/) |
+| `/llms/contact.md` | Same file, copied from the old site (site/content/llms/) |
 
-New pages with no old equivalent: `/modules`, `/industries`, `/kenvoice`.
+New pages with no old equivalent: `/modules`, `/industries`. The old site also served `/kenvoice` and `/index` (neither in its sitemap): `/kenvoice` is a page on the new site and `/index` is a 301 to `/`. `/llms.txt` is copied too.
 
 ## Deployable build
 
@@ -64,7 +64,7 @@ Every page has a canonical tag to `https://www.intelense.com/<path>`, Open Graph
 
 ## Before launch
 
-1. Decide what happens to each old URL marked "No equivalent page yet" (rebuild the page, keep it running on the old host, or 301 to the closest new page).
-2. Compare the old titles, meta descriptions, H1s and keywords with the new ones and carry over the ones that rank.
+1. The 5 redirect URLs need a real 301 on the host: `dist/.htaccess` (Apache) and `dist/_redirects` (Netlify / Cloudflare Pages) are generated; static fallback pages exist if the host cannot redirect.
+2. Titles and meta keywords of the 10 existing pages come from `content/old-seo.json`; four descriptions are the old ones, the module-page descriptions are the new ones.
 3. Connect the contact form (it is not connected to email yet).
 4. After launch: submit `sitemap.xml` in Google Search Console, check the old URLs with the URL Inspection tool and watch Coverage and Performance for two to four weeks.

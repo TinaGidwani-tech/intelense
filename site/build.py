@@ -305,14 +305,14 @@ def footer():
       </div>
       <div>
         <h4>Company</h4>
-        <ul><li><a href="about.html">About Intelense</a></li><li><a href="industries.html">Industries</a></li><li><a href="index.html#faq">FAQ</a></li><li><a href="contact.html">Contact</a></li><li><a href="contact.html">Book a demo</a></li></ul>
+        <ul><li><a href="about.html">About Intelense</a></li><li><a href="industries.html">Industries</a></li><li><a href="index.html#faq">FAQ</a></li><li><a href="casestudies.html">Case studies</a></li><li><a href="blog.html">Blog</a></li><li><a href="contact.html">Contact</a></li><li><a href="contact.html">Book a demo</a></li></ul>
       </div>
       <div>
         <h4>Contact</h4>
         <ul><li class="email">enquiries@intelense.ca</li><li>Markham, Ontario, Canada</li><li><a href="https://www.linkedin.com/company/intelense/" target="_blank" rel="noopener noreferrer">LinkedIn</a></li></ul>
       </div>
     </div>
-    <div class="legal"><span>© 2026 Intelense Inc.</span><span>Photography and video: Pexels and Unsplash</span></div>
+    <div class="legal"><span>© 2026 Intelense Inc. · <a href="privacy.html">Privacy</a> · <a href="terms.html">Terms</a></span><span>Photography and video: Pexels and Unsplash</span></div>
   </div>
 </footer>
 '''
@@ -2942,7 +2942,11 @@ def page_kenrobotics():
                 active='kenrobotics', body=body, cctv=True)
 
 
-PAGES = [page_index, page_platform, page_modules, page_kenvision, page_kensafety, page_kenagri, page_kenhome, page_keniot, page_kenvoice, page_kenrobotics, page_industries, page_about, page_contact]
+# The old www.intelense.com pages with no equivalent in the new design (text is verbatim from content/old-pages.json)
+import types
+import legacy_pages
+LEGACY_PAGES = legacy_pages.make_pages(types.SimpleNamespace(page_hero=page_hero, crumbs=crumbs, cta_band=cta_band))
+PAGES = [page_index, page_platform, page_modules, page_kenvision, page_kensafety, page_kenagri, page_kenhome, page_keniot, page_kenvoice, page_kenrobotics, page_industries, page_about, page_contact] + LEGACY_PAGES
 
 # ---------------------------------------------------------------- output
 
@@ -3073,6 +3077,7 @@ LINKEDIN_URL = 'https://www.linkedin.com/company/intelense/'
 PUBLIC = {'index.html': '/', 'platform.html': '/ken360', 'modules.html': '/modules', 'industries.html': '/industries', 'about.html': '/about', 'contact.html': '/contact',
           'kenvision.html': '/kenvision', 'kensafety.html': '/kensafety', 'kenhome.html': '/kenhome', 'kenagri.html': '/kenagri', 'keniot.html': '/keniot',
           'kenrobotics.html': '/kenrobotics', 'kenvoice.html': '/kenvoice'}
+PUBLIC.update({legacy_pages.file_for(s_): legacy_pages.public_for(s_) for s_ in legacy_pages.SLUGS})
 OG_IMAGE = '/assets/footage/video-home-poster.jpg'
 
 
@@ -3091,13 +3096,19 @@ def seo_head(p):
         org = {'@context': 'https://schema.org', '@type': 'Organization', 'name': 'Intelense', 'url': SITE_URL + '/', 'logo': SITE_URL + '/assets/logos/intelense.png',
                'email': 'enquiries@intelense.ca', 'sameAs': [LINKEDIN_URL]}
         out.append('<script type="application/ld+json">' + _j.dumps(org) + '</script>')
+    for ld in p.get('jsonld', []):
+        # structured data carried over from the old page; its logo / image URLs pointed at files that only existed on the old host
+        txt = _j.dumps(ld, ensure_ascii=False).replace('https://www.intelense.com/assets/logo-black.png', SITE_URL + '/assets/logos/intelense.png').replace('</', '<\\/')
+        out.append('<script type="application/ld+json">' + txt + '</script>')
     return '\n'.join(out)
 
 
 def render(p, inline=False, bare=False):
     css = (ASSETS / 'site.css').read_text()
     style = f'<style>\n{css}</style>' if inline else '<link rel="stylesheet" href="assets/site.css">'
-    head = f'<title>{p["title"]}</title>\n<meta name="description" content="{p["desc"]}">\n{seo_head(p)}\n{FONTS}\n{style}'
+    import html as _hh
+    kw = f'\n<meta name="keywords" content="{_hh.escape(p["keywords"], quote=True)}">' if p.get('keywords') else ''
+    head = f'<title>{_hh.escape(p["title"], quote=False)}</title>\n<meta name="description" content="{_hh.escape(p["desc"], quote=True)}">{kw}\n{seo_head(p)}\n{FONTS}\n{style}'
     if p.get('reveal'):
         if inline:
             head += f'\n<style>\n{(ASSETS / "scroll-reveal.css").read_text()}</style>\n<script>\n{(ASSETS / "scroll-reveal.js").read_text()}</script>'
@@ -3129,7 +3140,7 @@ def deploy_build(pages, out):
         return f'href="{PUBLIC[f]}{frag}"' if f in PUBLIC else m.group(0)
     for p in pages:
         h = render(p)
-        h = _re.sub(r'href="([a-z0-9]+)\.html(#[^"]*)?"', link, h)
+        h = _re.sub(r'href="([a-z0-9-]+)\.html(#[^"]*)?"', link, h)
         h = _re.sub(r'''(href=|src=|poster=|data-src=)(["'])assets/''', r'\1\2/assets/', h).replace('url(assets/', 'url(/assets/').replace("from './assets/", "from '/assets/")
         path = PUBLIC[p['file']]
         dest = out / 'index.html' if path == '/' else out / path.strip('/') / 'index.html'
@@ -3142,12 +3153,42 @@ def deploy_build(pages, out):
     today = datetime.date.today().isoformat()
     urls = ''.join(f'  <url><loc>{SITE_URL}{PUBLIC[p["file"]]}</loc><lastmod>{today}</lastmod></url>\n' for p in pages)
     (out / 'sitemap.xml').write_text(f'<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n{urls}</urlset>\n')
-    (out / 'robots.txt').write_text(f'User-agent: *\nAllow: /\n\nSitemap: {SITE_URL}/sitemap.xml\n')
+    (out / 'robots.txt').write_text(f'User-agent: *\nAllow: /\nDisallow: /.git/\n\nSitemap: {SITE_URL}/sitemap.xml\n\n# llms.txt: {SITE_URL}/llms.txt\n')
+    write_redirects(out, pages)
+    shutil.copytree(ROOT / 'content' / 'llms', out / 'llms', dirs_exist_ok=True)
+    shutil.copy(ROOT / 'content' / 'llms.txt', out / 'llms.txt')
     print('wrote deployable site to', out)
+
+
+def apply_old_seo(pages):
+    """Titles, meta keywords and (where chosen) descriptions of the pages that existed on the old site, so rankings carry over."""
+    import json
+    old = json.loads((ROOT / 'content' / 'old-seo.json').read_text())
+    for p in pages:
+        for k, v in old.get(p['file'], {}).items():
+            p['keywords' if k == 'keywords' else k] = v
+
+
+def write_redirects(out, pages):
+    """Old URLs that were only redirect stubs: 301 rules for Apache (.htaccess) and Netlify / Cloudflare Pages (_redirects), plus a static fallback page."""
+    rules = dict(legacy_pages.REDIRECTS)
+    (out / '.htaccess').write_text('RewriteEngine On\n' + ''.join(f'RewriteRule ^{src.strip("/")}/?$ {dst} [R=301,L]\n' for src, dst in rules.items()))
+    (out / '_redirects').write_text(''.join(f'{src} {dst} 301\n' for src, dst in rules.items()))
+    for src, dst in rules.items():
+        if src == '/index':
+            continue
+        d = out / src.strip('/')
+        d.mkdir(parents=True, exist_ok=True)
+        (d / 'index.html').write_text(f'<!doctype html>\n<html lang="en"><head><meta charset="utf-8"><title>Redirecting...</title><meta name="robots" content="noindex"><link rel="canonical" href="{SITE_URL}{dst}">'
+                                      f'<meta http-equiv="refresh" content="0;url={dst}"></head><body><p>This page has moved to <a href="{dst}">{SITE_URL}{dst}</a>.</p></body></html>\n')
+    idx = out / 'index' / 'index.html'
+    idx.parent.mkdir(parents=True, exist_ok=True)
+    idx.write_text(f'<!doctype html>\n<html lang="en"><head><meta charset="utf-8"><title>Redirecting...</title><meta name="robots" content="noindex"><link rel="canonical" href="{SITE_URL}/"><meta http-equiv="refresh" content="0;url=/"></head><body><p><a href="/">Home</a></p></body></html>\n')
 
 
 def main():
     pages = [f() for f in PAGES]
+    apply_old_seo(pages)
     for p in pages:
         (ROOT / p['file']).write_text(render(p))
     print('wrote', len(pages), 'pages to', ROOT)

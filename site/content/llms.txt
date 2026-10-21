@@ -1,0 +1,37 @@
+# Intelense
+
+> Intelense builds edge AI video analytics products for retail, workplace safety, smart homes, agriculture, IoT, and autonomous robotics. Six modular AI products — KenVision, KenSafety, KenHome, KenAgri, KenIoT, KenRobotics — powered by a single unified engine called Ken360. Works with existing cameras. No hardware replacement needed. Deploys in under 48 hours.
+
+Founded 2018 by Dinesh Prasanna (MIT TLP). Headquartered in Canada with operations in India. Backed by AWS, GCP, NVIDIA, and IBM partnerships.
+
+## Products
+
+- [KenVision](https://www.intelense.com/llms/kenvision.md): AI video intelligence — footfall analytics, zone heatmaps, queue detection, dwell time, conversion tracking. 95% accuracy, <3s latency.
+- [KenSafety](https://www.intelense.com/llms/kensafety.md): Workplace safety AI — PPE compliance, hazard zone detection, fire/smoke alerts, fall detection, automated incident reports. 95% PPE accuracy, 80% incident reduction.
+- [KenHome](https://www.intelense.com/llms/kenhome.md): Smart home security AI — intruder detection, elderly/child monitoring, pet hazard alerts, vehicle protection. 97% accuracy, <5s alerts.
+- [KenAgri](https://www.intelense.com/llms/kenagri.md): Precision agriculture AI — crop health monitoring, yield prediction, pest/disease detection, automated irrigation across satellite, drone, IoT, and ground cameras. 30% yield increase.
+- [KenIoT](https://www.intelense.com/llms/keniot.md): IoT sensor analytics — predictive failure detection, real-time anomaly alerts, automated maintenance scheduling across railways, defence, healthcare, fleet.
+- [KenRobotics](https://www.intelense.com/llms/kenrobotics.md): Autonomous systems AI — real-time perception, dynamic path planning, multi-robot coordination, fleet management. <3s perception latency.
+- [Ken360](https://www.intelense.com/llms/ken360.md): The unified AI platform connecting all six Ken modules — one API, one dashboard, shared data model, edge + cloud architecture.
+
+## Industries
+
+Retail, Construction, Manufacturing, Public Safety, Smart Cities, Healthcare, Commercial Real Estate, Hotels, Warehouse, Precision Agriculture, Smart Campuses.
+
+## Solutions
+
+- [Retail Analytics](https://www.intelense.com/llms/retail-analytics.md): AI-powered retail analytics using existing CCTV — footfall, heatmaps, queue monitoring, conversion tracking. 95% footfall accuracy, 28% conversion lift.
+
+## Company
+
+- [About Intelense](https://www.intelense.com/llms/about.md): Founded by Dinesh Prasanna (MIT TLP). Advisors include Dr. Huggy Rao (Stanford), Toby Lennox (Toronto Global), Poonam Puri (Osgoode), Bradford Cook (Accern).
+- [Case Studies](https://www.intelense.com/llms/casestudies.md): Real-world deployments — KenSafety in construction (80% fewer incidents), KenVision in retail (+28% conversion), KenHome in home safety (45% energy savings).
+- [FAQ](https://www.intelense.com/llms/faq.md): Common questions on AI products, deployment, hardware, integration, edge AI, privacy, and pricing.
+- [Contact](https://www.intelense.com/llms/contact.md): enquiries@intelense.ca | +1 (289) 552-3165 (Canada) | +91 91082 84574 (India). Book a 30-minute demo — live in <48 hours.
+
+## Optional
+
+- [Blog](https://www.intelense.com/blog): Articles on AI video analytics, generative AI, smart buildings, construction safety, digital billboards, and AI across sectors.
+- [Privacy Policy](https://www.intelense.com/privacy): Data handling and privacy practices.
+- [Terms of Service](https://www.intelense.com/terms): Terms and conditions.
+- [sitemap.xml](https://www.intelense.com/sitemap.xml): Full XML sitemap.
