@@ -691,17 +691,17 @@
  },
  "hero-voice": {
   "src": "hero-voice.jpg",
-  "credit": "MART PRODUCTION",
-  "source": "https://www.pexels.com/photo/photograph-of-laptops-with-headsets-7709281/",
+  "credit": "Gustavo Fring",
+  "source": "https://www.pexels.com/photo/female-customers-getting-paper-bags-at-counter-desk-3865901/",
   "licence": "Pexels License",
-  "desc": "Call-centre headsets",
-  "alt": "Call-centre headsets",
+  "desc": "Staff member handing a bag to customers across a shop counter",
+  "alt": "Shop assistant handing a paper bag to smiling customers across the counter",
   "plain": true,
   "boxes": [
    {
-    "x": 0.3,
-    "y": 0.45,
-    "w": 0.25,
+    "x": 0.36,
+    "y": 0.3,
+    "w": 0.3,
     "h": 0.5,
     "label": "Counter audio · on-device",
     "tone": "violet"
