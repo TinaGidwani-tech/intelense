@@ -792,6 +792,29 @@ def page_about():
       </div>
     </div>
   </section>'''
+    cert = f'''<section class="block" id="certification">
+    <div class="wrap">
+      {head_block('Certification', 'ISO 9001:2015 certified.', 'Our quality management system has been assessed and found to conform to ISO 9001:2015.')}
+      <div class="cert">
+        <a class="cert-doc" href="assets/certificates/intelense-iso-9001-2015.pdf" aria-label="Open the ISO 9001:2015 certificate of registration (PDF)">
+          <img src="assets/certificates/intelense-iso-9001-2015.jpg" alt="Certificate of Registration: Intelense Technologies Private Limited, ISO 9001:2015, issued by ROHS Certification Pvt. Ltd." width="909" height="1287" loading="lazy" decoding="async">
+        </a>
+        <div class="cert-copy">
+          <dl class="cert-facts">
+            <div><dt>Standard</dt><dd>ISO 9001:2015 Quality Management System</dd></div>
+            <div><dt>Registered company</dt><dd>Intelense Technologies Private Limited, Bangalore, Karnataka, India</dd></div>
+            <div><dt>Certification body</dt><dd>ROHS Certification Pvt. Ltd.</dd></div>
+            <div><dt>Certificate no.</dt><dd>26DQQG78</dd></div>
+            <div><dt>Issued</dt><dd>17 October 2026</dd></div>
+            <div><dt>Valid until</dt><dd>16 October 2029, subject to surveillance audits</dd></div>
+          </dl>
+          <h3>Scope</h3>
+          <p>Design, development, integration, deployment, installation, commissioning, maintenance and support of technology solutions incorporating artificial intelligence (AI), machine learning (ML), computer vision, Internet of Things (IoT), robotics, automation, software and data analytics for industrial, commercial, infrastructure and smart city use.</p>
+          <p><a class="link-arrow" href="assets/certificates/intelense-iso-9001-2015.pdf">View the certificate (PDF)</a></p>
+        </div>
+      </div>
+    </div>
+  </section>'''
     proof = f'''<section class="block" id="partners">
     <div class="wrap">
       {head_block('Ecosystem', 'Supported by Canadian innovation.', 'We are grateful to the programmes that have helped us grow.')}
@@ -807,7 +830,7 @@ def page_about():
       {credits_html()}
     </div>
   </section>'''
-    body = '\n\n  '.join([hero, leadership_section(), story, values, proof, credits, cta_band('Want to work with us?', ('industries.html', 'See industries'))])
+    body = '\n\n  '.join([hero, leadership_section(), story, values, cert, proof, credits, cta_band('Want to work with us?', ('industries.html', 'See industries'))])
     return dict(file='about.html', title='About | Intelense', desc='Intelense is an AI and data analytics company in Markham, Ontario, with a mission to create a safer world.',
                 active='about.html', body=body)
 

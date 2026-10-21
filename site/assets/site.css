@@ -1040,3 +1040,17 @@ footer a:hover { color: var(--parchment); }
 .adv-loc { display: inline-block; margin-top: 12px; font-size: 12px; text-transform: uppercase; letter-spacing: .06em; color: var(--smoke); font-weight: 500; }
 @media (max-width: 900px) { .founder { grid-template-columns: minmax(0, 1fr); } .founder img { max-width: 420px; } }
 @media (max-width: 760px) { .advisors { grid-template-columns: minmax(0, 1fr); } .advisor { padding: 22px; gap: 16px; } }
+
+/* Certification (about.html) */
+.cert { display: grid; grid-template-columns: minmax(0, 360px) minmax(0, 1fr); gap: clamp(28px, 5vw, 72px); align-items: start; }
+.cert-doc { display: block; border: 1px solid var(--ash); border-radius: 20px; overflow: hidden; background: var(--white); }
+.cert-doc img { display: block; width: 100%; height: auto; }
+.cert-copy { min-width: 0; display: flex; flex-direction: column; gap: 14px; }
+.cert-facts { margin: 0 0 12px; display: grid; }
+.cert-facts > div { display: grid; grid-template-columns: minmax(0, 11rem) minmax(0, 1fr); gap: 16px; padding: 14px 0; border-top: 1px solid var(--ash); font-size: 15px; }
+.cert-facts dt { font-size: 12px; text-transform: uppercase; letter-spacing: 0.06em; font-weight: 500; color: var(--smoke); padding-top: 2px; }
+.cert-facts dd { margin: 0; }
+.cert-copy h3 { margin-top: 8px; }
+.cert-copy p { color: var(--graphite); }
+@media (max-width: 900px) { .cert { grid-template-columns: minmax(0, 1fr); } .cert-doc { max-width: 380px; } }
+@media (max-width: 560px) { .cert-facts > div { grid-template-columns: minmax(0, 1fr); gap: 4px; } }
