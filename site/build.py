@@ -446,18 +446,24 @@ FAQ = home_section('faq')
 # ---------------------------------------------------------------- pages
 
 
-CLIENTS = [('Swarovski', 'w1'), ('GIVA', 'w2'), ('CaratLane', 'w3'), ('Mia', 'w4'), ('Rado', 'w2'), ('Tissot', 'w1'), ('Seiko', 'w5'),
-           ('Orra Fine Jewelry', 'w3'), ('HYOU Fine Jewelry', 'w2'), ('Sangeetha Mobiles', 'w4'), ('Mokobara', 'w5'), ('Prestige Group', 'w1'), ('Shell', 'w6')]
+CLIENTS = [('Swarovski', 'w1', 'swarovski'), ('GIVA', 'w2', 'giva'), ('CaratLane', 'w3', 'caratlane'), ('Mia by Tanishq', 'w4', 'mia'), ('Rado', 'w2', 'rado'), ('Tissot', 'w1', 'tissot'), ('Seiko', 'w5', 'seiko'),
+           ('Orra Fine Jewelry', 'w3', 'orra'), ('HYOU Fine Jewelry', 'w2', 'hyou'), ('Sangeetha Mobiles', 'w4', 'sangeetha'), ('Mokobara', 'w5', 'mokobara'), ('Prestige Group', 'w1', 'prestige'), ('Shell', 'w6', 'shell')]
 CLIENT_SECTORS = [('Fine jewelry', 6), ('Watches', 3), ('Consumer retail', 2), ('Property', 1), ('Energy', 1)]
 
 
 def clients_section():
+    def tile(n, c, slug):
+        for ext in ('svg', 'png', 'webp'):
+            if (ASSETS / 'clients' / f'{slug}.{ext}').exists():
+                return f'<li class="tile"><img src="assets/clients/{slug}.{ext}" alt="{n}" loading="lazy" decoding="async"></li>'
+        return f'<li class="tile txt {c}"><span>{n}</span></li>'
+
     def row(items, rev=False):
-        cells = ''.join(f'<li class="{c}"><span>{n}</span></li>' for n, c in items)
+        cells = ''.join(tile(*t) for t in items)
         return f'<div class="marquee{" rev" if rev else ""}"><ul>{cells}</ul><ul aria-hidden="true">{cells}</ul></div>'
     half = (len(CLIENTS) + 1) // 2
     chips = ''.join(f'<span><b>{n}</b>{k}</span>' for k, n in CLIENT_SECTORS)
-    names = ', '.join(n for n, _ in CLIENTS)
+    names = ', '.join(c[0] for c in CLIENTS)
     return f'''<section class="block" id="clients">
     <div class="wrap">
       {head_block('Clients', 'Trusted by brands people know.', 'Fine jewelry, watches, mobile retail, travel gear, property and energy. Teams across these sectors use Intelense to see what is happening on the floor.')}
@@ -3096,6 +3102,7 @@ def main():
         shutil.copytree(ASSETS / 'logos', out / 'assets' / 'logos', dirs_exist_ok=True)
         shutil.copytree(FOOTAGE, out / 'assets' / 'footage', dirs_exist_ok=True)
         shutil.copytree(ASSETS / 'people', out / 'assets' / 'people', dirs_exist_ok=True)
+        shutil.copytree(ASSETS / 'clients', out / 'assets' / 'clients', dirs_exist_ok=True)
         print('wrote inline copy to', out)
 
 
