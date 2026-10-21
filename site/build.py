@@ -3199,7 +3199,10 @@ def apply_old_seo(pages):
 def write_redirects(out, pages):
     """Old URLs that were only redirect stubs: 301 rules for Apache (.htaccess) and Netlify / Cloudflare Pages (_redirects), plus a static fallback page."""
     rules = dict(legacy_pages.REDIRECTS)
-    (out / '.htaccess').write_text('RewriteEngine On\n' + ''.join(f'RewriteRule ^{src.strip("/")}/?$ {dst} [R=301,L]\n' for src, dst in rules.items()))
+    canonical_host = ('RewriteEngine On\n# one address per page: intelense.com and plain http go to https://www.intelense.com (only on the real domain, so a temporary test URL is left alone)\n'
+                      'RewriteCond %{HTTP_HOST} ^intelense\\.com$ [NC]\nRewriteRule ^ https://www.intelense.com%{REQUEST_URI} [R=301,L]\n'
+                      'RewriteCond %{HTTP_HOST} ^www\\.intelense\\.com$ [NC]\nRewriteCond %{HTTPS} off\nRewriteRule ^ https://www.intelense.com%{REQUEST_URI} [R=301,L]\n\n')
+    (out / '.htaccess').write_text(canonical_host + ''.join(f'RewriteRule ^{src.strip("/")}/?$ {dst} [R=301,L]\n' for src, dst in rules.items()))
     (out / '_redirects').write_text(''.join(f'{src} {dst} 301\n' for src, dst in rules.items()))
     for src, dst in rules.items():
         if src == '/index':
