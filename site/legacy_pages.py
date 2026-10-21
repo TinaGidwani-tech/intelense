@@ -7,6 +7,7 @@ import json
 import re
 from pathlib import Path
 
+IMG_DIR = Path(__file__).resolve().parent / 'assets' / 'old-images'
 CONTENT = json.loads((Path(__file__).resolve().parent / 'content' / 'old-pages.json').read_text())
 
 SLUGS = ['retail-analytics', 'casestudies', 'kensafety-construction', 'kenvision-retail', 'kenhome-safety', 'blog',
@@ -17,6 +18,30 @@ SLUGS = ['retail-analytics', 'casestudies', 'kensafety-construction', 'kenvision
 REDIRECTS = {'/video-analytics-retail': '/retail-analytics', '/footfall-analytics': '/retail-analytics', '/queue-analytics': '/retail-analytics',
              '/heatmap-analytics': '/retail-analytics', '/cctv-analytics-retail': '/retail-analytics', '/index': '/'}
 OLD_HOSTS = ('https://www.intelense.com', 'https://intelense.com')
+
+
+def local_image(src):
+    """Old image -> its local copy in assets/old-images/ (Pexels photos are saved as pexels-<id>.jpg), or None while the file is missing."""
+    m = re.search(r'pexels-photo-(\d+)', src)
+    name = f'pexels-{m.group(1)}.jpg' if m else src.rsplit('/', 1)[-1].replace('%20', '-').replace(' ', '-')
+    f = IMG_DIR / name
+    if not f.exists():
+        return None
+    try:
+        from PIL import Image
+        w, h = Image.open(f).size
+    except Exception:
+        w = h = 0
+    return 'assets/old-images/' + name, w, h
+
+
+def img_tag(b, cls=''):
+    loc = local_image(b['src'])
+    if not loc:
+        return ''
+    path, w, h = loc
+    dim = f' width="{w}" height="{h}"' if w else ''
+    return f'<img{f" class=\"{cls}\"" if cls else ""} src="{path}" alt="{attr(b.get("alt", ""))}"{dim} loading="lazy" decoding="async">'
 
 
 def file_for(slug):
@@ -72,7 +97,9 @@ def classify(b):
     t, cls = b['t'], b.get('cls', '')
     if cls.startswith('cam-') or cls in ('breadcrumb', 'post-breadcrumb'):
         return 'drop'
-    if t == 'img' or t == 'video':
+    if t == 'img':
+        return 'keep' if local_image(b['src']) else 'drop'
+    if t == 'video':
         return 'drop'
     if t == 'line' and b['html'] == 'Answer Block':
         return 'drop'
@@ -166,6 +193,8 @@ def render_content(items, public, sid=''):
             out.append(f'<p>{b["html"]}</p>'); i += 1
         elif t in ('ul', 'ol'):
             out.append(f'<{t} class="bul">' + ''.join(f'<li>{x}</li>' for x in b['items']) + f'</{t}>'); i += 1
+        elif t == 'img':
+            out.append(f'<figure class="legacy-figure">{img_tag(b)}</figure>'); i += 1
         elif t == 'h2':
             out.append(f'<h2>{b["html"]}</h2>'); i += 1
         elif t == 'h3' and i + 1 < n and items[i + 1].get('ctx') == 'post-cta':
@@ -368,7 +397,7 @@ def make_pages(h):
         tail = []
         for b in bl[k:]:
             if b['t'] == 'img':
-                cur = []; cards_blocks.append(cur)
+                cur = [b]; cards_blocks.append(cur)
             elif b['t'] == 'line' and b['cls'] == 'eyebrow':
                 cur = None; tail.append(b)
             elif cur is not None:
@@ -382,7 +411,7 @@ def make_pages(h):
             exc = next(b for b in grp if b['t'] == 'p')
             meta = next(b for b in grp if b.get('cls') == 'blog-card-meta')
             stats = [b for b in grp if b.get('cls') == 'cs-stat']
-            cards.append(f'<a class="card post-card" href="{file_for(CASE_CARDS[n].strip("/"))}"><span class="kind">{" ".join(esc(x) for x in tag["parts"])}</span><h3>{title["html"]}</h3><p>{exc["html"]}</p>'
+            cards.append(f'<a class="card post-card" href="{file_for(CASE_CARDS[n].strip("/"))}">{img_tag(grp[0], "thumb")}<span class="kind">{" ".join(esc(x) for x in tag["parts"])}</span><h3>{title["html"]}</h3><p>{exc["html"]}</p>'
                          f'<p class="post-meta">{"".join(f"<span>{esc(x)}</span>" for x in meta["parts"])}</p>'
                          + '<div class="stats small">' + ''.join(f'<div><b>{esc(s["parts"][0])}</b><span>{esc(s["parts"][1])}</span></div>' for s in stats) + '</div></a>')
         body = [hero, f'<section class="block"><div class="wrap"><div class="post-grid">{"".join(cards)}</div></div></section>']
@@ -402,14 +431,14 @@ def make_pages(h):
         groups, cur = [], None
         for b in bl[i1 + 2:]:
             if b['t'] == 'img':
-                cur = []; groups.append(cur)
+                cur = [b]; groups.append(cur)
             elif cur is not None:
                 cur.append(b)
         cards = []
         for n, grp in enumerate(groups):
             tag = next(b for b in grp if b.get('cls') == 'blog-tag'); title = next(b for b in grp if b.get('cls') == 'blog-card-title')
             exc = next(b for b in grp if b['t'] == 'p'); meta = next(b for b in grp if b.get('cls') == 'blog-card-meta')
-            cards.append(f'<a class="card post-card" href="{file_for(BLOG_CARDS[n])}"><span class="kind">{tag["html"]}</span><h3>{title["html"]}</h3><p>{exc["html"]}</p>'
+            cards.append(f'<a class="card post-card" href="{file_for(BLOG_CARDS[n])}">{img_tag(grp[0], "thumb")}<span class="kind">{tag["html"]}</span><h3>{title["html"]}</h3><p>{exc["html"]}</p>'
                          f'<p class="post-meta">{"".join(f"<span>{esc(x)}</span>" for x in meta["parts"])}</p></a>')
         body = [hero, f'<section class="block"><div class="wrap"><div class="post-grid">{"".join(cards)}</div></div></section>', h.cta_band('See Intelense on your own footage.')]
         return finish(slug, d, body)

@@ -3146,7 +3146,7 @@ def deploy_build(pages, out):
         dest = out / 'index.html' if path == '/' else out / path.strip('/') / 'index.html'
         dest.parent.mkdir(parents=True, exist_ok=True)
         dest.write_text(h)
-    for d in ('logos', 'footage', 'people', 'clients', 'certificates'):
+    for d in ('logos', 'footage', 'people', 'clients', 'certificates', 'old-images'):
         shutil.copytree(ASSETS / d, out / 'assets' / d, dirs_exist_ok=True)
     for f in ('site.css', 'site.js', 'cctv.js', 'cursor-grid.js', 'scroll-reveal.css', 'scroll-reveal.js'):
         shutil.copy(ASSETS / f, out / 'assets' / f)
