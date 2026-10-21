@@ -1,10 +1,15 @@
 /* Subtle scroll reveal (index.html). Everything here sits under .js-reveal, which scroll-reveal.js adds only
    when JS runs and prefers-reduced-motion is off, so the page is fully visible without JS or with reduced motion.
-   Only opacity and translate animate. Timing lives in the two variables below. */
+   .js-reveal-rich is added on top only for wide, fine-pointer screens; narrower or touch screens get the plain fade-up.
+   Only opacity, translate and scale animate. Timing and distance live in the variables below. */
 :root {
   --rv-ease: cubic-bezier(.2, .7, .2, 1);
   --rv-dur: 600ms;
   --rv-dist: 16px;
+  --rv-head-dur: 800ms;   /* heading rise through its mask */
+  --rv-img-dur: 1100ms;   /* image settling inside its frame */
+  --rv-img-scale: 1.06;   /* image start scale */
+  --rv-line-dur: 900ms;   /* divider line drawing in */
 }
 .js-reveal .rv {
   opacity: 0; translate: 0 var(--rv-dist);
@@ -17,3 +22,34 @@
   transition: opacity var(--rv-dur) var(--rv-ease), translate var(--rv-dur) var(--rv-ease), border-color .2s;
   transition-delay: var(--d, 0ms), var(--d, 0ms), 0s;
 }
+
+/* Section headings: the text rises through a mask. The padding and negative margin cancel, so the box does not move. */
+.js-reveal-rich .rv-mask { overflow: clip; padding-bottom: .16em; margin-bottom: -.16em; }
+.js-reveal-rich .rv-mask > .rv-in-line {
+  display: block; translate: 0 108%;
+  transition: translate var(--rv-head-dur) var(--rv-ease); transition-delay: var(--d, 0ms);
+}
+.js-reveal-rich .rv-mask.is-in > .rv-in-line { translate: 0 0; }
+/* Narrow or touch screens: headings use the plain fade-up like everything else */
+.js-reveal:not(.js-reveal-rich) .rv-mask {
+  opacity: 0; translate: 0 var(--rv-dist);
+  transition: opacity var(--rv-dur) var(--rv-ease), translate var(--rv-dur) var(--rv-ease); transition-delay: var(--d, 0ms);
+}
+.js-reveal:not(.js-reveal-rich) .rv-mask.is-in { opacity: 1; translate: 0 0; }
+
+/* Large images: the frame stays put, the picture settles from a slight zoom while it fades in */
+.js-reveal-rich .rv-img { overflow: hidden; }
+.js-reveal-rich .rv-img img, .js-reveal-rich .rv-img video {
+  scale: var(--rv-img-scale);
+  transition: scale var(--rv-img-dur) var(--rv-ease); transition-delay: var(--d, 0ms);
+}
+.js-reveal-rich .rv-img.is-in img, .js-reveal-rich .rv-img.is-in video { scale: 1; }
+
+/* Divider rule draws left to right; the real border stays for the non-rich case */
+.js-reveal-rich .rv-rule { position: relative; border-top-color: transparent; }
+.js-reveal-rich .rv-rule::before {
+  content: ""; position: absolute; left: 0; right: 0; top: 0; height: 1px; background: var(--ash);
+  transform: scaleX(0); transform-origin: left center;
+  transition: transform var(--rv-line-dur) var(--rv-ease); transition-delay: var(--d, 0ms);
+}
+.js-reveal-rich .rv-rule.is-in::before { transform: scaleX(1); }
