@@ -840,20 +840,21 @@ def page_contact():
     form = f'''<section class="block" id="form">
     <div class="wrap contact-grid">
       <div class="panel">
-        <form class="form" id="demo-form" novalidate>
-          <div class="field"><label for="f-name">Full name</label><input id="f-name" name="name" autocomplete="name" required></div>
-          <div class="field"><label for="f-email">Work email</label><input id="f-email" name="email" type="email" autocomplete="email" required></div>
-          <div class="field"><label for="f-company">Company</label><input id="f-company" name="company" autocomplete="organization" required></div>
-          <div class="field"><label for="f-role">Role</label><input id="f-role" name="role" autocomplete="organization-title"></div>
-          <div class="field"><label for="f-industry">Industry</label><select id="f-industry" name="industry"><option value="">Choose one</option>{''.join(f'<option>{i["name"]}</option>' for i in INDUSTRIES)}<option>Other</option></select></div>
-          <div class="field"><label for="f-size">Number of cameras or sensors</label><select id="f-size" name="size"><option value="">Choose one</option><option>Under 25</option><option>25 to 100</option><option>100 to 500</option><option>More than 500</option></select></div>
-          <div class="field full"><label>Modules you are interested in</label><div class="checks">{checks}</div></div>
-          <div class="field full"><label for="f-msg">What would you like to catch?</label><textarea id="f-msg" name="message" placeholder="For example: PPE compliance on two loading docks, after-hours intrusion at three sites."></textarea></div>
-          <div class="full" style="display:flex;gap:16px;align-items:center;flex-wrap:wrap"><button class="btn btn-blue" type="submit">Request a demo</button><span class="form-note">Sample form: not connected to email yet.</span></div>
+        <h2 style="font-size:28px;margin-bottom:6px">Send us a message</h2>
+        <p style="color:var(--graphite);margin:0 0 24px">We respond to all enquiries within one business day.</p>
+        <form class="form" id="demo-form" novalidate aria-label="Contact form">
+          <div class="field"><label for="f-first">First name <span class="req">*</span></label><input id="f-first" name="first_name" placeholder="Jane" autocomplete="given-name" required></div>
+          <div class="field"><label for="f-last">Last name <span class="req">*</span></label><input id="f-last" name="last_name" placeholder="Smith" autocomplete="family-name" required></div>
+          <div class="field full"><label for="f-email">Work email <span class="req">*</span></label><input id="f-email" name="email" type="email" placeholder="jane@yourcompany.com" autocomplete="email" required></div>
+          <div class="field"><label for="f-company">Company</label><input id="f-company" name="company" placeholder="Your Company" autocomplete="organization"></div>
+          <div class="field"><label for="f-interest">I'm interested in</label><select id="f-interest" name="interest"><option value="">Select a product…</option>{''.join(f'<option>{m["name"]}</option>' for m in MODULES)}<option>Full Platform</option><option>Partnership</option><option>Other</option></select></div>
+          <div class="field full"><label for="f-msg">How can we help? <span class="req">*</span></label><textarea id="f-msg" name="message" placeholder="Tell us about your use case, team size, or challenges you want to solve…" required></textarea></div>
+          <div class="full"><button class="btn btn-blue" type="submit">Send message</button></div>
+          <p class="form-note full">By submitting, you agree to our <a href="privacy.html">Privacy Policy</a>. We never share your data.</p>
         </form>
         <div class="form-done" id="form-done" hidden tabindex="-1">
-          <h3>Thanks, we have your request.</h3>
-          <p>This sample form is not connected yet. On the live site it will send your details to enquiries@intelense.ca and our team will be in touch.</p>
+          <h3>Your message is ready to send.</h3>
+          <p>Your email app should have opened with your message addressed to enquiries@intelense.ca. Press send there. If nothing opened, email us at <a href="mailto:enquiries@intelense.ca">enquiries@intelense.ca</a>.</p>
           <p style="margin-top:18px"><a class="link-arrow" href="modules.html">Explore the modules while you wait</a></p>
         </div>
       </div>

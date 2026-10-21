@@ -1128,3 +1128,4 @@ section.block > .wrap > p + p { margin-top: 14px; }
 .info-list a { text-decoration: none; }
 .info-list a:hover { color: var(--lake-blue); }
 #careers .btn { margin-top: 8px; }
+.form .req { color: var(--lake-blue); }

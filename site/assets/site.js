@@ -176,15 +176,20 @@
     if (!reduce) (function loop(now) { var dt = Math.min(.05, (now - last) / 1000); last = now; frame(dt); requestAnimationFrame(loop); })(last);
   });
 
-  // Contact form: validates in the page; not wired to a mail service yet
+  // Contact form: validates in the page, then opens the visitor's email app with the message addressed to enquiries@intelense.ca
   var form = document.getElementById('demo-form');
   if (form) {
     form.addEventListener('submit', function (e) {
       e.preventDefault();
       if (!form.checkValidity()) { form.reportValidity(); return; }
+      var v = function (n) { return (form.elements[n] && form.elements[n].value || '').trim(); };
+      var name = v('first_name') + ' ' + v('last_name');
+      var body = 'Name: ' + name + '\nWork email: ' + v('email') + '\nCompany: ' + v('company') + '\nInterested in: ' + v('interest') + '\n\n' + v('message');
+      var href = 'mailto:enquiries@intelense.ca?subject=' + encodeURIComponent('Message from ' + name + ' via intelense.com') + '&body=' + encodeURIComponent(body);
       var done = document.getElementById('form-done');
       form.hidden = true;
       if (done) { done.hidden = false; done.focus(); }
+      window.location.href = href;
     });
   }
 })();
