@@ -272,14 +272,13 @@ def header(active):
       {''.join(links)}
     </ul>
     <div class="nav-cta">
-      <a class="btn btn-ghost" href="contact.html">Contact</a>
       <a class="btn btn-blue" href="contact.html">Book a demo</a>
       <button class="menu-btn" type="button" aria-expanded="false" aria-controls="mobile-menu" aria-label="Menu"><span></span></button>
     </div>
   </div>
   <nav class="mobile-menu" id="mobile-menu" hidden aria-label="Mobile">
     <div class="wrap">
-      <a href="index.html">Home</a>{mobile}<a href="contact.html">Contact</a>
+      <a href="index.html">Home</a>{mobile}
       <a class="btn btn-blue" href="contact.html">Book a demo</a>
     </div>
   </nav>
@@ -447,6 +446,30 @@ FAQ = home_section('faq')
 # ---------------------------------------------------------------- pages
 
 
+CLIENTS = [('Swarovski', 'w1'), ('GIVA', 'w2'), ('CaratLane', 'w3'), ('Mia', 'w4'), ('Rado', 'w2'), ('Tissot', 'w1'), ('Seiko', 'w5'),
+           ('Orra Fine Jewelry', 'w3'), ('HYOU Fine Jewelry', 'w2'), ('Sangeetha Mobiles', 'w4'), ('Mokobara', 'w5'), ('Prestige Group', 'w1'), ('Shell', 'w6')]
+CLIENT_SECTORS = [('Fine jewelry', 6), ('Watches', 3), ('Consumer retail', 2), ('Property', 1), ('Energy', 1)]
+
+
+def clients_section():
+    def row(items, rev=False):
+        cells = ''.join(f'<li class="{c}"><span>{n}</span></li>' for n, c in items)
+        return f'<div class="marquee{" rev" if rev else ""}"><ul>{cells}</ul><ul aria-hidden="true">{cells}</ul></div>'
+    half = (len(CLIENTS) + 1) // 2
+    chips = ''.join(f'<span><b>{n}</b>{k}</span>' for k, n in CLIENT_SECTORS)
+    names = ', '.join(n for n, _ in CLIENTS)
+    return f'''<section class="block" id="clients">
+    <div class="wrap">
+      {head_block('Clients', 'Trusted by brands people know.', 'Fine jewelry, watches, mobile retail, travel gear, property and energy. Teams across these sectors use Intelense to see what is happening on the floor.')}
+      <div class="clients" role="group" aria-label="Clients include {names}">
+        {row(CLIENTS[:half])}
+        {row(CLIENTS[half:], True)}
+      </div>
+      <div class="client-sectors">{chips}</div>
+    </div>
+  </section>'''
+
+
 def page_index():
     platform = FLOW_SECTION.replace('</div>\n    </div>\n  </section>', '</div>\n      <p style="margin-top:32px"><a class="link-arrow" href="platform.html">See how the platform works</a></p>\n    </div>\n  </section>', 1)
     live = CONSOLE_SECTION.replace('<p class="demo-note">Example footage and data. Not a real site or customer.</p>',
@@ -474,7 +497,7 @@ def page_index():
     hero = HERO
     if 'video-home' in FEEDS:
         hero = hero[:hero.rindex('</section>')] + f'<div class="wrap hero-media">{photo("video-home")}<p class="demo-note">Example footage and data</p></div>\n  </section>'
-    body = '\n\n  '.join([hero, platform, modules, sectors, faq, cta_band()])
+    body = '\n\n  '.join([hero, platform, modules, clients_section(), sectors, faq, cta_band()])
     return dict(file='index.html', title='Intelense | AI Video Analytics & Intelligence at the Edge',
                 desc='Intelense turns live video, sensor and voice data into real-time alerts. Seven Ken modules on one AI platform.',
                 active='index.html', body=body, cctv=True)
@@ -1387,7 +1410,6 @@ def page_kensafety():
         ('report', 'Automated Safety Reports', 'Spend less time putting incident records together.', ['Maintain timestamped incident records, event details and available visual evidence. Review recurring violations and safety patterns to support audits, internal reviews and corrective action.']),
     ]
     feat_cards = ''.join(f'<article class="kv-feat"><div class="kv-mini">{feat('kensafety', k, ks_mini(k))}</div><span class="kv-num">{i + 1:02d}</span><h3>{t}</h3><p class="kv-strap">{s}</p>{"".join(f"<p>{p}</p>" for p in ps)}</article>' for i, (k, t, s, ps) in enumerate(feats))
-    feat_cards += f'''<article class="kv-feat kv-feat-wide"><div class="kv-mini">{feat('kensafety', 'dash', ks_mini('dash'))}</div><div><span class="kv-num">07</span><h3>Safety Dashboard &amp; Alerts</h3><p class="kv-strap">Know where attention is needed.</p><p>Bring safety events and compliance information into a central dashboard. Help supervisors review alerts, identify recurring issues and monitor activity across supported camera feeds and locations.</p></div></article>'''
     features = f'''<section class="block" id="features">
     <div class="wrap">
       {head_block('Features', 'Everything You Need for Smarter Workplace Safety Monitoring', 'KenSafety combines AI video analytics, hazard detection and safety reporting to help teams understand risks across their work environments.')}
@@ -1972,7 +1994,6 @@ def page_kenhome():
         ('alerts', 'Real-Time Alerts &amp; Video Evidence', 'Get the context you need when an alert arrives.', 'Receive notifications for configured events through supported alert channels. Review available timestamps, camera details and video clips to better understand what triggered the alert.'),
     ]
     cards = ''.join(f'<article class="kv-feat"><div class="kv-mini">{feat('kenhome', k, kh_mini(k))}</div><span class="kv-num">{i + 1:02d}</span><h3>{t}</h3><p class="kv-strap">{s}</p><p>{d}</p></article>' for i, (k, t, s, d) in enumerate(feats))
-    cards += f'<article class="kv-feat kv-feat-wide"><div class="kv-mini" style="background:#16171b">{feat("kenhome", "onehome", kh_mini("grid"))}</div><div><span class="kv-num">07</span><h3>One View for Your Home</h3><p class="kv-strap">Keep your cameras and important alerts in one place.</p><p>Review activity across supported cameras and monitored zones through a central dashboard. Help family members and designated caregivers stay informed without manually checking every feed.</p></div></article>'
     features = f'''<section class="block" id="features">
     <div class="wrap">
       {head_block('Features', 'One Smarter Way to Monitor Your Home', 'KenHome brings AI home security and safety monitoring into one solution, helping families keep track of important activity across camera-covered areas.')}
@@ -2259,14 +2280,12 @@ def page_keniot():
         ('predict', 'Predictive Maintenance', 'Move from fixing breakdowns to planning ahead.', 'Use equipment data, historical patterns and anomaly detection to identify signs of potential equipment failure. Help maintenance teams prioritise inspections, plan servicing and reduce dependence on reactive repairs.'),
         ('health', 'Equipment Health Monitoring', 'Understand how your assets are performing.', 'Monitor equipment conditions through available sensor data and asset-specific indicators. Compare current readings with expected operating patterns to help identify equipment that may need inspection or maintenance.'),
         ('alerts', 'Smart Alerts &amp; Notifications', 'Know when a reading needs your attention.', 'Configure alerts for supported anomalies, operating thresholds and equipment conditions. Help the relevant team investigate unusual readings without continuously checking every sensor dashboard.'),
-        ('integrate', 'Sensor Data Integration', 'Bring different data sources into one view.', 'Connect compatible sensors, industrial equipment and monitoring systems through supported communication protocols and integrations. Build a more complete picture of your operations without necessarily replacing existing equipment.'),
-        ('workflow', 'Automated Maintenance Workflows', 'Turn potential problems into planned action.', 'Use detected anomalies and configured rules to support maintenance workflows, including work-order or maintenance-ticket creation where integrated. Help teams document issues, assign follow-ups and track corrective action.'),
         ('trends', 'Historical Trends &amp; Reporting', "Understand what's changing over time.", 'Review historical sensor readings, equipment behaviour and detected anomalies. Use trends and reports to investigate recurring issues, understand operating patterns and support maintenance planning.'),
     ]
     features = f'''<section class="block" id="features">
     <div class="wrap">
       {head_block('Features', 'Turn Sensor Data into Decisions That Keep Operations Moving.', 'KenIoT combines IoT connectivity, AI-powered sensor analytics and predictive maintenance capabilities to help you understand the condition of your equipment and infrastructure.')}
-      <div class="kv-feats four">{''.join(f'<article class="kv-feat"><div class="kv-mini">{feat('keniot', k, ki_mini(k))}</div><span class="kv-num">{i + 1:02d}</span><h3>{t}</h3><p class="kv-strap">{s}</p><p>{d}</p></article>' for i, (k, t, s, d) in enumerate(feats))}</div>
+      <div class="kv-feats">{''.join(f'<article class="kv-feat"><div class="kv-mini">{feat('keniot', k, ki_mini(k))}</div><span class="kv-num">{i + 1:02d}</span><h3>{t}</h3><p class="kv-strap">{s}</p><p>{d}</p></article>' for i, (k, t, s, d) in enumerate(feats))}</div>
     </div>
   </section>'''
 
