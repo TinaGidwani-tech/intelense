@@ -313,7 +313,7 @@ def footer():
         <ul><li class="email">enquiries@intelense.ca</li><li>Markham, Ontario, Canada</li></ul>
       </div>
     </div>
-    <div class="legal"><span>© 2026 Intelense Inc.</span><span>Sample site concept</span></div>
+    <div class="legal"><span>© 2026 Intelense Inc.</span><span>Photography and video: <a href="about.html#credits">Pexels and Unsplash</a></span></div>
   </div>
 </footer>
 '''
@@ -326,19 +326,22 @@ def crumbs(*items):
     return f'<ol class="crumbs" aria-label="Breadcrumb">{"".join(out)}</ol>'
 
 
-def page_hero(crumb, eyebrow, h1, lede, ctas, extra=''):
-    return f'''<section class="page-hero">
-    <div class="wash wash-a" aria-hidden="true"></div>
-    <div class="wash wash-b" aria-hidden="true"></div>
-    <div class="cursor-grid" aria-hidden="true"></div>
-    <div class="wrap">
-      {crumb}
+def page_hero(crumb, eyebrow, h1, lede, ctas, extra='', media=''):
+    copy = f'''{crumb}
       <span class="eyebrow">{eyebrow}</span>
       {extra}
       <h1>{h1}</h1>
       <p class="lede">{lede}</p>
-      <div class="hero-ctas">{ctas}</div>
-    </div>
+      <div class="hero-ctas">{ctas}</div>'''
+    if media:
+        inner = f'<div class="wrap kv-hero-grid">\n      <div class="kv-hero-copy">\n      {copy}\n      </div>\n      <div class="kv-hero-visual photo-hero">{media}</div>\n    </div>'
+    else:
+        inner = f'<div class="wrap">\n      {copy}\n    </div>'
+    return f'''<section class="page-hero{" kv-hero" if media else ""}">
+    <div class="wash wash-a" aria-hidden="true"></div>
+    <div class="wash wash-b" aria-hidden="true"></div>
+    <div class="cursor-grid" aria-hidden="true"></div>
+    {inner}
   </section>'''
 
 
@@ -367,9 +370,13 @@ def cta_band(h2='See Intelense on your own footage.', second=('modules.html', 'C
   </section>'''
 
 
+CARD_PHOTO = {'kensafety': 'dock', 'kenhome': 'porch', 'kenagri': 'hero-agri', 'keniot': 'hero-iot', 'kenrobotics': 'robot', 'kenvoice': 'hero-voice'}
+
+
 def card(m):
     tag = '<span class="tag-new">New</span>' if m.get('new') else ''
     return f'''<article style="--mod:{m["color"]}" class="card">
+          {thumb(CARD_PHOTO.get(m["key"], ""))}
           <div class="card-top"><span class="kind">{m["kind"]}</span>{tag}</div>
           <h3><a href="{m["key"]}.html">{logo_img(m)}</a></h3>
           <p>{m["card"]}</p>
@@ -464,7 +471,10 @@ def page_index():
     </div>
   </section>'''
     faq = FAQ.replace('<p>Book a demo. We', '<p><a href="contact.html">Book a demo</a>. We').replace('<summary>What is KenVoice?</summary>\n          <p>KenVoice is our newest module. It adds voice to the Ken platform, so spoken alerts, hands-free commands and call audio sit in the same timeline as your video and sensor events.</p>', '<summary>What is KenVoice?</summary>\n          <p><a href="kenvoice.html">KenVoice</a> is our newest module. It uses AI audio analytics to turn customer and staff conversations at retail counters into service, coaching and sales insights, with audio processed on-device.</p>')
-    body = '\n\n  '.join([HERO, platform, live, modules, sectors, faq, cta_band()])
+    hero = HERO
+    if 'video-home' in FEEDS:
+        hero = hero[:hero.rindex('</section>')] + f'<div class="wrap hero-media">{photo("video-home")}<p class="demo-note">Example footage and data</p></div>\n  </section>'
+    body = '\n\n  '.join([hero, platform, live, modules, sectors, faq, cta_band()])
     return dict(file='index.html', title='Intelense | AI Video Analytics & Intelligence at the Edge',
                 desc='Intelense turns live video, sensor and voice data into real-time alerts. Seven Ken modules on one AI platform.',
                 active='index.html', body=body, cctv=True)
@@ -473,7 +483,7 @@ def page_index():
 def page_platform():
     hero = page_hero(crumbs((None, 'Platform')), 'The Intelense platform', 'One engine for every camera, sensor and voice on site.',
                      'Intelense connects to the devices you already run, understands what they see and hear at the edge, and sends each event to the people who need it.',
-                     '<a class="btn btn-blue" href="contact.html">Book a demo</a><a class="btn btn-ghost" href="modules.html">Explore the modules</a>')
+                     '<a class="btn btn-blue" href="contact.html">Book a demo</a><a class="btn btn-ghost" href="modules.html">Explore the modules</a>', media=photo('video-warehouse'))
     flow = f'''<section class="block" id="how">
     <div class="wrap">
       {head_block('How it works', 'From every sensor to the right response.', 'Connect the cameras and devices you already run. Intelense watches, listens and understands them, then sends each event where it needs to go.')}
@@ -524,7 +534,7 @@ def page_platform():
 def page_modules():
     hero = page_hero(crumbs((None, 'Modules')), 'The Ken platform', 'Seven modules. One engine.',
                      "Start with the module that solves today's problem. Every module runs on the same engine and dashboard, so adding the next one is simple.",
-                     '<a class="btn btn-blue" href="contact.html">Book a demo</a><a class="btn btn-ghost" href="#compare">Compare modules</a>')
+                     '<a class="btn btn-blue" href="contact.html">Book a demo</a><a class="btn btn-ghost" href="#compare">Compare modules</a>', media=photo('video-store') or photo('store'))
     grid = f'''<section class="block" id="all">
     <div class="wrap">
       {module_grid()}
@@ -672,6 +682,7 @@ def page_industries():
     for ind in INDUSTRIES:
         uses = ''.join(f'<li><b>{t}</b><span>{d}</span></li>' for t, d in ind['uses'])
         blocks.append(f'''<article class="sector" id="{ind['id']}">
+          {('<div class="sector-photo">' + photo('industry-' + ind['id']) + '</div>') if ('industry-' + ind['id']) in FEEDS else ''}
           <div>
             <span class="eyebrow">{ind['name']}</span>
             <h2>{ind['title']}</h2>
@@ -693,7 +704,7 @@ def page_industries():
 def page_about():
     hero = page_hero(crumbs((None, 'Company')), 'About Intelense', 'A safer world, starting with public safety.',
                      'Intelense is an artificial intelligence and data analytics company based in Markham, Ontario. We turn the video, sensor and voice data organisations already have into alerts people can act on.',
-                     '<a class="btn btn-blue" href="contact.html">Talk to us</a><a class="btn btn-ghost" href="platform.html">See the platform</a>')
+                     '<a class="btn btn-blue" href="contact.html">Talk to us</a><a class="btn btn-ghost" href="platform.html">See the platform</a>', media=photo('hero-about'))
     story = f'''<section class="block" id="story">
     <div class="wrap">
       {head_block('Our story', 'From one idea to seven modules.', 'We started with a simple question: why do cameras record everything but tell nobody anything?')}
@@ -724,7 +735,13 @@ def page_about():
       </div>
     </div>
   </section>'''
-    body = '\n\n  '.join([hero, story, values, proof, cta_band('Want to work with us?', ('industries.html', 'See industries'))])
+    credits = f'''<section class="block" id="credits">
+    <div class="wrap">
+      {head_block('Credits', 'Photography and video.', 'Images and clips on this site are free to use under the Pexels and Unsplash licences. Thank you to the photographers and videographers.')}
+      {credits_html()}
+    </div>
+  </section>'''
+    body = '\n\n  '.join([hero, story, values, proof, credits, cta_band('Want to work with us?', ('industries.html', 'See industries'))])
     return dict(file='about.html', title='About | Intelense', desc='Intelense is an AI and data analytics company in Markham, Ontario, with a mission to create a safer world.',
                 active='about.html', body=body)
 
@@ -732,7 +749,7 @@ def page_about():
 def page_contact():
     hero = page_hero(crumbs((None, 'Contact')), 'Contact', 'Book a demo.',
                      'Tell us about your sites and what you want to catch. We will show you Intelense on footage like yours.',
-                     '<a class="btn btn-ghost" href="index.html#faq">Read the FAQ</a><a class="btn btn-ghost" href="modules.html">Explore the modules</a>')
+                     '<a class="btn btn-ghost" href="index.html#faq">Read the FAQ</a><a class="btn btn-ghost" href="modules.html">Explore the modules</a>', media=photo('hero-contact'))
     checks = ''.join(f'<label><input type="checkbox" name="modules" value="{m["key"]}"> {m["name"]}</label>' for m in MODULES)
     form = f'''<section class="block" id="form">
     <div class="wrap contact-grid">
@@ -1801,7 +1818,7 @@ def page_kenagri():
                       'Tell us about your farm, your crops and the data you already have.',
                       'KenAgri by Intelense | Intelligence at the Edge.')
 
-    body = '\n\n  '.join([hero, problem, features, how, industries, example, benefits, dash, faq_block(KA_FAQ), related_block(m), final, faq_schema(KA_FAQ)])
+    body = '\n\n  '.join([hero, photo_band('hero-agri', 'From above the field', 'See every field at a glance.', 'Drone and satellite imagery become field zones with health scores, so you know where to walk first.'), problem, features, how, industries, example, benefits, dash, faq_block(KA_FAQ), related_block(m), final, faq_schema(KA_FAQ)])
     return dict(file='kenagri.html', title='KenAgri: AI-Powered Precision Agriculture | Intelense',
                 desc='KenAgri uses AI with satellite imagery, drone images, ground sensors and weather data to monitor crop health, flag pests and disease, predict yields and guide irrigation.',
                 active='kenagri', body=body)
@@ -2341,7 +2358,7 @@ def page_keniot():
                       "Tell us about your equipment, existing sensors and operational challenges. We'll help you explore how KenIoT can fit your infrastructure.",
                       'KenIoT by Intelense | Intelligence at the Edge.')
 
-    body = '\n\n  '.join([hero, problem, features, how, industries, example, benefits, dash, faq_block(KI_FAQ), related_block(m), final, faq_schema(KI_FAQ)])
+    body = '\n\n  '.join([hero, photo_band('hero-iot', 'On the plant floor', 'Listen to the equipment.', 'Vibration, temperature and power readings from motors and pumps show up as trends before they become breakdowns.'), problem, features, how, industries, example, benefits, dash, faq_block(KI_FAQ), related_block(m), final, faq_schema(KI_FAQ)])
     return dict(file='keniot.html', title='KenIoT: AI-Powered IoT Monitoring & Predictive Maintenance | Intelense',
                 desc='KenIoT turns data from connected sensors and equipment into real-time monitoring, AI anomaly detection and predictive maintenance insights.',
                 active='keniot', body=body)
@@ -2623,7 +2640,7 @@ def page_kenvoice():
     </div>
   </section>'''
 
-    body = '\n\n  '.join([hero, what, how, benefits, built, dash, privacy, faq_block(KC_FAQ), related_block(m), final, faq_schema(KC_FAQ)])
+    body = '\n\n  '.join([hero, photo_band('hero-voice', 'At the counter', 'Understand the conversation.', 'On-device audio analysis picks up greetings, needs and outcomes without recording audio to the cloud.'), what, how, benefits, built, dash, privacy, faq_block(KC_FAQ), related_block(m), final, faq_schema(KC_FAQ)])
     return dict(file='kenvoice.html', title='KenVoice: Retail Conversation Intelligence | Intelense',
                 desc='KenVoice uses on-device AI audio analytics to turn customer and staff conversations at the counter into service, coaching and sales insights for retailers.',
                 active='kenvoice', body=body)
@@ -2896,9 +2913,10 @@ def feed_html(scene):
     f = FEEDS[scene]
     src = f'assets/footage/{f["src"]}'
     if src.endswith(('.mp4', '.webm')):
-        media = f'<video src="{src}" autoplay muted loop playsinline preload="metadata"></video>'
+        poster = f' poster="assets/footage/{f["poster"]}"' if f.get('poster') else ''
+        media = f'<video src="{src}"{poster} autoplay muted loop playsinline preload="metadata" aria-hidden="true"></video>'
     else:
-        media = f'<img src="{src}" alt="" loading="lazy" decoding="async">'
+        media = f'<img src="{src}" alt="{f.get("alt", "")}" loading="lazy" decoding="async">'
     svg, tags = [], []
     for z in f.get('zones', []):
         rgb = TONE_RGB[z.get('tone', 'mute')]
@@ -2919,9 +2937,44 @@ def feed_html(scene):
         svg.append(f'<rect x="{x}" y="{y}" width="{w}" height="{h}" fill="none" stroke="rgba({rgb},.28)"/><path d="{d}" fill="none" stroke="rgba({rgb},.95)" stroke-width="2"/>')
         tags.append((b['x'], b['y'], b['label'], b.get('tone', 'mute'), 'box'))
     labels = ''.join(f'<span class="feed-tag {kind}" style="left:{x * 100:.2f}%;top:{y * 100:.2f}%"><i class="{tone}"></i>{lab}</span>' for x, y, lab, tone, kind in tags)
-    return (f'<figure class="feed">{media}'
-            f'<svg class="feed-ov" viewBox="0 0 1000 1000" preserveAspectRatio="none" aria-hidden="true">{"".join(svg)}</svg>{labels}'
-            f'<figcaption class="feed-osd"><span><b class="rec"></b>{f.get("camera", "")}</span><span data-feed-clock>14:32:09</span></figcaption></figure>')
+    ov = f'<svg class="feed-ov" viewBox="0 0 1000 1000" preserveAspectRatio="none" aria-hidden="true">{"".join(svg)}</svg>{labels}' if svg else ''
+    osd = '' if f.get('plain') else f'<figcaption class="feed-osd"><span><b class="rec"></b>{f.get("camera", "")}</span><span data-feed-clock>14:32:09</span></figcaption>'
+    style = f' style="aspect-ratio:{f["ratio"]}"' if f.get('ratio') else ''
+    return f'<figure class="feed{" plain" if f.get("plain") else ""}"{style}>{media}{ov}{osd}</figure>'
+
+
+def photo_band(name, eyebrow, title, text, note='Example footage and data'):
+    if name not in FEEDS:
+        return ''
+    return f'''<section class="block photo-band">
+    <div class="wrap">
+      <div class="photo-band-grid">
+        <div><span class="eyebrow">{eyebrow}</span><h2>{title}</h2><p class="lede">{text}</p></div>
+        <div>{photo(name)}<p class="demo-note">{note}</p></div>
+      </div>
+    </div>
+  </section>'''
+
+
+def photo(name):
+    """Real photo or clip (with optional overlays) for a feeds.json key; empty when the asset is missing."""
+    return feed_html(name) if name in FEEDS else ''
+
+
+def thumb(name):
+    """Plain cropped photo for a card top."""
+    if name not in FEEDS:
+        return ''
+    f = FEEDS[name]
+    return f'<div class="thumb-photo"><img src="assets/footage/{f["src"]}" alt="{f.get("alt", "")}" loading="lazy" decoding="async"></div>'
+
+
+def credits_html():
+    rows = []
+    for k, f in sorted(FEEDS.items()):
+        if f.get('credit'):
+            rows.append(f'<li><span>{f.get("desc") or k}</span><a href="{f["source"]}" rel="noopener">{f["credit"]}</a><em>{f.get("licence", "")}</em></li>')
+    return '<ul class="credits">' + ''.join(rows) + '</ul>'
 
 
 def swap_feeds(html):

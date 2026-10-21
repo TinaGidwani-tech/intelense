@@ -954,3 +954,24 @@ footer a:hover { color: var(--parchment); }
 .feed-osd { position: absolute; z-index: 2; left: 0; right: 0; top: 0; display: flex; justify-content: space-between; padding: 2.4cqi 2.8cqi; color: rgba(255, 255, 255, .9); font: 500 clamp(9px, 1.5cqi, 12px)/1 var(--font); letter-spacing: .02em; font-variant-numeric: tabular-nums; }
 .feed-osd span { display: inline-flex; align-items: center; gap: 6px; }
 .feed-osd .rec { width: 6px; height: 6px; border-radius: 50%; background: #FF7953; animation: apblink 1.6s ease-in-out infinite; }
+
+/* ===== Real photography and footage ===== */
+.feed.plain::after { display: none; }
+.thumb-photo { margin: -40px -40px 12px; border-radius: 39px 39px 0 0; overflow: hidden; aspect-ratio: 16 / 9; background: #0c0d10; }
+.thumb-photo img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .6s ease; }
+.card:hover .thumb-photo img { transform: scale(1.03); }
+.hero-media { margin-top: clamp(40px, 5vw, 72px); text-align: left; }
+.hero-media .feed { border-radius: 32px; box-shadow: 0 30px 80px -40px rgba(10, 52, 237, .5); aspect-ratio: 21 / 9; }
+.photo-hero .feed { border-radius: 28px; box-shadow: 0 24px 60px -30px rgba(10, 52, 237, .45); }
+.sector-photo { grid-column: 1 / -1; margin: calc(-1 * clamp(24px, 4vw, 44px)) calc(-1 * clamp(24px, 4vw, 44px)) 0; }
+.sector-photo .feed { border-radius: 32px 32px 0 0; aspect-ratio: 21 / 8; }
+.photo-band-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr); gap: 32px 64px; align-items: center; }
+.photo-band-grid h2 { margin-top: 18px; }
+.photo-band-grid .lede { margin-top: 18px; }
+.photo-band .feed { border-radius: 32px; }
+.credits { list-style: none; margin: 0; padding: 0; display: grid; }
+.credits li { display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr) minmax(0, .8fr); gap: 16px; padding: 12px 0; border-top: 1px solid var(--ash); font-size: 14px; }
+.credits a { font-weight: 600; text-decoration: none; }
+.credits em { font-style: normal; color: var(--smoke); }
+@media (max-width: 1080px) { .photo-band-grid { grid-template-columns: minmax(0, 1fr); } }
+@media (max-width: 640px) { .thumb-photo { margin: -28px -28px 10px; border-radius: 27px 27px 0 0; } .credits li { grid-template-columns: minmax(0, 1fr); gap: 2px; } .hero-media .feed { aspect-ratio: 16 / 9; } .sector-photo .feed { aspect-ratio: 16 / 9; } }
