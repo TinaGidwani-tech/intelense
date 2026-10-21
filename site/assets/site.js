@@ -176,20 +176,29 @@
     if (!reduce) (function loop(now) { var dt = Math.min(.05, (now - last) / 1000); last = now; frame(dt); requestAnimationFrame(loop); })(last);
   });
 
-  // Contact form: validates in the page, then opens the visitor's email app with the message addressed to enquiries@intelense.ca
+  // Contact form: validates in the page, then posts to /send-message.php on this site, which emails enquiries@intelense.ca
   var form = document.getElementById('demo-form');
   if (form) {
+    var note = document.getElementById('form-status');
+    var btn = form.querySelector('button[type="submit"]');
     form.addEventListener('submit', function (e) {
       e.preventDefault();
       if (!form.checkValidity()) { form.reportValidity(); return; }
-      var v = function (n) { return (form.elements[n] && form.elements[n].value || '').trim(); };
-      var name = v('first_name') + ' ' + v('last_name');
-      var body = 'Name: ' + name + '\nWork email: ' + v('email') + '\nCompany: ' + v('company') + '\nInterested in: ' + v('interest') + '\n\n' + v('message');
-      var href = 'mailto:enquiries@intelense.ca?subject=' + encodeURIComponent('Message from ' + name + ' via intelense.com') + '&body=' + encodeURIComponent(body);
-      var done = document.getElementById('form-done');
-      form.hidden = true;
-      if (done) { done.hidden = false; done.focus(); }
-      window.location.href = href;
+      var data = {};
+      ['first_name', 'last_name', 'email', 'company', 'interest', 'message', '_honey'].forEach(function (n) { data[n] = form.elements[n] ? form.elements[n].value : ''; });
+      btn.disabled = true;
+      if (note) note.textContent = 'Sending...';
+      fetch('/send-message.php', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) })
+        .then(function (r) { return r.json().then(function (j) { if (!r.ok || !j.ok) throw new Error(j.error || 'send failed'); }); })
+        .then(function () {
+          var done = document.getElementById('form-done');
+          form.hidden = true;
+          if (done) { done.hidden = false; done.focus(); }
+        })
+        .catch(function (err) {
+          btn.disabled = false;
+          if (note) note.textContent = (err && err.message && err.message.indexOf('Please') === 0 ? err.message + ' ' : 'We could not send that. ') + 'You can also email enquiries@intelense.ca.';
+        });
     });
   }
 })();

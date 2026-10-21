@@ -26,4 +26,4 @@ The home page reuses sections from `design/mockups/homepage-monad-style.html`.
 - `assets/cctv.js`: simulated camera feeds, used only for scenes that have no footage
 - `assets/cursor-grid.js`: cursor-reactive grid in each page hero (`initCursorGrid(container, options)`)
 
-The contact form is not connected to email yet.
+The contact form posts to `/send-message.php` (`server/send-message.php`, copied into the deployable build), which emails enquiries@intelense.ca. It needs PHP, so it works on the live host but not in a static preview.

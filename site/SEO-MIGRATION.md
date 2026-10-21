@@ -66,5 +66,5 @@ Every page has a canonical tag to `https://www.intelense.com/<path>`, Open Graph
 
 1. The 5 redirect URLs need a real 301 on the host: `dist/.htaccess` (Apache) and `dist/_redirects` (Netlify / Cloudflare Pages) are generated; static fallback pages exist if the host cannot redirect.
 2. Titles and meta keywords of the 10 existing pages come from `content/old-seo.json`; four descriptions are the old ones, the module-page descriptions are the new ones.
-3. Connect the contact form (it is not connected to email yet).
+3. Contact form: the page posts to `/send-message.php` (copied into `dist/` from `site/server/`), which emails enquiries@intelense.ca with PHP `mail()`. On GoDaddy: upload the contents of `dist/` to `public_html`, create the mailbox `website@intelense.com` in cPanel (Email Accounts) if it does not exist, then send one test message from the live /contact page and check the enquiries inbox and spam folder. The sender address is the `FROM_ADDRESS` constant at the top of the script.
 4. After launch: submit `sitemap.xml` in Google Search Console, check the old URLs with the URL Inspection tool and watch Coverage and Performance for two to four weeks.

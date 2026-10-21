@@ -849,12 +849,13 @@ def page_contact():
           <div class="field"><label for="f-company">Company</label><input id="f-company" name="company" placeholder="Your Company" autocomplete="organization"></div>
           <div class="field"><label for="f-interest">I'm interested in</label><select id="f-interest" name="interest"><option value="">Select a product…</option>{''.join(f'<option>{m["name"]}</option>' for m in MODULES)}<option>Full Platform</option><option>Partnership</option><option>Other</option></select></div>
           <div class="field full"><label for="f-msg">How can we help? <span class="req">*</span></label><textarea id="f-msg" name="message" placeholder="Tell us about your use case, team size, or challenges you want to solve…" required></textarea></div>
-          <div class="full"><button class="btn btn-blue" type="submit">Send message</button></div>
+          <input type="text" name="_honey" value="" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0">
+          <div class="full" style="display:flex;gap:16px;align-items:center;flex-wrap:wrap"><button class="btn btn-blue" type="submit">Send message</button><span class="form-note" id="form-status" role="status" aria-live="polite"></span></div>
           <p class="form-note full">By submitting, you agree to our <a href="privacy.html">Privacy Policy</a>. We never share your data.</p>
         </form>
         <div class="form-done" id="form-done" hidden tabindex="-1">
-          <h3>Your message is ready to send.</h3>
-          <p>Your email app should have opened with your message addressed to enquiries@intelense.ca. Press send there. If nothing opened, email us at <a href="mailto:enquiries@intelense.ca">enquiries@intelense.ca</a>.</p>
+          <h3>Thanks, we have your message.</h3>
+          <p>Our team will reply to you within one business day.</p>
           <p style="margin-top:18px"><a class="link-arrow" href="modules.html">Explore the modules while you wait</a></p>
         </div>
       </div>
@@ -3168,6 +3169,7 @@ def deploy_build(pages, out):
     write_redirects(out, pages)
     shutil.copytree(ROOT / 'content' / 'llms', out / 'llms', dirs_exist_ok=True)
     shutil.copy(ROOT / 'content' / 'llms.txt', out / 'llms.txt')
+    shutil.copy(ROOT / 'server' / 'send-message.php', out / 'send-message.php')
     print('wrote deployable site to', out)
 
 
