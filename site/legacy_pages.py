@@ -20,28 +20,48 @@ REDIRECTS = {'/video-analytics-retail': '/retail-analytics', '/footfall-analytic
 OLD_HOSTS = ('https://www.intelense.com', 'https://intelense.com')
 
 
+# Old Pexels photo id -> a similar photo already on the new site (assets/footage). Used only until the real photo is saved
+# as assets/old-images/pexels-<id>.jpg, which takes priority.
+SUBSTITUTE = {
+    '2219024': 'feat-ppe-kensafety', '1078884': 'feat-ppe-kensafety', '544966': 'feat-report-kensafety', '1216589': 'feat-fall-kensafety',
+    '1005638': 'feat-queue-kenvision', '1571463': 'living',
+    '8386440': 'hero-contact', '8386434': 'hero-contact',
+    '2528118': 'plaza', '430205': 'plaza', '3184292': 'feat-trends-keniot',
+    '3184465': 'feat-scorecard-kenvoice', '3182812': 'feat-scorecard-kenvoice', '574071': 'feat-trends-keniot',
+    '590022': 'industry-industrial', '3861969': 'industry-industrial', '256262': 'industry-healthcare',
+    '3225531': 'industry-smart-cities', '1546903': 'industry-smart-cities', '325185': 'plaza',
+    '323705': 'lobby', '1370296': 'lobby', '380769': 'hero-iot',
+}
+FOOTAGE = Path(__file__).resolve().parent / 'assets' / 'footage'
+FEEDS = json.loads((FOOTAGE / 'feeds.json').read_text())
+
+
 def local_image(src):
     """Old image -> its local copy in assets/old-images/ (Pexels photos are saved as pexels-<id>.jpg), or None while the file is missing."""
     m = re.search(r'pexels-photo-(\d+)', src)
     name = f'pexels-{m.group(1)}.jpg' if m else src.rsplit('/', 1)[-1].replace('%20', '-').replace(' ', '-')
-    f = IMG_DIR / name
+    f, rel, alt = IMG_DIR / name, 'assets/old-images/' + name, None
     if not f.exists():
-        return None
+        key = SUBSTITUTE.get(m.group(1)) if m else None
+        feed = next((v for v in FEEDS.values() if isinstance(v, dict) and v.get('src') == key + '.jpg'), None) if key else None
+        if not feed:
+            return None
+        f, rel, alt = FOOTAGE / feed['src'], 'assets/footage/' + feed['src'], feed.get('alt', '')
     try:
         from PIL import Image
         w, h = Image.open(f).size
     except Exception:
         w = h = 0
-    return 'assets/old-images/' + name, w, h
+    return rel, w, h, alt
 
 
 def img_tag(b, cls=''):
     loc = local_image(b['src'])
     if not loc:
         return ''
-    path, w, h = loc
+    path, w, h, alt = loc
     dim = f' width="{w}" height="{h}"' if w else ''
-    return f'<img{f" class=\"{cls}\"" if cls else ""} src="{path}" alt="{attr(b.get("alt", ""))}"{dim} loading="lazy" decoding="async">'
+    return f'<img{f" class=\"{cls}\"" if cls else ""} src="{path}" alt="{attr(alt if alt is not None else b.get("alt", ""))}"{dim} loading="lazy" decoding="async">'
 
 
 def file_for(slug):
