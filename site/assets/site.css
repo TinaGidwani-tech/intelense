@@ -398,7 +398,8 @@ footer a:hover { color: var(--parchment); }
 .page-hero .wrap { position: relative; }
 .page-hero h1 { max-width: 18ch; margin-top: 22px; font-size: clamp(36px, 5.2vw, 64px); }
 .page-hero .lede { margin-top: 22px; }
-.page-hero .wash-a { left: 0; top: auto; bottom: 8%; }
+.page-hero .wash-a { left: 14%; top: 26%; }
+.page-hero .wash-b { right: 14%; top: 6%; }
 .page-hero .hero-ctas { justify-content: flex-start; margin-top: 32px; }
 .page-hero .hero-logo { display: block; height: auto; width: min(340px, 80%); margin-top: 20px; }
 .crumbs { display: flex; flex-wrap: wrap; gap: 8px; list-style: none; margin: 0 0 22px; padding: 0; font-size: 13px; color: var(--smoke); }
