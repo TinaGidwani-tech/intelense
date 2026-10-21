@@ -1,10 +1,110 @@
 {
-  "_help": "Real camera stills or clips that replace the simulated feeds. Each key is a scene name used in build.py (store, dock, whse, porch, living, drive, aisle, lot, lobby, plaza, field, robot). Coordinates are fractions of the frame (0 to 1). A scene is used only when its src file exists in this folder. Example entry below under _example.",
-  "_example": {
-    "src": "store.jpg",
-    "camera": "CAM-02 · Store floor",
-    "boxes": [{"x": 0.42, "y": 0.38, "w": 0.06, "h": 0.30, "label": "Shopper", "tone": "pos"}],
-    "zones": [{"points": [[0.70, 0.45], [0.95, 0.45], [0.95, 0.95], [0.70, 0.95]], "label": "Queue · 4", "tone": "neg"}],
-    "lines": [{"from": [0.10, 0.90], "to": [0.35, 0.90], "label": "Entry · IN 415", "tone": "info"}]
-  }
+ "_help": "Real camera stills or clips that replace the simulated feeds. Each key is a scene name used in build.py (store, dock, whse, porch, living, drive, aisle, lot, lobby, plaza, field, robot). Coordinates are fractions of the frame (0 to 1). A scene is used only when its src file exists in this folder. Example entry below under _example.",
+ "_example": {
+  "src": "store.jpg",
+  "camera": "CAM-02 \u00b7 Store floor",
+  "boxes": [
+   {
+    "x": 0.42,
+    "y": 0.38,
+    "w": 0.06,
+    "h": 0.3,
+    "label": "Shopper",
+    "tone": "pos"
+   }
+  ],
+  "zones": [
+   {
+    "points": [
+     [
+      0.7,
+      0.45
+     ],
+     [
+      0.95,
+      0.45
+     ],
+     [
+      0.95,
+      0.95
+     ],
+     [
+      0.7,
+      0.95
+     ]
+    ],
+    "label": "Queue \u00b7 4",
+    "tone": "neg"
+   }
+  ],
+  "lines": [
+   {
+    "from": [
+     0.1,
+     0.9
+    ],
+    "to": [
+     0.35,
+     0.9
+    ],
+    "label": "Entry \u00b7 IN 415",
+    "tone": "info"
+   }
+  ]
+ },
+ "store": {
+  "src": "store.jpg",
+  "camera": "CAM-02 \u00b7 Store floor",
+  "credit": "BI ravencrow",
+  "source": "https://www.pexels.com/photo/busy-supermarket-aisle-with-shoppers-and-products-38079866/",
+  "licence": "Pexels License (free to use)",
+  "boxes": [
+   {
+    "x": 0.405,
+    "y": 0.43,
+    "w": 0.06,
+    "h": 0.3,
+    "label": "Shopper",
+    "tone": "pos"
+   }
+  ],
+  "zones": [
+   {
+    "points": [
+     [
+      0.34,
+      0.66
+     ],
+     [
+      0.6,
+      0.66
+     ],
+     [
+      0.72,
+      0.98
+     ],
+     [
+      0.25,
+      0.98
+     ]
+    ],
+    "label": "Dwell \u00b7 6m 12s",
+    "tone": "info"
+   }
+  ],
+  "lines": [
+   {
+    "from": [
+     0.26,
+     0.92
+    ],
+    "to": [
+     0.72,
+     0.92
+    ],
+    "label": "Aisle \u00b7 IN 415",
+    "tone": "info"
+   }
+  ]
+ }
 }

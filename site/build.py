@@ -973,7 +973,7 @@ def page_kenvision():
       </div>
       <div class="kv-hero-visual">
         {ap.hero(KV_HERO)}
-        <p class="demo-note">Simulated camera feed and example data</p>
+        <p class="demo-note">Example footage and data</p>
       </div>
     </div>
   </section>'''
@@ -1077,7 +1077,7 @@ def page_kenvision():
     <div class="wrap">
       {head_block('Dashboard', 'See the Numbers Behind What You See.', 'Bring important video analytics into one view. Monitor footfall, review activity across zones, understand dwell time and track queue patterns through an analytics dashboard.')}
       {ap.dash(kv_dash())}
-      <p class="demo-note">Example dashboard with simulated data. Not a real store.</p>
+      <p class="demo-note">Example footage and data. Not a real store.</p>
       <p class="kv-body" style="max-width:62ch">Move from watching camera footage to understanding what the activity means for your business.</p>
       <p style="margin-top:28px"><a class="btn btn-blue" href="contact.html">Request a KenVision Demo</a></p>
     </div>
