@@ -394,7 +394,7 @@ def module_grid():
             <div class="chips"><span class="chip">Footfall</span><span class="chip">Heatmaps</span><span class="chip">Dwell time</span><span class="chip">Queues</span></div>
             <a class="link-arrow" href="kenvision.html">Explore KenVision</a>
           </div>
-          <div class="snap" role="img" aria-label="Simulated plaza camera with a crowd-density heatmap and a live people count for zone A">
+          <div class="snap" role="img" aria-label="Example plaza camera with a crowd-density heatmap and a live people count for zone A">
             <canvas class="cctv" data-scene="plaza" width="800" height="600"></canvas>
             <div class="snap-ui"><span class="lvl">High density</span><span>Zone A · <b id="crowd-count">26</b> people</span><span class="snap-legend">Density <i></i></span></div>
           </div>
@@ -449,8 +449,8 @@ FAQ = home_section('faq')
 
 def page_index():
     platform = FLOW_SECTION.replace('</div>\n    </div>\n  </section>', '</div>\n      <p style="margin-top:32px"><a class="link-arrow" href="platform.html">See how the platform works</a></p>\n    </div>\n  </section>', 1)
-    live = CONSOLE_SECTION.replace('<p class="demo-note">Simulated camera feeds and example data. Not a real site or customer.</p>',
-                                   '<p class="demo-note">Simulated camera feeds and example data. Not a real site or customer.</p>\n      <p style="margin-top:20px"><a class="link-arrow" href="platform.html#console">See the platform</a></p>')
+    live = CONSOLE_SECTION.replace('<p class="demo-note">Example footage and data. Not a real site or customer.</p>',
+                                   '<p class="demo-note">Example footage and data. Not a real site or customer.</p>\n      <p style="margin-top:20px"><a class="link-arrow" href="platform.html#console">See the platform</a></p>')
     modules = f'''<section class="block" id="modules">
     <div class="wrap">
       {head_block('The Ken platform', 'Seven modules. One platform.', "Start with the module that solves today's problem. Add others as you grow, on the same engine and the same dashboard.")}
@@ -504,7 +504,7 @@ def page_platform():
     <div class="wrap">
       {head_block('The operator console', 'One screen for every site.', 'Live feeds, alerts and trends sit together, so operators review events instead of watching screens.')}
       {CONSOLE}
-      <p class="demo-note">Simulated camera feeds and example data. Not a real site or customer.</p>
+      <p class="demo-note">Example footage and data. Not a real site or customer.</p>
     </div>
   </section>'''
     chips = ['IP cameras (RTSP / ONVIF)', 'Video management systems', 'Drones and body cams', 'IoT and industrial sensors', 'Counter tablets for in-store audio', 'Access control', 'Email, SMS and push alerts', 'Webhooks and APIs']
@@ -569,7 +569,7 @@ def page_modules():
 def module_visual(m):
     v = m['visual']
     if v == 'console':
-        return CONSOLE + '\n      <p class="demo-note">Simulated camera feeds and example data. Not a real site or customer.</p>'
+        return CONSOLE + '\n      <p class="demo-note">Example footage and data. Not a real site or customer.</p>'
     if v == 'safety':
         return '<div class="split">' + tile('dock') + checklist('PPE check · CAM-04', [
             ('Worker A: hard hat and vest', 'OK', False), ('Worker B: no hard hat in restricted zone', 'Alert', True),
@@ -1353,7 +1353,7 @@ def page_kensafety():
       </div>
       <div class="kv-hero-visual">
         {ap.hero(KS_HERO)}
-        <p class="demo-note">Simulated camera feed and example data</p>
+        <p class="demo-note">Example footage and data</p>
       </div>
     </div>
   </section>'''
@@ -1441,7 +1441,7 @@ def page_kensafety():
           <li><time>14:32:09</time><div><b>No hi-vis vest detected</b><span>CAM-09 · Aisle 3. Added to today's PPE log.</span></div><em class="bad">Alert</em></li>
           <li><time>14:32:41</time><div><b>Supervisor acknowledged</b><span>Clip reviewed, worker reminded, incident record created.</span></div><em>Resolved</em></li>
         </ol>
-        <p class="demo-note">Simulated camera feed and example events</p>
+        <p class="demo-note">Example footage and events</p>
       </div>
     </div>
   </section>'''
@@ -1936,7 +1936,7 @@ def page_kenhome():
       </div>
       <div class="kv-hero-visual">
         {ap.hero(KH_HERO)}
-        <p class="demo-note">Simulated camera feed and example alerts</p>
+        <p class="demo-note">Example footage and alerts</p>
       </div>
     </div>
   </section>'''
@@ -2040,7 +2040,7 @@ def page_kenhome():
           <li><time>10:43:05</time><div><b>Family member reviews clip</b><span>Calls to check in</span></div><em>Action</em></li>
         </ol>
         </div>
-        <p class="demo-note">Simulated camera feed and example notification</p>
+        <p class="demo-note">Example footage and notification</p>
       </div>
     </div>
   </section>'''
@@ -2826,7 +2826,7 @@ def page_kenrobotics():
           <canvas class="cctv" data-scene="robot" data-osd="R-03  FRONT CAMERA" width="960" height="540"></canvas>
         </div>
         <figure class="panel" style="margin:12px 0 0;padding:12px">{kr_safety_diagram()}</figure>
-        <p class="demo-note">Simulated camera feed and example safety zones</p>
+        <p class="demo-note">Example footage and safety zones</p>
       </div>
     </div>
   </section>'''
@@ -2877,7 +2877,7 @@ def page_kenrobotics():
     </div>
   </section>'''
 
-    body = '\n\n  '.join([hero, what, how, corecaps, where, collab, integ, eco, faq_block(KR_FAQ), final, faq_schema(KR_FAQ)])
+    body = '\n\n  '.join([hero, photo_band('robot', 'On the warehouse floor', 'Robots that see the people around them.', 'Perception and fleet coordination slow or reroute robots when people, forklifts or obstacles enter their path.'), what, how, corecaps, where, collab, integ, eco, faq_block(KR_FAQ), final, faq_schema(KR_FAQ)])
     return dict(file='kenrobotics.html', title='KenRobotics: AI for Autonomous Robotics | Intelense',
                 desc='KenRobotics helps autonomous robots understand their surroundings, navigate changing environments, avoid obstacles and coordinate tasks across robot fleets.',
                 active='kenrobotics', body=body, cctv=True)
@@ -2977,9 +2977,19 @@ def credits_html():
     return '<ul class="credits">' + ''.join(rows) + '</ul>'
 
 
+def swap_thumb(m):
+    scene, crop = m.group(1), [float(v) for v in m.group(2).split(',')]
+    if scene not in FEEDS or FEEDS[scene]['src'].endswith(('.mp4', '.webm')):
+        return m.group(0)
+    x, y, w = crop[:3]
+    pos = f'{x / (1 - w) * 100:.1f}% {y / (1 - w) * 100:.1f}%'
+    return f'<span class="thumb" role="img" aria-label="{FEEDS[scene].get("alt", "")}" style="background:url(assets/footage/{FEEDS[scene]["src"]}) {pos} / {100 / w:.0f}% auto no-repeat"></span>'
+
+
 def swap_feeds(html):
     if not FEEDS:
         return html
+    html = re.sub(r'<canvas class="thumb" data-from="(\w+)" data-crop="([\d.,]+)"[^>]*></canvas>', swap_thumb, html)
     return re.sub(r'<canvas class="cctv" data-scene="(\w+)"[^>]*></canvas>',
                   lambda m: feed_html(m.group(1)) if m.group(1) in FEEDS else m.group(0), html)
 

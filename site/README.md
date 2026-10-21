@@ -19,7 +19,8 @@ The home page reuses sections from `design/mockups/homepage-monad-style.html`.
 
 ## Assets
 - `assets/site.js`: mobile menu, sensor diagram, console clock, contact form
-- `assets/cctv.js`: simulated camera feeds (swap a tile's `<canvas>` for real footage or screenshots when available)
+- `assets/footage/`: real Pexels/Unsplash photos and clips, described in `feeds.json` (credit, source, overlays). `build.py` swaps them in for the simulated canvases, and `about.html#credits` lists every credit.
+- `assets/cctv.js`: simulated camera feeds, used only for scenes that have no footage
 - `assets/cursor-grid.js`: cursor-reactive grid in each page hero (`initCursorGrid(container, options)`)
 
 The contact form is not connected to email yet.

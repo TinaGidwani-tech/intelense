@@ -975,3 +975,4 @@ footer a:hover { color: var(--parchment); }
 .credits em { font-style: normal; color: var(--smoke); }
 @media (max-width: 1080px) { .photo-band-grid { grid-template-columns: minmax(0, 1fr); } }
 @media (max-width: 640px) { .thumb-photo { margin: -28px -28px 10px; border-radius: 27px 27px 0 0; } .credits li { grid-template-columns: minmax(0, 1fr); gap: 2px; } .hero-media .feed { aspect-ratio: 16 / 9; } .sector-photo .feed { aspect-ratio: 16 / 9; } }
+@container (max-width: 340px) { .feed-tag { display: none; } .feed-osd span:first-child { font-size: 9px; } }

@@ -2,7 +2,7 @@
  "_help": "Real camera stills or clips that replace the simulated feeds. Each key is a scene name used in build.py (store, dock, whse, porch, living, drive, aisle, lot, lobby, plaza, field, robot). Coordinates are fractions of the frame (0 to 1). A scene is used only when its src file exists in this folder. Example entry below under _example.",
  "_example": {
   "src": "store.jpg",
-  "camera": "CAM-02 \u00b7 Store floor",
+  "camera": "CAM-02 · Store floor",
   "boxes": [
    {
     "x": 0.42,
@@ -33,7 +33,7 @@
       0.95
      ]
     ],
-    "label": "Queue \u00b7 4",
+    "label": "Queue · 4",
     "tone": "neg"
    }
   ],
@@ -47,14 +47,14 @@
      0.35,
      0.9
     ],
-    "label": "Entry \u00b7 IN 415",
+    "label": "Entry · IN 415",
     "tone": "info"
    }
   ]
  },
  "store": {
   "src": "store.jpg",
-  "camera": "CAM-02 \u00b7 Store floor",
+  "camera": "CAM-02 · Store floor",
   "credit": "BI ravencrow",
   "source": "https://www.pexels.com/photo/busy-supermarket-aisle-with-shoppers-and-products-38079866/",
   "licence": "Pexels License (free to use)",
@@ -88,7 +88,7 @@
       0.98
      ]
     ],
-    "label": "Dwell \u00b7 6m 12s",
+    "label": "Dwell · 6m 12s",
     "tone": "info"
    }
   ],
@@ -102,9 +102,667 @@
      0.72,
      0.92
     ],
-    "label": "Aisle \u00b7 IN 415",
+    "label": "Aisle · IN 415",
+    "tone": "info"
+   }
+  ],
+  "desc": "Supermarket aisle",
+  "alt": "Supermarket aisle with shoppers"
+ },
+ "dock": {
+  "src": "dock.jpg",
+  "credit": "ELEVATE",
+  "source": "https://www.pexels.com/photo/man-riding-on-yellow-forklift-1267329/",
+  "licence": "Pexels License",
+  "desc": "Loading dock forklift",
+  "alt": "Loading dock forklift",
+  "camera": "CAM-04 · Loading dock B",
+  "boxes": [
+   {
+    "x": 0.36,
+    "y": 0.13,
+    "w": 0.52,
+    "h": 0.75,
+    "label": "Forklift 91%",
+    "tone": "info"
+   },
+   {
+    "x": 0.7,
+    "y": 0.2,
+    "w": 0.1,
+    "h": 0.28,
+    "label": "Person · PPE ok",
+    "tone": "pos"
+   }
+  ],
+  "zones": [
+   {
+    "points": [
+     [
+      0.05,
+      0.82
+     ],
+     [
+      0.95,
+      0.82
+     ],
+     [
+      0.98,
+      0.99
+     ],
+     [
+      0.02,
+      0.99
+     ]
+    ],
+    "label": "Dock zone B",
+    "tone": "warn"
+   }
+  ]
+ },
+ "whse": {
+  "src": "whse.jpg",
+  "credit": "Willians Huerta",
+  "source": "https://www.pexels.com/photo/industrial-warehouse-with-forklift-and-shelving-36398150/",
+  "licence": "Pexels License",
+  "desc": "Warehouse aisle",
+  "alt": "Warehouse aisle",
+  "camera": "CAM-12 · Warehouse aisle",
+  "boxes": [
+   {
+    "x": 0.42,
+    "y": 0.33,
+    "w": 0.14,
+    "h": 0.21,
+    "label": "Forklift",
+    "tone": "info"
+   }
+  ],
+  "zones": [
+   {
+    "points": [
+     [
+      0.42,
+      0.58
+     ],
+     [
+      0.6,
+      0.58
+     ],
+     [
+      0.8,
+      0.99
+     ],
+     [
+      0.28,
+      0.99
+     ]
+    ],
+    "label": "Pedestrian aisle",
+    "tone": "pos"
+   }
+  ]
+ },
+ "robot": {
+  "src": "robot.jpg",
+  "credit": "Hyundai Motor Group",
+  "source": "https://unsplash.com/photos/a-large-room-filled-with-lots-of-shelves-isO_JcRYYeU",
+  "licence": "Unsplash License",
+  "desc": "Autonomous robots in a logistics hall",
+  "alt": "Autonomous robots in a logistics hall",
+  "camera": "CAM-03 · Robot hall",
+  "boxes": [
+   {
+    "x": 0.45,
+    "y": 0.27,
+    "w": 0.31,
+    "h": 0.5,
+    "label": "AMR · R027",
+    "tone": "info"
+   },
+   {
+    "x": 0.7,
+    "y": 0.74,
+    "w": 0.3,
+    "h": 0.26,
+    "label": "AMR · R047",
+    "tone": "info"
+   },
+   {
+    "x": 0.91,
+    "y": 0.44,
+    "w": 0.06,
+    "h": 0.1,
+    "label": "Person",
+    "tone": "warn"
+   }
+  ]
+ },
+ "lot": {
+  "src": "lot.jpg",
+  "credit": "K / kelly",
+  "source": "https://pexels.com/photo/public-parking-with-modern-cars-in-rows-4196105/",
+  "licence": "Pexels License",
+  "desc": "Parking lot from above",
+  "alt": "Parking lot from above",
+  "camera": "CAM-02 · North parking",
+  "boxes": [
+   {
+    "x": 0.885,
+    "y": 0.2,
+    "w": 0.03,
+    "h": 0.15,
+    "label": "Bus",
+    "tone": "info"
+   },
+   {
+    "x": 0.66,
+    "y": 0.115,
+    "w": 0.04,
+    "h": 0.04,
+    "label": "Vehicle",
+    "tone": "mute"
+   },
+   {
+    "x": 0.855,
+    "y": 0.755,
+    "w": 0.04,
+    "h": 0.08,
+    "label": "Vehicle",
+    "tone": "mute"
+   }
+  ],
+  "zones": [
+   {
+    "points": [
+     [
+      0.54,
+      0.22
+     ],
+     [
+      0.63,
+      0.22
+     ],
+     [
+      0.63,
+      0.88
+     ],
+     [
+      0.54,
+      0.88
+     ]
+    ],
+    "label": "Bay C · 84% full",
+    "tone": "pos"
+   }
+  ]
+ },
+ "porch": {
+  "src": "porch.jpg",
+  "credit": "ArtHouse Studio",
+  "source": "https://www.pexels.com/photo/woman-receiving-boxes-at-door-6017736/",
+  "licence": "Pexels License",
+  "desc": "Front door delivery",
+  "alt": "Front door delivery",
+  "camera": "Front door",
+  "boxes": [
+   {
+    "x": 0.36,
+    "y": 0.15,
+    "w": 0.18,
+    "h": 0.7,
+    "label": "Person",
+    "tone": "pos"
+   },
+   {
+    "x": 0.39,
+    "y": 0.8,
+    "w": 0.17,
+    "h": 0.2,
+    "label": "Package",
+    "tone": "warn"
+   },
+   {
+    "x": 0.64,
+    "y": 0.87,
+    "w": 0.18,
+    "h": 0.13,
+    "label": "Pet",
+    "tone": "violet"
+   }
+  ]
+ },
+ "living": {
+  "src": "living.jpg",
+  "credit": "cottonbro studio",
+  "source": "https://www.pexels.com/photo/a-happy-family-sitting-on-the-couch-while-spending-time-together-5998713/",
+  "licence": "Pexels License",
+  "desc": "Living room",
+  "alt": "Living room",
+  "camera": "Living room",
+  "boxes": [
+   {
+    "x": 0.15,
+    "y": 0.1,
+    "w": 0.17,
+    "h": 0.45,
+    "label": "Child",
+    "tone": "violet"
+   },
+   {
+    "x": 0.43,
+    "y": 0.08,
+    "w": 0.13,
+    "h": 0.26,
+    "label": "Pet",
+    "tone": "info"
+   },
+   {
+    "x": 0.7,
+    "y": 0.13,
+    "w": 0.2,
+    "h": 0.52,
+    "label": "Person",
+    "tone": "pos"
+   }
+  ]
+ },
+ "drive": {
+  "src": "drive.jpg",
+  "credit": "Erik Mclean",
+  "source": "https://www.pexels.com/photo/photo-of-a-car-in-front-of-a-house-9459185/",
+  "licence": "Pexels License",
+  "desc": "Driveway",
+  "alt": "Driveway",
+  "camera": "Driveway",
+  "boxes": [
+   {
+    "x": 0.31,
+    "y": 0.63,
+    "w": 0.42,
+    "h": 0.25,
+    "label": "Vehicle",
+    "tone": "info"
+   },
+   {
+    "x": 0.42,
+    "y": 0.33,
+    "w": 0.2,
+    "h": 0.31,
+    "label": "Door · closed",
+    "tone": "pos"
+   }
+  ],
+  "zones": [
+   {
+    "points": [
+     [
+      0.28,
+      0.76
+     ],
+     [
+      0.99,
+      0.76
+     ],
+     [
+      0.99,
+      0.99
+     ],
+     [
+      0.28,
+      0.99
+     ]
+    ],
+    "label": "Driveway",
+    "tone": "mute"
+   }
+  ]
+ },
+ "lobby": {
+  "src": "lobby.jpg",
+  "credit": "蔡宗翰 (Tsai Tsung-han)",
+  "source": "https://www.pexels.com/photo/group-of-people-in-spacious-hall-4345859/",
+  "licence": "Pexels License",
+  "desc": "Atrium entrance hall",
+  "alt": "Atrium entrance hall",
+  "camera": "CAM-07 · Main entrance",
+  "boxes": [
+   {
+    "x": 0.25,
+    "y": 0.55,
+    "w": 0.16,
+    "h": 0.3,
+    "label": "People · 6",
+    "tone": "pos"
+   },
+   {
+    "x": 0.6,
+    "y": 0.53,
+    "w": 0.2,
+    "h": 0.2,
+    "label": "People · 3",
+    "tone": "pos"
+   }
+  ],
+  "lines": [
+   {
+    "from": [
+     0.05,
+     0.95
+    ],
+    "to": [
+     0.55,
+     0.95
+    ],
+    "label": "Entry · IN 128",
     "tone": "info"
    }
   ]
+ },
+ "plaza": {
+  "src": "plaza.jpg",
+  "credit": "Valeria Drozdova",
+  "source": "https://www.pexels.com/photo/aerial-view-of-piazza-del-duomo-in-milan-35707711/",
+  "licence": "Pexels License",
+  "desc": "City square crowd",
+  "alt": "City square crowd",
+  "camera": "CAM-21 · Central plaza",
+  "boxes": [
+   {
+    "x": 0.36,
+    "y": 0.25,
+    "w": 0.06,
+    "h": 0.05,
+    "label": "Tram",
+    "tone": "info"
+   }
+  ],
+  "zones": [
+   {
+    "points": [
+     [
+      0.45,
+      0.55
+     ],
+     [
+      0.75,
+      0.55
+     ],
+     [
+      0.75,
+      0.9
+     ],
+     [
+      0.45,
+      0.9
+     ]
+    ],
+    "label": "Zone A · 32 people",
+    "tone": "neg"
+   }
+  ]
+ },
+ "aisle": {
+  "src": "aisle.jpg",
+  "credit": "Antonius Natan",
+  "source": "https://www.pexels.com/photo/people-shopping-in-a-large-warehouse-11835352/",
+  "licence": "Pexels License",
+  "desc": "Warehouse supermarket aisle",
+  "alt": "Warehouse supermarket aisle",
+  "camera": "CAM-11 · Aisle 7",
+  "boxes": [
+   {
+    "x": 0.45,
+    "y": 0.75,
+    "w": 0.1,
+    "h": 0.13,
+    "label": "Shopper",
+    "tone": "pos"
+   },
+   {
+    "x": 0.69,
+    "y": 0.79,
+    "w": 0.04,
+    "h": 0.11,
+    "label": "Staff",
+    "tone": "info"
+   }
+  ],
+  "zones": [
+   {
+    "points": [
+     [
+      0.74,
+      0.8
+     ],
+     [
+      0.92,
+      0.8
+     ],
+     [
+      0.92,
+      0.99
+     ],
+     [
+      0.74,
+      0.99
+     ]
+    ],
+    "label": "Queue · 3",
+    "tone": "neg"
+   }
+  ]
+ },
+ "industry-public-safety": {
+  "src": "industry-public-safety.jpg",
+  "credit": "tommy picone",
+  "source": "https://www.pexels.com/photo/urban-traffic-surveillance-with-cctv-camera-30546987/",
+  "licence": "Pexels License",
+  "desc": "CCTV camera over a city road",
+  "alt": "CCTV camera over a city road",
+  "plain": true
+ },
+ "industry-retail": {
+  "src": "industry-retail.jpg",
+  "credit": "Daniel Maurício Bertoli",
+  "source": "https://www.pexels.com/photo/modern-clothing-store-interior-with-fashion-display-31318445/",
+  "licence": "Pexels License",
+  "desc": "Clothing store interior",
+  "alt": "Clothing store interior",
+  "plain": true
+ },
+ "industry-healthcare": {
+  "src": "industry-healthcare.jpg",
+  "credit": "Jsme MILA",
+  "source": "https://www.pexels.com/photo/nurse-with-cart-on-corridor-at-hospital-18271838/",
+  "licence": "Pexels License",
+  "desc": "Hospital corridor",
+  "alt": "Hospital corridor",
+  "plain": true
+ },
+ "industry-industrial": {
+  "src": "industry-industrial.jpg",
+  "credit": "EqualStock IN",
+  "source": "https://www.pexels.com/photo/textile-factory-workers-packaging-products-efficiently-31112181/",
+  "licence": "Pexels License",
+  "desc": "Factory packing floor",
+  "alt": "Factory packing floor",
+  "plain": true
+ },
+ "industry-agriculture": {
+  "src": "industry-agriculture.jpg",
+  "credit": "Florence Mathiot",
+  "source": "https://www.pexels.com/photo/aerial-view-of-tractor-working-on-green-farmland-37314899/",
+  "licence": "Pexels License",
+  "desc": "Tractor on farmland from above",
+  "alt": "Tractor on farmland from above",
+  "plain": true
+ },
+ "industry-residential": {
+  "src": "industry-residential.jpg",
+  "credit": "Littlehampton Bricks",
+  "source": "https://www.pexels.com/photo/modern-house-facade-with-glowing-lights-at-dusk-4626268/",
+  "licence": "Pexels License",
+  "desc": "Modern house at dusk",
+  "alt": "Modern house at dusk",
+  "plain": true
+ },
+ "hero-agri": {
+  "src": "hero-agri.jpg",
+  "credit": "Francesco Ungaro",
+  "source": "https://www.pexels.com/photo/aerial-view-of-vineyard-26887756/",
+  "licence": "Pexels License",
+  "desc": "Vineyard rows from above",
+  "alt": "Vineyard rows from above",
+  "plain": true,
+  "zones": [
+   {
+    "points": [
+     [
+      0.05,
+      0.12
+     ],
+     [
+      0.45,
+      0.12
+     ],
+     [
+      0.4,
+      0.55
+     ],
+     [
+      0.02,
+      0.55
+     ]
+    ],
+    "label": "Block A · Healthy",
+    "tone": "pos"
+   },
+   {
+    "points": [
+     [
+      0.55,
+      0.45
+     ],
+     [
+      0.95,
+      0.45
+     ],
+     [
+      0.95,
+      0.9
+     ],
+     [
+      0.5,
+      0.9
+     ]
+    ],
+    "label": "Block C · Water stress",
+    "tone": "warn"
+   }
+  ]
+ },
+ "hero-iot": {
+  "src": "hero-iot.jpg",
+  "credit": "Shameer Vayalakkad Hydrose",
+  "source": "https://www.pexels.com/photo/industrial-electrical-control-room-interior-33706880/",
+  "licence": "Pexels License",
+  "desc": "Industrial switchgear room",
+  "alt": "Industrial switchgear room",
+  "plain": true,
+  "boxes": [
+   {
+    "x": 0.02,
+    "y": 0.05,
+    "w": 0.2,
+    "h": 0.88,
+    "label": "Feeder 1 · 71 °C",
+    "tone": "pos"
+   },
+   {
+    "x": 0.22,
+    "y": 0.18,
+    "w": 0.13,
+    "h": 0.62,
+    "label": "Feeder 2 · Watch",
+    "tone": "warn"
+   }
+  ]
+ },
+ "hero-voice": {
+  "src": "hero-voice.jpg",
+  "credit": "MART PRODUCTION",
+  "source": "https://www.pexels.com/photo/photograph-of-laptops-with-headsets-7709281/",
+  "licence": "Pexels License",
+  "desc": "Call-centre headsets",
+  "alt": "Call-centre headsets",
+  "plain": true,
+  "boxes": [
+   {
+    "x": 0.3,
+    "y": 0.45,
+    "w": 0.25,
+    "h": 0.5,
+    "label": "Counter audio · on-device",
+    "tone": "violet"
+   }
+  ]
+ },
+ "hero-about": {
+  "src": "hero-about.jpg",
+  "credit": "Isnar Silva",
+  "source": "https://www.pexels.com/photo/cityscape-of-toronto-16669433/",
+  "licence": "Pexels License",
+  "desc": "Toronto skyline",
+  "alt": "Toronto skyline",
+  "plain": true
+ },
+ "hero-contact": {
+  "src": "hero-contact.jpg",
+  "credit": "Rana Matloob Hussain",
+  "source": "https://www.pexels.com/photo/modern-reception-area-in-office-interior-design-34823913/",
+  "licence": "Pexels License",
+  "desc": "Office reception",
+  "alt": "Office reception",
+  "plain": true
+ },
+ "video-home": {
+  "src": "video-home.mp4",
+  "credit": "Henrique",
+  "source": "https://www.pexels.com/video/aerial-footage-of-moving-vehicles-7005467/",
+  "licence": "Pexels License",
+  "desc": "Intersection traffic (video)",
+  "alt": "Intersection traffic (video)",
+  "poster": "video-home-poster.jpg",
+  "camera": "CAM-01 · Intersection"
+ },
+ "video-store": {
+  "src": "video-store.mp4",
+  "credit": "Suika Chan",
+  "source": "https://www.pexels.com/video/customers-shopping-at-supermarket-10901926/",
+  "licence": "Pexels License",
+  "desc": "Supermarket shoppers (video)",
+  "alt": "Supermarket shoppers (video)",
+  "poster": "video-store-poster.jpg",
+  "camera": "CAM-02 · Store floor"
+ },
+ "video-warehouse": {
+  "src": "video-warehouse.mp4",
+  "credit": "Usman AbdulrasheedGambo",
+  "source": "https://www.pexels.com/video/industrial-warehouse-forklift-operations-32243651/",
+  "licence": "Pexels License",
+  "desc": "Warehouse forklift (video)",
+  "alt": "Warehouse forklift (video)",
+  "poster": "video-warehouse-poster.jpg",
+  "camera": "CAM-04 · Warehouse hall"
+ },
+ "industry-smart-cities": {
+  "src": "industry-smart-cities.jpg",
+  "credit": "Chandra Phuyal",
+  "source": "https://www.pexels.com/photo/drone-shot-of-cars-on-intersections-10661529/",
+  "licence": "Pexels License",
+  "desc": "Signalised intersection from above",
+  "alt": "Signalised intersection from above",
+  "plain": true
  }
 }
