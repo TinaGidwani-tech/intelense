@@ -728,23 +728,14 @@
  },
  "video-home": {
   "src": "video-home.mp4",
-  "credit": "Henrique",
-  "source": "https://www.pexels.com/video/aerial-footage-of-moving-vehicles-7005467/",
+  "credit": "Martyn Day",
+  "source": "https://www.pexels.com/video/train-station-in-edinburgh-13067503/",
   "licence": "Pexels License",
-  "desc": "Intersection traffic (video)",
-  "alt": "Intersection traffic (video)",
+  "desc": "Station concourse with person tracking (video)",
+  "alt": "",
   "poster": "video-home-poster.jpg",
-  "camera": "CAM-01 · Intersection"
- },
- "video-store": {
-  "src": "video-store.mp4",
-  "credit": "Suika Chan",
-  "source": "https://www.pexels.com/video/customers-shopping-at-supermarket-10901926/",
-  "licence": "Pexels License",
-  "desc": "Supermarket shoppers (video)",
-  "alt": "Supermarket shoppers (video)",
-  "poster": "video-store-poster.jpg",
-  "camera": "CAM-02 · Store floor"
+  "camera": "CAM-01 · Station concourse",
+  "ratio": "2/1"
  },
  "video-warehouse": {
   "src": "video-warehouse.mp4",
@@ -764,5 +755,1164 @@
   "desc": "Signalised intersection from above",
   "alt": "Signalised intersection from above",
   "plain": true
+ },
+ "feat-footfall-kenvision": {
+  "src": "feat-footfall-kenvision.jpg",
+  "credit": "Henry Acevedo",
+  "source": "https://www.pexels.com/photo/busy-shopping-scene-outside-florence-outlets-34111054/",
+  "licence": "Pexels License",
+  "desc": "Group of shoppers walking past and into arched shop entrances on a street",
+  "alt": "Group of shoppers walking past and into arched shop entrances on a street",
+  "plain": true,
+  "ratio": "16/10",
+  "zones": [
+   {
+    "points": [
+     [
+      0.05,
+      0.62
+     ],
+     [
+      0.95,
+      0.62
+     ],
+     [
+      0.95,
+      0.98
+     ],
+     [
+      0.05,
+      0.98
+     ]
+    ],
+    "label": "Entrance · 18 in",
+    "tone": "info"
+   }
+  ]
+ },
+ "feat-queue-kenvision": {
+  "src": "feat-queue-kenvision.jpg",
+  "credit": "Deane Bayas",
+  "source": "https://www.pexels.com/photo/people-at-the-mall-13753893/",
+  "licence": "Pexels License",
+  "desc": "High-angle view of a long queue of people behind stanchion ropes in a mall outsi",
+  "alt": "High-angle view of a long queue of people behind stanchion ropes in a mall outsi",
+  "plain": true,
+  "ratio": "16/10",
+  "zones": [
+   {
+    "points": [
+     [
+      0.35,
+      0.22
+     ],
+     [
+      0.75,
+      0.22
+     ],
+     [
+      0.75,
+      0.88
+     ],
+     [
+      0.35,
+      0.88
+     ]
+    ],
+    "label": "Queue · 12",
+    "tone": "neg"
+   }
+  ]
+ },
+ "feat-util-kenvision": {
+  "src": "feat-util-kenvision.jpg",
+  "credit": "Pavel Danilyuk",
+  "source": "https://www.pexels.com/photo/people-wearing-masks-standing-at-a-counter-7234479/",
+  "licence": "Pexels License",
+  "desc": "Two customers",
+  "alt": "Two customers",
+  "plain": true,
+  "ratio": "16/10",
+  "zones": [
+   {
+    "points": [
+     [
+      0.45,
+      0.45
+     ],
+     [
+      0.98,
+      0.45
+     ],
+     [
+      0.98,
+      0.98
+     ],
+     [
+      0.45,
+      0.98
+     ]
+    ],
+    "label": "Counter zone",
+    "tone": "info"
+   }
+  ]
+ },
+ "feat-greeting-kenvoice": {
+  "src": "feat-greeting-kenvoice.jpg",
+  "credit": "Amina Filkins",
+  "source": "https://www.pexels.com/photo/happy-female-florist-waving-hand-in-shop-5413728/",
+  "licence": "Pexels License",
+  "desc": "Smiling shop assistant in apron waving hello to an arriving customer",
+  "alt": "Smiling shop assistant in apron waving hello to an arriving customer",
+  "plain": true,
+  "ratio": "16/10",
+  "zones": [
+   {
+    "points": [
+     [
+      0.04,
+      0.8
+     ],
+     [
+      0.96,
+      0.8
+     ],
+     [
+      0.96,
+      0.97
+     ],
+     [
+      0.04,
+      0.97
+     ]
+    ],
+    "label": "Greeting · 4s",
+    "tone": "violet"
+   }
+  ]
+ },
+ "feat-upsell-kenvoice": {
+  "src": "feat-upsell-kenvoice.jpg",
+  "credit": "cottonbro studio",
+  "source": "https://www.pexels.com/photo/smiling-salesman-showing-wood-samples-to-a-client-7505180/",
+  "licence": "Pexels License",
+  "desc": "Smiling shop assistant holding out a product sample to a customer",
+  "alt": "Smiling shop assistant holding out a product sample to a customer",
+  "plain": true,
+  "ratio": "16/10",
+  "zones": [
+   {
+    "points": [
+     [
+      0.04,
+      0.8
+     ],
+     [
+      0.96,
+      0.8
+     ],
+     [
+      0.96,
+      0.97
+     ],
+     [
+      0.04,
+      0.97
+     ]
+    ],
+    "label": "Upsell offered",
+    "tone": "violet"
+   }
+  ]
+ },
+ "feat-walkaway-kenvoice": {
+  "src": "feat-walkaway-kenvoice.jpg",
+  "credit": "Mathias Reding",
+  "source": "https://www.pexels.com/photo/woman-in-trench-coat-in-front-of-a-building-11808197/",
+  "licence": "Pexels License",
+  "desc": "Woman in trench coat seen from behind at a large dark wooden shop doorway, no sh",
+  "alt": "Woman in trench coat seen from behind at a large dark wooden shop doorway, no sh",
+  "plain": true,
+  "ratio": "16/10",
+  "zones": [
+   {
+    "points": [
+     [
+      0.04,
+      0.8
+     ],
+     [
+      0.96,
+      0.8
+     ],
+     [
+      0.96,
+      0.97
+     ],
+     [
+      0.04,
+      0.97
+     ]
+    ],
+    "label": "Walk-away flagged",
+    "tone": "warn"
+   }
+  ]
+ },
+ "feat-sentiment-kenvoice": {
+  "src": "feat-sentiment-kenvoice.jpg",
+  "credit": "Gustavo Fring",
+  "source": "https://www.pexels.com/photo/female-customers-getting-paper-bags-at-counter-desk-3865901/",
+  "licence": "Pexels License",
+  "desc": "Two smiling female customers happily receiving a paper bag from a smiling shop a",
+  "alt": "Two smiling female customers happily receiving a paper bag from a smiling shop a",
+  "plain": true,
+  "ratio": "16/10",
+  "zones": [
+   {
+    "points": [
+     [
+      0.04,
+      0.8
+     ],
+     [
+      0.96,
+      0.8
+     ],
+     [
+      0.96,
+      0.97
+     ],
+     [
+      0.04,
+      0.97
+     ]
+    ],
+    "label": "Sentiment · Positive",
+    "tone": "pos"
+   }
+  ]
+ },
+ "feat-score-kenvoice": {
+  "src": "feat-score-kenvoice.jpg",
+  "credit": "Unzer Berlin",
+  "source": "https://www.pexels.com/photo/smiling-customer-using-digital-checkout-in-berlin-store-39114258/",
+  "licence": "Pexels License",
+  "desc": "Smiling customer at a wooden shop counter while a staff member",
+  "alt": "Smiling customer at a wooden shop counter while a staff member",
+  "plain": true,
+  "ratio": "16/10",
+  "zones": [
+   {
+    "points": [
+     [
+      0.04,
+      0.8
+     ],
+     [
+      0.96,
+      0.8
+     ],
+     [
+      0.96,
+      0.97
+     ],
+     [
+      0.04,
+      0.97
+     ]
+    ],
+    "label": "Score 86",
+    "tone": "violet"
+   }
+  ]
+ },
+ "feat-scorecard-kenvoice": {
+  "src": "feat-scorecard-kenvoice.jpg",
+  "credit": "Amina Filkins",
+  "source": "https://www.pexels.com/photo/focused-multiracial-women-with-tablet-in-workshop-5410067/",
+  "licence": "Pexels License",
+  "desc": "Florist-shop manager showing a tablet to a smiling younger colleague in a small",
+  "alt": "Florist-shop manager showing a tablet to a smiling younger colleague in a small",
+  "plain": true,
+  "ratio": "16/10",
+  "zones": [
+   {
+    "points": [
+     [
+      0.04,
+      0.8
+     ],
+     [
+      0.96,
+      0.8
+     ],
+     [
+      0.96,
+      0.97
+     ],
+     [
+      0.04,
+      0.97
+     ]
+    ],
+    "label": "Coaching note",
+    "tone": "violet"
+   }
+  ]
+ },
+ "feat-proximity-kensafety": {
+  "src": "feat-proximity-kensafety.jpg",
+  "credit": "Tiger Lily",
+  "source": "https://www.pexels.com/photo/workers-of-warehouse-4487445/",
+  "licence": "Pexels License",
+  "desc": "Two workers in brown uniforms walk across a warehouse yard just in front of a pa",
+  "alt": "Two workers in brown uniforms walk across a warehouse yard just in front of a pa",
+  "plain": true,
+  "ratio": "16/10",
+  "boxes": [
+   {
+    "x": 0.06,
+    "y": 0.3,
+    "w": 0.22,
+    "h": 0.52,
+    "label": "Forklift",
+    "tone": "info"
+   },
+   {
+    "x": 0.37,
+    "y": 0.3,
+    "w": 0.14,
+    "h": 0.55,
+    "label": "Person · 2.1 m",
+    "tone": "warn"
+   }
+  ]
+ },
+ "feat-fire-kensafety": {
+  "src": "feat-fire-kensafety.jpg",
+  "credit": "Akmal Fruzteck",
+  "source": "https://www.pexels.com/photo/industrial-safety-training-in-action-outdoors-34206461/",
+  "licence": "Pexels License",
+  "desc": "Worker in yellow hard hat, mask and boots sprays a hose at a thick white smoke c",
+  "alt": "Worker in yellow hard hat, mask and boots sprays a hose at a thick white smoke c",
+  "plain": true,
+  "ratio": "16/10",
+  "zones": [
+   {
+    "points": [
+     [
+      0.05,
+      0.25
+     ],
+     [
+      0.55,
+      0.25
+     ],
+     [
+      0.55,
+      0.88
+     ],
+     [
+      0.05,
+      0.88
+     ]
+    ],
+    "label": "Smoke detected",
+    "tone": "neg"
+   }
+  ]
+ },
+ "feat-fall-kensafety": {
+  "src": "feat-fall-kensafety.jpg",
+  "credit": "Mukhtar Shuaib Mukhtar",
+  "source": "https://www.pexels.com/photo/construction-workers-building-with-bamboo-scaffolding-29438558/",
+  "licence": "Pexels License",
+  "desc": "Two workers in hi-vis vests and hard hats climbing high on bamboo scaffolding ag",
+  "alt": "Two workers in hi-vis vests and hard hats climbing high on bamboo scaffolding ag",
+  "plain": true,
+  "ratio": "16/10",
+  "boxes": [
+   {
+    "x": 0.33,
+    "y": 0.18,
+    "w": 0.25,
+    "h": 0.72,
+    "label": "Person · at height",
+    "tone": "warn"
+   }
+  ]
+ },
+ "feat-report-kensafety": {
+  "src": "feat-report-kensafety.jpg",
+  "credit": "Mikael Blomkvist",
+  "source": "https://www.pexels.com/photo/an-engineer-using-a-digital-tablet-8961008/",
+  "licence": "Pexels License",
+  "desc": "Woman in white hard hat and hi-vis vest looks down at a tablet on a site under s",
+  "alt": "Woman in white hard hat and hi-vis vest looks down at a tablet on a site under s",
+  "plain": true,
+  "ratio": "16/10",
+  "boxes": [
+   {
+    "x": 0.38,
+    "y": 0.04,
+    "w": 0.5,
+    "h": 0.92,
+    "label": "PPE ok",
+    "tone": "pos"
+   }
+  ]
+ },
+ "feat-ppe-kensafety": {
+  "src": "feat-ppe-kensafety.jpg",
+  "credit": "Denniz Futalan",
+  "source": "https://www.pexels.com/photo/group-of-people-wearing-hard-hats-standing-on-a-roof-4956920/",
+  "licence": "Pexels License",
+  "desc": "Group of about eight construction workers in hard hats and orange/green hi-vis v",
+  "alt": "Group of about eight construction workers in hard hats and orange/green hi-vis v",
+  "plain": true,
+  "ratio": "16/10",
+  "boxes": [
+   {
+    "x": 0.2,
+    "y": 0.3,
+    "w": 0.11,
+    "h": 0.48,
+    "label": "PPE ok",
+    "tone": "pos"
+   },
+   {
+    "x": 0.56,
+    "y": 0.28,
+    "w": 0.11,
+    "h": 0.5,
+    "label": "PPE ok",
+    "tone": "pos"
+   }
+  ]
+ },
+ "feat-perception-kenrobotics": {
+  "src": "robot.jpg",
+  "alt": "Autonomous robots in a logistics hall",
+  "plain": true,
+  "ratio": "16/10",
+  "boxes": [
+   {
+    "x": 0.45,
+    "y": 0.27,
+    "w": 0.31,
+    "h": 0.5,
+    "label": "AMR · R027",
+    "tone": "info"
+   },
+   {
+    "x": 0.91,
+    "y": 0.44,
+    "w": 0.06,
+    "h": 0.1,
+    "label": "Person",
+    "tone": "warn"
+   }
+  ]
+ },
+ "feat-path-kenrobotics": {
+  "src": "feat-path-kenrobotics.jpg",
+  "credit": "Kindel Media",
+  "source": "https://www.pexels.com/photo/delivery-robot-on-pavement-under-trees-8566570/",
+  "licence": "Pexels License",
+  "desc": "Autonomous delivery robot travelling along a curved paved path under trees, clea",
+  "alt": "Autonomous delivery robot travelling along a curved paved path under trees, clea",
+  "plain": true,
+  "ratio": "16/10",
+  "boxes": [
+   {
+    "x": 0.38,
+    "y": 0.38,
+    "w": 0.22,
+    "h": 0.3,
+    "label": "AMR · route 1",
+    "tone": "info"
+   }
+  ]
+ },
+ "feat-avoid-kenrobotics": {
+  "src": "feat-avoid-kenrobotics.jpg",
+  "credit": "Kindel Media",
+  "source": "https://www.pexels.com/photo/man-walking-on-roadside-8566630/",
+  "licence": "Pexels License",
+  "desc": "Man seen from behind walking along a road edge while a small delivery robot appr",
+  "alt": "Man seen from behind walking along a road edge while a small delivery robot appr",
+  "plain": true,
+  "ratio": "16/10",
+  "boxes": [
+   {
+    "x": 0.44,
+    "y": 0.14,
+    "w": 0.15,
+    "h": 0.68,
+    "label": "Person",
+    "tone": "warn"
+   }
+  ]
+ },
+ "feat-fleet-kenrobotics": {
+  "src": "feat-fleet-kenrobotics.jpg",
+  "credit": "Kindel Media",
+  "source": "https://www.pexels.com/photo/delivery-robots-on-sidestreet-8566636/",
+  "licence": "Pexels License",
+  "desc": "A line of five or six identical delivery robots parked/travelling in a row besid",
+  "alt": "A line of five or six identical delivery robots parked/travelling in a row besid",
+  "plain": true,
+  "ratio": "16/10",
+  "boxes": [
+   {
+    "x": 0.02,
+    "y": 0.26,
+    "w": 0.22,
+    "h": 0.58,
+    "label": "R-01",
+    "tone": "info"
+   },
+   {
+    "x": 0.42,
+    "y": 0.28,
+    "w": 0.2,
+    "h": 0.44,
+    "label": "R-02",
+    "tone": "info"
+   }
+  ]
+ },
+ "feat-tasks-kenrobotics": {
+  "src": "feat-tasks-kenrobotics.jpg",
+  "credit": "Peter Xie",
+  "source": "https://www.pexels.com/photo/automated-warehouse-robotic-system-with-blue-crates-36522028/",
+  "licence": "Pexels License",
+  "desc": "Green automated picker arm on a rack gantry handling blue storage crates in an a",
+  "alt": "Green automated picker arm on a rack gantry handling blue storage crates in an a",
+  "plain": true,
+  "ratio": "16/10",
+  "boxes": [
+   {
+    "x": 0.28,
+    "y": 0.22,
+    "w": 0.46,
+    "h": 0.72,
+    "label": "Pick · crate 14",
+    "tone": "info"
+   }
+  ]
+ },
+ "feat-pest-kenagri": {
+  "src": "feat-pest-kenagri.jpg",
+  "credit": "Kelly",
+  "source": "https://www.pexels.com/photo/colony-of-yellow-aphids-feeding-of-the-plant-17333448/",
+  "licence": "Pexels License",
+  "desc": "Macro of a colony of yellow aphids feeding along a green leaf/stem",
+  "alt": "Macro of a colony of yellow aphids feeding along a green leaf/stem",
+  "plain": true,
+  "ratio": "16/10",
+  "boxes": [
+   {
+    "x": 0.27,
+    "y": 0.03,
+    "w": 0.24,
+    "h": 0.94,
+    "label": "Aphids · 94%",
+    "tone": "warn"
+   }
+  ]
+ },
+ "feat-yield-kenagri": {
+  "src": "feat-yield-kenagri.jpg",
+  "credit": "Péter Borkó",
+  "source": "https://www.pexels.com/photo/combine-on-a-field-in-sunlight-27037415/",
+  "licence": "Pexels License",
+  "desc": "Combine harvester head-on in a golden wheat field with a tractor beside it under",
+  "alt": "Combine harvester head-on in a golden wheat field with a tractor beside it under",
+  "plain": true,
+  "ratio": "16/10",
+  "boxes": [
+   {
+    "x": 0.3,
+    "y": 0.35,
+    "w": 0.36,
+    "h": 0.4,
+    "label": "Combine",
+    "tone": "info"
+   }
+  ]
+ },
+ "feat-irrigation-kenagri": {
+  "src": "feat-irrigation-kenagri.jpg",
+  "credit": "Ryan Lansdown",
+  "source": "https://www.pexels.com/photo/efficient-irrigation-system-on-green-farmland-33405287/",
+  "licence": "Pexels License",
+  "desc": "Centre-pivot irrigation tower and wheels over a green field",
+  "alt": "Centre-pivot irrigation tower and wheels over a green field",
+  "plain": true,
+  "ratio": "16/10",
+  "zones": [
+   {
+    "points": [
+     [
+      0,
+      0.56
+     ],
+     [
+      1,
+      0.56
+     ],
+     [
+      1,
+      0.98
+     ],
+     [
+      0,
+      0.98
+     ]
+    ],
+    "label": "Zone 3 · Irrigating",
+    "tone": "info"
+   }
+  ]
+ },
+ "feat-soil-kenagri": {
+  "src": "feat-soil-kenagri.jpg",
+  "credit": "ahadi muyali",
+  "source": "https://www.pexels.com/photo/hands-holding-soil-and-seeds-15182672/",
+  "licence": "Pexels License",
+  "desc": "Two hands holding dark soil with seeds, soft brown background",
+  "alt": "Two hands holding dark soil with seeds, soft brown background",
+  "plain": true,
+  "ratio": "16/10",
+  "boxes": [
+   {
+    "x": 0.18,
+    "y": 0.28,
+    "w": 0.46,
+    "h": 0.55,
+    "label": "Moisture 31%",
+    "tone": "info"
+   }
+  ]
+ },
+ "feat-aerial-kenagri": {
+  "src": "feat-aerial-kenagri.jpg",
+  "credit": "Magda Ehlers",
+  "source": "https://www.pexels.com/photo/drone-flying-over-agricultural-field-in-rural-area-34182315/",
+  "licence": "Pexels License",
+  "desc": "Agricultural drone hovering low over a wheat field edge, hills behind",
+  "alt": "Agricultural drone hovering low over a wheat field edge, hills behind",
+  "plain": true,
+  "ratio": "16/10",
+  "boxes": [
+   {
+    "x": 0.38,
+    "y": 0.3,
+    "w": 0.25,
+    "h": 0.32,
+    "label": "Drone · 42 m",
+    "tone": "info"
+   }
+  ]
+ },
+ "feat-anomaly-keniot": {
+  "src": "feat-anomaly-keniot.jpg",
+  "credit": "Freek Wolsink",
+  "source": "https://www.pexels.com/photo/industrial-motor-on-wooden-surface-in-workshop-34194564/",
+  "licence": "Pexels License",
+  "desc": "Clean grey geared electric motor on a wooden bench, shallow depth of field",
+  "alt": "Clean grey geared electric motor on a wooden bench, shallow depth of field",
+  "plain": true,
+  "ratio": "16/10",
+  "boxes": [
+   {
+    "x": 0.18,
+    "y": 0.18,
+    "w": 0.62,
+    "h": 0.62,
+    "label": "Vibration 4.2 mm/s",
+    "tone": "warn"
+   }
+  ]
+ },
+ "feat-predict-keniot": {
+  "src": "feat-predict-keniot.jpg",
+  "credit": "ranjeet",
+  "source": "https://www.pexels.com/photo/a-man-is-working-on-an-electrical-panel-27928761/",
+  "licence": "Pexels License",
+  "desc": "Technician in profile testing an open electrical control cabinet with a yellow h",
+  "alt": "Technician in profile testing an open electrical control cabinet with a yellow h",
+  "plain": true,
+  "ratio": "16/10",
+  "boxes": [
+   {
+    "x": 0.2,
+    "y": 0.08,
+    "w": 0.75,
+    "h": 0.84,
+    "label": "Panel · 71 °C",
+    "tone": "pos"
+   }
+  ]
+ },
+ "feat-health-keniot": {
+  "src": "feat-health-keniot.jpg",
+  "credit": "Rommel Ortiz",
+  "source": "https://www.pexels.com/photo/interior-of-factory-10143477/",
+  "licence": "Pexels License",
+  "desc": "High-angle view inside a plant hall of a large generator/turbine rotor on its sh",
+  "alt": "High-angle view inside a plant hall of a large generator/turbine rotor on its sh",
+  "plain": true,
+  "ratio": "16/10",
+  "boxes": [
+   {
+    "x": 0.28,
+    "y": 0.2,
+    "w": 0.5,
+    "h": 0.72,
+    "label": "Rotor · healthy",
+    "tone": "pos"
+   }
+  ]
+ },
+ "feat-alerts-keniot": {
+  "src": "feat-alerts-keniot.jpg",
+  "credit": "Sergey Sergeev",
+  "source": "https://www.pexels.com/photo/engineer-in-industrial-factory-using-tablet-32845694/",
+  "licence": "Pexels License",
+  "desc": "Engineer in hard hat and blue overalls holding a tablet",
+  "alt": "Engineer in hard hat and blue overalls holding a tablet",
+  "plain": true,
+  "ratio": "16/10",
+  "boxes": [
+   {
+    "x": 0.3,
+    "y": 0.04,
+    "w": 0.42,
+    "h": 0.9,
+    "label": "Alert · M-14",
+    "tone": "warn"
+   }
+  ]
+ },
+ "feat-integrate-keniot": {
+  "src": "feat-integrate-keniot.jpg",
+  "credit": "Vladimir Srajber",
+  "source": "https://www.pexels.com/photo/meters-on-pipes-19841125/",
+  "licence": "Pexels License",
+  "desc": "Row of pressure/temperature gauges on insulated black pipes in a plant room",
+  "alt": "Row of pressure/temperature gauges on insulated black pipes in a plant room",
+  "plain": true,
+  "ratio": "16/10",
+  "boxes": [
+   {
+    "x": 0.1,
+    "y": 0.18,
+    "w": 0.82,
+    "h": 0.62,
+    "label": "6 sensors online",
+    "tone": "pos"
+   }
+  ]
+ },
+ "feat-workflow-keniot": {
+  "src": "feat-workflow-keniot.jpg",
+  "credit": "Sergey Sergeev",
+  "source": "https://www.pexels.com/photo/female-engineer-in-industrial-plant-holding-documents-32845671/",
+  "licence": "Pexels License",
+  "desc": "Maintenance engineer in hard hat holding a paper work order beside steel coils i",
+  "alt": "Maintenance engineer in hard hat holding a paper work order beside steel coils i",
+  "plain": true,
+  "ratio": "16/10",
+  "boxes": [
+   {
+    "x": 0.4,
+    "y": 0.08,
+    "w": 0.48,
+    "h": 0.88,
+    "label": "Work order · open",
+    "tone": "info"
+   }
+  ]
+ },
+ "feat-trends-keniot": {
+  "src": "feat-trends-keniot.jpg",
+  "credit": "Fernando Narvaez",
+  "source": "https://www.pexels.com/photo/advanced-control-room-in-el-agustino-lima-32529341/",
+  "licence": "Pexels License",
+  "desc": "Operator seen from behind at a desk of monitors facing a video wall in a bright",
+  "alt": "Operator seen from behind at a desk of monitors facing a video wall in a bright",
+  "plain": true,
+  "ratio": "16/10",
+  "boxes": [
+   {
+    "x": 0.3,
+    "y": 0.04,
+    "w": 0.66,
+    "h": 0.46,
+    "label": "Trend · live",
+    "tone": "pos"
+   }
+  ]
+ },
+ "feat-intrusion-kenhome": {
+  "src": "feat-intrusion-kenhome.jpg",
+  "credit": "Plato Terentev",
+  "source": "https://www.pexels.com/photo/white-wooden-front-door-with-metal-railing-9809620/",
+  "licence": "Pexels License",
+  "desc": "Dimly lit wooden house front door with steps and railing at night, no person in",
+  "alt": "Dimly lit wooden house front door with steps and railing at night, no person in",
+  "plain": true,
+  "ratio": "16/10",
+  "boxes": [
+   {
+    "x": 0.34,
+    "y": 0.22,
+    "w": 0.28,
+    "h": 0.58,
+    "label": "Entry · after hours",
+    "tone": "info"
+   }
+  ]
+ },
+ "feat-fall-kenhome": {
+  "src": "feat-fall-kenhome.jpg",
+  "credit": "Ivan S",
+  "source": "https://www.pexels.com/photo/photo-of-an-elderly-woman-reading-a-book-while-sitting-on-a-sofa-7394787/",
+  "licence": "Pexels License",
+  "desc": "Elderly woman reclining on a pink sofa reading, seen from a distance in a calm l",
+  "alt": "Elderly woman reclining on a pink sofa reading, seen from a distance in a calm l",
+  "plain": true,
+  "ratio": "16/10",
+  "boxes": [
+   {
+    "x": 0.42,
+    "y": 0.18,
+    "w": 0.38,
+    "h": 0.62,
+    "label": "Person · resting",
+    "tone": "pos"
+   }
+  ]
+ },
+ "feat-child-kenhome": {
+  "src": "feat-child-kenhome.jpg",
+  "credit": "Polesie Toys",
+  "source": "https://www.pexels.com/photo/two-children-playing-in-the-garden-with-a-shovel-and-wheelbarrow-27738494/",
+  "licence": "Pexels License",
+  "desc": "Two young children playing in a home garden with a toy wheelbarrow and watering",
+  "alt": "Two young children playing in a home garden with a toy wheelbarrow and watering",
+  "plain": true,
+  "ratio": "16/10",
+  "boxes": [
+   {
+    "x": 0.14,
+    "y": 0.1,
+    "w": 0.17,
+    "h": 0.55,
+    "label": "Child",
+    "tone": "violet"
+   },
+   {
+    "x": 0.76,
+    "y": 0.14,
+    "w": 0.17,
+    "h": 0.55,
+    "label": "Child",
+    "tone": "violet"
+   }
+  ]
+ },
+ "feat-pet-kenhome": {
+  "src": "feat-pet-kenhome.jpg",
+  "credit": "Andreas Ebner",
+  "source": "https://www.pexels.com/photo/relaxed-dog-lounging-on-comfortable-sofa-indoors-40108335/",
+  "licence": "Pexels License",
+  "desc": "White and brown dog lying on a beige sofa with cushions, medium-wide shot [box 0",
+  "alt": "White and brown dog lying on a beige sofa with cushions, medium-wide shot [box 0",
+  "plain": true,
+  "ratio": "16/10",
+  "boxes": [
+   {
+    "x": 0.3,
+    "y": 0.18,
+    "w": 0.46,
+    "h": 0.62,
+    "label": "Pet",
+    "tone": "violet"
+   }
+  ]
+ },
+ "feat-drive-kenhome": {
+  "src": "feat-drive-kenhome.jpg",
+  "credit": "Erik Mclean",
+  "source": "https://www.pexels.com/photo/mercedes-parked-by-house-at-night-12641844/",
+  "licence": "Pexels License",
+  "desc": "Silver sedan parked on a brick driveway in front of a garage and house at night,",
+  "alt": "Silver sedan parked on a brick driveway in front of a garage and house at night,",
+  "plain": true,
+  "ratio": "16/10",
+  "boxes": [
+   {
+    "x": 0.06,
+    "y": 0.32,
+    "w": 0.66,
+    "h": 0.6,
+    "label": "Vehicle",
+    "tone": "info"
+   }
+  ]
+ },
+ "feat-alerts-kenhome": {
+  "src": "feat-alerts-kenhome.jpg",
+  "credit": "Artem Podrez",
+  "source": "https://www.pexels.com/photo/person-in-the-dark-room-holding-smartphone-6279107/",
+  "licence": "Pexels License",
+  "desc": "Hand holding a generic smartphone with a blank white screen in a warm candlelit",
+  "alt": "Hand holding a generic smartphone with a blank white screen in a warm candlelit",
+  "plain": true,
+  "ratio": "16/10",
+  "boxes": [
+   {
+    "x": 0.4,
+    "y": 0.06,
+    "w": 0.25,
+    "h": 0.78,
+    "label": "Alert sent",
+    "tone": "info"
+   }
+  ]
+ },
+ "feat-onehome-kenhome": {
+  "src": "feat-onehome-kenhome.jpg",
+  "credit": "Deepak DK",
+  "source": "https://www.pexels.com/photo/illuminated-house-at-countryside-4933643/",
+  "licence": "Pexels License",
+  "desc": "Large modern suburban home with lit windows and driveway loop at dusk, pink sky,",
+  "alt": "Large modern suburban home with lit windows and driveway loop at dusk, pink sky,",
+  "plain": true,
+  "ratio": "16/10",
+  "boxes": [
+   {
+    "x": 0.18,
+    "y": 0.24,
+    "w": 0.62,
+    "h": 0.42,
+    "label": "Perimeter · armed",
+    "tone": "pos"
+   }
+  ]
+ },
+ "feat-heat-kenvision": {
+  "src": "plaza.jpg",
+  "alt": "Crowd density over a city square",
+  "plain": true,
+  "ratio": "16/10",
+  "heat": [
+   {
+    "x": 0.55,
+    "y": 0.72,
+    "r": 0.16
+   },
+   {
+    "x": 0.82,
+    "y": 0.78,
+    "r": 0.12
+   },
+   {
+    "x": 0.28,
+    "y": 0.58,
+    "r": 0.09
+   }
+  ],
+  "boxes": [
+   {
+    "x": 0.52,
+    "y": 0.62,
+    "w": 0.06,
+    "h": 0.06,
+    "label": "High density",
+    "tone": "neg"
+   }
+  ]
+ },
+ "feat-dwell-kenvision": {
+  "src": "store.jpg",
+  "alt": "Shoppers in a supermarket aisle",
+  "plain": true,
+  "ratio": "16/10",
+  "zones": [
+   {
+    "points": [
+     [
+      0.3,
+      0.5
+     ],
+     [
+      0.58,
+      0.5
+     ],
+     [
+      0.58,
+      0.85
+     ],
+     [
+      0.3,
+      0.85
+     ]
+    ],
+    "label": "Dwell · 4m 10s",
+    "tone": "info"
+   }
+  ]
+ },
+ "feat-funnel-kenvision": {
+  "src": "industry-retail.jpg",
+  "alt": "Retail store display",
+  "plain": true,
+  "ratio": "16/10",
+  "zones": [
+   {
+    "points": [
+     [
+      0.08,
+      0.3
+     ],
+     [
+      0.52,
+      0.3
+     ],
+     [
+      0.52,
+      0.85
+     ],
+     [
+      0.08,
+      0.85
+     ]
+    ],
+    "label": "Display · 62%",
+    "tone": "pos"
+   }
+  ]
+ },
+ "feat-zone-kensafety": {
+  "src": "whse.jpg",
+  "alt": "Warehouse aisle",
+  "plain": true,
+  "ratio": "16/10",
+  "zones": [
+   {
+    "points": [
+     [
+      0.35,
+      0.58
+     ],
+     [
+      0.62,
+      0.58
+     ],
+     [
+      0.78,
+      0.98
+     ],
+     [
+      0.25,
+      0.98
+     ]
+    ],
+    "label": "Restricted zone",
+    "tone": "neg"
+   }
+  ]
+ },
+ "feat-dash-kensafety": {
+  "src": "industry-industrial.jpg",
+  "alt": "Factory floor",
+  "plain": true,
+  "ratio": "16/10"
+ },
+ "feat-health-kenagri": {
+  "src": "hero-agri.jpg",
+  "alt": "Vineyard rows from above",
+  "plain": true,
+  "ratio": "16/10",
+  "zones": [
+   {
+    "points": [
+     [
+      0.08,
+      0.12
+     ],
+     [
+      0.48,
+      0.12
+     ],
+     [
+      0.42,
+      0.62
+     ],
+     [
+      0.04,
+      0.62
+     ]
+    ],
+    "label": "Block A · Healthy",
+    "tone": "pos"
+   }
+  ]
+ },
+ "feat-realtime-keniot": {
+  "src": "hero-iot.jpg",
+  "alt": "Industrial switchgear room",
+  "plain": true,
+  "ratio": "16/10",
+  "boxes": [
+   {
+    "x": 0.04,
+    "y": 0.08,
+    "w": 0.46,
+    "h": 0.84,
+    "label": "12 sensors · live",
+    "tone": "pos"
+   }
+  ]
+ },
+ "feat-safety-kenrobotics": {
+  "src": "feat-safety-kenrobotics.jpg",
+  "credit": "Ярослав Сапрыкин (Yaroslav Saprykin)",
+  "source": "https://www.pexels.com/photo/autonomous-robot-sweeper-cleaning-city-street-19114196/",
+  "licence": "Pexels License",
+  "desc": "Pedestrian walks past a revolving door while a small autonomous cleaning robot s",
+  "alt": "Pedestrian walks past a revolving door while a small autonomous cleaning robot s",
+  "plain": true,
+  "ratio": "16/10",
+  "zones": [
+   {
+    "points": [
+     [
+      0.04,
+      0.18
+     ],
+     [
+      0.96,
+      0.18
+     ],
+     [
+      0.96,
+      0.97
+     ],
+     [
+      0.04,
+      0.97
+     ]
+    ],
+    "label": "Safety zone",
+    "tone": "warn"
+   }
+  ]
  }
 }

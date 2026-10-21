@@ -298,7 +298,7 @@ def footer():
       </div>
       <div>
         <h4>Platform</h4>
-        <ul><li><a href="platform.html">How it works</a></li><li><a href="platform.html#console">Live console</a></li><li><a href="platform.html#integrations">Integrations</a></li><li><a href="modules.html">All modules</a></li><li><a href="modules.html#compare">Compare modules</a></li></ul>
+        <ul><li><a href="platform.html">How it works</a></li><li><a href="platform.html#integrations">Integrations</a></li><li><a href="modules.html">All modules</a></li><li><a href="modules.html#compare">Compare modules</a></li></ul>
       </div>
       <div>
         <h4>Modules</h4>
@@ -474,7 +474,7 @@ def page_index():
     hero = HERO
     if 'video-home' in FEEDS:
         hero = hero[:hero.rindex('</section>')] + f'<div class="wrap hero-media">{photo("video-home")}<p class="demo-note">Example footage and data</p></div>\n  </section>'
-    body = '\n\n  '.join([hero, platform, live, modules, sectors, faq, cta_band()])
+    body = '\n\n  '.join([hero, platform, modules, sectors, faq, cta_band()])
     return dict(file='index.html', title='Intelense | AI Video Analytics & Intelligence at the Edge',
                 desc='Intelense turns live video, sensor and voice data into real-time alerts. Seven Ken modules on one AI platform.',
                 active='index.html', body=body, cctv=True)
@@ -526,7 +526,7 @@ def page_platform():
       {mod_chips([m['key'] for m in MODULES])}
     </div>
   </section>'''
-    body = '\n\n  '.join([hero, flow, edge, console, integ, mods, cta_band()])
+    body = '\n\n  '.join([hero, flow, edge, integ, mods, cta_band()])
     return dict(file='platform.html', title='Platform | Intelense', desc='How the Intelense AI platform connects cameras, sensors and voice at the edge and turns them into real-time alerts.',
                 active='platform.html', body=body, cctv=True)
 
@@ -534,7 +534,7 @@ def page_platform():
 def page_modules():
     hero = page_hero(crumbs((None, 'Modules')), 'The Ken platform', 'Seven modules. One engine.',
                      "Start with the module that solves today's problem. Every module runs on the same engine and dashboard, so adding the next one is simple.",
-                     '<a class="btn btn-blue" href="contact.html">Book a demo</a><a class="btn btn-ghost" href="#compare">Compare modules</a>', media=photo('video-store') or photo('store'))
+                     '<a class="btn btn-blue" href="contact.html">Book a demo</a><a class="btn btn-ghost" href="#compare">Compare modules</a>', media=photo('store'))
     grid = f'''<section class="block" id="all">
     <div class="wrap">
       {module_grid()}
@@ -989,7 +989,7 @@ def page_kenvision():
         <p class="kv-tagline">AI video analytics for retail, commercial spaces and business operations.</p>
       </div>
       <div class="kv-hero-visual">
-        {ap.hero(KV_HERO)}
+        {photo('store')}
         <p class="demo-note">Example footage and data</p>
       </div>
     </div>
@@ -1027,7 +1027,7 @@ def page_kenvision():
     features = f'''<section class="block" id="features">
     <div class="wrap">
       {head_block('Features', 'Everything You Need to Understand Your Space Better', 'KenVision combines AI video analytics, people counting and movement analysis to help you see beyond the camera feed.')}
-      <div class="kv-feats">{''.join(f'<article class="kv-feat"><div class="kv-mini">{mini(k)}</div><span class="kv-num">{i + 1:02d}</span><h3>{t}</h3><p class="kv-strap">{s}</p><p>{d}</p></article>' for i, (k, t, s, d) in enumerate(feats))}</div>
+      <div class="kv-feats">{''.join(f'<article class="kv-feat"><div class="kv-mini">{feat('kenvision', k, mini(k))}</div><span class="kv-num">{i + 1:02d}</span><h3>{t}</h3><p class="kv-strap">{s}</p><p>{d}</p></article>' for i, (k, t, s, d) in enumerate(feats))}</div>
     </div>
   </section>'''
 
@@ -1039,7 +1039,7 @@ def page_kenvision():
         <li><span>Step 2</span><h3>AI Analyses Video Feeds</h3><p>AI-powered video analytics processes camera feeds to count people, measure activity across defined zones and identify configured events or patterns.</p></li>
         <li><span>Step 3</span><h3>View Insights on Your Dashboard</h3><p>Access available metrics, trends and alerts through dashboards and reports. Use the information to understand activity and make informed operational decisions.</p></li>
       </ol>
-      <p style="margin-top:36px"><a class="btn btn-black" href="#dashboard">See KenVision in Action</a></p>
+      <p style="margin-top:36px"><a class="btn btn-black" href="#features">See KenVision in Action</a></p>
     </div>
   </section>'''
 
@@ -1141,7 +1141,7 @@ def page_kenvision():
           'mainEntity': [{'@type': 'Question', 'name': q, 'acceptedAnswer': {'@type': 'Answer', 'text': a}} for q, a in KV_FAQ]}
     schema = '<script type="application/ld+json">' + json.dumps(ld) + '</script>'
 
-    body = '\n\n  '.join([hero, problem, features, how, industries, retail, benefits, dash, faq, related, final, schema])
+    body = '\n\n  '.join([hero, problem, features, how, industries, retail, benefits, faq, related, final, schema])
     return dict(file='kenvision.html', title='KenVision: AI Video Analytics Software | Intelense',
                 desc="KenVision is AI-powered video analytics software. Track footfall, customer movement, dwell time and queues using your existing CCTV cameras.",
                 active='kenvision', body=body, cctv=True)
@@ -1352,7 +1352,7 @@ def page_kensafety():
         <p class="kv-tagline">AI-powered workplace safety monitoring for construction, manufacturing, warehouses and industrial facilities.</p>
       </div>
       <div class="kv-hero-visual">
-        {ap.hero(KS_HERO)}
+        {photo('dock')}
         <p class="demo-note">Example footage and data</p>
       </div>
     </div>
@@ -1386,8 +1386,8 @@ def page_kensafety():
         ('fall', 'Fall &amp; Incident Detection', 'Flag potential incidents that need attention.', ['Detect supported events such as falls and other configured safety incidents from video feeds. Help teams identify situations that may require immediate investigation or assistance.']),
         ('report', 'Automated Safety Reports', 'Spend less time putting incident records together.', ['Maintain timestamped incident records, event details and available visual evidence. Review recurring violations and safety patterns to support audits, internal reviews and corrective action.']),
     ]
-    feat_cards = ''.join(f'<article class="kv-feat"><div class="kv-mini">{ks_mini(k)}</div><span class="kv-num">{i + 1:02d}</span><h3>{t}</h3><p class="kv-strap">{s}</p>{"".join(f"<p>{p}</p>" for p in ps)}</article>' for i, (k, t, s, ps) in enumerate(feats))
-    feat_cards += f'''<article class="kv-feat kv-feat-wide"><div class="kv-mini">{ks_mini('dash')}</div><div><span class="kv-num">07</span><h3>Safety Dashboard &amp; Alerts</h3><p class="kv-strap">Know where attention is needed.</p><p>Bring safety events and compliance information into a central dashboard. Help supervisors review alerts, identify recurring issues and monitor activity across supported camera feeds and locations.</p></div></article>'''
+    feat_cards = ''.join(f'<article class="kv-feat"><div class="kv-mini">{feat('kensafety', k, ks_mini(k))}</div><span class="kv-num">{i + 1:02d}</span><h3>{t}</h3><p class="kv-strap">{s}</p>{"".join(f"<p>{p}</p>" for p in ps)}</article>' for i, (k, t, s, ps) in enumerate(feats))
+    feat_cards += f'''<article class="kv-feat kv-feat-wide"><div class="kv-mini">{feat('kensafety', 'dash', ks_mini('dash'))}</div><div><span class="kv-num">07</span><h3>Safety Dashboard &amp; Alerts</h3><p class="kv-strap">Know where attention is needed.</p><p>Bring safety events and compliance information into a central dashboard. Help supervisors review alerts, identify recurring issues and monitor activity across supported camera feeds and locations.</p></div></article>'''
     features = f'''<section class="block" id="features">
     <div class="wrap">
       {head_block('Features', 'Everything You Need for Smarter Workplace Safety Monitoring', 'KenSafety combines AI video analytics, hazard detection and safety reporting to help teams understand risks across their work environments.')}
@@ -1476,7 +1476,7 @@ def page_kensafety():
                       "Tell us about your site, your safety requirements and your camera setup. We'll help you explore the right AI safety monitoring solution.",
                       'KenSafety by Intelense | Intelligence at the Edge.')
 
-    body = '\n\n  '.join([hero, problem, features, how, industries, example, benefits, dash, faq_block(KS_FAQ), related_block(m), final, faq_schema(KS_FAQ)])
+    body = '\n\n  '.join([hero, problem, features, how, industries, example, benefits, faq_block(KS_FAQ), related_block(m), final, faq_schema(KS_FAQ)])
     return dict(file='kensafety.html', title='KenSafety: AI Workplace Safety Monitoring | Intelense',
                 desc='KenSafety uses AI video analytics on your existing CCTV to detect missing PPE, restricted-zone entry, human-vehicle risks, fire, smoke and falls, with alerts and safety reports.',
                 active='kensafety', body=body, cctv=True)
@@ -1734,7 +1734,7 @@ def page_kenagri():
     features = f'''<section class="block" id="features">
     <div class="wrap">
       {head_block('Features', 'Everything You Need to Understand Your Fields Better', 'KenAgri combines AI crop monitoring, predictive analytics and agricultural data to help you make informed decisions throughout the growing season.')}
-      <div class="kv-feats">{''.join(f'<article class="kv-feat"><div class="kv-mini">{ag_mini(k)}</div><span class="kv-num">{i + 1:02d}</span><h3>{t}</h3><p class="kv-strap">{s}</p>{"".join(f"<p>{p}</p>" for p in ps)}</article>' for i, (k, t, s, ps) in enumerate(feats))}</div>
+      <div class="kv-feats">{''.join(f'<article class="kv-feat"><div class="kv-mini">{feat('kenagri', k, ag_mini(k))}</div><span class="kv-num">{i + 1:02d}</span><h3>{t}</h3><p class="kv-strap">{s}</p>{"".join(f"<p>{p}</p>" for p in ps)}</article>' for i, (k, t, s, ps) in enumerate(feats))}</div>
     </div>
   </section>'''
 
@@ -1818,7 +1818,7 @@ def page_kenagri():
                       'Tell us about your farm, your crops and the data you already have.',
                       'KenAgri by Intelense | Intelligence at the Edge.')
 
-    body = '\n\n  '.join([hero, photo_band('hero-agri', 'From above the field', 'See every field at a glance.', 'Drone and satellite imagery become field zones with health scores, so you know where to walk first.'), problem, features, how, industries, example, benefits, dash, faq_block(KA_FAQ), related_block(m), final, faq_schema(KA_FAQ)])
+    body = '\n\n  '.join([hero, photo_band('hero-agri', 'From above the field', 'See every field at a glance.', 'Drone and satellite imagery become field zones with health scores, so you know where to walk first.'), problem, features, how, industries, example, benefits, faq_block(KA_FAQ), related_block(m), final, faq_schema(KA_FAQ)])
     return dict(file='kenagri.html', title='KenAgri: AI-Powered Precision Agriculture | Intelense',
                 desc='KenAgri uses AI with satellite imagery, drone images, ground sensors and weather data to monitor crop health, flag pests and disease, predict yields and guide irrigation.',
                 active='kenagri', body=body)
@@ -1935,7 +1935,7 @@ def page_kenhome():
         <p class="kv-tagline">AI home security and safety monitoring for families, homes and residential properties.</p>
       </div>
       <div class="kv-hero-visual">
-        {ap.hero(KH_HERO)}
+        {photo('porch')}
         <p class="demo-note">Example footage and alerts</p>
       </div>
     </div>
@@ -1971,8 +1971,8 @@ def page_kenhome():
         ('drive', 'Driveway &amp; Vehicle Security', "Keep an eye on your vehicle, even when you're indoors.", "Monitor your driveway and parking areas for unexpected vehicle access, suspicious activity and supported tampering-related events. Receive alerts so you can review what's happening around your vehicle."),
         ('alerts', 'Real-Time Alerts &amp; Video Evidence', 'Get the context you need when an alert arrives.', 'Receive notifications for configured events through supported alert channels. Review available timestamps, camera details and video clips to better understand what triggered the alert.'),
     ]
-    cards = ''.join(f'<article class="kv-feat"><div class="kv-mini">{kh_mini(k)}</div><span class="kv-num">{i + 1:02d}</span><h3>{t}</h3><p class="kv-strap">{s}</p><p>{d}</p></article>' for i, (k, t, s, d) in enumerate(feats))
-    cards += f'<article class="kv-feat kv-feat-wide"><div class="kv-mini" style="background:#16171b">{kh_mini("grid")}</div><div><span class="kv-num">07</span><h3>One View for Your Home</h3><p class="kv-strap">Keep your cameras and important alerts in one place.</p><p>Review activity across supported cameras and monitored zones through a central dashboard. Help family members and designated caregivers stay informed without manually checking every feed.</p></div></article>'
+    cards = ''.join(f'<article class="kv-feat"><div class="kv-mini">{feat('kenhome', k, kh_mini(k))}</div><span class="kv-num">{i + 1:02d}</span><h3>{t}</h3><p class="kv-strap">{s}</p><p>{d}</p></article>' for i, (k, t, s, d) in enumerate(feats))
+    cards += f'<article class="kv-feat kv-feat-wide"><div class="kv-mini" style="background:#16171b">{feat("kenhome", "onehome", kh_mini("grid"))}</div><div><span class="kv-num">07</span><h3>One View for Your Home</h3><p class="kv-strap">Keep your cameras and important alerts in one place.</p><p>Review activity across supported cameras and monitored zones through a central dashboard. Help family members and designated caregivers stay informed without manually checking every feed.</p></div></article>'
     features = f'''<section class="block" id="features">
     <div class="wrap">
       {head_block('Features', 'One Smarter Way to Monitor Your Home', 'KenHome brings AI home security and safety monitoring into one solution, helping families keep track of important activity across camera-covered areas.')}
@@ -2077,7 +2077,7 @@ def page_kenhome():
                       "Tell us about your home, your existing cameras and what you want to monitor. We'll help you explore the right KenHome setup.",
                       'KenHome by Intelense | Intelligence at the Edge.')
 
-    body = '\n\n  '.join([hero, problem, features, how, whos, example, benefits, dash, faq_block(KH_FAQ), related_block(m), final, faq_schema(KH_FAQ)])
+    body = '\n\n  '.join([hero, problem, features, how, whos, example, benefits, faq_block(KH_FAQ), related_block(m), final, faq_schema(KH_FAQ)])
     return dict(file='kenhome.html', title='KenHome: AI Home Security & Smart Monitoring | Intelense',
                 desc='KenHome turns compatible home cameras into AI-powered monitoring for home security, elderly fall detection, child safety, pets and driveways, with real-time alerts.',
                 active='kenhome', body=body, cctv=True)
@@ -2266,7 +2266,7 @@ def page_keniot():
     features = f'''<section class="block" id="features">
     <div class="wrap">
       {head_block('Features', 'Turn Sensor Data into Decisions That Keep Operations Moving.', 'KenIoT combines IoT connectivity, AI-powered sensor analytics and predictive maintenance capabilities to help you understand the condition of your equipment and infrastructure.')}
-      <div class="kv-feats four">{''.join(f'<article class="kv-feat"><div class="kv-mini">{ki_mini(k)}</div><span class="kv-num">{i + 1:02d}</span><h3>{t}</h3><p class="kv-strap">{s}</p><p>{d}</p></article>' for i, (k, t, s, d) in enumerate(feats))}</div>
+      <div class="kv-feats four">{''.join(f'<article class="kv-feat"><div class="kv-mini">{feat('keniot', k, ki_mini(k))}</div><span class="kv-num">{i + 1:02d}</span><h3>{t}</h3><p class="kv-strap">{s}</p><p>{d}</p></article>' for i, (k, t, s, d) in enumerate(feats))}</div>
     </div>
   </section>'''
 
@@ -2358,7 +2358,7 @@ def page_keniot():
                       "Tell us about your equipment, existing sensors and operational challenges. We'll help you explore how KenIoT can fit your infrastructure.",
                       'KenIoT by Intelense | Intelligence at the Edge.')
 
-    body = '\n\n  '.join([hero, photo_band('hero-iot', 'On the plant floor', 'Listen to the equipment.', 'Vibration, temperature and power readings from motors and pumps show up as trends before they become breakdowns.'), problem, features, how, industries, example, benefits, dash, faq_block(KI_FAQ), related_block(m), final, faq_schema(KI_FAQ)])
+    body = '\n\n  '.join([hero, photo_band('hero-iot', 'On the plant floor', 'Listen to the equipment.', 'Vibration, temperature and power readings from motors and pumps show up as trends before they become breakdowns.'), problem, features, how, industries, example, benefits, faq_block(KI_FAQ), related_block(m), final, faq_schema(KI_FAQ)])
     return dict(file='keniot.html', title='KenIoT: AI-Powered IoT Monitoring & Predictive Maintenance | Intelense',
                 desc='KenIoT turns data from connected sensors and equipment into real-time monitoring, AI anomaly detection and predictive maintenance insights.',
                 active='keniot', body=body)
@@ -2539,7 +2539,7 @@ def page_kenvoice():
         <p class="kv-body" style="margin:0;font-size:17px">With conversation insights and staff scorecards, managers can make coaching more specific and identify areas for improvement.</p>
       </div>
       <h3 class="kc-sub">Key capabilities</h3>
-      <div class="kv-feats">{''.join(f'<article class="kv-feat"><div class="kv-mini">{kc_mini(k)}</div><span class="kv-num">{i + 1:02d}</span><h3>{t}</h3><p>{d}</p></article>' for i, (k, t, d) in enumerate(caps))}</div>
+      <div class="kv-feats">{''.join(f'<article class="kv-feat"><div class="kv-mini">{feat('kenvoice', k, kc_mini(k))}</div><span class="kv-num">{i + 1:02d}</span><h3>{t}</h3><p>{d}</p></article>' for i, (k, t, d) in enumerate(caps))}</div>
     </div>
   </section>'''
 
@@ -2640,7 +2640,7 @@ def page_kenvoice():
     </div>
   </section>'''
 
-    body = '\n\n  '.join([hero, photo_band('hero-voice', 'At the counter', 'Understand the conversation.', 'On-device audio analysis picks up greetings, needs and outcomes without recording audio to the cloud.'), what, how, benefits, built, dash, privacy, faq_block(KC_FAQ), related_block(m), final, faq_schema(KC_FAQ)])
+    body = '\n\n  '.join([hero, photo_band('hero-voice', 'At the counter', 'Understand the conversation.', 'On-device audio analysis picks up greetings, needs and outcomes without recording audio to the cloud.'), what, how, benefits, built, privacy, faq_block(KC_FAQ), related_block(m), final, faq_schema(KC_FAQ)])
     return dict(file='kenvoice.html', title='KenVoice: Retail Conversation Intelligence | Intelense',
                 desc='KenVoice uses on-device AI audio analytics to turn customer and staff conversations at the counter into service, coaching and sales insights for retailers.',
                 active='kenvoice', body=body)
@@ -2769,7 +2769,7 @@ def page_kenrobotics():
         <p class="kv-body" style="margin:0;font-size:17px">From warehouse robots moving goods to inspection robots operating in complex environments, KenRobotics helps teams coordinate autonomous operations more effectively.</p>
       </div>
       <h3 class="kc-sub" id="capabilities">Key capabilities</h3>
-      <div class="kv-feats">{''.join(f'<article class="kv-feat"><div class="kv-mini">{kr_mini(k)}</div><span class="kv-num">{i + 1:02d}</span><h3>{t}</h3><p>{d}</p></article>' for i, (k, t, d) in enumerate(caps))}</div>
+      <div class="kv-feats">{''.join(f'<article class="kv-feat"><div class="kv-mini">{feat('kenrobotics', k, kr_mini(k))}</div><span class="kv-num">{i + 1:02d}</span><h3>{t}</h3><p>{d}</p></article>' for i, (k, t, d) in enumerate(caps))}</div>
     </div>
   </section>'''
 
@@ -2921,7 +2921,7 @@ def feed_html(scene):
     for z in f.get('zones', []):
         rgb = TONE_RGB[z.get('tone', 'mute')]
         pts = ' '.join(f'{x * 1000:.0f},{y * 1000:.0f}' for x, y in z['points'])
-        svg.append(f'<polygon points="{pts}" fill="rgba({rgb},.10)" stroke="rgba({rgb},.75)" stroke-dasharray="6 5"/>')
+        svg.append(f'<polygon points="{pts}" fill="rgba({rgb},.16)" stroke="rgba({rgb},.9)" stroke-dasharray="6 5"/>')
         x0, y0 = min(x for x, _ in z['points']), min(y for _, y in z['points'])
         tags.append((x0, y0, z['label'], z.get('tone', 'mute'), 'zone'))
     for ln in f.get('lines', []):
@@ -2929,6 +2929,14 @@ def feed_html(scene):
         (x1, y1), (x2, y2) = ln['from'], ln['to']
         svg.append(f'<line x1="{x1 * 1000:.0f}" y1="{y1 * 1000:.0f}" x2="{x2 * 1000:.0f}" y2="{y2 * 1000:.0f}" stroke="rgba({rgb},.9)"/>')
         tags.append((min(x1, x2), min(y1, y2), ln['label'], ln.get('tone', 'info'), 'line'))
+    asp = 16 / 9
+    if f.get('ratio'):
+        a, b2 = (float(v) for v in str(f['ratio']).replace(' ', '').split('/'))
+        asp = a / b2
+    heat = f.get('heat', [])
+    if heat:
+        defs = '<defs><radialGradient id="hg-{0}"><stop offset="0" stop-color="rgb(255,121,83)" stop-opacity=".85"/><stop offset=".55" stop-color="rgb(242,210,138)" stop-opacity=".45"/><stop offset="1" stop-color="rgb(115,196,197)" stop-opacity="0"/></radialGradient></defs>'.format(scene)
+        svg.append(defs + ''.join(f'<ellipse cx="{h["x"] * 1000:.0f}" cy="{h["y"] * 1000:.0f}" rx="{h["r"] * 1000:.0f}" ry="{h["r"] * 1000 * asp:.0f}" fill="url(#hg-{scene})" stroke="none" style="stroke-width:0"/>' for h in heat))
     for b in f.get('boxes', []):
         x, y, w, h = (b[k] * 1000 for k in ('x', 'y', 'w', 'h'))
         c = min(w, h) * 0.22
@@ -2941,6 +2949,12 @@ def feed_html(scene):
     osd = '' if f.get('plain') else f'<figcaption class="feed-osd"><span><b class="rec"></b>{f.get("camera", "")}</span><span data-feed-clock>14:32:09</span></figcaption>'
     style = f' style="aspect-ratio:{f["ratio"]}"' if f.get('ratio') else ''
     return f'<figure class="feed{" plain" if f.get("plain") else ""}"{style}>{media}{ov}{osd}</figure>'
+
+
+def feat(mod, kind, fallback):
+    """Feature-card image from feeds.json key feat-<kind>-<mod>; falls back to the drawn graphic."""
+    key = f'feat-{kind}-{mod}'
+    return photo(key) if key in FEEDS else fallback
 
 
 def photo_band(name, eyebrow, title, text, note='Example footage and data'):
