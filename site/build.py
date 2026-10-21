@@ -3131,6 +3131,7 @@ def main():
         shutil.copytree(FOOTAGE, out / 'assets' / 'footage', dirs_exist_ok=True)
         shutil.copytree(ASSETS / 'people', out / 'assets' / 'people', dirs_exist_ok=True)
         shutil.copytree(ASSETS / 'clients', out / 'assets' / 'clients', dirs_exist_ok=True)
+        shutil.copytree(ASSETS / 'certificates', out / 'assets' / 'certificates', dirs_exist_ok=True)
         print('wrote inline copy to', out)
 
 
