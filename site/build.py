@@ -506,7 +506,7 @@ def page_index():
     body = '\n\n  '.join([hero, platform, modules, clients_section(), sectors, faq, cta_band()])
     return dict(file='index.html', title='Intelense | AI Video Analytics & Intelligence at the Edge',
                 desc='Intelense turns live video, sensor and voice data into real-time alerts. Seven Ken modules on one AI platform.',
-                active='index.html', body=body, cctv=True)
+                active='index.html', body=body, cctv=True, motion=True)
 
 
 def page_platform():
@@ -3074,6 +3074,11 @@ def render(p, inline=False, bare=False):
     css = (ASSETS / 'site.css').read_text()
     style = f'<style>\n{css}</style>' if inline else '<link rel="stylesheet" href="assets/site.css">'
     head = f'<title>{p["title"]}</title>\n<meta name="description" content="{p["desc"]}">\n{FONTS}\n{style}'
+    if p.get('motion'):
+        if inline:
+            head += f'\n<style>\n{(ASSETS / "scroll-motion.css").read_text()}</style>\n<script>\n{(ASSETS / "scroll-motion.js").read_text()}</script>'
+        else:
+            head += '\n<link rel="stylesheet" href="assets/scroll-motion.css">\n<script src="assets/scroll-motion.js"></script>'
     scripts = []
     for name, need in (('site.js', True), ('cctv.js', p.get('cctv'))):
         if need:
