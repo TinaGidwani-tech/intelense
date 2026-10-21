@@ -19,8 +19,8 @@
 .js-reveal .rv.is-in { opacity: 1; translate: 0 0; }
 /* Module cards keep their hover border transition */
 .js-reveal .card.rv {
-  transition: opacity var(--rv-dur) var(--rv-ease), translate var(--rv-dur) var(--rv-ease), border-color .2s;
-  transition-delay: var(--d, 0ms), var(--d, 0ms), 0s;
+  transition: opacity var(--rv-dur) var(--rv-ease), translate var(--rv-dur) var(--rv-ease), border-color .2s, transform .3s var(--rv-ease);
+  transition-delay: var(--d, 0ms), var(--d, 0ms), 0s, 0s;
 }
 
 /* Section headings: the text rises through a mask. The padding and negative margin cancel, so the box does not move. */
@@ -41,7 +41,7 @@
 .js-reveal-rich .rv-img { overflow: hidden; }
 .js-reveal-rich .rv-img img, .js-reveal-rich .rv-img video {
   scale: var(--rv-img-scale);
-  transition: scale var(--rv-img-dur) var(--rv-ease); transition-delay: var(--d, 0ms);
+  transition: scale var(--rv-img-dur) var(--rv-ease), transform .6s ease; transition-delay: var(--d, 0ms), 0s;
 }
 .js-reveal-rich .rv-img.is-in img, .js-reveal-rich .rv-img.is-in video { scale: 1; }
 

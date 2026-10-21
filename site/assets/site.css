@@ -348,6 +348,19 @@ footer a:hover { color: var(--parchment); }
   *, *::before, *::after { animation: none !important; transition: none !important; }
 }
 
+/* Subtle hover feedback for buttons and cards: transform and colour only, mouse devices only */
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  .btn { transition: transform .25s cubic-bezier(.2, .7, .2, 1), background-color .2s ease, color .2s ease; }
+  .btn:hover { transform: translateY(-2px); }
+  .btn:active { transform: translateY(0); transition-duration: .08s; }
+  .btn-blue::after { transition: transform .25s cubic-bezier(.2, .7, .2, 1); }
+  .btn-blue:hover::after { transform: translateX(3px); }
+  .card { transition: border-color .2s, transform .3s cubic-bezier(.2, .7, .2, 1); }
+  .card:hover { transform: translateY(-3px); }
+  .sectors a { transition: border-color .2s, color .2s, transform .25s cubic-bezier(.2, .7, .2, 1); }
+  .sectors a:hover { transform: translateY(-2px); }
+}
+
 /* ===== Multi-page additions ===== */
 
 /* Nav: current page, modules dropdown, mobile menu */
