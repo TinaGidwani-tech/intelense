@@ -448,7 +448,6 @@ FAQ = home_section('faq')
 
 CLIENTS = [('Swarovski', 'w1', 'swarovski'), ('GIVA', 'w2', 'giva'), ('CaratLane', 'w3', 'caratlane'), ('Mia by Tanishq', 'w4', 'mia'), ('Rado', 'w2', 'rado'), ('Tissot', 'w1', 'tissot'), ('Seiko', 'w5', 'seiko'),
            ('Orra Fine Jewelry', 'w3', 'orra'), ('HYOU Fine Jewelry', 'w2', 'hyou'), ('Sangeetha Mobiles', 'w4', 'sangeetha'), ('Mokobara', 'w5', 'mokobara'), ('Prestige Group', 'w1', 'prestige'), ('Shell', 'w6', 'shell')]
-CLIENT_SECTORS = [('Fine jewelry', 6), ('Watches', 3), ('Consumer retail', 2), ('Property', 1), ('Energy', 1)]
 
 
 def clients_section():
@@ -462,7 +461,6 @@ def clients_section():
         cells = ''.join(tile(*t) for t in items)
         return f'<div class="marquee{" rev" if rev else ""}"><ul>{cells}</ul><ul aria-hidden="true">{cells}</ul></div>'
     half = (len(CLIENTS) + 1) // 2
-    chips = ''.join(f'<span><b>{n}</b>{k}</span>' for k, n in CLIENT_SECTORS)
     names = ', '.join(c[0] for c in CLIENTS)
     return f'''<section class="block" id="clients">
     <div class="wrap">
@@ -471,7 +469,6 @@ def clients_section():
         {row(CLIENTS[:half])}
         {row(CLIENTS[half:], True)}
       </div>
-      <div class="client-sectors">{chips}</div>
     </div>
   </section>'''
 

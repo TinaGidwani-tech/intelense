@@ -60,7 +60,7 @@ var REVEAL = {
     group('#platform .flow', null);
     group('#platform .steps > div', step);
     group('#clients .clients', null);
-    group('#clients .client-sectors > *, #sectors .sectors > *', function (i) { return Math.min(i, 6) * 45; });
+    group('#sectors .sectors > *', function (i) { return Math.min(i, 6) * 45; });
     group('#sectors .proof', null, 'rv-rule');
     group('#sectors .proof > *, #faq .faq-grid > *', sib);
     group('.cta .eyebrow, .cta .hero-ctas', step);

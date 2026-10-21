@@ -1019,9 +1019,6 @@ footer a:hover { color: var(--parchment); }
 .marquee .tile.w5 span { font-weight: 600; letter-spacing: .22em; text-transform: uppercase; font-size: clamp(15px, 1.5vw, 20px); }
 .marquee .tile.w6 span { font-weight: 600; letter-spacing: -.03em; font-style: italic; }
 @keyframes marquee { to { transform: translateX(-50%); } }
-.client-sectors { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 24px; }
-.client-sectors span { display: inline-flex; align-items: baseline; gap: 10px; padding: 10px 18px; border: 1px solid var(--ash); border-radius: 9999px; font-size: 13px; text-transform: uppercase; letter-spacing: .06em; color: var(--graphite); }
-.client-sectors b { font-size: 18px; font-weight: 600; letter-spacing: -.02em; color: var(--off-black); font-variant-numeric: tabular-nums; }
 @media (prefers-reduced-motion: reduce) { .marquee { animation: none; flex-wrap: wrap; width: auto; justify-content: center; } .marquee ul[aria-hidden] { display: none; } .marquee ul { flex-wrap: wrap; justify-content: center; } .clients::after { display: none; } }
 
 /* ===== Leadership and advisory board ===== */
