@@ -1123,3 +1123,8 @@ section.block > .wrap > p + p { margin-top: 14px; }
 .legacy-figure img, .prose img { display: block; width: 100%; height: auto; border-radius: 28px; border: 1px solid var(--ash); }
 .prose .legacy-figure { margin: 32px 0; }
 .post-card img.thumb { width: 100%; height: auto; aspect-ratio: 3 / 2; object-fit: cover; border-radius: 20px; margin-bottom: 4px; }
+.info-list b small { color: var(--smoke); font-weight: 400; margin-left: 6px; }
+.info-list b { font-weight: 500; }
+.info-list a { text-decoration: none; }
+.info-list a:hover { color: var(--lake-blue); }
+#careers .btn { margin-top: 8px; }

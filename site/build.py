@@ -309,7 +309,7 @@ def footer():
       </div>
       <div>
         <h4>Contact</h4>
-        <ul><li class="email">enquiries@intelense.ca</li><li>Markham, Ontario, Canada</li><li><a href="https://www.linkedin.com/company/intelense/" target="_blank" rel="noopener noreferrer">LinkedIn</a></li></ul>
+        <ul><li class="email">enquiries@intelense.ca</li><li><a href="tel:+12895523165">+1 (289) 552-3165</a> Canada</li><li><a href="tel:+919108284574">+91 91082 84574</a> India</li><li>Markham, Ontario, Canada</li><li><a href="https://www.linkedin.com/company/intelense/" target="_blank" rel="noopener noreferrer">LinkedIn</a></li></ul>
       </div>
     </div>
     <div class="legal"><span>© 2026 Intelense Inc. · <a href="privacy.html">Privacy</a> · <a href="terms.html">Terms</a></span><span>Photography and video: Pexels and Unsplash</span></div>
@@ -821,7 +821,13 @@ def page_about():
       </div>
     </div>
   </section>'''
-    body = '\n\n  '.join([hero, leadership_section(), story, values, cert, proof, cta_band('Want to work with us?', ('industries.html', 'See industries'))])
+    careers = f'''<section class="block" id="careers">
+    <div class="wrap">
+      {head_block('We have been waiting for you', 'Too brilliant for your current job?', "Time to work with people who'd give you a run for your money.")}
+      <a class="btn btn-blue" href="mailto:enquiries@intelense.ca?subject=I%20want%20in">Our inbox is lonely</a>
+    </div>
+  </section>'''
+    body = '\n\n  '.join([hero, leadership_section(), story, values, cert, proof, careers, cta_band('Want to work with us?', ('industries.html', 'See industries'))])
     return dict(file='about.html', title='About | Intelense', desc='Intelense is an AI and data analytics company in Markham, Ontario, with a mission to create a safer world.',
                 active='about.html', body=body)
 
@@ -854,7 +860,8 @@ def page_contact():
       <aside class="panel">
         <ul class="info-list">
           <li><span>Email</span><b class="email">enquiries@intelense.ca</b></li>
-          <li><span>Head office</span><b>Markham, Ontario, Canada</b></li>
+          <li><span>Phone</span><b><a href="tel:+12895523165">+1 (289) 552-3165</a> <small>Canada</small></b><b><a href="tel:+919108284574">+91 91082 84574</a> <small>India</small></b></li>
+          <li><span>Offices</span><b>3600 Steeles Ave E, Markham, ON Canada</b><b>No. 45 C2 Gubbalala, Bangalore South India</b></li>
         </ul>
         <h3 style="margin-top:28px">What happens next</h3>
         <ol class="next-steps">
@@ -3095,7 +3102,9 @@ def seo_head(p):
            f'<meta name="twitter:image" content="{SITE_URL}{OG_IMAGE}">']
     if p['file'] == 'index.html':
         org = {'@context': 'https://schema.org', '@type': 'Organization', 'name': 'Intelense', 'url': SITE_URL + '/', 'logo': SITE_URL + '/assets/logos/intelense.png',
-               'email': 'enquiries@intelense.ca', 'sameAs': [LINKEDIN_URL]}
+               'email': 'enquiries@intelense.ca', 'telephone': '+12895523165', 'sameAs': [LINKEDIN_URL],
+               'contactPoint': [{'@type': 'ContactPoint', 'telephone': '+12895523165', 'contactType': 'sales', 'areaServed': 'CA', 'availableLanguage': 'English'},
+                                {'@type': 'ContactPoint', 'telephone': '+919108284574', 'contactType': 'sales', 'areaServed': 'IN', 'availableLanguage': 'English'}]}
         out.append('<script type="application/ld+json">' + _j.dumps(org) + '</script>')
     for ld in p.get('jsonld', []):
         # structured data carried over from the old page; its logo / image URLs pointed at files that only existed on the old host

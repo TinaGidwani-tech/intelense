@@ -321,19 +321,34 @@
       },
       {
        "@type": "ContactPoint",
+       "telephone": "+919108284574",
+       "contactType": "sales",
+       "areaServed": "IN",
+       "availableLanguage": "English"
+      },
+      {
+       "@type": "ContactPoint",
        "email": "enquiries@intelense.ca",
        "contactType": "customer support",
        "availableLanguage": "English"
       }
      ],
-     "address": {
-      "@type": "PostalAddress",
-      "streetAddress": "3600 Steeles Ave E",
-      "addressLocality": "Markham",
-      "addressRegion": "Ontario",
-      "postalCode": "M1W 2Z2",
-      "addressCountry": "CA"
-     }
+     "address": [
+      {
+       "@type": "PostalAddress",
+       "streetAddress": "3600 Steeles Ave E",
+       "addressLocality": "Markham",
+       "addressRegion": "Ontario",
+       "postalCode": "M1W 2Z2",
+       "addressCountry": "CA"
+      },
+      {
+       "@type": "PostalAddress",
+       "streetAddress": "No. 45 C2 Gubbalala",
+       "addressLocality": "Bangalore South",
+       "addressCountry": "IN"
+      }
+     ]
     }
    },
    {
