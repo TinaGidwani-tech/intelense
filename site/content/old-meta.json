@@ -1,0 +1,423 @@
+{
+ "index.html": {
+  "og_title": "Intelense | AI Video Analytics Platform for Retail, Safety & Smart Monitoring",
+  "og_desc": "Seven AI modules for video analytics, workplace safety, home security, agriculture, IoT monitoring, robotics, and retail conversation intelligence. One platform, built for the real world."
+ },
+ "platform.html": {
+  "og_title": "Ken 360 Unified AI Platform | Intelense",
+  "og_desc": "The AI engine powering all six Ken modules. One dashboard, unified data, complete operational visibility across every site.",
+  "jsonld": [
+   {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "Ken 360",
+    "applicationCategory": "AI Platform",
+    "description": "Unified AI platform that powers all seven Ken modules with a shared data model, single dashboard, and real-time cross-module intelligence.",
+    "brand": {
+     "@type": "Brand",
+     "name": "Intelense"
+    }
+   },
+   {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+     {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "https://www.intelense.com/"
+     },
+     {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Ken 360",
+      "item": "https://www.intelense.com/ken360"
+     }
+    ]
+   }
+  ]
+ },
+ "kenvision.html": {
+  "og_title": "KenVision Video Intelligence | Intelense",
+  "og_desc": "Turn any camera into a business intelligence tool. Footfall analytics, heatmaps, queue detection at 95% accuracy. No hardware replacement needed.",
+  "jsonld": [
+   {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "KenVision",
+    "applicationCategory": "Video Intelligence",
+    "operatingSystem": "Edge + Cloud",
+    "description": "Real-time video intelligence platform with footfall counting, zone heatmaps, dwell analysis, queue detection, and conversion tracking at 95% accuracy.",
+    "brand": {
+     "@type": "Brand",
+     "name": "Intelense"
+    },
+    "offers": {
+     "@type": "Offer",
+     "availability": "https://schema.org/InStock"
+    }
+   },
+   {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+     {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "https://www.intelense.com/"
+     },
+     {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "KenVision",
+      "item": "https://www.intelense.com/kenvision"
+     }
+    ]
+   }
+  ]
+ },
+ "kensafety.html": {
+  "og_title": "KenSafety Safety Intelligence | Intelense",
+  "og_desc": "AI-powered workplace safety. PPE compliance, fall detection, and hazard alerts 95% PPE accuracy, 84% fewer unsafe behaviours.",
+  "jsonld": [
+   {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "KenSafety",
+    "applicationCategory": "Safety Intelligence",
+    "description": "AI-powered workplace safety platform delivering PPE compliance monitoring, hazard detection, fire and smoke alerts, and incident reporting in under 3 seconds.",
+    "brand": {
+     "@type": "Brand",
+     "name": "Intelense"
+    }
+   },
+   {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+     {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "https://www.intelense.com/"
+     },
+     {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "KenSafety",
+      "item": "https://www.intelense.com/kensafety"
+     }
+    ]
+   }
+  ]
+ },
+ "kenhome.html": {
+  "og_title": "KenHome Smart Home Security AI | Intelense",
+  "og_desc": "AI-powered home security. KenHome protects your family, children, elderly, pets, and vehicles 97% detection accuracy, alerts in under 5 seconds.",
+  "jsonld": [
+   {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "KenHome",
+    "applicationCategory": "Smart Home Security AI",
+    "description": "AI-powered home security platform delivering 24/7 intrusion detection, elderly and child safety monitoring, pet protection, vehicle security, and predictive theft alerts with 97% detection accuracy and alerts under 5 seconds.",
+    "brand": {
+     "@type": "Brand",
+     "name": "Intelense"
+    }
+   },
+   {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+     {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "https://www.intelense.com/"
+     },
+     {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "KenHome",
+      "item": "https://www.intelense.com/kenhome"
+     }
+    ]
+   }
+  ]
+ },
+ "kenagri.html": {
+  "og_title": "KenAgri Precision Agriculture AI | Intelense",
+  "og_desc": "AI-powered precision agriculture. KenAgri delivers 30% higher yields, 40% cost reduction, and 95% AI accuracy across satellite, drone, IoT, and ground camera data.",
+  "jsonld": [
+   {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "KenAgri",
+    "applicationCategory": "Precision Agriculture AI",
+    "description": "Precision agriculture AI for crop health monitoring, yield prediction, pest and disease detection, and automated irrigation management.",
+    "brand": {
+     "@type": "Brand",
+     "name": "Intelense"
+    }
+   },
+   {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+     {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "https://www.intelense.com/"
+     },
+     {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "KenAgri",
+      "item": "https://www.intelense.com/kenagri"
+     }
+    ]
+   }
+  ]
+ },
+ "keniot.html": {
+  "og_title": "KenIoT IoT & Sensor Analytics | Intelense",
+  "og_desc": "AI-powered IoT sensor analytics with predictive failure detection, real-time anomaly detection, and automated maintenance scheduling.",
+  "jsonld": [
+   {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "KenIoT",
+    "applicationCategory": "IoT Analytics",
+    "description": "IoT and sensor analytics platform with multi-protocol ingestion, predictive failure detection with advance warning, and edge plus cloud hybrid deployment.",
+    "brand": {
+     "@type": "Brand",
+     "name": "Intelense"
+    }
+   },
+   {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+     {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "https://www.intelense.com/"
+     },
+     {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "KenIoT",
+      "item": "https://www.intelense.com/keniot"
+     }
+    ]
+   }
+  ]
+ },
+ "kenrobotics.html": {
+  "og_title": "KenRobotics Autonomous Systems AI | Intelense",
+  "og_desc": "AI for autonomous robot fleets. Real-time environment awareness, intelligent navigation, and multi-robot coordination. 40% ROI increase.",
+  "jsonld": [
+   {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "KenRobotics",
+    "applicationCategory": "Autonomous Systems AI",
+    "description": "Autonomous systems AI delivering real-time scene perception, dynamic path planning, and multi-robot fleet coordination for industrial robot fleets.",
+    "brand": {
+     "@type": "Brand",
+     "name": "Intelense"
+    }
+   },
+   {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+     {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "https://www.intelense.com/"
+     },
+     {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "KenRobotics",
+      "item": "https://www.intelense.com/kenrobotics"
+     }
+    ]
+   }
+  ]
+ },
+ "about.html": {
+  "og_title": "About Intelense Intelligence at the Edge",
+  "og_desc": "Meet the team behind Intelense. Founded by Dinesh Prasanna (MIT TLP). Advisors from Stanford, Osgoode, and Accern.",
+  "jsonld": [
+   {
+    "@context": "https://schema.org",
+    "@type": "AboutPage",
+    "name": "About Intelense",
+    "description": "Intelense was founded in 2018 by Dinesh Prasanna, a technology entrepreneur with experience in AI-driven healthtech, analytics, and robotics, and a graduate of the MIT Technical Leadership Program.",
+    "mainEntity": {
+     "@type": "Person",
+     "name": "Dinesh Prasanna",
+     "jobTitle": "Founder & CEO",
+     "sameAs": "https://www.linkedin.com/in/dinesh-prasanna-35623a23/",
+     "worksFor": {
+      "@type": "Organization",
+      "name": "Intelense",
+      "foundingDate": "2018",
+      "url": "https://www.intelense.com"
+     }
+    }
+   },
+   {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+     {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "https://www.intelense.com/"
+     },
+     {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "About",
+      "item": "https://www.intelense.com/about"
+     }
+    ]
+   }
+  ]
+ },
+ "contact.html": {
+  "og_title": "Contact Intelense Book a Demo or Talk to Sales",
+  "og_desc": "Get in touch with Intelense. Book a 30-minute demo, talk to our sales team, or reach us at enquiries@intelense.ca.",
+  "jsonld": [
+   {
+    "@context": "https://schema.org",
+    "@type": "ContactPage",
+    "name": "Contact Intelense",
+    "description": "Get in touch with Intelense. Book a 30-minute demo, talk to our sales team, or reach us at enquiries@intelense.ca.",
+    "url": "https://www.intelense.com/contact",
+    "mainEntity": {
+     "@type": "Organization",
+     "name": "Intelense",
+     "url": "https://www.intelense.com",
+     "email": "enquiries@intelense.ca",
+     "telephone": "+12895523165",
+     "contactPoint": [
+      {
+       "@type": "ContactPoint",
+       "telephone": "+12895523165",
+       "contactType": "sales",
+       "areaServed": "CA",
+       "availableLanguage": "English"
+      },
+      {
+       "@type": "ContactPoint",
+       "email": "enquiries@intelense.ca",
+       "contactType": "customer support",
+       "availableLanguage": "English"
+      }
+     ],
+     "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "3600 Steeles Ave E",
+      "addressLocality": "Markham",
+      "addressRegion": "Ontario",
+      "postalCode": "M1W 2Z2",
+      "addressCountry": "CA"
+     }
+    }
+   },
+   {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+     {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "https://www.intelense.com/"
+     },
+     {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Contact",
+      "item": "https://www.intelense.com/contact"
+     }
+    ]
+   }
+  ]
+ },
+ "retail-analytics.html": {
+  "og_title": "Retail Analytics Platform Using CCTV | Intelense",
+  "og_desc": "AI retail analytics for footfall, dwell time, queues, heatmaps, and conversion using existing CCTV infrastructure."
+ },
+ "casestudies.html": {
+  "og_title": "Case Studies Real-World AI Deployments | Intelense",
+  "og_desc": "See how Intelense AI delivers measurable outcomes across retail, construction, agriculture, and more."
+ },
+ "kensafety-construction.html": {
+  "og_title": "Automating Safety & Compliance at a Large Construction Site | KenSafety",
+  "og_desc": "70% → 95% safety compliance. 80% fewer incidents. Using existing cameras. See how KenSafety transformed a large construction site."
+ },
+ "kenvision-retail.html": {
+  "og_title": "Transforming Retail Cameras into AI-Driven Insight Systems | KenVision",
+  "og_desc": "95% footfall accuracy. 30–40% visitor engagement uplift. 25–35% staffing optimisation. Using existing cameras."
+ },
+ "kenhome-safety.html": {
+  "og_title": "Making Every Home Safer with Real-Time Alerts | KenHome Case Study",
+  "og_desc": "AI-powered protection for elderly relatives, children, and pets. Fall detection, hazard alerts, and home security using existing cameras."
+ },
+ "blog.html": {
+  "og_title": "Blog AI Insights | Intelense",
+  "og_desc": "AI insights, industry analysis, and operational intelligence from the Intelense team."
+ },
+ "blogs-generative-ai-rewriting-business.html": {
+  "og_title": "How Generative AI Is Rewriting the Rules of Business",
+  "og_desc": "From ChatGPT to Gemini to Copilot — generative AI is no longer a research novelty."
+ },
+ "blogs-ai-video-surveillance.html": {
+  "og_title": "Why Video Surveillance Is Getting a Brain",
+  "og_desc": "AI is turning passive CCTV networks into real-time intelligence systems."
+ },
+ "blogs-ai-changing-how-we-work.html": {
+  "og_title": "How AI Is Changing the Way We Work",
+  "og_desc": "From Microsoft Copilot to factory-floor robotics — AI is reshaping every role in the enterprise."
+ },
+ "blogs-ai-across-every-sector.html": {
+  "og_title": "AI in Every Sector: How Industries Are Deploying Intelligent Systems",
+  "og_desc": "From agriculture to healthcare — a sector-by-sector breakdown of real AI deployments."
+ },
+ "blogs-ai-digital-billboards.html": {
+  "og_title": "Digital Billboards Are Getting Smart: AI Is Personalising Outdoor Advertising",
+  "og_desc": "JCDecaux and Clear Channel are deploying AI that reads the crowd and serves the right ad in real time."
+ },
+ "blogs-ai-construction-safety.html": {
+  "og_title": "From Reactive to Predictive: The New Era of AI-Powered Construction Safety",
+  "og_desc": "AI is turning construction safety from periodic and human to continuous and automated."
+ },
+ "blogs-ai-smart-buildings.html": {
+  "og_title": "Your Building Is Wasting Energy Right Now. AI Can Fix That.",
+  "og_desc": "Google cut cooling by 40%. JLL saves 35% on energy. AI is the management layer fixing building waste."
+ },
+ "faq.html": {
+  "og_title": "Intelense FAQ | AI Products, Deployment, and Pricing",
+  "og_desc": "Common questions about Intelense AI products KenVision, KenSafety, KenHome, KenAgri, KenIoT, and KenRobotics."
+ },
+ "privacy.html": {
+  "og_title": "Privacy Policy | Intelense",
+  "og_desc": "How Intelense collects, uses, and protects your information. Privacy by design, edge processing, no raw video storage."
+ },
+ "terms.html": {
+  "og_title": "Terms of Service | Intelense",
+  "og_desc": "The terms governing your access to and use of Intelense AI products and services."
+ }
+}

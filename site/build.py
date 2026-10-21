@@ -3086,7 +3086,7 @@ def seo_head(p):
     """Canonical, social share tags and (home page) Organization data. The text matches the page's own title and description."""
     import html as _h, json as _j
     url = SITE_URL + PUBLIC[p['file']]
-    title, desc = _h.escape(p['title'], quote=True), _h.escape(p['desc'], quote=True)
+    title, desc = _h.escape(p.get('og_title') or p['title'], quote=True), _h.escape(p.get('og_desc') or p['desc'], quote=True)
     out = [f'<link rel="canonical" href="{url}">',
            '<meta property="og:type" content="website">', '<meta property="og:site_name" content="Intelense">',
            f'<meta property="og:title" content="{title}">', f'<meta property="og:description" content="{desc}">',
@@ -3165,9 +3165,18 @@ def apply_old_seo(pages):
     """Titles, meta keywords and (where chosen) descriptions of the pages that existed on the old site, so rankings carry over."""
     import json
     old = json.loads((ROOT / 'content' / 'old-seo.json').read_text())
+    meta = json.loads((ROOT / 'content' / 'old-meta.json').read_text())
     for p in pages:
         for k, v in old.get(p['file'], {}).items():
             p['keywords' if k == 'keywords' else k] = v
+        m = meta.get(p['file'])
+        if m:
+            # old social-share text; the module pages keep their new description, so their og:description follows it
+            if m['og_title']:
+                p['og_title'] = m['og_title']
+            if m['og_desc'] and (p['file'] not in old or 'desc' in old[p['file']]):
+                p['og_desc'] = m['og_desc']
+            p['jsonld'] = p.get('jsonld', []) + m.get('jsonld', [])
 
 
 def write_redirects(out, pages):
