@@ -3145,9 +3145,23 @@ def render(p, inline=False, bare=False):
     return f'<!doctype html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">\n{head}\n</head>\n<body>\n{content}</body>\n</html>\n'
 
 
+ASSET_VERSION = None
+
+
+def asset_version():
+    """Short hash of the CSS/JS, so a changed file gets a new address (the host caches them for a year)."""
+    import hashlib
+    h = hashlib.md5()
+    for f in sorted(ASSETS.glob('*.css')) + sorted(ASSETS.glob('*.js')):
+        h.update(f.read_bytes())
+    return h.hexdigest()[:8]
+
+
 def deploy_build(pages, out):
     """Deployable copy: clean URLs (/kenvision, /ken360 ...), root-relative assets, sitemap.xml and robots.txt."""
     import re as _re, datetime
+    global ASSET_VERSION
+    ASSET_VERSION = asset_version()
     out.mkdir(parents=True, exist_ok=True)
     key = {f: f for f in PUBLIC}
 
@@ -3158,6 +3172,8 @@ def deploy_build(pages, out):
         h = render(p)
         h = _re.sub(r'href="([a-z0-9-]+)\.html(#[^"]*)?"', link, h)
         h = _re.sub(r'''(href=|src=|poster=|data-src=)(["'])assets/''', r'\1\2/assets/', h).replace('url(assets/', 'url(/assets/').replace("from './assets/", "from '/assets/")
+        h = _re.sub(r'((?:href|src)="/assets/[a-z-]+\.(?:css|js))"', lambda m: m.group(1) + '?v=' + ASSET_VERSION + '"', h)
+        h = h.replace("from '/assets/cursor-grid.js'", "from '/assets/cursor-grid.js?v=" + ASSET_VERSION + "'")
         path = PUBLIC[p['file']]
         # flat files (/kenvision -> kenvision.html, /blogs/x -> blogs/x.html): the layout the old site used, so a host that already
         # rewrites clean URLs to .html (the old .htaccess) serves them without redirecting /x to /x/
@@ -3203,7 +3219,7 @@ def write_redirects(out, pages):
     rules = dict(legacy_pages.REDIRECTS)
     lines = ['# Add these lines to the host .htaccess, directly after "RewriteEngine On" and before the clean-URL rules.\n',
              '# They send the old redirect-stub addresses to the page that replaced them (301 = permanent, keeps search rankings).\n']
-    lines += [f'RewriteRule ^{src.strip("/")}/?$ {dst} [R=301,L]\n' for src, dst in rules.items() if src != '/index']
+    lines += [f'RewriteRule ^{src.strip("/")}/?$ {dst} [R=301,L]\n' for src, dst in rules.items()]
     (out / 'htaccess-add-these-lines.txt').write_text(''.join(lines))
     (out / '_redirects').write_text(''.join(f'{src} {dst} 301\n' for src, dst in rules.items()))
 
