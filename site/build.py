@@ -700,7 +700,7 @@ def page_module(m):
 def page_industries():
     hero = page_hero(crumbs((None, 'Industries')), 'Industries', "Built for places where safety can't wait.",
                      'Our mission is a safer world, starting with public safety. The same platform serves teams across seven sectors.',
-                     '<a class="btn btn-blue" href="contact.html">Book a demo</a><a class="btn btn-ghost" href="modules.html">Explore the modules</a>')
+                     '<a class="btn btn-blue" href="contact.html">Book a demo</a><a class="btn btn-ghost" href="modules.html">Explore the modules</a>').replace('class="page-hero"', 'class="page-hero hero-center"', 1)
     jump = f'''<section class="block" id="sectors" style="padding-block:40px">
     <div class="wrap">{sector_links()}</div>
   </section>'''
