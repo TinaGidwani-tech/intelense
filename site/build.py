@@ -3091,6 +3091,10 @@ PUBLIC.update({legacy_pages.file_for(s_): legacy_pages.public_for(s_) for s_ in 
 OG_IMAGE = '/assets/footage/video-home-poster.jpg'
 
 
+ICON_LINKS = ('<link rel="icon" href="assets/icons/favicon.ico" sizes="any">\n<link rel="icon" type="image/png" sizes="32x32" href="assets/icons/favicon-32.png">\n'
+              '<link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png">')
+
+
 def seo_head(p):
     """Canonical, social share tags and (home page) Organization data. The text matches the page's own title and description."""
     import html as _h, json as _j
@@ -3120,7 +3124,7 @@ def render(p, inline=False, bare=False):
     style = f'<style>\n{css}</style>' if inline else '<link rel="stylesheet" href="assets/site.css">'
     import html as _hh
     kw = f'\n<meta name="keywords" content="{_hh.escape(p["keywords"], quote=True)}">' if p.get('keywords') else ''
-    head = f'<title>{_hh.escape(p["title"], quote=False)}</title>\n<meta name="description" content="{_hh.escape(p["desc"], quote=True)}">{kw}\n{seo_head(p)}\n{FONTS}\n{style}'
+    head = f'<title>{_hh.escape(p["title"], quote=False)}</title>\n<meta name="description" content="{_hh.escape(p["desc"], quote=True)}">{kw}\n{ICON_LINKS}\n{seo_head(p)}\n{FONTS}\n{style}'
     if p.get('reveal'):
         if inline:
             head += f'\n<style>\n{(ASSETS / "scroll-reveal.css").read_text()}</style>\n<script>\n{(ASSETS / "scroll-reveal.js").read_text()}</script>'
@@ -3158,7 +3162,7 @@ def deploy_build(pages, out):
         dest = out / 'index.html' if path == '/' else out / path.strip('/') / 'index.html'
         dest.parent.mkdir(parents=True, exist_ok=True)
         dest.write_text(h)
-    for d in ('logos', 'footage', 'people', 'clients', 'certificates', 'old-images'):
+    for d in ('logos', 'footage', 'people', 'clients', 'certificates', 'old-images', 'icons'):
         shutil.copytree(ASSETS / d, out / 'assets' / d, dirs_exist_ok=True)
     for f in ('site.css', 'site.js', 'cctv.js', 'cursor-grid.js', 'scroll-reveal.css', 'scroll-reveal.js'):
         shutil.copy(ASSETS / f, out / 'assets' / f)
@@ -3170,6 +3174,7 @@ def deploy_build(pages, out):
     shutil.copytree(ROOT / 'content' / 'llms', out / 'llms', dirs_exist_ok=True)
     shutil.copy(ROOT / 'content' / 'llms.txt', out / 'llms.txt')
     shutil.copy(ROOT / 'server' / 'send-message.php', out / 'send-message.php')
+    shutil.copy(ASSETS / 'icons' / 'favicon.ico', out / 'favicon.ico')  # browsers ask for /favicon.ico by default
     print('wrote deployable site to', out)
 
 
