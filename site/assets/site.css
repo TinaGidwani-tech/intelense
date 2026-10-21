@@ -802,15 +802,6 @@ footer a:hover { color: var(--parchment); }
 .kr-fleet b { font-size: 12px; font-weight: 600; }
 .kr-fleet span { grid-column: 2; font-size: 11px; color: #9fe0e1; }
 .kr-fleet span.warn { color: #ffb39b; }
-.kr-eco { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin-bottom: 24px; }
-.kr-eco-card { display: grid; gap: 12px; padding: 22px; border-radius: 24px; border: 1px solid var(--ash); background: var(--white); text-decoration: none; transition: border-color .2s; }
-.kr-eco-card:hover { border-color: var(--mod); }
-.kr-eco-card img { height: auto; width: 150px; max-width: 100%; }
-.kr-eco-card span { font-size: 15px; color: var(--graphite); }
-.kr-eco-card b { color: var(--off-black); font-weight: 600; }
-@media (max-width: 1080px) { .kr-eco { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-@media (max-width: 640px) { .kr-body, .kr-eco { grid-template-columns: minmax(0, 1fr); } }
-
 /* ---------------------------------------------------------------- product UI kit (appui.py) */
 .ap { --ap-bg: #0c0d10; --ap-card: #16171b; --ap-line: #222329; --ap-text: #f2f2f4; --ap-muted: #8d8f9e;
   display: grid; grid-template-columns: 68px minmax(0, 1fr); background: var(--ap-bg); color: var(--ap-text); border-radius: 30px; overflow: hidden;
@@ -1055,3 +1046,4 @@ footer a:hover { color: var(--parchment); }
 .cert-copy p { color: var(--graphite); }
 @media (max-width: 900px) { .cert { grid-template-columns: minmax(0, 1fr); } .cert-doc { max-width: 380px; } }
 @media (max-width: 560px) { .cert-facts > div { grid-template-columns: minmax(0, 1fr); gap: 4px; } }
+@media (max-width: 640px) { .kr-body { grid-template-columns: minmax(0, 1fr); } }

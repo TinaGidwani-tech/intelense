@@ -309,7 +309,7 @@ def footer():
       </div>
       <div>
         <h4>Contact</h4>
-        <ul><li class="email">enquiries@intelense.ca</li><li>Markham, Ontario, Canada</li></ul>
+        <ul><li class="email">enquiries@intelense.ca</li><li>Markham, Ontario, Canada</li><li><a href="https://www.linkedin.com/company/intelense/" target="_blank" rel="noopener noreferrer">LinkedIn</a></li></ul>
       </div>
     </div>
     <div class="legal"><span>© 2026 Intelense Inc.</span><span>Photography and video: Pexels and Unsplash</span></div>
@@ -369,7 +369,7 @@ def cta_band(h2='See Intelense on your own footage.', second=('modules.html', 'C
   </section>'''
 
 
-CARD_PHOTO = {'kensafety': 'dock', 'kenhome': 'porch', 'kenagri': 'hero-agri', 'keniot': 'hero-iot', 'kenrobotics': 'robot', 'kenvoice': 'hero-voice'}
+CARD_PHOTO = {'kenvision': 'store', 'kensafety': 'dock', 'kenhome': 'porch', 'kenagri': 'hero-agri', 'keniot': 'hero-iot', 'kenrobotics': 'robot', 'kenvoice': 'hero-voice'}
 
 
 def card(m):
@@ -2926,20 +2926,6 @@ def page_kenrobotics():
     </div>
   </section>'''
 
-    eco_txt = [('kenvision', 'AI video analytics for footfall, movement, queues, and operational visibility.'),
-               ('kensafety', 'AI-powered workplace safety monitoring and hazard detection.'),
-               ('keniot', 'Sensor analytics, anomaly detection, and predictive maintenance.'),
-               ('kenagri', 'AI-powered precision agriculture and crop intelligence.'),
-               ('kenhome', 'AI-powered monitoring for homes and connected spaces.'),
-               ('kenvoice', 'AI audio analytics for retail conversations.')]
-    eco = f'''<section class="block" id="ecosystem">
-    <div class="wrap">
-      {head_block('The Ken ecosystem', 'One AI Platform. Connected Intelligence.', 'KenRobotics is part of the Intelense Ken ecosystem, designed to bring AI capabilities across different operational environments.')}
-      <div class="kr-eco">{''.join(f'<a class="kr-eco-card" href="{k}.html" style="--mod:{MOD[k]["color"]}">{logo_img(MOD[k], 0.2)}<span><b>{MOD[k]["name"]}:</b> {d}</span></a>' for k, d in eco_txt)}</div>
-      <p class="kv-body" style="max-width:62ch">Together, these modules can help businesses connect insights from their physical environments, equipment, and operations.</p>
-    </div>
-  </section>'''
-
     final = f'''<section class="cta">
     <div class="wash wash-b" aria-hidden="true" style="top:10%;right:20%"></div>
     <div class="wash wash-a" aria-hidden="true" style="top:30%;left:20%"></div>
@@ -2952,7 +2938,7 @@ def page_kenrobotics():
     </div>
   </section>'''
 
-    body = '\n\n  '.join([hero, photo_band('robot', 'On the warehouse floor', 'Robots that see the people around them.', 'Perception and fleet coordination slow or reroute robots when people, forklifts or obstacles enter their path.'), what, how, corecaps, where, collab, integ, eco, faq_block(KR_FAQ), final, faq_schema(KR_FAQ)])
+    body = '\n\n  '.join([hero, photo_band('robot', 'On the warehouse floor', 'Robots that see the people around them.', 'Perception and fleet coordination slow or reroute robots when people, forklifts or obstacles enter their path.'), what, how, corecaps, where, collab, integ, faq_block(KR_FAQ), related_block(m), final, faq_schema(KR_FAQ)])
     return dict(file='kenrobotics.html', title='KenRobotics: AI for Autonomous Robotics | Intelense',
                 desc='KenRobotics helps autonomous robots understand their surroundings, navigate changing environments, avoid obstacles and coordinate tasks across robot fleets.',
                 active='kenrobotics', body=body, cctv=True)
