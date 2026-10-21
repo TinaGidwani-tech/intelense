@@ -188,3 +188,11 @@
     });
   }
 })();
+
+// Live clock on real camera feeds
+(function () {
+  var els = document.querySelectorAll('[data-feed-clock]');
+  if (!els.length) return;
+  function tick() { var t = new Date().toTimeString().slice(0, 8); els.forEach(function (e) { e.textContent = t; }); }
+  tick(); setInterval(tick, 1000);
+})();

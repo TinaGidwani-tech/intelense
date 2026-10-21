@@ -2874,6 +2874,63 @@ GRID_OPTS = "{ cellSize: 60, color: '#0a0a0a', radius: 160, falloff: 'smooth', h
 FONTS = '<link rel="preconnect" href="https://fonts.googleapis.com">\n<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>\n<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600&display=swap">'
 
 
+# ---------------------------------------------------------------- real camera footage
+# Drop a still (.jpg/.png/.webp) or clip (.mp4/.webm) into assets/footage and describe it in feeds.json.
+# Every simulated canvas for that scene is then swapped for the real frame with light analytics overlays.
+
+FOOTAGE = ASSETS / 'footage'
+TONE_RGB = {'pos': '115,196,197', 'neg': '255,121,83', 'info': '120,150,255', 'violet': '170,120,245', 'warn': '242,210,138', 'mute': '255,255,255'}
+
+
+def load_feeds():
+    import json
+    f = FOOTAGE / 'feeds.json'
+    feeds = json.loads(f.read_text()) if f.exists() else {}
+    return {k: v for k, v in feeds.items() if not k.startswith('_') and (FOOTAGE / v['src']).exists()}
+
+
+FEEDS = load_feeds()
+
+
+def feed_html(scene):
+    f = FEEDS[scene]
+    src = f'assets/footage/{f["src"]}'
+    if src.endswith(('.mp4', '.webm')):
+        media = f'<video src="{src}" autoplay muted loop playsinline preload="metadata"></video>'
+    else:
+        media = f'<img src="{src}" alt="" loading="lazy" decoding="async">'
+    svg, tags = [], []
+    for z in f.get('zones', []):
+        rgb = TONE_RGB[z.get('tone', 'mute')]
+        pts = ' '.join(f'{x * 1000:.0f},{y * 1000:.0f}' for x, y in z['points'])
+        svg.append(f'<polygon points="{pts}" fill="rgba({rgb},.10)" stroke="rgba({rgb},.75)" stroke-dasharray="6 5"/>')
+        x0, y0 = min(x for x, _ in z['points']), min(y for _, y in z['points'])
+        tags.append((x0, y0, z['label'], z.get('tone', 'mute'), 'zone'))
+    for ln in f.get('lines', []):
+        rgb = TONE_RGB[ln.get('tone', 'info')]
+        (x1, y1), (x2, y2) = ln['from'], ln['to']
+        svg.append(f'<line x1="{x1 * 1000:.0f}" y1="{y1 * 1000:.0f}" x2="{x2 * 1000:.0f}" y2="{y2 * 1000:.0f}" stroke="rgba({rgb},.9)"/>')
+        tags.append((min(x1, x2), min(y1, y2), ln['label'], ln.get('tone', 'info'), 'line'))
+    for b in f.get('boxes', []):
+        x, y, w, h = (b[k] * 1000 for k in ('x', 'y', 'w', 'h'))
+        c = min(w, h) * 0.22
+        d = (f'M{x},{y + c}V{y}H{x + c} M{x + w - c},{y}H{x + w}V{y + c} M{x + w},{y + h - c}V{y + h}H{x + w - c} M{x + c},{y + h}H{x}V{y + h - c}')
+        rgb = TONE_RGB[b.get('tone', 'mute')]
+        svg.append(f'<rect x="{x}" y="{y}" width="{w}" height="{h}" fill="none" stroke="rgba({rgb},.28)"/><path d="{d}" fill="none" stroke="rgba({rgb},.95)" stroke-width="2"/>')
+        tags.append((b['x'], b['y'], b['label'], b.get('tone', 'mute'), 'box'))
+    labels = ''.join(f'<span class="feed-tag {kind}" style="left:{x * 100:.2f}%;top:{y * 100:.2f}%"><i class="{tone}"></i>{lab}</span>' for x, y, lab, tone, kind in tags)
+    return (f'<figure class="feed">{media}'
+            f'<svg class="feed-ov" viewBox="0 0 1000 1000" preserveAspectRatio="none" aria-hidden="true">{"".join(svg)}</svg>{labels}'
+            f'<figcaption class="feed-osd"><span><b class="rec"></b>{f.get("camera", "")}</span><span data-feed-clock>14:32:09</span></figcaption></figure>')
+
+
+def swap_feeds(html):
+    if not FEEDS:
+        return html
+    return re.sub(r'<canvas class="cctv" data-scene="(\w+)"[^>]*></canvas>',
+                  lambda m: feed_html(m.group(1)) if m.group(1) in FEEDS else m.group(0), html)
+
+
 def render(p, inline=False, bare=False):
     css = (ASSETS / 'site.css').read_text()
     style = f'<style>\n{css}</style>' if inline else '<link rel="stylesheet" href="assets/site.css">'
@@ -2887,7 +2944,7 @@ def render(p, inline=False, bare=False):
         scripts.append(f"<script>\n{{\n{grid}\ninitCursorGrid(document.querySelector('.cursor-grid'), {GRID_OPTS});\n}}\n</script>")
     else:
         scripts.append(f"<script type=\"module\">\nimport {{ initCursorGrid }} from './assets/cursor-grid.js';\ninitCursorGrid(document.querySelector('.cursor-grid'), {GRID_OPTS});\n</script>")
-    content = f'{header(p["active"])}\n<main id="top">\n  {p["body"]}\n</main>\n\n{footer()}\n' + '\n'.join(scripts) + '\n'
+    content = f'{header(p["active"])}\n<main id="top">\n  {swap_feeds(p["body"])}\n</main>\n\n{footer()}\n' + '\n'.join(scripts) + '\n'
     if bare:
         return head + '\n\n' + content
     return f'<!doctype html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">\n{head}\n</head>\n<body>\n{content}</body>\n</html>\n'
@@ -2904,6 +2961,7 @@ def main():
         for p in pages:
             (out / p['file']).write_text(render(p, inline=True, bare=p['file'] == 'index.html'))
         shutil.copytree(ASSETS / 'logos', out / 'assets' / 'logos', dirs_exist_ok=True)
+        shutil.copytree(FOOTAGE, out / 'assets' / 'footage', dirs_exist_ok=True)
         print('wrote inline copy to', out)
 
 
