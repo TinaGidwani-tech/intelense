@@ -386,7 +386,7 @@ footer a:hover { color: var(--parchment); }
 .menu-btn span::before { position: absolute; top: -5px; }
 .menu-btn span::after { position: absolute; top: 5px; }
 .mobile-menu { border-top: 1px solid var(--ash); background: var(--parchment); }
-.mobile-menu .wrap { display: grid; gap: 4px; padding-block: 16px 24px; }
+.mobile-menu .wrap { display: grid; grid-template-columns: minmax(0, 1fr); gap: 4px; padding-block: 16px 24px; }
 .mobile-menu a { text-decoration: none; padding: 10px 0; font-weight: 500; border-bottom: 1px solid var(--ash); }
 .mobile-menu .sub { padding-left: 16px; font-weight: 400; color: var(--graphite); }
 .mobile-menu .btn { justify-content: center; margin-top: 12px; border-bottom: 0; }
