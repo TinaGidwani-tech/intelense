@@ -1914,5 +1914,67 @@
     "tone": "warn"
    }
   ]
+ },
+ "retail-heat-kenvision": {
+  "src": "aisle.jpg",
+  "alt": "Store aisle and checkout lanes with a heatmap showing the most activity at the checkout and the main aisle",
+  "plain": true,
+  "ratio": "16/10",
+  "heat": [
+   {
+    "x": 0.82,
+    "y": 0.84,
+    "r": 0.22
+   },
+   {
+    "x": 0.5,
+    "y": 0.78,
+    "r": 0.13
+   },
+   {
+    "x": 0.9,
+    "y": 0.6,
+    "r": 0.13
+   },
+   {
+    "x": 0.14,
+    "y": 0.82,
+    "r": 0.09
+   }
+  ],
+  "zones": [
+   {
+    "points": [
+     [
+      0.66,
+      0.64
+     ],
+     [
+      0.98,
+      0.64
+     ],
+     [
+      0.98,
+      0.99
+     ],
+     [
+      0.66,
+      0.99
+     ]
+    ],
+    "label": "Checkout · high activity",
+    "tone": "neg"
+   }
+  ],
+  "boxes": [
+   {
+    "x": 0.44,
+    "y": 0.72,
+    "w": 0.12,
+    "h": 0.16,
+    "label": "Shopper",
+    "tone": "pos"
+   }
+  ]
  }
 }

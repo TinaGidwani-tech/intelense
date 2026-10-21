@@ -1153,8 +1153,8 @@ def page_kenvision():
         </ul>
         <p class="kv-body">By combining these insights with available sales data, retailers can make better-informed decisions about store layouts, staffing and the customer experience.</p>
       </div>
-      <figure class="panel kv-plan">
-        {heat_plan(False, 'light')}
+      <figure class="kv-plan photo-hero">
+        {photo('retail-heat-kenvision') or heat_plan(False, 'light')}
         <figcaption class="demo-note">Example store heatmap</figcaption>
       </figure>
     </div>
