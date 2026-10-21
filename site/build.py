@@ -752,6 +752,7 @@ def leadership_section():
           <p class="founder-role">{f['role']}</p>
           <div class="founder-bio">{bio}</div>
           <span class="founder-chip">{f['chip']}</span>
+          <p style="margin-top:20px"><a class="link-arrow" href="https://www.linkedin.com/in/dinesh-prasanna-35623a23/" target="_blank" rel="noopener noreferrer">Connect on LinkedIn</a></p>
         </div>
       </div>
     </div>
