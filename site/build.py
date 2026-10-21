@@ -312,7 +312,7 @@ def footer():
         <ul><li class="email">enquiries@intelense.ca</li><li>Markham, Ontario, Canada</li></ul>
       </div>
     </div>
-    <div class="legal"><span>© 2026 Intelense Inc.</span><span>Photography and video: <a href="about.html#credits">Pexels and Unsplash</a></span></div>
+    <div class="legal"><span>© 2026 Intelense Inc.</span><span>Photography and video: Pexels and Unsplash</span></div>
   </div>
 </footer>
 '''
@@ -810,7 +810,6 @@ def page_about():
           </dl>
           <h3>Scope</h3>
           <p>Design, development, integration, deployment, installation, commissioning, maintenance and support of technology solutions incorporating artificial intelligence (AI), machine learning (ML), computer vision, Internet of Things (IoT), robotics, automation, software and data analytics for industrial, commercial, infrastructure and smart city use.</p>
-          <p><a class="link-arrow" href="assets/certificates/intelense-iso-9001-2015.pdf">View the certificate (PDF)</a></p>
         </div>
       </div>
     </div>
@@ -824,13 +823,7 @@ def page_about():
       </div>
     </div>
   </section>'''
-    credits = f'''<section class="block" id="credits">
-    <div class="wrap">
-      {head_block('Credits', 'Photography and video.', 'Images and clips on this site are free to use under the Pexels and Unsplash licences. Thank you to the photographers and videographers.')}
-      {credits_html()}
-    </div>
-  </section>'''
-    body = '\n\n  '.join([hero, leadership_section(), story, values, cert, proof, credits, cta_band('Want to work with us?', ('industries.html', 'See industries'))])
+    body = '\n\n  '.join([hero, leadership_section(), story, values, cert, proof, cta_band('Want to work with us?', ('industries.html', 'See industries'))])
     return dict(file='about.html', title='About | Intelense', desc='Intelense is an AI and data analytics company in Markham, Ontario, with a mission to create a safer world.',
                 active='about.html', body=body)
 

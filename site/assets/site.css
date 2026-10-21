@@ -394,14 +394,13 @@ footer a:hover { color: var(--parchment); }
 @media (min-width: 1081px) { .mobile-menu { display: none; } }
 
 /* Inner page hero */
-.page-hero { position: relative; isolation: isolate; overflow: hidden; padding-block: clamp(40px, 6vw, 80px) clamp(56px, 7vw, 96px); }
+.page-hero { position: relative; isolation: isolate; padding-block: clamp(40px, 6vw, 80px) clamp(56px, 7vw, 96px); }
 .page-hero .wrap { position: relative; }
 .page-hero h1 { max-width: 18ch; margin-top: 22px; font-size: clamp(36px, 5.2vw, 64px); }
 .page-hero .lede { margin-top: 22px; }
+.page-hero .wash-a { left: 0; top: auto; bottom: 8%; }
 .page-hero .hero-ctas { justify-content: flex-start; margin-top: 32px; }
 .page-hero .hero-logo { display: block; height: auto; width: min(340px, 80%); margin-top: 20px; }
-.page-hero .wash-a { left: -6%; top: 10%; }
-.page-hero .wash-b { right: -4%; top: -10%; }
 .crumbs { display: flex; flex-wrap: wrap; gap: 8px; list-style: none; margin: 0 0 22px; padding: 0; font-size: 13px; color: var(--smoke); }
 .crumbs li + li::before { content: "/"; margin-right: 8px; color: var(--ash); }
 .crumbs a { text-decoration: none; color: var(--graphite); }
