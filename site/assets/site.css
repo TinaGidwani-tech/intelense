@@ -996,8 +996,8 @@ footer a:hover { color: var(--parchment); }
 .clients:hover .marquee { animation-play-state: paused; }
 .marquee ul { display: flex; align-items: center; list-style: none; margin: 0; padding: 0; flex: none; }
 .marquee ul { gap: clamp(14px, 1.8vw, 24px); padding-right: clamp(14px, 1.8vw, 24px); }
-.marquee .tile { --th: clamp(88px, 8.6vw, 116px); display: flex; align-items: center; justify-content: center; box-sizing: border-box; overflow: hidden; width: clamp(170px, 17vw, 230px); height: var(--th); padding: 16px 22px; background: #fff; border-radius: 22px; }
-.marquee .tile img { max-width: 100%; max-height: calc(var(--th) - 36px); width: auto; height: auto; object-fit: contain; display: block; }
+.marquee .tile { --th: clamp(100px, 10vw, 132px); display: flex; align-items: center; justify-content: center; box-sizing: border-box; overflow: hidden; width: clamp(170px, 17vw, 230px); height: var(--th); padding: 16px 22px; background: #fff; border-radius: 22px; }
+.marquee .tile img { max-width: 100%; max-height: calc(var(--th) - 28px); width: auto; height: auto; object-fit: contain; display: block; }
 .marquee .tile.txt span { color: var(--off-black); font-size: clamp(19px, 1.9vw, 26px); line-height: 1.15; text-align: center; white-space: normal; }
 .marquee .tile.w1 span { font-weight: 500; letter-spacing: .14em; text-transform: uppercase; font-size: clamp(16px, 1.6vw, 22px); }
 .marquee .tile.w2 span { font-weight: 600; letter-spacing: -.02em; }
