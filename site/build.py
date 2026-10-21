@@ -428,7 +428,7 @@ def tile(scene, osd=None, w=960, h=540):
 # ---------------------------------------------------------------- home page sections (reused from the approved homepage)
 
 _home = HOME_SOURCE.read_text()
-_main = _home[_home.index('<main id="top">') + len('<main id="top">'):_home.index('</main>')].replace('src="logos/', 'src="assets/logos/').replace('<img class="c-logo" src="assets/logos/kenvision-light.png" alt="" width="82" height="30">', '<img class="c-logo" src="assets/logos/intelense-light.png" alt="Intelense" width="143" height="22" style="height:22px">').replace('<span class="eyebrow">KenVision in action</span>', '<span class="eyebrow">Intelense in action</span>')
+_main = _home[_home.index('<main id="top">') + len('<main id="top">'):_home.index('</main>')].replace('src="logos/', 'src="assets/logos/').replace('<img class="c-logo" src="assets/logos/kenvision-light.png" alt="" width="82" height="30">', '<img class="c-logo" src="assets/logos/intelense-light.png" alt="Intelense" width="143" height="22" style="height:22px">').replace('<span class="eyebrow">KenVision in action</span>', '<span class="eyebrow">Intelense in action</span>').replace('<div class="serif">Intelense</div>', '<div class="serif">Ken360</div>')
 
 
 def home_section(sid=None, cls=None):
