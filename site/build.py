@@ -3159,7 +3159,9 @@ def deploy_build(pages, out):
         h = _re.sub(r'href="([a-z0-9-]+)\.html(#[^"]*)?"', link, h)
         h = _re.sub(r'''(href=|src=|poster=|data-src=)(["'])assets/''', r'\1\2/assets/', h).replace('url(assets/', 'url(/assets/').replace("from './assets/", "from '/assets/")
         path = PUBLIC[p['file']]
-        dest = out / 'index.html' if path == '/' else out / path.strip('/') / 'index.html'
+        # flat files (/kenvision -> kenvision.html, /blogs/x -> blogs/x.html): the layout the old site used, so a host that already
+        # rewrites clean URLs to .html (the old .htaccess) serves them without redirecting /x to /x/
+        dest = out / 'index.html' if path == '/' else out / (path.strip('/') + '.html')
         dest.parent.mkdir(parents=True, exist_ok=True)
         dest.write_text(h)
     for d in ('logos', 'footage', 'people', 'clients', 'certificates', 'old-images', 'icons'):
@@ -3197,23 +3199,13 @@ def apply_old_seo(pages):
 
 
 def write_redirects(out, pages):
-    """Old URLs that were only redirect stubs: 301 rules for Apache (.htaccess) and Netlify / Cloudflare Pages (_redirects), plus a static fallback page."""
+    """Old URLs that were only redirect stubs. Written as add-on files, never as .htaccess: the host's own .htaccess stays in charge."""
     rules = dict(legacy_pages.REDIRECTS)
-    canonical_host = ('RewriteEngine On\n# one address per page: intelense.com and plain http go to https://www.intelense.com (only on the real domain, so a temporary test URL is left alone)\n'
-                      'RewriteCond %{HTTP_HOST} ^intelense\\.com$ [NC]\nRewriteRule ^ https://www.intelense.com%{REQUEST_URI} [R=301,L]\n'
-                      'RewriteCond %{HTTP_HOST} ^www\\.intelense\\.com$ [NC]\nRewriteCond %{HTTPS} off\nRewriteRule ^ https://www.intelense.com%{REQUEST_URI} [R=301,L]\n\n')
-    (out / '.htaccess').write_text(canonical_host + ''.join(f'RewriteRule ^{src.strip("/")}/?$ {dst} [R=301,L]\n' for src, dst in rules.items()))
+    lines = ['# Add these lines to the host .htaccess, directly after "RewriteEngine On" and before the clean-URL rules.\n',
+             '# They send the old redirect-stub addresses to the page that replaced them (301 = permanent, keeps search rankings).\n']
+    lines += [f'RewriteRule ^{src.strip("/")}/?$ {dst} [R=301,L]\n' for src, dst in rules.items() if src != '/index']
+    (out / 'htaccess-add-these-lines.txt').write_text(''.join(lines))
     (out / '_redirects').write_text(''.join(f'{src} {dst} 301\n' for src, dst in rules.items()))
-    for src, dst in rules.items():
-        if src == '/index':
-            continue
-        d = out / src.strip('/')
-        d.mkdir(parents=True, exist_ok=True)
-        (d / 'index.html').write_text(f'<!doctype html>\n<html lang="en"><head><meta charset="utf-8"><title>Redirecting...</title><meta name="robots" content="noindex"><link rel="canonical" href="{SITE_URL}{dst}">'
-                                      f'<meta http-equiv="refresh" content="0;url={dst}"></head><body><p>This page has moved to <a href="{dst}">{SITE_URL}{dst}</a>.</p></body></html>\n')
-    idx = out / 'index' / 'index.html'
-    idx.parent.mkdir(parents=True, exist_ok=True)
-    idx.write_text(f'<!doctype html>\n<html lang="en"><head><meta charset="utf-8"><title>Redirecting...</title><meta name="robots" content="noindex"><link rel="canonical" href="{SITE_URL}/"><meta http-equiv="refresh" content="0;url=/"></head><body><p><a href="/">Home</a></p></body></html>\n')
 
 
 def main():
