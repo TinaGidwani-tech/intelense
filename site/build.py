@@ -514,10 +514,26 @@ def page_index():
                 active='index.html', body=body, cctv=True, reveal=True)
 
 
+def plat_ui():
+    """Hero visual for /ken360: the tracked station clip inside a console frame with example counts and alerts (labelled as example data)."""
+    alerts = [('warn', 'Crowd density high', 'Zone A', '2s ago'), ('info', 'Queue forming', 'Gate 3', '41s ago'), ('pos', 'Entrance count updated', 'North door', '1m ago')]
+    rows = ''.join(f'<li><i class="{t}"></i><span><b>{a}</b> {z}</span><time>{w}</time></li>' for t, a, z, w in alerts)
+    return f'''<div class="plat-ui">
+      <div class="pu-bar"><span class="pu-live"><i></i><b>Intelense console</b> · Live</span><span class="pu-tag">Example data</span></div>
+      {feed_html('video-home')}
+      <div class="pu-kpis">
+        <div><span>People in view</span><b>38</b></div>
+        <div><span>Avg. dwell</span><b>2m 14s</b></div>
+        <div><span>Open alerts</span><b>3</b></div>
+      </div>
+      <ul class="pu-alerts" aria-label="Example alerts">{rows}</ul>
+    </div>'''
+
+
 def page_platform():
     hero = page_hero(crumbs((None, 'Platform')), 'The Intelense platform', 'One engine for every camera, sensor and voice on site.',
                      'Intelense connects to the devices you already run, understands what they see and hear at the edge, and sends each event to the people who need it.',
-                     '<a class="btn btn-blue" href="contact.html">Book a demo</a><a class="btn btn-ghost" href="modules.html">Explore the modules</a>', media=photo('video-warehouse'))
+                     '<a class="btn btn-blue" href="contact.html">Book a demo</a><a class="btn btn-ghost" href="modules.html">Explore the modules</a>', media=plat_ui())
     flow = f'''<section class="block" id="how">
     <div class="wrap">
       {head_block('How it works', 'From every sensor to the right response.', 'Connect the cameras and devices you already run. Intelense watches, listens and understands them, then sends each event where it needs to go.')}
@@ -557,7 +573,7 @@ def page_platform():
     mods = f'''<section class="block" id="modules">
     <div class="wrap">
       {head_block('Modules', 'Seven ways to use the same engine.', 'Each module is built on the platform above. Pick one to see what it does.')}
-      {mod_chips([m['key'] for m in MODULES])}
+      {module_grid()}
     </div>
   </section>'''
     body = '\n\n  '.join([hero, flow, edge, integ, mods, cta_band()])
@@ -773,10 +789,15 @@ def leadership_section():
   </section>'''
 
 
+def about_facts():
+    facts = [('2018', 'Founded in Markham, Ontario'), ('7', 'Ken modules on one platform'), ('ISO 9001:2015', 'Certified quality management'), ('2 offices', 'Markham, Canada and Bangalore, India')]
+    return '<div class="facts">' + ''.join(f'<div><b>{n}</b><span>{t}</span></div>' for n, t in facts) + '</div>'
+
+
 def page_about():
     hero = page_hero(crumbs((None, 'Company')), 'About Intelense', 'A safer world, starting with public safety.',
                      'Intelense is an artificial intelligence and data analytics company based in Markham, Ontario. We turn the video, sensor and voice data organisations already have into alerts people can act on.',
-                     '<a class="btn btn-blue" href="contact.html">Talk to us</a><a class="btn btn-ghost" href="platform.html">See the platform</a>', media=photo('hero-about'))
+                     '<a class="btn btn-blue" href="contact.html">Talk to us</a><a class="btn btn-ghost" href="platform.html">See the platform</a>', media=about_facts())
     story = f'''<section class="block" id="story">
     <div class="wrap">
       {head_block('Our story', 'From one idea to seven modules.', 'We started with a simple question: why do cameras record everything but tell nobody anything?')}
@@ -879,7 +900,10 @@ def offices_section():
 def page_contact():
     hero = page_hero(crumbs((None, 'Contact')), 'Contact', 'Book a demo.',
                      'Tell us about your sites and what you want to catch. We will show you Intelense on footage like yours.',
-                     '<a class="btn btn-ghost" href="index.html#faq">Read the FAQ</a><a class="btn btn-ghost" href="modules.html">Explore the modules</a>', media=photo('hero-contact'))
+                     '<a class="btn btn-blue" href="#form">Send us a message</a><a class="btn btn-ghost" href="index.html#faq">Read the FAQ</a>',
+                     extra='')
+    # centred text hero (no photo), with the three promises from the old Contact page
+    hero = hero.replace('class="page-hero"', 'class="page-hero hero-center"', 1).replace('<div class="hero-ctas">', '<div class="chips hero-pills"><span class="chip">Response in 1 business day</span><span class="chip">Live in &lt;48 hours</span><span class="chip">No hardware needed</span></div>\n      <div class="hero-ctas">', 1)
     checks = ''.join(f'<label><input type="checkbox" name="modules" value="{m["key"]}"> {m["name"]}</label>' for m in MODULES)
     form = f'''<section class="block" id="form">
     <div class="wrap contact-grid">
