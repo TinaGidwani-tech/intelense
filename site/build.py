@@ -413,6 +413,13 @@ def mod_chips(keys):
     return '<div class="mod-chips">' + ''.join(f'<a href="{k}.html" style="--mod:{MOD[k]["color"]}">{MOD[k]["name"]}</a>' for k in keys) + '</div>'
 
 
+SUPPORTERS = ['CENGN', 'VentureLab', 'Nasscom', 'Razorpay Rize', 'IBM', 'Google for Startups', 'AWS for Startups', 'NVIDIA Inception for Startups']
+
+
+def supporter_marks():
+    return '<ul class="marks">' + ''.join(f'<li class="mark">{n}</li>' for n in SUPPORTERS) + '</ul>'
+
+
 def sector_links():
     return '<div class="sectors">' + ''.join(f'<a href="industries.html#{i["id"]}">{i["name"]}</a>' for i in INDUSTRIES) + '</div>'
 
@@ -498,8 +505,7 @@ def page_index():
       {sector_links()}
       <div class="proof">
         <span class="lbl">Supported by</span>
-        <span class="mark">CENGN</span>
-        <span class="mark">VentureLab</span>
+        {supporter_marks()}
         <a class="link-arrow" href="about.html" style="margin-left:auto">About Intelense</a>
       </div>
     </div>
@@ -843,9 +849,9 @@ def page_about():
   </section>'''
     proof = f'''<section class="block" id="partners">
     <div class="wrap">
-      {head_block('Ecosystem', 'Supported by Canadian innovation.', 'We are grateful to the programmes that have helped us grow.')}
+      {head_block('Ecosystem', 'Backed by a strong ecosystem.', 'We are grateful to the programmes and partners that have helped us grow.')}
       <div class="proof" style="margin-top:0;border-top:0;padding-top:0">
-        <span class="lbl">Supported by</span><span class="mark">CENGN</span><span class="mark">VentureLab</span>
+        <span class="lbl">Supported by</span>{supporter_marks()}
         <a class="link-arrow" href="industries.html" style="margin-left:auto">Who we work with</a>
       </div>
     </div>
@@ -3173,7 +3179,7 @@ THEME_BOOT = "<script>try{var t=localStorage.getItem('theme');if(t==='dark'||t==
 GRID_START = ("var gridEl = document.querySelector('.cursor-grid'), gridStop = null, gridOpts = %s;\n"
               "function startGrid() { var dark = document.documentElement.dataset.theme === 'dark'; gridStop = initCursorGrid(gridEl, Object.assign({}, gridOpts, { color: dark ? '#ffffff' : '#0a0a0a' })); }\n"
               "startGrid();\nwindow.addEventListener('themechange', function () { if (gridStop) gridStop(); startGrid(); });")
-ICON_LINKS = ('<link rel="icon" href="assets/icons/favicon.ico" sizes="any">\n<link rel="icon" type="image/png" sizes="32x32" href="assets/icons/favicon-32.png">\n'
+ICON_LINKS = ('<link rel="icon" href="assets/icons/favicon.ico" sizes="any">\n<link rel="icon" type="image/png" sizes="32x32" href="assets/icons/favicon-32.png">\n<link rel="icon" type="image/png" sizes="48x48" href="assets/icons/favicon-48.png">\n<link rel="icon" type="image/png" sizes="96x96" href="assets/icons/favicon-96.png">\n<link rel="icon" type="image/png" sizes="192x192" href="assets/icons/icon-192.png">\n'
               '<link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png">')
 
 
