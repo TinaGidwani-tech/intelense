@@ -1207,3 +1207,11 @@ section.block > .wrap > p + p { margin-top: 14px; }
 /* Contact hero: centred, with the three promises */
 .hero-pills { justify-content: center; margin-top: 28px; }
 .page-hero.hero-center .hero-pills + .hero-ctas { margin-top: 24px; }
+
+/* Supporters: equal tiles */
+.proof.partners-wrap { display: block; }
+.partners-wrap .lbl { display: block; margin-bottom: 18px; }
+.partners { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
+.partners li { display: grid; place-items: center; text-align: center; min-height: 84px; padding: 16px 18px; border: 1px solid var(--ash); border-radius: 22px; background: var(--white); font-weight: 600; font-size: clamp(15px, 1.4vw, 19px); letter-spacing: -0.01em; line-height: 1.25; color: var(--off-black); min-width: 0; overflow-wrap: anywhere; }
+.partners-wrap .link-arrow { display: inline-flex; margin-top: 26px; }
+@media (max-width: 1080px) { .partners { grid-template-columns: repeat(2, minmax(0, 1fr)); } }

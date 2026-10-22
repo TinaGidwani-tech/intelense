@@ -416,8 +416,12 @@ def mod_chips(keys):
 SUPPORTERS = ['CENGN', 'VentureLab', 'Nasscom', 'Razorpay Rize', 'IBM', 'Google for Startups', 'AWS for Startups', 'NVIDIA Inception for Startups']
 
 
-def supporter_marks():
-    return '<ul class="marks">' + ''.join(f'<li class="mark">{n}</li>' for n in SUPPORTERS) + '</ul>'
+def supporter_marks(link=None, label=False):
+    """Supporters as a grid of equal tiles, with an optional label above and a link below."""
+    tiles = ''.join(f'<li>{n}</li>' for n in SUPPORTERS)
+    lab = '<span class="lbl">Supported by</span>' if label else ''
+    lnk = f'<a class="link-arrow" href="{link[0]}">{link[1]}</a>' if link else ''
+    return f'{lab}<ul class="partners">{tiles}</ul>{lnk}'
 
 
 def sector_links():
@@ -503,10 +507,8 @@ def page_index():
     <div class="wrap">
       {head_block('Industries', "Built for places where safety can't wait.", 'Our mission is a safer world, starting with public safety. The same platform serves teams across these sectors.')}
       {sector_links()}
-      <div class="proof">
-        <span class="lbl">Supported by</span>
-        {supporter_marks()}
-        <a class="link-arrow" href="about.html" style="margin-left:auto">About Intelense</a>
+      <div class="proof partners-wrap">
+        {supporter_marks(('about.html', 'About Intelense'), label=True)}
       </div>
     </div>
   </section>'''
@@ -850,9 +852,8 @@ def page_about():
     proof = f'''<section class="block" id="partners">
     <div class="wrap">
       {head_block('Ecosystem', 'Backed by a strong ecosystem.', 'We are grateful to the programmes and partners that have helped us grow.')}
-      <div class="proof" style="margin-top:0;border-top:0;padding-top:0">
-        <span class="lbl">Supported by</span>{supporter_marks()}
-        <a class="link-arrow" href="industries.html" style="margin-left:auto">Who we work with</a>
+      <div class="partners-wrap">
+        {supporter_marks(('industries.html', 'Who we work with'))}
       </div>
     </div>
   </section>'''
