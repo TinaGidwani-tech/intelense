@@ -842,7 +842,8 @@ def page_about():
 
 OFFICES = [
     dict(city='Markham, Canada', addr='3600 Steeles Ave E, Markham, ON Canada', q='3600 Steeles Ave E, Markham, ON, Canada', tel='+12895523165', tel_show='+1 (289) 552-3165'),
-    dict(city='Bangalore, India', addr='No. 45 C2 Gubbalala, Bangalore South India', q='No. 45 C2 Gubbalala, Bangalore South, India', tel='+919342810422', tel_show='+91 93428 10422'),
+    dict(city='Bangalore, India', addr='No. 45 C2 Gubbalala, Bangalore South India', q='No. 45 C2 Gubbalala, Bangalore South, India', tel='+919342810422', tel_show='+91 93428 10422',
+         embed='https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3889.3260922302957!2d77.5360637743334!3d12.886741016734618!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bae3f003f33d53f%3A0x28bf52898b54df88!2sIntelense%20Technologies%20Private%20Limited!5e0!3m2!1sen!2sin!4v1792657405921!5m2!1sen!2sin', link='https://www.google.com/maps?cid=2936156232770445192'),
 ]
 
 
@@ -852,14 +853,17 @@ def offices_section():
     cards = ''
     for o in OFFICES:
         q = quote_plus(o['q'])
+        # offices with a pinned Google place use that exact embed and link; the others search by address
+        src = o.get('embed') or f'https://maps.google.com/maps?q={q}&z=15&output=embed'
+        href = o.get('link') or f'https://www.google.com/maps/search/?api=1&query={q}'
         cards += f'''<article class="office">
         <h3>{o['city']}</h3>
         <p>{o['addr']}</p>
         <p><a href="tel:{o['tel']}">{o['tel_show']}</a></p>
-        <div class="map" data-src="https://maps.google.com/maps?q={q}&amp;z=15&amp;output=embed" data-title="Map of our {o['city']} office">
+        <div class="map" data-src="{src.replace("&", "&amp;")}" data-title="Map of our {o['city']} office">
           <button class="map-load" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s7-6.2 7-11.5A7 7 0 0 0 5 9.5C5 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg><span>Show map</span></button>
         </div>
-        <a class="link-arrow" href="https://www.google.com/maps/search/?api=1&amp;query={q}" target="_blank" rel="noopener noreferrer">Open in Google Maps</a>
+        <a class="link-arrow" href="{href.replace("&", "&amp;")}" target="_blank" rel="noopener noreferrer">Open in Google Maps</a>
       </article>'''
     return f'''<section class="block" id="offices">
     <div class="wrap">
