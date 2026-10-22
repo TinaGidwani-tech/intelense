@@ -1135,7 +1135,8 @@ section.block > .wrap > p + p { margin-top: 14px; }
 .theme-btn:hover { background: var(--off-black); color: var(--parchment); }
 .theme-btn svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
 .theme-btn .i-sun { display: none; }
-.logo .logo-dark, img.on-dark { display: none; }
+.logo .logo-dark { display: none; }
+img.on-dark { display: none !important; } /* the white twin is only for dark mode; !important because layout rules like .hero-logo set display too */
 :root[data-theme="dark"] {
   color-scheme: dark;
   --parchment: #101114;
@@ -1149,10 +1150,11 @@ section.block > .wrap > p + p { margin-top: 14px; }
 }
 :root[data-theme="dark"] .theme-btn .i-moon { display: none; }
 :root[data-theme="dark"] .theme-btn .i-sun { display: block; }
-:root[data-theme="dark"] .logo .logo-light, :root[data-theme="dark"] img.on-light { display: none; }
+:root[data-theme="dark"] .logo .logo-light { display: none; }
+:root[data-theme="dark"] img.on-light { display: none !important; }
 :root[data-theme="dark"] .logo .logo-dark { display: block; }
-:root[data-theme="dark"] img.on-dark { display: inline-block; }
-:root[data-theme="dark"] .page-hero img.on-dark.hero-logo { display: block; }
+:root[data-theme="dark"] img.on-dark { display: inline-block !important; }
+:root[data-theme="dark"] .page-hero img.on-dark.hero-logo { display: block !important; }
 :root[data-theme="dark"] .chip, :root[data-theme="dark"] .anchor-row a { border-color: rgba(236,236,241,.35); }
 :root[data-theme="dark"] .wash { opacity: .55; }
 :root[data-theme="dark"] svg [fill="#242424"] { fill: var(--off-black); }
