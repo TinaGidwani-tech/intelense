@@ -848,7 +848,7 @@ OFFICES = [
 
 
 def offices_section():
-    """One card per office. The map loads only when the visitor clicks it, so no Google content or cookies are loaded just by opening the page."""
+    """One card per office; the Bangalore card carries the embedded Google map."""
     from urllib.parse import quote_plus
     cards = ''
     for o in OFFICES:
@@ -856,13 +856,16 @@ def offices_section():
         # offices with a pinned Google place use that exact embed and link; the others search by address
         src = o.get('embed') or f'https://maps.google.com/maps?q={q}&z=15&output=embed'
         href = o.get('link') or f'https://www.google.com/maps/search/?api=1&query={q}'
+        if o.get('embed'):
+            map_html = (f'<div class="map"><iframe src="{src.replace("&", "&amp;")}" title="Map of our {o["city"]} office" loading="lazy" '
+                        f'referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div>')
+        else:
+            map_html = ''  # only the Bangalore office has a map
         cards += f'''<article class="office">
         <h3>{o['city']}</h3>
         <p>{o['addr']}</p>
         <p><a href="tel:{o['tel']}">{o['tel_show']}</a></p>
-        <div class="map" data-src="{src.replace("&", "&amp;")}" data-title="Map of our {o['city']} office">
-          <button class="map-load" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s7-6.2 7-11.5A7 7 0 0 0 5 9.5C5 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg><span>Show map</span></button>
-        </div>
+        {map_html}
         <a class="link-arrow" href="{href.replace("&", "&amp;")}" target="_blank" rel="noopener noreferrer">Open in Google Maps</a>
       </article>'''
     return f'''<section class="block" id="offices">

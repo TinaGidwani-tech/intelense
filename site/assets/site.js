@@ -176,20 +176,6 @@
     if (!reduce) (function loop(now) { var dt = Math.min(.05, (now - last) / 1000); last = now; frame(dt); requestAnimationFrame(loop); })(last);
   });
 
-  // Office maps: the Google map loads only after the visitor asks for it
-  document.querySelectorAll('.map-load').forEach(function (btn) {
-    btn.addEventListener('click', function () {
-      var box = btn.closest('.map');
-      var f = document.createElement('iframe');
-      f.src = box.getAttribute('data-src');
-      f.title = box.getAttribute('data-title') || 'Map';
-      f.loading = 'lazy';
-      f.referrerPolicy = 'strict-origin-when-cross-origin';
-      f.setAttribute('allowfullscreen', '');
-      box.replaceChildren(f);
-    });
-  });
-
   // Light / dark toggle: remembers the choice in this browser, and tells the cursor grid to redraw in the new colour
   var themeBtn = document.querySelector('.theme-btn');
   if (themeBtn) {
