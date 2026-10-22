@@ -3195,7 +3195,9 @@ OG_IMAGE = '/assets/footage/video-home-poster.jpg'
 # `python3 site/build.py --deploy dist --no-dark` leaves the light/dark toggle out (the CSS stays, nothing switches it on)
 ENABLE_THEME = '--no-dark' not in sys.argv
 # Runs before the page paints, so a saved dark choice does not flash light first
-THEME_BOOT = "<script>try{var t=localStorage.getItem('theme');if(t==='dark'||t==='light')document.documentElement.dataset.theme=t}catch(e){}</script>"
+THEME_BOOT = ("<script>try{var t=null;try{t=localStorage.getItem('theme')}catch(e){}"
+              "if(!t){var m=/(?:^|;)theme:(dark|light);/.exec(window.name||'');if(m)t=m[1]}"
+              "if(t==='dark'||t==='light')document.documentElement.dataset.theme=t}catch(e){}</script>")
 GRID_START = ("var gridEl = document.querySelector('.cursor-grid'), gridStop = null, gridOpts = %s;\n"
               "function startGrid() { var dark = document.documentElement.dataset.theme === 'dark'; gridStop = initCursorGrid(gridEl, Object.assign({}, gridOpts, { color: dark ? '#ffffff' : '#0a0a0a' })); }\n"
               "startGrid();\nwindow.addEventListener('themechange', function () { if (gridStop) gridStop(); startGrid(); });")

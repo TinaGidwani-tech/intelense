@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<script>try{var t=localStorage.getItem('theme');if(t==='dark'||t==='light')document.documentElement.dataset.theme=t}catch(e){}</script>
+<script>try{var t=null;try{t=localStorage.getItem('theme')}catch(e){}if(!t){var m=/(?:^|;)theme:(dark|light);/.exec(window.name||'');if(m)t=m[1]}if(t==='dark'||t==='light')document.documentElement.dataset.theme=t}catch(e){}</script>
 <title>AI in Every Sector: How Industries Are Deploying Intelligent Systems | Intelense Blog</title>
 <meta name="description" content="From John Deere&#x27;s precision spraying to NHS radiology AI — a sector-by-sector breakdown of who&#x27;s deploying AI and what results they&#x27;re seeing.">
 <link rel="icon" href="assets/icons/favicon.ico" sizes="any">

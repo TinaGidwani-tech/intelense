@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<script>try{var t=localStorage.getItem('theme');if(t==='dark'||t==='light')document.documentElement.dataset.theme=t}catch(e){}</script>
+<script>try{var t=null;try{t=localStorage.getItem('theme')}catch(e){}if(!t){var m=/(?:^|;)theme:(dark|light);/.exec(window.name||'');if(m)t=m[1]}if(t==='dark'||t==='light')document.documentElement.dataset.theme=t}catch(e){}</script>
 <title>Digital Billboards Are Getting Smart: AI Is Personalising Outdoor Advertising | Intelense Blog</title>
 <meta name="description" content="JCDecaux, Clear Channel, and Lamar are deploying AI that reads the crowd and serves the right ad in real time. How computer vision is transforming OOH advertising.">
 <link rel="icon" href="assets/icons/favicon.ico" sizes="any">

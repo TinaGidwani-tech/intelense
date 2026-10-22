@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<script>try{var t=localStorage.getItem('theme');if(t==='dark'||t==='light')document.documentElement.dataset.theme=t}catch(e){}</script>
+<script>try{var t=null;try{t=localStorage.getItem('theme')}catch(e){}if(!t){var m=/(?:^|;)theme:(dark|light);/.exec(window.name||'');if(m)t=m[1]}if(t==='dark'||t==='light')document.documentElement.dataset.theme=t}catch(e){}</script>
 <title>KenIoT IoT &amp; Sensor Analytics | Intelense</title>
 <meta name="description" content="KenIoT turns data from connected sensors and equipment into real-time monitoring, AI anomaly detection and predictive maintenance insights.">
 <meta name="keywords" content="IoT analytics AI, AI driven predictive maintenance, AI powered predictive maintenance, AI based predictive maintenance system, predictive maintenance using IoT, industrial IoT analysis, IoT based safety monitoring, real time activity monitoring, industrial safety monitoring system using IoT, IoT based worker safety monitoring, smart manufacturing with IoT, smart factory management, IoT energy monitoring system, cloud analytics for IoT application, centralized surveillance using IoT, enterprise IoT solutions, easy remote monitoring">

@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<script>try{var t=localStorage.getItem('theme');if(t==='dark'||t==='light')document.documentElement.dataset.theme=t}catch(e){}</script>
+<script>try{var t=null;try{t=localStorage.getItem('theme')}catch(e){}if(!t){var m=/(?:^|;)theme:(dark|light);/.exec(window.name||'');if(m)t=m[1]}if(t==='dark'||t==='light')document.documentElement.dataset.theme=t}catch(e){}</script>
 <title>Making Every Home Safer with Real-Time Alerts for Elderly, Kids, and Pets | KenHome Case Study</title>
 <meta name="description" content="How KenHome delivers continuous AI monitoring for elderly fall detection, child safety, pet tracking, and home security turning any existing camera into a smart guardian.">
 <link rel="icon" href="assets/icons/favicon.ico" sizes="any">

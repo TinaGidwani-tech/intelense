@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<script>try{var t=localStorage.getItem('theme');if(t==='dark'||t==='light')document.documentElement.dataset.theme=t}catch(e){}</script>
+<script>try{var t=null;try{t=localStorage.getItem('theme')}catch(e){}if(!t){var m=/(?:^|;)theme:(dark|light);/.exec(window.name||'');if(m)t=m[1]}if(t==='dark'||t==='light')document.documentElement.dataset.theme=t}catch(e){}</script>
 <title>About Intelense AI Company Founded by Dinesh Prasanna | MIT TLP</title>
 <meta name="description" content="Intelense builds AI products for the real world. Meet the founder and advisors behind KenVision, KenSafety, KenHome, KenAgri, KenIoT, and KenRobotics.">
 <link rel="icon" href="assets/icons/favicon.ico" sizes="any">

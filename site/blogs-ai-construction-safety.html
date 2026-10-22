@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<script>try{var t=localStorage.getItem('theme');if(t==='dark'||t==='light')document.documentElement.dataset.theme=t}catch(e){}</script>
+<script>try{var t=null;try{t=localStorage.getItem('theme')}catch(e){}if(!t){var m=/(?:^|;)theme:(dark|light);/.exec(window.name||'');if(m)t=m[1]}if(t==='dark'||t==='light')document.documentElement.dataset.theme=t}catch(e){}</script>
 <title>From Reactive to Predictive: The New Era of AI-Powered Construction Safety | Intelense Blog</title>
 <meta name="description" content="Construction is the world&#x27;s second-deadliest industry. AI doesn&#x27;t add more rules — it changes enforcement from periodic and human to continuous and automated.">
 <link rel="icon" href="assets/icons/favicon.ico" sizes="any">

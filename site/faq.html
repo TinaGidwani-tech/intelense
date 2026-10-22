@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<script>try{var t=localStorage.getItem('theme');if(t==='dark'||t==='light')document.documentElement.dataset.theme=t}catch(e){}</script>
+<script>try{var t=null;try{t=localStorage.getItem('theme')}catch(e){}if(!t){var m=/(?:^|;)theme:(dark|light);/.exec(window.name||'');if(m)t=m[1]}if(t==='dark'||t==='light')document.documentElement.dataset.theme=t}catch(e){}</script>
 <title>Intelense FAQ | AI Products, Deployment, and Pricing</title>
 <meta name="description" content="Answers to common questions about Intelense AI products KenVision, KenSafety, KenHome, KenAgri, KenIoT, and KenRobotics. Covers hardware requirements, deployment, integrations, and pricing.">
 <link rel="icon" href="assets/icons/favicon.ico" sizes="any">

@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<script>try{var t=localStorage.getItem('theme');if(t==='dark'||t==='light')document.documentElement.dataset.theme=t}catch(e){}</script>
+<script>try{var t=null;try{t=localStorage.getItem('theme')}catch(e){}if(!t){var m=/(?:^|;)theme:(dark|light);/.exec(window.name||'');if(m)t=m[1]}if(t==='dark'||t==='light')document.documentElement.dataset.theme=t}catch(e){}</script>
 <title>Your Building Is Wasting Energy Right Now. AI Can Fix That. | Intelense Blog</title>
 <meta name="description" content="Google cut data centre cooling by 40%. JLL saves 35% on energy across its managed portfolio. Buildings account for 40% of global energy — AI is the management layer that fixes the waste.">
 <link rel="icon" href="assets/icons/favicon.ico" sizes="any">

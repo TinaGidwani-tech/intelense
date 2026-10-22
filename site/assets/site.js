@@ -200,6 +200,8 @@
       var next = root.dataset.theme === 'dark' ? 'light' : 'dark';
       root.dataset.theme = next;
       try { localStorage.setItem('theme', next); } catch (e) {}
+      // fallback for browsers or preview frames that block storage: window.name survives page changes in the same tab
+      try { window.name = (window.name || '').replace(/(^|;)theme:(dark|light);/, '$1') + 'theme:' + next + ';'; } catch (e) {}
       label();
       window.dispatchEvent(new Event('themechange'));
     });

@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<script>try{var t=localStorage.getItem('theme');if(t==='dark'||t==='light')document.documentElement.dataset.theme=t}catch(e){}</script>
+<script>try{var t=null;try{t=localStorage.getItem('theme')}catch(e){}if(!t){var m=/(?:^|;)theme:(dark|light);/.exec(window.name||'');if(m)t=m[1]}if(t==='dark'||t==='light')document.documentElement.dataset.theme=t}catch(e){}</script>
 <title>KenHome Smart Home Security AI | Intelense</title>
 <meta name="description" content="KenHome turns compatible home cameras into AI-powered monitoring for home security, elderly fall detection, child safety, pets and driveways, with real-time alerts.">
 <meta name="keywords" content="AI home security system, AI home security camera, AI smart home security, real time home security camera, AI home automation, AI monitoring system, AI for elderly care, AI home monitoring for elderly, AI child safety monitoring, smart home safety AI, AI pet monitoring system, real time pet monitoring system, baby monitoring system with real time AI detection, kids monitoring camera, theft detection system, car anti theft system, AI based monitoring system, AI monitoring tools">

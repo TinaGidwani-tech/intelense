@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<script>try{var t=localStorage.getItem('theme');if(t==='dark'||t==='light')document.documentElement.dataset.theme=t}catch(e){}</script>
+<script>try{var t=null;try{t=localStorage.getItem('theme')}catch(e){}if(!t){var m=/(?:^|;)theme:(dark|light);/.exec(window.name||'');if(m)t=m[1]}if(t==='dark'||t==='light')document.documentElement.dataset.theme=t}catch(e){}</script>
 <title>KenVoice Retail Conversation Intelligence | Intelense</title>
 <meta name="description" content="KenVoice uses on-device AI audio analytics to turn customer and staff conversations at the counter into service, coaching and sales insights for retailers.">
 <link rel="icon" href="assets/icons/favicon.ico" sizes="any">

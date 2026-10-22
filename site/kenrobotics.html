@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<script>try{var t=localStorage.getItem('theme');if(t==='dark'||t==='light')document.documentElement.dataset.theme=t}catch(e){}</script>
+<script>try{var t=null;try{t=localStorage.getItem('theme')}catch(e){}if(!t){var m=/(?:^|;)theme:(dark|light);/.exec(window.name||'');if(m)t=m[1]}if(t==='dark'||t==='light')document.documentElement.dataset.theme=t}catch(e){}</script>
 <title>KenRobotics Autonomous Systems AI | Intelense</title>
 <meta name="description" content="KenRobotics helps autonomous robots understand their surroundings, navigate changing environments, avoid obstacles and coordinate tasks across robot fleets.">
 <meta name="keywords" content="AI robotics, warehouse automation AI, warehouse robotics, warehouse automation, smart warehouse technology, automated warehouse, robotic inspection systems, AI driven automated inspection, inspection robots for industrial facilities, AI powered analytics, AI data analytics, automate data analysis, AI powered real time insights, warehouse robotics in India, AI robotics companies in India, AI and data analytics smarter warehouse decision making, automatic inspection and sorting">
