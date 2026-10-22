@@ -317,7 +317,7 @@ def footer():
       </div>
       <div>
         <h4>Contact</h4>
-        <ul><li class="email">enquiries@intelense.ca</li><li><a href="tel:+12895523165">+1 (289) 552-3165</a> Canada</li><li><a href="tel:+919342810422">+91 93428 10422</a> India</li><li>Markham, Ontario, Canada</li><li>Bangalore, India</li><li><a href="https://www.linkedin.com/company/intelense/" target="_blank" rel="noopener noreferrer">LinkedIn</a></li></ul>
+        <ul><li class="email">enquiries@intelense.ca</li><li><a href="tel:+12895523165">+1 (289) 552-3165</a> Canada</li><li><a href="tel:+919342810422">+91 93428 10422</a> India</li><li>Markham, Ontario, Canada</li><li>Bengaluru, India</li><li><a href="https://www.linkedin.com/company/intelense/" target="_blank" rel="noopener noreferrer">LinkedIn</a></li></ul>
       </div>
     </div>
     <div class="legal"><span>© 2026 Intelense Inc. · <a href="privacy.html">Privacy</a> · <a href="terms.html">Terms</a></span><span>Photography and video: Pexels and Unsplash</span></div>
@@ -796,7 +796,7 @@ def leadership_section():
 
 
 def about_facts():
-    facts = [('2018', 'Founded in Markham, Ontario'), ('7', 'Ken modules on one platform'), ('ISO 9001:2015', 'Certified quality management'), ('2 offices', 'Markham, Canada and Bangalore, India')]
+    facts = [('2018', 'Founded in Markham, Ontario'), ('7', 'Ken modules on one platform'), ('ISO 9001:2015', 'Certified quality management'), ('2 offices', 'Markham, Canada and Bengaluru, India')]
     return '<div class="facts">' + ''.join(f'<div><b>{n}</b><span>{t}</span></div>' for n, t in facts) + '</div>'
 
 
@@ -869,13 +869,13 @@ def page_about():
 
 OFFICES = [
     dict(city='Markham, Canada', addr='3600 Steeles Ave E, Markham, ON Canada', q='3600 Steeles Ave E, Markham, ON, Canada', tel='+12895523165', tel_show='+1 (289) 552-3165'),
-    dict(city='Bangalore, India', addr='No. 45 C2 Gubbalala, Bangalore South India', q='No. 45 C2 Gubbalala, Bangalore South, India', tel='+919342810422', tel_show='+91 93428 10422',
+    dict(city='Bengaluru, India', addr='No. 45 C2, Deepika Layout, Gubbalala, Uttarahalli Hobli, Bengaluru, Karnataka 560061', q='No. 45 C2, Deepika Layout, Gubbalala, Uttarahalli Hobli, Bengaluru, Karnataka 560061, India', tel='+919342810422', tel_show='+91 93428 10422',
          embed='https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3889.3260922302957!2d77.5360637743334!3d12.886741016734618!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bae3f003f33d53f%3A0x28bf52898b54df88!2sIntelense%20Technologies%20Private%20Limited!5e0!3m2!1sen!2sin!4v1792657405921!5m2!1sen!2sin', link='https://www.google.com/maps?cid=2936156232770445192'),
 ]
 
 
 def offices_section():
-    """One card per office; the Bangalore card carries the embedded Google map."""
+    """One card per office; the Bengaluru card carries the embedded Google map."""
     from urllib.parse import quote_plus
     cards = ''
     for o in OFFICES:
@@ -897,7 +897,7 @@ def offices_section():
       </article>'''
     return f'''<section class="block" id="offices">
     <div class="wrap">
-      {head_block('Offices', 'Find us.', 'Visit us in Markham or Bangalore, or call the office nearest you.')}
+      {head_block('Offices', 'Find us.', 'Visit us in Markham or Bengaluru, or call the office nearest you.')}
       <div class="offices">{cards}</div>
     </div>
   </section>'''
@@ -937,7 +937,7 @@ def page_contact():
         <ul class="info-list">
           <li><span>Email</span><b class="email">enquiries@intelense.ca</b></li>
           <li><span>Phone</span><b><a href="tel:+12895523165">+1 (289) 552-3165</a> <small>Canada</small></b><b><a href="tel:+919342810422">+91 93428 10422</a> <small>India</small></b></li>
-          <li><span>Offices</span><b>3600 Steeles Ave E, Markham, ON Canada</b><b>No. 45 C2 Gubbalala, Bangalore South India</b></li>
+          <li><span>Offices</span><b>3600 Steeles Ave E, Markham, ON Canada</b><b>No. 45 C2, Deepika Layout, Gubbalala, Uttarahalli Hobli, Bengaluru, Karnataka 560061</b></li>
         </ul>
         <h3 style="margin-top:28px">What happens next</h3>
         <ol class="next-steps">

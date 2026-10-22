@@ -344,9 +344,11 @@
       },
       {
        "@type": "PostalAddress",
-       "streetAddress": "No. 45 C2 Gubbalala",
-       "addressLocality": "Bangalore South",
-       "addressCountry": "IN"
+       "streetAddress": "No. 45 C2, Deepika Layout, Gubbalala, Uttarahalli Hobli",
+       "addressLocality": "Bengaluru",
+       "addressCountry": "IN",
+       "addressRegion": "Karnataka",
+       "postalCode": "560061"
       }
      ]
     }
