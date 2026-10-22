@@ -243,6 +243,9 @@ def logo_img(m, scale=0.22, cls='mod-logo'):
             f'<img class="{cls} on-dark" src="assets/logos/{light}" alt="" aria-hidden="true" {dims}>')
 
 
+THEME_BUTTON = '<button class="theme-btn" type="button" aria-label="Switch to dark mode" title="Switch to dark mode"><svg class="i-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg><svg class="i-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg></button>'
+
+
 def header(active):
     links = []
     for href, label in NAV:
@@ -276,7 +279,7 @@ def header(active):
       {''.join(links)}
     </ul>
     <div class="nav-cta">
-      <button class="theme-btn" type="button" aria-label="Switch to dark mode" title="Switch to dark mode"><svg class="i-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg><svg class="i-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg></button>
+      {THEME_BUTTON if ENABLE_THEME else ''}
       <a class="btn btn-blue" href="contact.html">Book a demo</a>
       <button class="menu-btn" type="button" aria-expanded="false" aria-controls="mobile-menu" aria-label="Menu"><span></span></button>
     </div>
@@ -314,7 +317,7 @@ def footer():
       </div>
       <div>
         <h4>Contact</h4>
-        <ul><li class="email">enquiries@intelense.ca</li><li><a href="tel:+12895523165">+1 (289) 552-3165</a> Canada</li><li><a href="tel:+919108284574">+91 91082 84574</a> India</li><li>Markham, Ontario, Canada</li><li><a href="https://www.linkedin.com/company/intelense/" target="_blank" rel="noopener noreferrer">LinkedIn</a></li></ul>
+        <ul><li class="email">enquiries@intelense.ca</li><li><a href="tel:+12895523165">+1 (289) 552-3165</a> Canada</li><li><a href="tel:+919342810422">+91 93428 10422</a> India</li><li>Markham, Ontario, Canada</li><li>Bangalore, India</li><li><a href="https://www.linkedin.com/company/intelense/" target="_blank" rel="noopener noreferrer">LinkedIn</a></li></ul>
       </div>
     </div>
     <div class="legal"><span>© 2026 Intelense Inc. · <a href="privacy.html">Privacy</a> · <a href="terms.html">Terms</a></span><span>Photography and video: Pexels and Unsplash</span></div>
@@ -837,6 +840,35 @@ def page_about():
                 active='about.html', body=body)
 
 
+OFFICES = [
+    dict(city='Markham, Canada', addr='3600 Steeles Ave E, Markham, ON Canada', q='3600 Steeles Ave E, Markham, ON, Canada', tel='+12895523165', tel_show='+1 (289) 552-3165'),
+    dict(city='Bangalore, India', addr='No. 45 C2 Gubbalala, Bangalore South India', q='No. 45 C2 Gubbalala, Bangalore South, India', tel='+919342810422', tel_show='+91 93428 10422'),
+]
+
+
+def offices_section():
+    """One card per office. The map loads only when the visitor clicks it, so no Google content or cookies are loaded just by opening the page."""
+    from urllib.parse import quote_plus
+    cards = ''
+    for o in OFFICES:
+        q = quote_plus(o['q'])
+        cards += f'''<article class="office">
+        <h3>{o['city']}</h3>
+        <p>{o['addr']}</p>
+        <p><a href="tel:{o['tel']}">{o['tel_show']}</a></p>
+        <div class="map" data-src="https://maps.google.com/maps?q={q}&amp;z=15&amp;output=embed" data-title="Map of our {o['city']} office">
+          <button class="map-load" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s7-6.2 7-11.5A7 7 0 0 0 5 9.5C5 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg><span>Show map</span></button>
+        </div>
+        <a class="link-arrow" href="https://www.google.com/maps/search/?api=1&amp;query={q}" target="_blank" rel="noopener noreferrer">Open in Google Maps</a>
+      </article>'''
+    return f'''<section class="block" id="offices">
+    <div class="wrap">
+      {head_block('Offices', 'Find us.', 'Visit us in Markham or Bangalore, or call the office nearest you.')}
+      <div class="offices">{cards}</div>
+    </div>
+  </section>'''
+
+
 def page_contact():
     hero = page_hero(crumbs((None, 'Contact')), 'Contact', 'Book a demo.',
                      'Tell us about your sites and what you want to catch. We will show you Intelense on footage like yours.',
@@ -867,7 +899,7 @@ def page_contact():
       <aside class="panel">
         <ul class="info-list">
           <li><span>Email</span><b class="email">enquiries@intelense.ca</b></li>
-          <li><span>Phone</span><b><a href="tel:+12895523165">+1 (289) 552-3165</a> <small>Canada</small></b><b><a href="tel:+919108284574">+91 91082 84574</a> <small>India</small></b></li>
+          <li><span>Phone</span><b><a href="tel:+12895523165">+1 (289) 552-3165</a> <small>Canada</small></b><b><a href="tel:+919342810422">+91 93428 10422</a> <small>India</small></b></li>
           <li><span>Offices</span><b>3600 Steeles Ave E, Markham, ON Canada</b><b>No. 45 C2 Gubbalala, Bangalore South India</b></li>
         </ul>
         <h3 style="margin-top:28px">What happens next</h3>
@@ -879,7 +911,7 @@ def page_contact():
       </aside>
     </div>
   </section>'''
-    body = '\n\n  '.join([hero, form])
+    body = '\n\n  '.join([hero, form, offices_section()])
     return dict(file='contact.html', title='Contact and book a demo | Intelense', desc='Book a demo of the Intelense AI platform and the Ken modules.',
                 active='contact.html', body=body)
 
@@ -3103,6 +3135,8 @@ PUBLIC.update({legacy_pages.file_for(s_): legacy_pages.public_for(s_) for s_ in 
 OG_IMAGE = '/assets/footage/video-home-poster.jpg'
 
 
+# `python3 site/build.py --deploy dist --no-dark` leaves the light/dark toggle out (the CSS stays, nothing switches it on)
+ENABLE_THEME = '--no-dark' not in sys.argv
 # Runs before the page paints, so a saved dark choice does not flash light first
 THEME_BOOT = "<script>try{var t=localStorage.getItem('theme');if(t==='dark'||t==='light')document.documentElement.dataset.theme=t}catch(e){}</script>"
 GRID_START = ("var gridEl = document.querySelector('.cursor-grid'), gridStop = null, gridOpts = %s;\n"
@@ -3129,7 +3163,7 @@ def seo_head(p):
         org = {'@context': 'https://schema.org', '@type': 'Organization', 'name': 'Intelense', 'url': SITE_URL + '/', 'logo': SITE_URL + '/assets/logos/intelense.png',
                'email': 'enquiries@intelense.ca', 'telephone': '+12895523165', 'sameAs': [LINKEDIN_URL],
                'contactPoint': [{'@type': 'ContactPoint', 'telephone': '+12895523165', 'contactType': 'sales', 'areaServed': 'CA', 'availableLanguage': 'English'},
-                                {'@type': 'ContactPoint', 'telephone': '+919108284574', 'contactType': 'sales', 'areaServed': 'IN', 'availableLanguage': 'English'}]}
+                                {'@type': 'ContactPoint', 'telephone': '+919342810422', 'contactType': 'sales', 'areaServed': 'IN', 'availableLanguage': 'English'}]}
         out.append('<script type="application/ld+json">' + _j.dumps(org) + '</script>')
     for ld in p.get('jsonld', []):
         # structured data carried over from the old page; its logo / image URLs pointed at files that only existed on the old host
@@ -3143,7 +3177,7 @@ def render(p, inline=False, bare=False):
     style = f'<style>\n{css}</style>' if inline else '<link rel="stylesheet" href="assets/site.css">'
     import html as _hh
     kw = f'\n<meta name="keywords" content="{_hh.escape(p["keywords"], quote=True)}">' if p.get('keywords') else ''
-    head = f'{THEME_BOOT}\n<title>{_hh.escape(p["title"], quote=False)}</title>\n<meta name="description" content="{_hh.escape(p["desc"], quote=True)}">{kw}\n{ICON_LINKS}\n{seo_head(p)}\n{FONTS}\n{style}'
+    head = f'{THEME_BOOT if ENABLE_THEME else ""}\n<title>{_hh.escape(p["title"], quote=False)}</title>\n<meta name="description" content="{_hh.escape(p["desc"], quote=True)}">{kw}\n{ICON_LINKS}\n{seo_head(p)}\n{FONTS}\n{style}'
     if p.get('reveal'):
         if inline:
             head += f'\n<style>\n{(ASSETS / "scroll-reveal.css").read_text()}</style>\n<script>\n{(ASSETS / "scroll-reveal.js").read_text()}</script>'

@@ -27,7 +27,7 @@ Retail, Construction, Manufacturing, Public Safety, Smart Cities, Healthcare, Co
 - [About Intelense](https://www.intelense.com/llms/about.md): Founded by Dinesh Prasanna (MIT TLP). Advisors include Dr. Huggy Rao (Stanford), Toby Lennox (Toronto Global), Poonam Puri (Osgoode), Bradford Cook (Accern).
 - [Case Studies](https://www.intelense.com/llms/casestudies.md): Real-world deployments — KenSafety in construction (80% fewer incidents), KenVision in retail (+28% conversion), KenHome in home safety (45% energy savings).
 - [FAQ](https://www.intelense.com/llms/faq.md): Common questions on AI products, deployment, hardware, integration, edge AI, privacy, and pricing.
-- [Contact](https://www.intelense.com/llms/contact.md): enquiries@intelense.ca | +1 (289) 552-3165 (Canada) | +91 91082 84574 (India). Book a 30-minute demo — live in <48 hours.
+- [Contact](https://www.intelense.com/llms/contact.md): enquiries@intelense.ca | +1 (289) 552-3165 (Canada) | +91 93428 10422 (India). Book a 30-minute demo — live in <48 hours.
 
 ## Optional
 

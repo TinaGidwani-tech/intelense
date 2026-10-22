@@ -8,7 +8,7 @@
 
 **Email:** enquiries@intelense.ca
 **Canada:** +1 (289) 552-3165
-**India:** +91 91082 84574
+**India:** +91 93428 10422
 
 ## Book a Demo
 
