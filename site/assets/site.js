@@ -176,6 +176,25 @@
     if (!reduce) (function loop(now) { var dt = Math.min(.05, (now - last) / 1000); last = now; frame(dt); requestAnimationFrame(loop); })(last);
   });
 
+  // Light / dark toggle: remembers the choice in this browser, and tells the cursor grid to redraw in the new colour
+  var themeBtn = document.querySelector('.theme-btn');
+  if (themeBtn) {
+    var root = document.documentElement;
+    var label = function () {
+      var dark = root.dataset.theme === 'dark';
+      themeBtn.setAttribute('aria-label', dark ? 'Switch to light mode' : 'Switch to dark mode');
+      themeBtn.setAttribute('title', dark ? 'Switch to light mode' : 'Switch to dark mode');
+    };
+    label();
+    themeBtn.addEventListener('click', function () {
+      var next = root.dataset.theme === 'dark' ? 'light' : 'dark';
+      root.dataset.theme = next;
+      try { localStorage.setItem('theme', next); } catch (e) {}
+      label();
+      window.dispatchEvent(new Event('themechange'));
+    });
+  }
+
   // Contact form: validates in the page, then posts to /send-message.php on this site, which emails enquiries@intelense.ca
   var form = document.getElementById('demo-form');
   if (form) {

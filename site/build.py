@@ -236,7 +236,11 @@ NAV = [('platform.html', 'Platform'), ('modules.html', 'Modules'), ('industries.
 
 def logo_img(m, scale=0.22, cls='mod-logo'):
     w, h = m['size']
-    return f'<img class="{cls}" src="assets/logos/{m["logo"]}" alt="{m["name"]} by Intelense" width="{round(w * scale)}" height="{round(h * scale)}">'
+    dims = f'width="{round(w * scale)}" height="{round(h * scale)}"'
+    light = m['logo'].replace('.png', '-light.png')
+    # dark-theme twin; site.css shows one of the two depending on the theme
+    return (f'<img class="{cls} on-light" src="assets/logos/{m["logo"]}" alt="{m["name"]} by Intelense" {dims}>'
+            f'<img class="{cls} on-dark" src="assets/logos/{light}" alt="" aria-hidden="true" {dims}>')
 
 
 def header(active):
@@ -267,11 +271,12 @@ def header(active):
 
 <header class="nav">
   <div class="wrap">
-    <a class="logo" href="index.html"><img src="assets/logos/intelense.png" alt="Intelense home" width="169" height="26"></a>
+    <a class="logo" href="index.html"><img class="logo-light" src="assets/logos/intelense.png" alt="Intelense home" width="169" height="26"><img class="logo-dark" src="assets/logos/intelense-light.png" alt="" aria-hidden="true" width="169" height="26"></a>
     <ul class="nav-links">
       {''.join(links)}
     </ul>
     <div class="nav-cta">
+      <button class="theme-btn" type="button" aria-label="Switch to dark mode" title="Switch to dark mode"><svg class="i-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg><svg class="i-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg></button>
       <a class="btn btn-blue" href="contact.html">Book a demo</a>
       <button class="menu-btn" type="button" aria-expanded="false" aria-controls="mobile-menu" aria-label="Menu"><span></span></button>
     </div>
@@ -3098,6 +3103,11 @@ PUBLIC.update({legacy_pages.file_for(s_): legacy_pages.public_for(s_) for s_ in 
 OG_IMAGE = '/assets/footage/video-home-poster.jpg'
 
 
+# Runs before the page paints, so a saved dark choice does not flash light first
+THEME_BOOT = "<script>try{var t=localStorage.getItem('theme');if(t==='dark'||t==='light')document.documentElement.dataset.theme=t}catch(e){}</script>"
+GRID_START = ("var gridEl = document.querySelector('.cursor-grid'), gridStop = null, gridOpts = %s;\n"
+              "function startGrid() { var dark = document.documentElement.dataset.theme === 'dark'; gridStop = initCursorGrid(gridEl, Object.assign({}, gridOpts, { color: dark ? '#ffffff' : '#0a0a0a' })); }\n"
+              "startGrid();\nwindow.addEventListener('themechange', function () { if (gridStop) gridStop(); startGrid(); });")
 ICON_LINKS = ('<link rel="icon" href="assets/icons/favicon.ico" sizes="any">\n<link rel="icon" type="image/png" sizes="32x32" href="assets/icons/favicon-32.png">\n'
               '<link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png">')
 
@@ -3133,7 +3143,7 @@ def render(p, inline=False, bare=False):
     style = f'<style>\n{css}</style>' if inline else '<link rel="stylesheet" href="assets/site.css">'
     import html as _hh
     kw = f'\n<meta name="keywords" content="{_hh.escape(p["keywords"], quote=True)}">' if p.get('keywords') else ''
-    head = f'<title>{_hh.escape(p["title"], quote=False)}</title>\n<meta name="description" content="{_hh.escape(p["desc"], quote=True)}">{kw}\n{ICON_LINKS}\n{seo_head(p)}\n{FONTS}\n{style}'
+    head = f'{THEME_BOOT}\n<title>{_hh.escape(p["title"], quote=False)}</title>\n<meta name="description" content="{_hh.escape(p["desc"], quote=True)}">{kw}\n{ICON_LINKS}\n{seo_head(p)}\n{FONTS}\n{style}'
     if p.get('reveal'):
         if inline:
             head += f'\n<style>\n{(ASSETS / "scroll-reveal.css").read_text()}</style>\n<script>\n{(ASSETS / "scroll-reveal.js").read_text()}</script>'
@@ -3145,9 +3155,9 @@ def render(p, inline=False, bare=False):
             scripts.append(f'<script>\n{(ASSETS / name).read_text()}</script>' if inline else f'<script src="assets/{name}" defer></script>')
     if inline:
         grid = (ASSETS / 'cursor-grid.js').read_text().replace('export function', 'function')
-        scripts.append(f"<script>\n{{\n{grid}\ninitCursorGrid(document.querySelector('.cursor-grid'), {GRID_OPTS});\n}}\n</script>")
+        scripts.append(f"<script>\n{{\n{grid}\n{GRID_START % GRID_OPTS}\n}}\n</script>")
     else:
-        scripts.append(f"<script type=\"module\">\nimport {{ initCursorGrid }} from './assets/cursor-grid.js';\ninitCursorGrid(document.querySelector('.cursor-grid'), {GRID_OPTS});\n</script>")
+        scripts.append(f"<script type=\"module\">\nimport {{ initCursorGrid }} from './assets/cursor-grid.js';\n{GRID_START % GRID_OPTS}\n</script>")
     content = f'{header(p["active"])}\n<main id="top">\n  {swap_feeds(p["body"])}\n</main>\n\n{footer()}\n' + '\n'.join(scripts) + '\n'
     if bare:
         return head + '\n\n' + content
