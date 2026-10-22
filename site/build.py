@@ -869,36 +869,55 @@ def page_about():
 
 
 OFFICES = [
-    dict(city='Markham, Canada', addr='3600 Steeles Ave E, Markham, ON Canada', q='3600 Steeles Ave E, Markham, ON, Canada', tel='+12895523165', tel_show='+1 (289) 552-3165'),
-    dict(city='Bengaluru, India', addr='No. 45 C2, Deepika Layout, Gubbalala, Uttarahalli Hobli, Bengaluru, Karnataka 560061', q='No. 45 C2, Deepika Layout, Gubbalala, Uttarahalli Hobli, Bengaluru, Karnataka 560061, India', tel='+919342810422', tel_show='+91 93428 10422',
-         embed='https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3889.3260922302957!2d77.5360637743334!3d12.886741016734618!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bae3f003f33d53f%3A0x28bf52898b54df88!2sIntelense%20Technologies%20Private%20Limited!5e0!3m2!1sen!2sin!4v1792657405921!5m2!1sen!2sin', link='https://www.google.com/maps?cid=2936156232770445192'),
+    dict(pin='ca', city='Markham, Canada', addr='3600 Steeles Ave E, Markham, ON Canada', q='3600 Steeles Ave E, Markham, ON, Canada', tel='+12895523165', tel_show='+1 (289) 552-3165'),
+    dict(pin='in', city='Bengaluru, India', addr='No. 45 C2, Deepika Layout, Gubbalala, Uttarahalli Hobli, Bengaluru, Karnataka 560061', q='No. 45 C2, Deepika Layout, Gubbalala, Uttarahalli Hobli, Bengaluru, Karnataka 560061, India',
+         tel='+919342810422', tel_show='+91 93428 10422', link='https://www.google.com/maps?cid=2936156232770445192'),
 ]
 
 
+def world_map():
+    """Dotted world map (land from Natural Earth, see tools/make_worldmap.mjs) with an animated marker per office and a route between them."""
+    import json
+    d = json.loads((ROOT / 'content' / 'worldmap.json').read_text())
+    w, h = d['w'], d['h']
+    paths = ''.join(f'<path style="--i:{i}" d="{g}"/>' for i, g in enumerate(d['groups']))
+    ca, ind = d['pins']['ca'], d['pins']['in']
+
+    def marker(pt, cls):
+        return (f'<g class="wm-m {cls}" transform="translate({pt["x"]} {pt["y"]})"><circle class="wm-ring" r="7"/><circle class="wm-ring r2" r="7"/>'
+                f'<circle class="wm-halo" r="13"/><circle class="wm-core" r="6"/></g>')
+
+    def label(pt, key, city, country):
+        return (f'<div class="wm-pin" data-pin="{key}" style="left:{pt["x"] / w * 100:.2f}%;top:{pt["y"] / h * 100:.2f}%">'
+                f'<span class="wm-label"><b>{city}</b><small>{country}</small></span></div>')
+    return f'''<div class="worldmap" role="img" aria-label="World map with our two offices: Markham in Canada and Bengaluru in India">
+      <svg viewBox="0 0 {w} {h}" aria-hidden="true" focusable="false">
+        <defs><linearGradient id="wm-grad" gradientUnits="userSpaceOnUse" x1="{ca['x']}" y1="0" x2="{ind['x']}" y2="0"><stop offset="0" stop-color="#0A34ED"/><stop offset=".45" stop-color="#7C28E9"/><stop offset=".8" stop-color="#FF7953"/><stop offset="1" stop-color="#73C4C5"/></linearGradient></defs>
+        <g class="wm-dots">{paths}</g>
+        <path class="wm-route" d="{d['arc']}"/>
+        <path class="wm-flow" pathLength="1000" d="{d['arc']}"/>
+        {marker(ca, 'ca')}{marker(ind, 'in')}
+      </svg>
+      {label(ca, 'ca', 'Markham', 'Canada')}{label(ind, 'in', 'Bengaluru', 'India')}
+    </div>'''
+
+
 def offices_section():
-    """One card per office; the Bengaluru card carries the embedded Google map."""
+    """World map with both offices, then one card per office."""
     from urllib.parse import quote_plus
     cards = ''
     for o in OFFICES:
-        q = quote_plus(o['q'])
-        # offices with a pinned Google place use that exact embed and link; the others search by address
-        src = o.get('embed') or f'https://maps.google.com/maps?q={q}&z=15&output=embed'
-        href = o.get('link') or f'https://www.google.com/maps/search/?api=1&query={q}'
-        if o.get('embed'):
-            map_html = (f'<div class="map"><iframe src="{src.replace("&", "&amp;")}" title="Map of our {o["city"]} office" loading="lazy" '
-                        f'referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div>')
-        else:
-            map_html = ''  # only the Bangalore office has a map
-        cards += f'''<article class="office">
+        href = o.get('link') or f'https://www.google.com/maps/search/?api=1&query={quote_plus(o["q"])}'
+        cards += f'''<article class="office" data-pin="{o['pin']}" tabindex="0">
         <h3>{o['city']}</h3>
         <p>{o['addr']}</p>
         <p><a href="tel:{o['tel']}">{o['tel_show']}</a></p>
-        {map_html}
         <a class="link-arrow" href="{href.replace("&", "&amp;")}" target="_blank" rel="noopener noreferrer">Open in Google Maps</a>
       </article>'''
     return f'''<section class="block" id="offices">
     <div class="wrap">
       {head_block('Offices', 'Find us.', 'Visit us in Markham or Bengaluru, or call the office nearest you.')}
+      {world_map()}
       <div class="offices">{cards}</div>
     </div>
   </section>'''

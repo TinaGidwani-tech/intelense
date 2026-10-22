@@ -176,6 +176,16 @@
     if (!reduce) (function loop(now) { var dt = Math.min(.05, (now - last) / 1000); last = now; frame(dt); requestAnimationFrame(loop); })(last);
   });
 
+  // Offices: highlight the matching marker on the world map while its card is hovered or focused
+  var wm = document.querySelector('.worldmap');
+  if (wm) {
+    document.querySelectorAll('.office[data-pin]').forEach(function (card) {
+      var cls = 'is-' + card.getAttribute('data-pin');
+      ['mouseenter', 'focusin'].forEach(function (ev) { card.addEventListener(ev, function () { wm.classList.add(cls); }); });
+      ['mouseleave', 'focusout'].forEach(function (ev) { card.addEventListener(ev, function () { wm.classList.remove(cls); }); });
+    });
+  }
+
   // Light / dark toggle: remembers the choice in this browser, and tells the cursor grid to redraw in the new colour
   var themeBtn = document.querySelector('.theme-btn');
   if (themeBtn) {
