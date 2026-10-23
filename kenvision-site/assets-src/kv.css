@@ -287,3 +287,4 @@ footer .logo img.kv-logo { height: 56px; }
 .kx-foot .by-link { display: inline-block; margin-top: 14px; font-size: 13px; text-transform: uppercase; letter-spacing: 0.06em; text-decoration: none; border-bottom: 1px solid currentColor; }
 @media (max-width: 1080px) { .foot.kx-foot { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 @media (max-width: 680px) { .foot.kx-foot { grid-template-columns: minmax(0, 1fr); } }
+@media (max-width: 900px) { .kx-tile::before { background: linear-gradient(0deg, rgba(6, 8, 20, .92) 20%, rgba(6, 8, 20, .55) 65%, rgba(6, 8, 20, .2)); } .kx-tile { min-height: 320px; } }
