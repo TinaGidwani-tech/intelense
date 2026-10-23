@@ -68,7 +68,7 @@ UNSPLASH = {
     '1534452203293': 'assets/retail-ai-view.webp', '1497366216548': 'assets/images/dashboards/kenvision-dashboard-elite.webp',
     '1581091226825': 'assets/images/icons/dashboard.webp',
 }
-CONTAIN = ('dashboards/', 'icons/', 'core-heatmaps', 'core-alerts', 'alert-prioritization')
+CONTAIN = ('dashboards/', 'icons/', 'core-heatmaps')
 
 
 def e(s):
@@ -300,24 +300,86 @@ def by_intelense():
   </section>'''
 
 
-def stats(items):
-    return '<div class="stats">' + ''.join(f'<div><b>{e(v)}</b><span>{e(l)}</span><small>{e(s)}</small></div>' for v, l, s in items) + '</div>'
-
-
 HOME_STATS = [('99%', 'AI Accuracy', 'Anomaly Detection'), ('10X', 'Scalability', 'Distributed Architecture'), ('+40%', 'ROI Increase', 'Operational Efficiency'),
               ('80%', 'Faster Deployment', 'Cloud-Edge Integration'), ('< 2s', 'Real-Time Latency', 'Low Bandwidth Ready')]
 
 
-def card(c, link=None, cta='Learn More', tag='h3'):
-    media = f'<div class="media{fits(c["img"]["src"])}">{img(c["img"]["src"], c["img"]["alt"])}</div>' if c.get('img') else ''
-    inner = f'{media}<div class="body"><{tag}>{e(c["t"])}</{tag}><p>{e(c["p"])}</p>{f"<span class={chr(34)}link-arrow{chr(34)}>{cta}</span>" if link else ""}</div>'
-    if link:
-        return f'<a class="kx-card" href="{link}">{inner}</a>'
-    return f'<div class="kx-card{"" if media else " plain"}">{inner}</div>'
+def rv(i=0):
+    """Scroll-reveal hook (kv.js adds the .in class; without JS everything is simply visible)."""
+    return f' data-r style="--d:{i * 70}ms"'
 
 
-def steps(items):
-    return '<div class="kx-steps">' + ''.join(f'<div class="kx-step">{img(s["img"]["src"], s["img"]["alt"])}<h3>{e(s["t"])}</h3><p>{e(s["p"])}</p></div>' for s in items) + '</div>'
+def stats(items):
+    return '<div class="kx-statband">' + ''.join(f'<div{rv(i)}><b data-count>{e(v)}</b><span>{e(l)}</span><small>{e(s)}</small></div>' for i, (v, l, s) in enumerate(items)) + '</div>'
+
+
+def tile(key, src, t, p, cls, cta='Learn more', i=0):
+    return f'<a class="kx-tile {cls}" href="@{key}"{rv(i)}>{img(src, t)}<div class="ov"><h3>{e(t)}</h3><p>{e(p)}</p><span class="go">{cta}</span></div></a>'
+
+
+def bento(items):
+    """Capability grid: one large card, two small, then wide cards (works for 6 and 8 items)."""
+    out = []
+    for i, c in enumerate(items):
+        kind = 'big' if i == 0 else ('sm' if i < 3 else 'wide')
+        media = f'<div class="media{fits(c["img"]["src"])}">{img(c["img"]["src"], c["img"]["alt"])}</div>' if c.get('img') else ''
+        out.append(f'<article class="kx-b {kind} spot"{rv(i)}>{media}<div class="body"><h3>{e(c["t"])}</h3><p>{e(c["p"])}</p></div></article>')
+    return '<div class="kx-bentogrid">' + ''.join(out) + '</div>'
+
+
+def flowsteps(items):
+    return '<ol class="kx-flowsteps">' + ''.join(f'<li{rv(i)}><div class="pic">{img(s["img"]["src"], s["img"]["alt"])}</div><h3>{e(s["t"])}</h3><p>{e(s["p"])}</p></li>' for i, s in enumerate(items)) + '</ol>'
+
+
+def mini_cards(items, cols=4, icons=None):
+    icons = icons or ['layers', 'filter', 'bolt', 'plug', 'chart']
+    return f'<div class="kx-grid c{cols}">' + ''.join(f'<div class="kx-mini spot"{rv(i)}><span class="ic">{icon(icons[i % len(icons)])}</span><h3>{e(x["t"])}</h3><p>{e(x["p"])}</p></div>' for i, x in enumerate(items)) + '</div>'
+
+
+def why_panel(eyebrow, h2, items):
+    cells = ''.join(f'<div class="cell"{rv(i)}>{icon(ic)}<h3>{e(t)}</h3><p>{e(d)}</p></div>' for i, (ic, t, d) in enumerate(items))
+    return f'''<section class="block" id="why"><div class="wrap"><div class="kx-dark">
+        <div class="wash wash-b" aria-hidden="true" style="top:-30%;right:-8%;opacity:.55"></div>
+        <span class="eyebrow">{eyebrow}</span><h2>{h2}</h2>
+        <div class="cells n{len(items)}">{cells}</div>
+      </div></div></section>'''
+
+
+def issues(items):
+    ic = ['eye', 'clock', 'filter', 'layers']
+    return '<div class="kx-issues">' + ''.join(f'<div class="kx-issue"{rv(i)}><span class="ic">{icon(ic[i % 4])}</span><h3>{e(x["t"])}</h3><p>{e(x["p"])}</p></div>' for i, x in enumerate(items)) + '</div>'
+
+
+def outcomes(items):
+    return '<div class="kx-outcomes">' + ''.join(f'<div{rv(i)}><span class="tick" aria-hidden="true"></span><h3>{e(x["t"])}</h3><p>{e(x["p"])}</p></div>' for i, x in enumerate(items)) + '</div>'
+
+
+def tabs_standard(points):
+    """The four ideas of 'Cameras are everywhere' as tabs that cycle by themselves; the picture zooms to a different part for each."""
+    btns = ''.join(f'<button type="button" role="tab" id="std-t{i}" aria-selected="{"true" if i == 0 else "false"}" tabindex="{0 if i == 0 else -1}"><span class="t">{e(t)}</span><span class="d">{e(d)}</span><i class="bar" aria-hidden="true"></i></button>' for i, (t, d) in enumerate(points))
+    return f'''<div class="kx-tabs std" data-tabs data-auto data-i="0">
+        <div class="tablist" role="tablist" aria-label="What KenVision does">{btns}</div>
+        <div class="stage" aria-hidden="false"><div class="frame kx-scan"><span class="pill" data-label></span>{img('assets/images/dashboards/kenvision-imac-points.webp', 'KenVision Intelligence')}</div></div>
+      </div>'''
+
+
+DEPLOY_FACTS = {'Edge': ('On-device AI at your site', 'Lowest latency · Works offline', ['Cameras', 'Edge device', 'Dashboards & alerts']),
+                'On-Premise': ('Your data centre', 'Raw footage never leaves the building', ['Cameras', 'Your data centre', 'Dashboards & alerts']),
+                'Cloud': ('KenVision cloud', 'Add cameras and locations instantly', ['Cameras', 'Cloud', 'Dashboards & alerts']),
+                'Hybrid': ('Edge or on-prem + cloud', 'One platform, mixed architecture', ['Cameras', 'Edge / on-prem  +  Cloud', 'Dashboards & alerts'])}
+
+
+def tabs_deploy(items):
+    btns = ''.join(f'<button type="button" role="tab" id="dep-t{i}" aria-controls="dep-p{i}" aria-selected="{"true" if i == 0 else "false"}" tabindex="{0 if i == 0 else -1}"><b>{n}</b>{e(t)}</button>' for i, (n, t, d) in enumerate(items))
+    panels = ''
+    for i, (n, t, d) in enumerate(items):
+        _, badge, nodes = DEPLOY_FACTS[t]
+        ns = ''.join(f'<span class="node{" mid" if k == 1 else ""}">{x}</span>' + ('<i class="ln" aria-hidden="true"></i>' if k < 2 else '') for k, x in enumerate(nodes))
+        panels += f'''<div class="panel-d" role="tabpanel" id="dep-p{i}" aria-labelledby="dep-t{i}" data-panel{" hidden" if i else ""}>
+          <div><span class="kx-num">{n}</span><h3>{e(t)}</h3><p>{e(d)}</p><span class="badge">{badge}</span></div>
+          <div class="diagram" aria-hidden="true">{ns}</div>
+        </div>'''
+    return f'<div class="kx-tabs dep" data-tabs><div class="tablist seg" role="tablist" aria-label="Deployment models">{btns}</div>{panels}</div>'
 
 
 # ---------------------------------------------------------------- JSON-LD
@@ -352,18 +414,18 @@ def patch_ld(key, ld):
 
 def page_home():
     c = CONTENT['home']
+    floats = ('<span class="kx-float f1"><i></i>People counting</span><span class="kx-float f2"><i></i>Heatmaps</span><span class="kx-float f3"><i></i>Smart alerts</span>')
     h = hero('', '<span class="kx-byline">KenVision by <a href="' + INTELENSE + '/">Intelense</a></span>',
              'Turn the cameras you <em>already own</em> into real-time intelligence.',
              'KenVision applies advanced AI to your existing CCTV — counting people, mapping behaviour, spotting risk and measuring engagement — without replacing a single camera. Privacy-first, on-prem or edge, running in days.',
              demo_btn() + '<a class="btn btn-ghost" href="@solutions">See solutions</a>',
-             media='<figure class="kx-shot">' + img('assets/images/dashboards/kenvision-imac-dashboard.webp', 'KenVision Dashboard', lazy=False, prio=True) + '</figure>',
+             media='<div class="kx-stage" data-tilt><figure class="kx-shot">' + img('assets/images/dashboards/kenvision-imac-dashboard.webp', 'KenVision Dashboard', lazy=False, prio=True) + '</figure>' + floats + '</div>',
              extra='<div class="kx-trust"><span>Works with existing CCTV</span><span>Privacy-first &amp; on-prem</span><span>Camera-agnostic</span></div>')
-    st = block(stats(HOME_STATS), extra_cls='')
-    st = st.replace('class="block"', 'class="block" style="padding-block:clamp(40px,5vw,72px)"', 1)
+    st = f'<section class="kx-proof"><div class="wrap">{stats(HOME_STATS)}</div></section>'
     sectors = ['Electronics retail', 'Jewellery chains', 'FMCG activations', 'Commercial buildings', 'Smart cities', 'Worksite safety']
-    strip = f'<section class="wrap kx-strip"><span class="lbl">Reading existing cameras across</span>{"".join(f"<span class={chr(34)}pill{chr(34)}>{s}</span>" for s in sectors)}</section>'
+    strip = ticker(sectors).replace('<section class="kx-ticker"', '<section class="kx-ticker lbl"', 1).replace('<div class="track">', '<span class="lead">Reading existing cameras across</span><div class="track">', 1)
     partners = [('oce', 'OCE'), ('prestige', 'Prestige Group'), ('risingstar', 'RisingStar'), ('google-cloud', 'Google Cloud'), ('aws', 'AWS'), ('nvidia', 'NVIDIA'), ('mars', 'MaRS'), ('ibm', 'IBM'), ('f6s', 'F6S')]
-    cells = ''.join(f'<li class="tile">{img(f"assets/images/partners/{s}.webp", n)}</li>' for s, n in partners)
+    cells = ''.join(f'<li class="tile">{img(f"assets/images/partners/{s}.webp", n, lazy=False)}</li>' for s, n in partners)
     band = f'''<section class="block kx-partners" id="partners" style="padding-block:clamp(40px,5vw,72px)">
     <div class="wrap">
       <div class="clients" role="group" aria-label="Partners and programs: {", ".join(n for _, n in partners)}">
@@ -371,69 +433,59 @@ def page_home():
       </div>
     </div>
   </section>'''
-    points = f'''<section class="block" id="standard">
-    <div class="wrap">
-      {head_block('The KenVision standard', 'Cameras Are Everywhere. <em>Intelligence Is Not.</em>', '')}
-      <div class="kx-points">
-        <div class="col-text">
-          <div class="kx-point"><h3>Real-Time Video Analysis</h3><p>Cameras don’t just record. KenVision continuously analyzes live video streams to understand activity as it happens.</p></div>
-          <div class="kx-point"><h3>Automated Detection &amp; Alerts</h3><p>Eliminate manual footage review. KenVision detects events instantly and notifies teams in real time.</p></div>
-        </div>
-        <div class="col-img kx-shot">{img('assets/images/dashboards/kenvision-imac-points.webp', 'KenVision Intelligence')}</div>
-        <div class="col-text">
-          <div class="kx-point"><h3>Instant Response Enablement</h3><p>Identify incidents the moment they occur and act within seconds—not hours.</p></div>
-          <div class="kx-point"><h3>Actionable Intelligence</h3><p>Transform raw video into structured insights that support faster, smarter decision-making.</p></div>
-        </div>
-      </div>
-    </div>
-  </section>'''
-    sec = [('retail-analytics', 'assets/retail-store.webp', 'Retail Analytics', 'Optimize store performance using footfall, dwell time, heatmaps, and shopper behavior insights.'),
-           ('commercial-buildings', 'assets/commercial-buildings.webp', 'Commercial Buildings', 'Understand occupancy, space utilization, access patterns, and asset movement.'),
-           ('smart-cities', 'assets/smart-city-street.webp', 'Smart Cities', 'Monitor crowds, traffic flow, and public safety conditions in real time.'),
-           ('video-surveillance', 'assets/alert-dashboard.webp', 'Video Surveillance', 'Enhance surveillance systems with intelligent detection, alerts, and analytics.')]
+    pts = [('Real-Time Video Analysis', 'Cameras don’t just record. KenVision continuously analyzes live video streams to understand activity as it happens.'),
+           ('Automated Detection & Alerts', 'Eliminate manual footage review. KenVision detects events instantly and notifies teams in real time.'),
+           ('Instant Response Enablement', 'Identify incidents the moment they occur and act within seconds—not hours.'),
+           ('Actionable Intelligence', 'Transform raw video into structured insights that support faster, smarter decision-making.')]
+    standard = block(head_block('The KenVision standard', 'Cameras Are Everywhere. <em>Intelligence Is Not.</em>', '') + tabs_standard(pts), 'standard')
+    sec = [('retail-analytics', 'assets/retail-store.webp', 'Retail Analytics', 'Optimize store performance using footfall, dwell time, heatmaps, and shopper behavior insights.', 'a'),
+           ('commercial-buildings', 'assets/commercial-buildings.webp', 'Commercial Buildings', 'Understand occupancy, space utilization, access patterns, and asset movement.', 'b'),
+           ('smart-cities', 'assets/smart-city-street.webp', 'Smart Cities', 'Monitor crowds, traffic flow, and public safety conditions in real time.', 'b'),
+           ('video-surveillance', 'assets/alert-dashboard.webp', 'Video Surveillance', 'Enhance surveillance systems with intelligent detection, alerts, and analytics.', 'a')]
     sectors_html = block(head_block('Solutions', 'Intelligence Across Sectors', 'KenVision adapts to different environments by contextualizing intelligence for each industry.')
-                         + '<div class="kx-grid four">' + ''.join(card({'t': t, 'p': p, 'img': {'src': i, 'alt': t}}, f'@{k}') for k, i, t, p in sec) + '</div>', 'sectors')
+                         + '<div class="kx-bento">' + ''.join(tile(k, i, t, p, cl, i=n) for n, (k, i, t, p, cl) in enumerate(sec)) + '</div>', 'sectors')
     steps_html = block(head_block('How it works', 'How KenVision Turns Video into Action', '')
-                       + steps([{'t': s['t'], 'p': s['p'], 'img': s['img']} for s in CONTENT['retail-analytics']['steps']]), 'how')
+                       + flowsteps([{'t': s['t'], 'p': s['p'], 'img': s['img']} for s in CONTENT['retail-analytics']['steps']]), 'how')
     core = [('Real-Time Video Analytics', 'Detect events, movement, and anomalies as they happen — not after review.', 'assets/images/core-analytics.webp'),
             ('Behavior & Pattern Analysis', 'Understand how people and objects move, dwell, and interact within spaces.', 'https://images.unsplash.com/photo-1460925895917-afdab827c52f'),
             ('Heatmaps & Movement Tracking', 'Visualize traffic flow, engagement zones, and underutilized areas.', 'assets/images/retail-heatmap-update.webp'),
             ('Anomaly Detection', 'Identify unusual behavior or conditions that deviate from normal patterns.', 'https://images.unsplash.com/photo-1563986768609'),
             ('Dashboards & Reports', 'Clean, visual dashboards that turn complex video data into insights teams can act on.', 'https://images.unsplash.com/photo-1551288049'),
             ('Smart Alerts', 'Automated notifications ensure the right teams are informed at the right time.', 'assets/images/core-alerts.webp')]
-    core_html = block(head_block('Platform', 'Core Capabilities', '') + '<div class="kx-grid">' + ''.join(card({'t': t, 'p': p, 'img': {'src': i, 'alt': t}}) for t, p, i in core) + '</div>', 'capabilities')
+    core_html = block(head_block('Platform', 'Core Capabilities', '') + bento([{'t': t, 'p': p, 'img': {'src': i, 'alt': t}} for t, p, i in core]), 'capabilities')
     why = [('layers', 'Existing Infrastructure', 'Deploy using current systems without replacement.'), ('bolt', 'Fast Deployment', 'Operational within days, not months.'),
            ('chart', 'Scalable by Design', 'From single locations to city-wide scale.'), ('filter', 'Privacy-First', 'On-premise processing options for data sovereignty.'),
            ('patrol', 'Enterprise-Ready', 'Built for reliability and long-term security.')]
-    why_html = block(head_block('Why KenVision', 'Why Organizations Choose KenVision', '') + '<div class="caps kx-five">' + ''.join(f'<div class="cap">{icon(i)}<h3>{t}</h3><p>{d}</p></div>' for i, t, d in why) + '</div>', 'why')
+    why_html = why_panel('Why KenVision', 'Why Organizations Choose KenVision', why)
     dep = [('01', 'Edge', 'AI runs directly on a device at your site. Lowest latency, works offline, ideal where bandwidth is constrained or privacy is paramount.'),
            ('02', 'On-Premise', 'Full processing inside your data centre. Raw footage never leaves the building — the right choice for regulated industries and data-sovereignty requirements.'),
            ('03', 'Cloud', 'Elastic, multi-site scale with no on-site servers. Add cameras and locations instantly, and let infrastructure grow with your rollout.'),
            ('04', 'Hybrid', 'Edge or on-prem for sensitive streams, cloud for aggregation and reporting. One platform, mixed architecture — no compromise on privacy or scale.')]
-    dep_html = block(head_block('Deployment', 'Deploy KenVision Your Way', '') + '<div class="kx-grid four kx-deploy">' + ''.join(f'<div class="kx-card plain"><div class="body"><span class="kx-num">{n}</span><h3>{t}</h3><p>{d}</p></div></div>' for n, t, d in dep) + '</div>', 'deploy')
-    quote = f'''<section class="block"><div class="wrap"><figure class="kx-quote"><p>“The best camera for your AI is the one already on your wall. Everything after that should be software — not another hardware project.”</p><cite>KenVision product principle, by <a href="{INTELENSE}/">Intelense</a></cite></figure></div></section>'''
+    dep_html = block(head_block('Deployment', 'Deploy KenVision Your Way', '') + tabs_deploy(dep), 'deploy')
+    quote = f'''<section class="block"><div class="wrap"><figure class="kx-quote"{rv()}><p>“The best camera for your AI is the one already on your wall. Everything after that should be software — not another hardware project.”</p><cite>KenVision product principle, by <a href="{INTELENSE}/">Intelense</a></cite></figure></div></section>'''
     faq = faq_block([(x['q'], x['a']) for x in c['faq']], c['faq_h']['h'], c['faq_h']['p'])
     cta = cta_band('Ready to Unlock Intelligence from Video?', 'See how KenVision transforms everyday video into insights that improve safety, efficiency, and decision-making.')
-    body = '\n\n  '.join([h, st, strip, band, points, sectors_html, steps_html, core_html, why_html, dep_html, by_intelense(), quote, faq, cta])
+    body = '\n\n  '.join([h, st, strip, band, standard, sectors_html, steps_html, core_html, why_html, dep_html, by_intelense(), quote, faq, cta])
     return page('index', 'index.html', 'KenVision by Intelense | AI-Powered Video Intelligence Platform', c['meta'], body, 'home')
 
 
 def page_solutions():
     c = CONTENT['solutions-index']
     h = hero(crumbs((None, 'Solutions')), '<span class="eyebrow">Solutions</span>', c['h1'], c['lede'], demo_btn('Request Demo'),
-             media='<figure class="kx-shot round">' + img('assets/images/solutions-hero-collage.webp', c['hero_img']['alt'], lazy=False, prio=True) + '</figure>')
-    cards = [('retail-analytics', 'assets/retail-store.webp', 'Retail Analytics', 'Understand shopper behavior using footfall analysis and heatmaps.'),
-             ('commercial-buildings', 'assets/commercial-buildings.webp', 'Commercial Buildings', 'Gain real-time visibility into occupancy and space utilization.'),
-             ('smart-cities', 'assets/smart-city-street.webp', 'Smart Cities', 'Monitor traffic flow and public safety at city-wide scale.'),
-             ('video-surveillance', 'assets/alert-dashboard.webp', 'Intelligent Surveillance', 'Enhance existing systems with real-time detection and alerts.')]
-    sec = block(head_block('Solutions', 'Intelligence Across Sectors', '') + '<div class="kx-grid four">' + ''.join(card({'t': t, 'p': p, 'img': {'src': i, 'alt': t}}, f'@{k}', 'Explore') for k, i, t, p in cards) + '</div>', 'sectors')
+             media='<div class="kx-stage" data-tilt><figure class="kx-shot round">' + img('assets/images/solutions-hero-collage.webp', c['hero_img']['alt'], lazy=False, prio=True) + '</figure></div>')
+    cards = [('retail-analytics', 'assets/retail-store.webp', 'Retail Analytics', 'Understand shopper behavior using footfall analysis and heatmaps.', 'a'),
+             ('commercial-buildings', 'assets/commercial-buildings.webp', 'Commercial Buildings', 'Gain real-time visibility into occupancy and space utilization.', 'b'),
+             ('smart-cities', 'assets/smart-city-street.webp', 'Smart Cities', 'Monitor traffic flow and public safety at city-wide scale.', 'b'),
+             ('video-surveillance', 'assets/alert-dashboard.webp', 'Intelligent Surveillance', 'Enhance existing systems with real-time detection and alerts.', 'a')]
+    sec = block(head_block('Solutions', 'Intelligence Across Sectors', '') + '<div class="kx-bento">' + ''.join(tile(k, i, t, p, cl, 'Explore', n) for n, (k, i, t, p, cl) in enumerate(cards)) + '</div>', 'sectors')
     tick = ticker(['Real-time video analytics', 'Behavioral understanding', 'Anomaly detection', 'Heatmaps & tracking', 'Dashboards & reports', 'Edge + cloud deployment'])
+    onep = f'<section class="block" style="padding-block:clamp(40px,5vw,72px)"><div class="wrap"><h2 class="kx-h2"{rv()} style="font-size:clamp(24px,3vw,36px)">One Platform. Multiple Solutions.</h2></div></section>'
     scale = [('Single Site', 'Deploy KenVision in individual locations with focused intelligence and minimal setup.'), ('Multi-Location', 'Scale insights across multiple sites with centralized dashboards and unified reporting.'),
              ('Enterprise Scale', 'Unify intelligence across large, distributed environments with city-wide AI orchestration.')]
     dep = [('Edge Processing', 'Low latency intelligence processed directly where your cameras are located.'), ('On-Premise', 'Deploy on your own infrastructure for maximum data control and military-grade security.'),
            ('Cloud & Hybrid', 'Scale infinitely with flexible cloud models tailored to your global enterprise needs.')]
-    sc = block(head_block('Scale', 'Scalability & Deployment', '') + '<div class="kx-grid">' + ''.join(card({'t': t, 'p': p}) for t, p in scale + dep) + '</div>', 'scale')
-    onep = f'<section class="block" style="padding-block:clamp(40px,5vw,72px)"><div class="wrap"><h2 class="kx-h2" style="font-size:clamp(24px,3vw,36px)">One Platform. Multiple Solutions.</h2></div></section>'
+    ladder = '<ol class="kx-ladder">' + ''.join(f'<li{rv(i)} style="--s:{i + 1}"><h3>{e(t)}</h3><p>{e(p)}</p></li>' for i, (t, p) in enumerate(scale)) + '</ol>'
+    sc = block(head_block('Scale', 'Scalability &amp; Deployment', '') + ladder + mini_cards([{'t': t, 'p': p} for t, p in dep], 3, ['bolt', 'patrol', 'layers']), 'scale')
     cta = cta_band('Find the Right Solution for Your Environment', 'Tell us about your cameras and sites and we will point you to the right starting point.')
     cta = cta.replace('Book a 30-min Demo', 'Talk to an Expert')
     body = '\n\n  '.join([h, sec, onep, tick, sc, by_intelense(), cta])
@@ -442,16 +494,18 @@ def page_solutions():
 
 # panels for the "in the field" / "why it matters" block
 def vis(caption):
+    def bar(label, w, style=''):
+        return f'<div class="kx-bar"><span>{label}</span><i style="--w:{w}%;{style}"></i></div>'
     if caption == 'Shopper funnel':
         rows = [('Footfall — entered store', 100), ('Engaged a zone', 72), ('High dwell', 46), ('Converted', 24)]
-        return '<div class="kx-vis" role="img" aria-label="Shopper funnel: entered store, engaged a zone, high dwell, converted"><span class="cap-t">Shopper funnel</span>' + ''.join(f'<div class="kx-bar"><span>{l}</span><i style="width:{w}%"></i></div>' for l, w in rows) + '</div>'
+        return '<div class="kx-vis" data-r role="img" aria-label="Shopper funnel: entered store, engaged a zone, high dwell, converted"><span class="cap-t">Shopper funnel</span>' + ''.join(bar(l, w) for l, w in rows) + '</div>'
     if caption == 'Occupancy-driven energy':
-        return ('<div class="kx-vis"><span class="cap-t">Occupancy-driven energy</span><ul class="kx-flow"><li>Cameras · live occupancy</li><li>KenVision · occupancy API</li><li>BMS / HVAC · setpoints</li><li class="on">Conditioning only occupied zones</li></ul>'
-                '<div class="kx-bar"><span>Always-on</span><i style="width:100%;background:var(--ash)"></i></div><div class="kx-bar"><span>Occupancy-led</span><i style="width:58%"></i></div><span class="kx-save">↓ less wasted energy</span></div>')
+        return ('<div class="kx-vis" data-r><span class="cap-t">Occupancy-driven energy</span><ul class="kx-flow"><li>Cameras · live occupancy</li><li>KenVision · occupancy API</li><li>BMS / HVAC · setpoints</li><li class="on">Conditioning only occupied zones</li></ul>'
+                + bar('Always-on', 100, 'background:var(--ash)') + bar('Occupancy-led', 58) + '<span class="kx-save">↓ less wasted energy</span></div>')
     if caption == 'From signal to standard response':
-        return ('<div class="kx-vis"><span class="cap-t">From signal to standard response</span><ul class="kx-flow"><li class="on">Detection · suspicious behaviour at display case</li><li>Alert nearest trained staff (camera + zone)</li><li>Approach, assist, observe per SOP</li><li>Escalate &amp; log if risk persists</li></ul></div>')
+        return ('<div class="kx-vis" data-r><span class="cap-t">From signal to standard response</span><ul class="kx-flow"><li class="on">Detection · suspicious behaviour at display case</li><li>Alert nearest trained staff (camera + zone)</li><li>Approach, assist, observe per SOP</li><li>Escalate &amp; log if risk persists</li></ul></div>')
     if caption == 'Crowd density over time':
-        return ('<div class="kx-vis" role="img" aria-label="Crowd density over time with an alert threshold"><span class="cap-t">Crowd density over time</span>'
+        return ('<div class="kx-vis" data-r role="img" aria-label="Crowd density over time with an alert threshold"><span class="cap-t">Crowd density over time</span>'
                 '<svg viewBox="0 0 400 190" aria-hidden="true"><line class="axis" x1="30" y1="160" x2="390" y2="160"/><line class="axis" x1="30" y1="20" x2="30" y2="160"/>'
                 '<line class="thr" x1="30" y1="52" x2="390" y2="52"/><text x="34" y="46">alert threshold</text>'
                 '<path class="area" d="M30 150 C70 146 90 140 120 128 S170 96 200 84 S250 50 280 62 S340 110 390 124 L390 160 L30 160 Z"/>'
@@ -463,31 +517,28 @@ def page_solution(key):
     c = CONTENT[key]
     name = dict((k, n) for k, n, _ in SOLUTIONS)[key]
     h = hero(crumbs(('@solutions', 'Solutions'), (None, name)), '<span class="eyebrow">Solutions</span>', e(c['h1']), e(c['lede']), demo_btn('Request Demo'),
-             media='<figure class="kx-shot round">' + img(c['hero_img']['src'], c['hero_img']['alt'], lazy=False, prio=True) + '</figure>')
-    pain = block(head_block('The challenge', e(c['pain']['h']), '') + '<div class="kx-grid four">' + ''.join(card({'t': x['t'], 'p': x['p']}, tag='h3') for x in c['pain']['items']) + '</div>', 'challenge')
-    how = block(head_block('How it works', e(c['how_h']), '') + steps(c['steps']), 'how')
-    core_eyebrow = c['core']['h'] if c['core']['h2b'] else 'Capabilities'
-    core_h = c['core']['h2b'][0] if c['core']['h2b'] else c['core']['h']
-    if c['core']['h2b']:
-        core_h = f'{c["core"]["h"]} {core_h}'
-        core_eyebrow = 'Capabilities'
-    core = block(head_block(core_eyebrow, e(core_h), '') + '<div class="kx-grid">' + ''.join(card(x) for x in c['core']['items']) + '</div>', 'capabilities')
-    impact = block(head_block('Impact', e(c['impact']['h']), '') + '<div class="kx-grid">' + ''.join(card({'t': x['t'], 'p': x['p']}) for x in c['impact']['items']) + '</div>', 'impact')
-    scale = block(f'''<div class="kx-split"><div><span class="eyebrow">Scale</span><h2 style="margin-top:18px">{e(c['scale']['h'])}</h2>
-        <ul class="kx-ticks">{"".join(f"<li><span>{re.sub(r'^([^:]+:)', r'<strong>\\1</strong>', e(x))}</span></li>" for x in c['scale']['li'])}</ul></div>
-        {img(c['scale']['img']['src'], c['scale']['img']['alt'], 'photo')}</div>''', 'scale')
+             media='<div class="kx-stage" data-tilt><figure class="kx-shot round">' + img(c['hero_img']['src'], c['hero_img']['alt'], lazy=False, prio=True) + '</figure></div>')
+    pain = block(f'''<div class="kx-side"><div class="sticky"><span class="eyebrow">The challenge</span><h2 style="margin-top:18px">{e(c['pain']['h'])}</h2></div>{issues(c['pain']['items'])}</div>''', 'challenge')
+    how = block(head_block('How it works', e(c['how_h']), '') + flowsteps(c['steps']), 'how')
+    core_h = f'{c["core"]["h"]} {c["core"]["h2b"][0]}' if c['core']['h2b'] else c['core']['h']
+    core = block(head_block('Capabilities', e(core_h), '') + bento(c['core']['items']), 'capabilities')
+    impact = block(head_block('Impact', e(c['impact']['h']), '') + outcomes(c['impact']['items']), 'impact')
+    ticks = ''.join(f"<li><span>{re.sub(r'^([^:]+:)', r'<strong>\1</strong>', e(x))}</span></li>" for x in c['scale']['li'])
+    scale = block(f'''<div class="kx-split"><div{rv()}><span class="eyebrow">Scale</span><h2 style="margin-top:18px">{e(c['scale']['h'])}</h2>
+        <ul class="kx-ticks">{ticks}</ul></div>
+        <div class="kx-frame"{rv(2)}>{img(c['scale']['img']['src'], c['scale']['img']['alt'], 'photo')}</div></div>''', 'scale')
     f = c['field']
 
     def lead(li):
         t = li.lstrip('✓').strip()
         m = re.match(r'^(.{3,60}?[.:])\s+(.*)$', t)
         return f'<li><span><strong>{e(m.group(1))}</strong> {e(m.group(2))}</span></li>' if m else f'<li><span>{e(t)}</span></li>'
-    field = block(f'''<div class="kx-split flip"><div><span class="eyebrow">{e(f['eyebrow'])}</span><h2 style="margin-top:18px">{e(f['h'])}</h2><p class="lede" style="margin-top:18px">{e(f['lede'])}</p>
+    field = block(f'''<div class="kx-split flip"><div{rv()}><span class="eyebrow">{e(f['eyebrow'])}</span><h2 style="margin-top:18px">{e(f['h'])}</h2><p class="lede" style="margin-top:18px">{e(f['lede'])}</p>
         <ul class="kx-ticks">{"".join(lead(x) for x in f['li'])}</ul></div>
         {vis(f['caption'])}</div>''', 'field')
     strip_words = {'retail-analytics': ['Existing CCTV', 'Edge/On-Prem/Cloud', 'Privacy-First'], 'commercial-buildings': ['Existing CCTV', 'Flexible Deploy', 'Privacy-First'],
                    'smart-cities': ['Existing Networks', 'Hybrid Deployment', 'Privacy-First'], 'video-surveillance': ['Existing CCTV', 'Edge/Cloud Hybrid', 'Privacy-First']}[key]
-    why = block(head_block('Why KenVision', e(c['why']['h']), '') + '<div class="kx-grid four">' + ''.join(card({'t': x['t'], 'p': x['p']}) for x in c['why']['items']) + '</div>', 'why')
+    why = block(head_block('Why KenVision', e(c['why']['h']), '') + mini_cards(c['why']['items'], 4), 'why')
     faq = faq_block([(x['q'], x['a']) for x in c['faq']], c['faq_h']['h'], c['faq_h']['p'])
     cta = cta_band(c['cta']['h'], c['cta']['p'])
     body = '\n\n  '.join([h, pain, how, core, impact, scale, field, ticker(strip_words), why, faq, by_intelense(), cta])
@@ -598,7 +649,7 @@ def head(p):
                   f'<meta name="twitter:description" content="{ea(og_desc)}">', f'<meta name="twitter:image" content="{og_img}">']
         for ld in m.get('jsonld', []):
             parts.append('<script type="application/ld+json">' + json.dumps(patch_ld(p['key'], ld), ensure_ascii=False).replace('</', '<\\/') + '</script>')
-    parts += [IB.FONTS, '<link rel="stylesheet" href="@a/site.css">']
+    parts += [IB.FONTS, '<script>document.documentElement.classList.add("js")</script>', '<link rel="stylesheet" href="@a/site.css">']
     return '\n'.join(x for x in parts if x)
 
 
@@ -608,7 +659,7 @@ ICON_LINKS = ('<link rel="icon" href="@a/icons/favicon.ico" sizes="any">\n<link 
 
 
 def render(p):
-    scripts = ('<script src="@a/site.js" defer></script>\n<script type="module">\nimport { initCursorGrid } from \'@a/cursor-grid.js\';\n'
+    scripts = ('<script src="@a/site.js" defer></script>\n<script src="@a/kv.js" defer></script>\n<script type="module">\nimport { initCursorGrid } from \'@a/cursor-grid.js\';\n'
                + IB.GRID_START % IB.GRID_OPTS + '\n</script>')
     return (f'<!doctype html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">\n{head(p)}\n</head>\n<body>\n'
             f'{header(p["active"])}\n<main id="top">\n  {p["body"]}\n</main>\n\n{footer()}\n{scripts}\n</body>\n</html>\n')
@@ -647,7 +698,7 @@ def deploy(out):
     out.mkdir(parents=True, exist_ok=True)
     pages = [page_home(), page_solutions()] + [page_solution(k) for k, _, _ in SOLUTIONS] + [page_company(), page_contact(), page_404()]
     css = (SITE_DIR / 'assets' / 'site.css').read_text() + '\n' + (HERE / 'assets-src' / 'kv.css').read_text()
-    version = hashlib.md5((css + (SITE_DIR / 'assets' / 'site.js').read_text()).encode()).hexdigest()[:8]
+    version = hashlib.md5((css + (SITE_DIR / 'assets' / 'site.js').read_text() + (HERE / 'assets-src' / 'kv.js').read_text()).encode()).hexdigest()[:8]
     a = out / 'assets'
     a.mkdir(exist_ok=True)
     (a / 'site.css').write_text(css)
