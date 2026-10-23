@@ -313,18 +313,90 @@ def stats(items):
     return '<div class="kx-statband">' + ''.join(f'<div{rv(i)}><b data-count>{e(v)}</b><span>{e(l)}</span><small>{e(s)}</small></div>' for i, (v, l, s) in enumerate(items)) + '</div>'
 
 
-def tile(key, src, t, p, cls, cta='Learn more', i=0):
-    return f'<a class="kx-tile {cls}" href="@{key}"{rv(i)}>{img(src, t)}<div class="ov"><h3>{e(t)}</h3><p>{e(p)}</p><span class="go">{cta}</span></div></a>'
+def rows(items):
+    """Sector list: one clean row per solution, picture on the left, arrow on the right."""
+    out = ''.join(f'<a class="kx-row" href="@{k}"{rv(i)}><span class="pic">{img(src, t)}</span><span class="tx"><h3>{e(t)}</h3><p>{e(p)}</p></span><span class="go" aria-hidden="true"></span></a>' for i, (k, src, t, p) in enumerate(items))
+    return f'<div class="kx-rows">{out}</div>'
 
 
 def bento(items):
-    """Capability grid: one large card, two small, then wide cards (works for 6 and 8 items)."""
+    """Capability grid: equal cards with a picture on top (3 columns for 6 items, 4 for 8)."""
     out = []
     for i, c in enumerate(items):
-        kind = 'big' if i == 0 else ('sm' if i < 3 else 'wide')
         media = f'<div class="media{fits(c["img"]["src"])}">{img(c["img"]["src"], c["img"]["alt"])}</div>' if c.get('img') else ''
-        out.append(f'<article class="kx-b {kind} spot"{rv(i)}>{media}<div class="body"><h3>{e(c["t"])}</h3><p>{e(c["p"])}</p></div></article>')
-    return '<div class="kx-bentogrid">' + ''.join(out) + '</div>'
+        out.append(f'<article class="kx-b spot"{rv(i)}>{media}<div class="body"><h3>{e(c["t"])}</h3><p>{e(c["p"])}</p></div></article>')
+    return f'<div class="kx-bentogrid c{4 if len(items) % 4 == 0 else 3}">' + ''.join(out) + '</div>'
+
+
+def dash():
+    """KenVision dashboard drawn in HTML/CSS (sharp at any size, follows the light/dark theme). Figures are sample data."""
+    feed = img('assets/retail-ai-view.webp', 'Live camera view with people detected', lazy=False)
+    heat = img('assets/images/retail-heatmap-update.webp', 'Store heatmap', lazy=False)
+    hours = [34, 46, 41, 58, 72, 92, 70, 54, 64, 80, 57, 40]
+    bars = ''.join(f'<i style="--h:{h}%"{" class=pk" if h == 92 else ""}></i>' for h in hours)
+    nav = [('Overview', 'chart', ' on'), ('Heatmaps', 'eye', ''), ('Alerts', 'bell', ''), ('Reports', 'text', ''), ('Cameras', 'plug', '')]
+    side = ''.join(f'<span class="ni{on}">{icon(ic)}{lb}</span>' for lb, ic, on in nav)
+    kp = [('People in', '1,248', 'M0 22 L12 18 L24 20 L36 11 L48 14 L60 5'), ('Avg. dwell', '4m 12s', 'M0 14 L12 16 L24 9 L36 12 L48 8 L60 10'), ('Queue wait', '3 min', 'M0 6 L12 9 L24 8 L36 15 L48 13 L60 19')]
+    tiles = ''.join(f'<div class="kp"><span>{l}</span><b>{v}</b><svg viewBox="0 0 60 26" aria-hidden="true"><path d="{d}"/></svg></div>' for l, v, d in kp)
+    return f'''<div class="kx-dash" role="img" aria-label="Illustration of the KenVision dashboard with live camera view, heatmap and footfall">
+      <div class="dh"><span class="dots"><i></i><i></i><i></i></span><span class="ttl">Store overview</span><span class="smp">Sample data</span><span class="lv"><i></i>Live</span></div>
+      <div class="db">
+        <div class="ds">{side}</div>
+        <div class="dm">
+          <div class="kps">{tiles}</div>
+          <div class="dr">
+            <div class="fd">{feed}<span class="tg"><i></i>CAM-02 · Entrance</span></div>
+            <div class="rc">
+              <div class="ht">{heat}<span>Heatmap</span></div>
+              <div class="hb"><span>Footfall by hour</span><div class="bars">{bars}</div></div>
+            </div>
+          </div>
+        </div>
+        <div class="toast"><i></i><div><b>Queue alert</b><small>Checkout 2 · long wait</small></div></div>
+      </div>
+    </div>'''
+
+
+def screens():
+    """Four small UI scenes, one per tab of 'Cameras are everywhere'."""
+    feed = img('assets/retail-ai-view.webp', 'Live camera view', lazy=False)
+    heat = img('assets/images/retail-heatmap-update.webp', 'Heatmap')
+    s0 = f'<div class="scr s0"><div class="fd">{feed}<span class="tg"><i></i>LIVE · CAM-02 Entrance</span><span class="ch c1">People counting</span><span class="ch c2">Dwell time</span></div></div>'
+    al = [('neg', 'Queue building', 'Checkout 2 · Camera 04', 'now'), ('warn', 'Zone 3 over capacity', 'Ground floor · Camera 11', '2 min'), ('info', 'Unusual movement', 'Display case · Camera 07', '9 min')]
+    s1 = '<div class="scr s1"><span class="st">Alerts</span>' + ''.join(f'<div class="al {c}"{" data-new" if i == 0 else ""}><i></i><div><b>{t}</b><small>{m}</small></div><em>{w}</em></div>' for i, (c, t, m, w) in enumerate(al)) + '</div>'
+    stp = ['Event detected on camera', 'Right team notified', 'Action taken on site', 'Logged for review']
+    s2 = '<div class="scr s2"><span class="st">Response</span><ol>' + ''.join(f'<li style="--i:{i}"><i></i>{t}</li>' for i, t in enumerate(stp)) + '</ol><span class="lat">Alert in &lt; 2s</span></div>'
+    bars = ''.join(f'<i style="--h:{h}%"{" class=pk" if h == 92 else ""}></i>' for h in [34, 46, 41, 58, 72, 92, 70, 54, 64, 80, 57, 40])
+    s3 = f'<div class="scr s3"><span class="st">Insights</span><div class="g"><div class="hb"><span>Footfall by hour</span><div class="bars">{bars}</div></div><div class="ht">{heat}<span>Heatmap</span></div></div></div>'
+    return s0 + s1 + s2 + s3
+
+
+def tabs_standard(points):
+    """The four ideas of 'Cameras are everywhere' as tabs that cycle by themselves, each with its own scene."""
+    btns = ''.join(f'<button type="button" role="tab" id="std-t{i}" aria-selected="{"true" if i == 0 else "false"}" tabindex="{0 if i == 0 else -1}"><span class="t">{e(t)}</span><span class="d">{e(d)}</span><i class="bar" aria-hidden="true"></i></button>' for i, (t, d) in enumerate(points))
+    return f'''<div class="kx-tabs std" data-tabs data-auto data-i="0">
+        <div class="tablist" role="tablist" aria-label="What KenVision does">{btns}</div>
+        <div class="stage"><div class="frame kx-screens"><span class="pill" data-label></span>{screens()}</div></div>
+      </div>'''
+
+
+DEPLOY_FACTS = {'Edge': ('Lowest latency · Works offline', ['Cameras', 'Edge device', 'Dashboards & alerts']),
+                'On-Premise': ('Raw footage never leaves the building', ['Cameras', 'Your data centre', 'Dashboards & alerts']),
+                'Cloud': ('Add cameras and locations instantly', ['Cameras', 'Cloud', 'Dashboards & alerts']),
+                'Hybrid': ('One platform, mixed architecture', ['Cameras', 'Edge or on-prem + cloud', 'Dashboards & alerts'])}
+
+
+def tabs_deploy(items):
+    btns = ''.join(f'<button type="button" role="tab" id="dep-t{i}" aria-controls="dep-p{i}" aria-selected="{"true" if i == 0 else "false"}" tabindex="{0 if i == 0 else -1}"><b>{n}</b>{e(t)}</button>' for i, (n, t, d) in enumerate(items))
+    panels = ''
+    for i, (n, t, d) in enumerate(items):
+        badge, nodes = DEPLOY_FACTS[t]
+        ns = ''.join(f'<span class="dn{" mid" if k == 1 else ""}">{x}</span>' + ('<i class="dl" aria-hidden="true"></i>' if k < 2 else '') for k, x in enumerate(nodes))
+        panels += f'''<div class="panel-d{" off" if i else ""}" role="tabpanel" id="dep-p{i}" aria-labelledby="dep-t{i}" data-panel{' aria-hidden="true"' if i else ''}>
+          <div class="txt"><span class="kx-num">{n}</span><h3>{e(t)}</h3><p>{e(d)}</p><span class="badge">{badge}</span></div>
+          <div class="dg" aria-hidden="true">{ns}</div>
+        </div>'''
+    return f'<div class="kx-tabs dep" data-tabs><div class="tablist seg" role="tablist" aria-label="Deployment models">{btns}</div><div class="panels">{panels}</div></div>'
 
 
 def flowsteps(items):
@@ -352,34 +424,6 @@ def issues(items):
 
 def outcomes(items):
     return '<div class="kx-outcomes">' + ''.join(f'<div{rv(i)}><span class="tick" aria-hidden="true"></span><h3>{e(x["t"])}</h3><p>{e(x["p"])}</p></div>' for i, x in enumerate(items)) + '</div>'
-
-
-def tabs_standard(points):
-    """The four ideas of 'Cameras are everywhere' as tabs that cycle by themselves; the picture zooms to a different part for each."""
-    btns = ''.join(f'<button type="button" role="tab" id="std-t{i}" aria-selected="{"true" if i == 0 else "false"}" tabindex="{0 if i == 0 else -1}"><span class="t">{e(t)}</span><span class="d">{e(d)}</span><i class="bar" aria-hidden="true"></i></button>' for i, (t, d) in enumerate(points))
-    return f'''<div class="kx-tabs std" data-tabs data-auto data-i="0">
-        <div class="tablist" role="tablist" aria-label="What KenVision does">{btns}</div>
-        <div class="stage" aria-hidden="false"><div class="frame kx-scan"><span class="pill" data-label></span>{img('assets/images/dashboards/kenvision-imac-points.webp', 'KenVision Intelligence')}</div></div>
-      </div>'''
-
-
-DEPLOY_FACTS = {'Edge': ('On-device AI at your site', 'Lowest latency · Works offline', ['Cameras', 'Edge device', 'Dashboards & alerts']),
-                'On-Premise': ('Your data centre', 'Raw footage never leaves the building', ['Cameras', 'Your data centre', 'Dashboards & alerts']),
-                'Cloud': ('KenVision cloud', 'Add cameras and locations instantly', ['Cameras', 'Cloud', 'Dashboards & alerts']),
-                'Hybrid': ('Edge or on-prem + cloud', 'One platform, mixed architecture', ['Cameras', 'Edge / on-prem  +  Cloud', 'Dashboards & alerts'])}
-
-
-def tabs_deploy(items):
-    btns = ''.join(f'<button type="button" role="tab" id="dep-t{i}" aria-controls="dep-p{i}" aria-selected="{"true" if i == 0 else "false"}" tabindex="{0 if i == 0 else -1}"><b>{n}</b>{e(t)}</button>' for i, (n, t, d) in enumerate(items))
-    panels = ''
-    for i, (n, t, d) in enumerate(items):
-        _, badge, nodes = DEPLOY_FACTS[t]
-        ns = ''.join(f'<span class="node{" mid" if k == 1 else ""}">{x}</span>' + ('<i class="ln" aria-hidden="true"></i>' if k < 2 else '') for k, x in enumerate(nodes))
-        panels += f'''<div class="panel-d" role="tabpanel" id="dep-p{i}" aria-labelledby="dep-t{i}" data-panel{" hidden" if i else ""}>
-          <div><span class="kx-num">{n}</span><h3>{e(t)}</h3><p>{e(d)}</p><span class="badge">{badge}</span></div>
-          <div class="diagram" aria-hidden="true">{ns}</div>
-        </div>'''
-    return f'<div class="kx-tabs dep" data-tabs><div class="tablist seg" role="tablist" aria-label="Deployment models">{btns}</div>{panels}</div>'
 
 
 # ---------------------------------------------------------------- JSON-LD
@@ -419,7 +463,7 @@ def page_home():
              'Turn the cameras you <em>already own</em> into real-time intelligence.',
              'KenVision applies advanced AI to your existing CCTV — counting people, mapping behaviour, spotting risk and measuring engagement — without replacing a single camera. Privacy-first, on-prem or edge, running in days.',
              demo_btn() + '<a class="btn btn-ghost" href="@solutions">See solutions</a>',
-             media='<div class="kx-stage" data-tilt><figure class="kx-shot">' + img('assets/images/dashboards/kenvision-imac-dashboard.webp', 'KenVision Dashboard', lazy=False, prio=True) + '</figure>' + floats + '</div>',
+             media='<div class="kx-stage" data-tilt><div class="kx-shot">' + dash() + '</div>' + floats + '</div>',
              extra='<div class="kx-trust"><span>Works with existing CCTV</span><span>Privacy-first &amp; on-prem</span><span>Camera-agnostic</span></div>')
     st = f'<section class="kx-proof"><div class="wrap">{stats(HOME_STATS)}</div></section>'
     sectors = ['Electronics retail', 'Jewellery chains', 'FMCG activations', 'Commercial buildings', 'Smart cities', 'Worksite safety']
@@ -443,7 +487,7 @@ def page_home():
            ('smart-cities', 'assets/smart-city-street.webp', 'Smart Cities', 'Monitor crowds, traffic flow, and public safety conditions in real time.', 'b'),
            ('video-surveillance', 'assets/alert-dashboard.webp', 'Video Surveillance', 'Enhance surveillance systems with intelligent detection, alerts, and analytics.', 'a')]
     sectors_html = block(head_block('Solutions', 'Intelligence Across Sectors', 'KenVision adapts to different environments by contextualizing intelligence for each industry.')
-                         + '<div class="kx-bento">' + ''.join(tile(k, i, t, p, cl, i=n) for n, (k, i, t, p, cl) in enumerate(sec)) + '</div>', 'sectors')
+                         + rows([(k, i, t, p) for k, i, t, p, cl in sec]), 'sectors')
     steps_html = block(head_block('How it works', 'How KenVision Turns Video into Action', '')
                        + flowsteps([{'t': s['t'], 'p': s['p'], 'img': s['img']} for s in CONTENT['retail-analytics']['steps']]), 'how')
     core = [('Real-Time Video Analytics', 'Detect events, movement, and anomalies as they happen — not after review.', 'assets/images/core-analytics.webp'),
@@ -477,7 +521,7 @@ def page_solutions():
              ('commercial-buildings', 'assets/commercial-buildings.webp', 'Commercial Buildings', 'Gain real-time visibility into occupancy and space utilization.', 'b'),
              ('smart-cities', 'assets/smart-city-street.webp', 'Smart Cities', 'Monitor traffic flow and public safety at city-wide scale.', 'b'),
              ('video-surveillance', 'assets/alert-dashboard.webp', 'Intelligent Surveillance', 'Enhance existing systems with real-time detection and alerts.', 'a')]
-    sec = block(head_block('Solutions', 'Intelligence Across Sectors', '') + '<div class="kx-bento">' + ''.join(tile(k, i, t, p, cl, 'Explore', n) for n, (k, i, t, p, cl) in enumerate(cards)) + '</div>', 'sectors')
+    sec = block(head_block('Solutions', 'Intelligence Across Sectors', '') + rows([(k, i, t, p) for k, i, t, p, cl in cards]), 'sectors')
     tick = ticker(['Real-time video analytics', 'Behavioral understanding', 'Anomaly detection', 'Heatmaps & tracking', 'Dashboards & reports', 'Edge + cloud deployment'])
     onep = f'<section class="block" style="padding-block:clamp(40px,5vw,72px)"><div class="wrap"><h2 class="kx-h2"{rv()} style="font-size:clamp(24px,3vw,36px)">One Platform. Multiple Solutions.</h2></div></section>'
     scale = [('Single Site', 'Deploy KenVision in individual locations with focused intelligence and minimal setup.'), ('Multi-Location', 'Scale insights across multiple sites with centralized dashboards and unified reporting.'),
@@ -550,11 +594,11 @@ def page_company():
     h = hero(crumbs((None, 'Company')), '<span class="kx-byline">KenVision by <a href="' + INTELENSE + '/about">Intelense</a></span>', 'The cameras you already own can do more',
              'KenVision is the AI video intelligence layer built by <a href="' + INTELENSE + '/" style="color:var(--lake-blue);font-weight:600">Intelense</a> that turns existing CCTV into real-time insight — footfall, occupancy, crowd safety and loss prevention — without new hardware and without storing raw footage.',
              demo_btn() + f'<a class="btn btn-ghost" href="{INTELENSE}/">Explore Intelense</a>',
-             media='<figure class="kx-shot">' + img('assets/images/dashboards/kenvision-imac-dashboard.webp', 'KenVision Dashboard', lazy=False, prio=True) + '</figure>')
+             media='<div class="kx-stage" data-tilt><div class="kx-shot">' + dash() + '</div></div>')
     cog = block(f'''<div class="kx-split"><div><span class="eyebrow">KEN AI</span><h2 style="margin-top:18px">Cognitive Intelligence</h2>
         <p class="lede" style="margin-top:18px">We build device-agnostic AI platforms that make existing camera networks intelligent. Our core technology, KEN AI, processes video feeds in real-time to detect threats, anomalies, and safety hazards without requiring new infrastructure.</p>
         <div class="kx-chips"><span>Privacy-First Design</span><span>No Hardware Upgrades</span><span>Seamless Integration</span></div></div>
-        <figure class="kx-shot" style="margin:0">{img('assets/images/dashboards/kenvision-imac-dashboard.webp', 'KEN AI Dashboard')}</figure></div>''', 'cognitive')
+        <div class="kx-frame"{rv(2)}>{img('assets/retail-ai-view.webp', 'KEN AI detecting people in a live camera feed', 'photo')}</div></div>''', 'cognitive')
     st = block(stats([HOME_STATS[2], HOME_STATS[3], HOME_STATS[4], HOME_STATS[0], HOME_STATS[1]]), 'numbers')
     st = st.replace('class="block"', 'class="block" style="padding-block:clamp(40px,5vw,72px)"', 1)
     glob = block(head_block('Global Operations', 'Two offices, one team.', 'KenVision is built by Intelense in Canada and India.') + world_map() + '<div class="offices">' + ''.join(

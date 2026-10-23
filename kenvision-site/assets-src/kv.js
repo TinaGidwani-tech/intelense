@@ -82,7 +82,7 @@
     var auto = box.hasAttribute('data-auto');
     function set(n, byUser) {
       tabs.forEach(function (t, k) { t.setAttribute('aria-selected', k === n ? 'true' : 'false'); t.tabIndex = k === n ? 0 : -1; });
-      panels.forEach(function (p, k) { p.hidden = k !== n; });
+      panels.forEach(function (p, k) { p.classList.toggle('off', k !== n); if (k !== n) p.setAttribute('aria-hidden', 'true'); else p.removeAttribute('aria-hidden'); });
       box.setAttribute('data-i', n);
       if (label) label.textContent = tabs[n].querySelector('.t').textContent;
       if (byUser && auto) { auto = false; box.classList.add('manual'); }
