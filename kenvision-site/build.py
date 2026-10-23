@@ -92,13 +92,20 @@ def local(src):
 def img(src, alt='', cls='', lazy=True, prio=False, attrs=''):
     src = local(src)
     from PIL import Image
-    w, h = Image.open(IMG_DIR / src.replace('assets/', '', 1)).size
+    p = IMG_DIR / src.replace('assets/', '', 1)
+    w, h = Image.open(p if p.exists() else SITE_DIR / src).size
     return (f'<img src="@a/{src[7:]}" alt="{ea(alt)}" width="{w}" height="{h}"{f" class={chr(34)}{cls}{chr(34)}" if cls else ""}'
             f'{" fetchpriority=" + chr(34) + "high" + chr(34) if prio else (" loading=" + chr(34) + "lazy" + chr(34) + " decoding=" + chr(34) + "async" + chr(34) if lazy else "")}{attrs}>')
 
 
 def fits(src):
     return ' fit' if any(k in local(src) for k in CONTAIN) else ''
+
+
+def vid(name, alt, cls='kx-vid'):
+    """Muted looping clip from the shared footage library (Pexels). kv.js leaves it on the poster for visitors who prefer reduced motion."""
+    return (f'<video class="{cls}" muted loop playsinline autoplay preload="metadata" poster="@a/footage/{name}-poster.jpg" aria-label="{ea(alt)}">'
+            f'<source src="@a/footage/{name}.mp4" type="video/mp4"></video>')
 
 
 def demo_href():
@@ -189,7 +196,7 @@ def footer():
         <ul><li class="email">enquiries@intelense.ca</li><li><a href="tel:+12895523165">+1 (289) 552-3165</a> Canada</li><li><a href="tel:+919342810422">+91 93428 10422</a> India</li><li>Markham, Ontario, Canada</li><li>Bengaluru, India</li><li><a href="{LINKEDIN}" target="_blank" rel="noopener noreferrer">LinkedIn</a></li><li><a href="{XURL}" target="_blank" rel="noopener noreferrer">X</a></li></ul>
       </div>
     </div>
-    <div class="legal"><span>© 2026 Intelense Inc. · <a href="{INTELENSE}/privacy" rel="noopener">Privacy</a> · <a href="{INTELENSE}/terms" rel="noopener">Terms</a></span><span>KenVision is a product of <a href="{INTELENSE}/">Intelense</a> · Privacy-first, on-prem &amp; edge</span></div>
+    <div class="legal"><span>© 2026 Intelense Inc. · <a href="{INTELENSE}/privacy" rel="noopener">Privacy</a> · <a href="{INTELENSE}/terms" rel="noopener">Terms</a></span><span>KenVision is a product of <a href="{INTELENSE}/">Intelense</a> · Photography and video: Pexels and Unsplash</span></div>
   </div>
 </footer>
 '''
@@ -251,9 +258,13 @@ def faq_block(items, title, lede=''):
   </section>'''
 
 
-def cta_band(h2, lede, second=None):
+def cta_band(h2, lede, second=None, video=None):
     second = second or ('<a class="btn btn-black" href="@contact">Contact sales</a>')
-    return f'''<section class="cta">
+    if video:
+        second = second.replace('btn-black', 'btn-ghost')
+    bg = f'<div class="bgv" aria-hidden="true">{vid(video, "")}</div>' if video else ''
+    return f'''<section class="cta{" has-vid" if video else ""}">
+    {bg}
     <div class="wash wash-b" aria-hidden="true" style="top:10%;right:20%"></div>
     <div class="wash wash-a" aria-hidden="true" style="top:30%;left:20%"></div>
     <div class="wrap">
@@ -482,10 +493,10 @@ def page_home():
            ('Instant Response Enablement', 'Identify incidents the moment they occur and act within seconds—not hours.'),
            ('Actionable Intelligence', 'Transform raw video into structured insights that support faster, smarter decision-making.')]
     standard = block(head_block('The KenVision standard', 'Cameras Are Everywhere. <em>Intelligence Is Not.</em>', '') + tabs_standard(pts), 'standard')
-    sec = [('retail-analytics', 'assets/retail-store.webp', 'Retail Analytics', 'Optimize store performance using footfall, dwell time, heatmaps, and shopper behavior insights.', 'a'),
-           ('commercial-buildings', 'assets/commercial-buildings.webp', 'Commercial Buildings', 'Understand occupancy, space utilization, access patterns, and asset movement.', 'b'),
-           ('smart-cities', 'assets/smart-city-street.webp', 'Smart Cities', 'Monitor crowds, traffic flow, and public safety conditions in real time.', 'b'),
-           ('video-surveillance', 'assets/alert-dashboard.webp', 'Video Surveillance', 'Enhance surveillance systems with intelligent detection, alerts, and analytics.', 'a')]
+    sec = [('retail-analytics', 'assets/footage/industry-retail.jpg', 'Retail Analytics', 'Optimize store performance using footfall, dwell time, heatmaps, and shopper behavior insights.', 'a'),
+           ('commercial-buildings', 'assets/footage/lobby.jpg', 'Commercial Buildings', 'Understand occupancy, space utilization, access patterns, and asset movement.', 'b'),
+           ('smart-cities', 'assets/footage/industry-smart-cities.jpg', 'Smart Cities', 'Monitor crowds, traffic flow, and public safety conditions in real time.', 'b'),
+           ('video-surveillance', 'assets/footage/whse.jpg', 'Video Surveillance', 'Enhance surveillance systems with intelligent detection, alerts, and analytics.', 'a')]
     sectors_html = block(head_block('Solutions', 'Intelligence Across Sectors', 'KenVision adapts to different environments by contextualizing intelligence for each industry.')
                          + rows([(k, i, t, p) for k, i, t, p, cl in sec]), 'sectors')
     steps_html = block(head_block('How it works', 'How KenVision Turns Video into Action', '')
@@ -508,7 +519,7 @@ def page_home():
     dep_html = block(head_block('Deployment', 'Deploy KenVision Your Way', '') + tabs_deploy(dep), 'deploy')
     quote = f'''<section class="block"><div class="wrap"><figure class="kx-quote"{rv()}><p>“The best camera for your AI is the one already on your wall. Everything after that should be software — not another hardware project.”</p><cite>KenVision product principle, by <a href="{INTELENSE}/">Intelense</a></cite></figure></div></section>'''
     faq = faq_block([(x['q'], x['a']) for x in c['faq']], c['faq_h']['h'], c['faq_h']['p'])
-    cta = cta_band('Ready to Unlock Intelligence from Video?', 'See how KenVision transforms everyday video into insights that improve safety, efficiency, and decision-making.')
+    cta = cta_band('Ready to Unlock Intelligence from Video?', 'See how KenVision transforms everyday video into insights that improve safety, efficiency, and decision-making.', video='video-home')
     body = '\n\n  '.join([h, st, strip, band, standard, sectors_html, steps_html, core_html, why_html, dep_html, by_intelense(), quote, faq, cta])
     return page('index', 'index.html', 'KenVision by Intelense | AI-Powered Video Intelligence Platform', c['meta'], body, 'home')
 
@@ -517,10 +528,10 @@ def page_solutions():
     c = CONTENT['solutions-index']
     h = hero(crumbs((None, 'Solutions')), '<span class="eyebrow">Solutions</span>', c['h1'], c['lede'], demo_btn('Request Demo'),
              media='<div class="kx-stage" data-tilt><figure class="kx-shot round">' + img('assets/images/solutions-hero-collage.webp', c['hero_img']['alt'], lazy=False, prio=True) + '</figure></div>')
-    cards = [('retail-analytics', 'assets/retail-store.webp', 'Retail Analytics', 'Understand shopper behavior using footfall analysis and heatmaps.', 'a'),
-             ('commercial-buildings', 'assets/commercial-buildings.webp', 'Commercial Buildings', 'Gain real-time visibility into occupancy and space utilization.', 'b'),
-             ('smart-cities', 'assets/smart-city-street.webp', 'Smart Cities', 'Monitor traffic flow and public safety at city-wide scale.', 'b'),
-             ('video-surveillance', 'assets/alert-dashboard.webp', 'Intelligent Surveillance', 'Enhance existing systems with real-time detection and alerts.', 'a')]
+    cards = [('retail-analytics', 'assets/footage/industry-retail.jpg', 'Retail Analytics', 'Understand shopper behavior using footfall analysis and heatmaps.', 'a'),
+             ('commercial-buildings', 'assets/footage/lobby.jpg', 'Commercial Buildings', 'Gain real-time visibility into occupancy and space utilization.', 'b'),
+             ('smart-cities', 'assets/footage/industry-smart-cities.jpg', 'Smart Cities', 'Monitor traffic flow and public safety at city-wide scale.', 'b'),
+             ('video-surveillance', 'assets/footage/whse.jpg', 'Intelligent Surveillance', 'Enhance existing systems with real-time detection and alerts.', 'a')]
     sec = block(head_block('Solutions', 'Intelligence Across Sectors', '') + rows([(k, i, t, p) for k, i, t, p, cl in cards]), 'sectors')
     tick = ticker(['Real-time video analytics', 'Behavioral understanding', 'Anomaly detection', 'Heatmaps & tracking', 'Dashboards & reports', 'Edge + cloud deployment'])
     onep = f'<section class="block" style="padding-block:clamp(40px,5vw,72px)"><div class="wrap"><h2 class="kx-h2"{rv()} style="font-size:clamp(24px,3vw,36px)">One Platform. Multiple Solutions.</h2></div></section>'
@@ -557,11 +568,22 @@ def vis(caption):
     return ''
 
 
+SOL_MEDIA = {
+    'retail-analytics': dict(img='assets/footage/aisle.jpg', alt='Shoppers in a busy store aisle', scale='assets/footage/store.jpg', chips=['Footfall', 'Dwell time']),
+    'commercial-buildings': dict(img='assets/footage/lobby.jpg', alt='People moving through a bright building lobby', scale='assets/footage/hero-contact.jpg', chips=['Occupancy', 'Utilization']),
+    'smart-cities': dict(video='video-home', alt='Crowd moving through a busy public concourse', scale='assets/footage/lot.jpg', chips=['Crowd density', 'Flow']),
+    'video-surveillance': dict(video='video-warehouse', alt='Forklift and workers in a warehouse', scale='assets/footage/dock.jpg', chips=['Smart alerts', 'PPE check']),
+}
+
+
 def page_solution(key):
     c = CONTENT[key]
     name = dict((k, n) for k, n, _ in SOLUTIONS)[key]
+    hm = SOL_MEDIA[key]
+    pic = vid(hm['video'], hm['alt']) if hm.get('video') else img(hm['img'], hm['alt'], lazy=False, prio=True)
+    chips = ''.join(f'<span class="kx-float f{i + 1}"><i></i>{t}</span>' for i, t in enumerate(hm['chips']))
     h = hero(crumbs(('@solutions', 'Solutions'), (None, name)), '<span class="eyebrow">Solutions</span>', e(c['h1']), e(c['lede']), demo_btn('Request Demo'),
-             media='<div class="kx-stage" data-tilt><figure class="kx-shot round">' + img(c['hero_img']['src'], c['hero_img']['alt'], lazy=False, prio=True) + '</figure></div>')
+             media='<div class="kx-stage" data-tilt><figure class="kx-shot round">' + pic + '</figure>' + chips + '</div>')
     pain = block(f'''<div class="kx-side"><div class="sticky"><span class="eyebrow">The challenge</span><h2 style="margin-top:18px">{e(c['pain']['h'])}</h2></div>{issues(c['pain']['items'])}</div>''', 'challenge')
     how = block(head_block('How it works', e(c['how_h']), '') + flowsteps(c['steps']), 'how')
     core_h = f'{c["core"]["h"]} {c["core"]["h2b"][0]}' if c['core']['h2b'] else c['core']['h']
@@ -570,7 +592,7 @@ def page_solution(key):
     ticks = ''.join(f"<li><span>{re.sub(r'^([^:]+:)', r'<strong>\1</strong>', e(x))}</span></li>" for x in c['scale']['li'])
     scale = block(f'''<div class="kx-split"><div{rv()}><span class="eyebrow">Scale</span><h2 style="margin-top:18px">{e(c['scale']['h'])}</h2>
         <ul class="kx-ticks">{ticks}</ul></div>
-        <div class="kx-frame"{rv(2)}>{img(c['scale']['img']['src'], c['scale']['img']['alt'], 'photo')}</div></div>''', 'scale')
+        <div class="kx-frame"{rv(2)}>{img(SOL_MEDIA[key]['scale'], c['scale']['img']['alt'], 'photo')}</div></div>''', 'scale')
     f = c['field']
 
     def lead(li):
@@ -735,7 +757,7 @@ def sitemap(pages):
     return f'<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n{urls}</urlset>\n'
 
 
-USED = re.compile(r'@a/([A-Za-z0-9_./-]+\.(?:webp|png|ico|jpg|svg|css|js))')
+USED = re.compile(r'@a/([A-Za-z0-9_./-]+\.(?:webp|png|ico|jpg|svg|css|js|mp4))')
 
 
 def deploy(out):

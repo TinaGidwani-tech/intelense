@@ -104,6 +104,14 @@
     set(0, false);
   });
 
+  // Clips: stay on the poster for reduced motion, otherwise play only while on screen
+  $$('video.kx-vid, .bgv video').forEach(function (v) {
+    if (reduce) { v.removeAttribute('autoplay'); v.pause(); return; }
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver(function (es) { es.forEach(function (en) { var p = en.isIntersecting ? v.play() : v.pause(); if (p && p.catch) p.catch(function () {}); }); }, { threshold: 0.2 }).observe(v);
+    }
+  });
+
   // Thin progress bar under the top edge
   var bar = document.createElement('div');
   bar.className = 'kx-progress';
