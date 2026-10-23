@@ -1,0 +1,153 @@
+/* KenVision additions on top of the shared Intelense stylesheet (site/assets/site.css). Brand blue #0A34ED, Montserrat. */
+
+/* Logo lockup ("KenVision by Intelense") is taller than the plain Intelense wordmark */
+.logo img.kv-logo { height: 48px; width: auto; }
+footer .logo img.kv-logo { height: 56px; }
+@media (max-width: 480px) { .logo img.kv-logo { height: 42px; } }
+
+/* Hero */
+.kx-hero h1 { max-width: 18ch; }
+.kx-hero h1 em, .kx-h2 em { font-style: normal; color: var(--lake-blue); }
+.kx-byline { font-size: 12px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--smoke); display: inline-flex; gap: 6px; align-items: center; margin-bottom: 18px; }
+.kx-byline a { color: var(--lake-blue); text-decoration: none; font-weight: 600; }
+.kx-byline a:hover { text-decoration: underline; }
+.kx-trust { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 28px; }
+.kx-trust span { display: inline-flex; align-items: center; gap: 8px; padding: 8px 14px; border-radius: 9999px; background: var(--white); border: 1px solid var(--ash); font-size: 13px; color: var(--graphite); }
+.kx-trust span::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--lake-blue); }
+.kx-shot { margin: 0; min-width: 0; }
+.kx-shot img { display: block; width: 100%; height: auto; filter: drop-shadow(0 28px 40px rgba(10, 52, 237, .22)); }
+.kx-shot.round img { border-radius: 28px; filter: none; box-shadow: 0 24px 60px -30px rgba(10, 52, 237, .45); }
+
+/* Sector strip, tickers */
+.kx-strip { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 14px; padding-block: 28px; border-top: 1px solid var(--ash); }
+.kx-strip .lbl { flex-basis: 100%; font-size: 12px; text-transform: uppercase; color: var(--smoke); letter-spacing: 0.06em; margin-right: 8px; }
+.kx-strip span.pill { border: 1px solid var(--ash); border-radius: 9999px; padding: 10px 18px; font-size: 13px; text-transform: uppercase; letter-spacing: 0.04em; background: var(--white); }
+.kx-ticker { overflow: hidden; border-block: 1px solid var(--ash); padding-block: 22px; background: var(--white); }
+.kx-ticker .track { display: flex; width: max-content; animation: kx-slide 40s linear infinite; }
+.kx-ticker ul { display: flex; gap: 48px; list-style: none; margin: 0; padding: 0 24px; flex: none; }
+.kx-ticker li { white-space: nowrap; text-transform: uppercase; font-size: 14px; font-weight: 500; letter-spacing: 0.04em; display: inline-flex; align-items: center; gap: 48px; }
+.kx-ticker li::after { content: ""; width: 8px; height: 8px; border-radius: 50%; background: linear-gradient(135deg, var(--g-blue), var(--g-violet) 50%, var(--g-coral)); }
+@keyframes kx-slide { to { transform: translateX(-50%); } }
+@media (prefers-reduced-motion: reduce) { .kx-ticker .track { animation: none; flex-wrap: wrap; width: auto; } .kx-ticker ul[aria-hidden] { display: none; } }
+
+/* Partner logos: white rounded tiles read well on the dark band in both themes */
+
+/* Three-column "points" layout with the product image in the middle */
+.kx-points { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.5fr) minmax(0, 1fr); gap: 32px; align-items: center; }
+.kx-points .col-text { display: grid; gap: 20px; }
+.kx-point { border: 1px solid var(--ash); border-radius: 24px; padding: 24px; background: var(--white); }
+.kx-point h3 { font-size: 19px; color: var(--lake-blue); margin-bottom: 8px; }
+.kx-point p { color: var(--graphite); font-size: 15px; }
+
+/* Image cards */
+.kx-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+.kx-grid.two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.kx-grid.four { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.kx-card { border: 1px solid var(--ash); border-radius: 28px; background: var(--white); overflow: hidden; display: flex; flex-direction: column; min-width: 0; text-decoration: none; color: inherit; transition: border-color .2s ease, transform .2s ease; }
+a.kx-card:hover { border-color: var(--lake-blue); transform: translateY(-2px); }
+.kx-card .media { aspect-ratio: 16 / 10; background: var(--parchment); overflow: hidden; }
+.kx-card .media img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.kx-card .media.fit img { object-fit: contain; padding: 8px; }
+.kx-card .body { padding: 22px 24px 26px; display: flex; flex-direction: column; gap: 8px; flex: 1; }
+.kx-card h3 { font-size: 20px; }
+.kx-card p { color: var(--graphite); font-size: 15px; }
+.kx-card .link-arrow { margin-top: auto; padding-top: 10px; color: var(--lake-blue); font-weight: 600; font-size: 13px; }
+.kx-card.plain .body { padding: 24px; }
+
+/* Steps with pictures */
+.kx-steps { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; counter-reset: kx; }
+.kx-step { border-top: 1px solid var(--ash); padding-top: 18px; display: grid; gap: 14px; align-content: start; }
+.kx-step img { width: 100%; height: auto; aspect-ratio: 16 / 10; object-fit: cover; border-radius: 20px; display: block; background: var(--parchment); }
+.kx-step h3 { font-size: 20px; }
+.kx-step p { color: var(--graphite); font-size: 15px; }
+
+/* Numbered deployment cards */
+.kx-num { font-size: 13px; font-weight: 600; color: var(--lake-blue); letter-spacing: 0.06em; }
+.kx-deploy .kx-card .body { gap: 10px; }
+
+/* Part of Intelense band */
+.kx-by { border: 1px solid var(--ash); border-radius: var(--radius-card); background: var(--white); padding: clamp(28px, 4vw, 56px); display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: 32px 56px; align-items: center; position: relative; overflow: hidden; isolation: isolate; }
+.kx-by .wash { opacity: .5; }
+.kx-by img.by-logo { height: 30px; width: auto; display: block; margin-bottom: 20px; }
+.kx-by h2 { font-size: clamp(26px, 3vw, 38px); }
+.kx-by p { color: var(--graphite); margin-top: 14px; max-width: 52ch; }
+.kx-by .links { display: grid; gap: 0; list-style: none; margin: 0; padding: 0; }
+.kx-by .links li { border-top: 1px solid var(--ash); }
+.kx-by .links li:first-child { border-top: 0; }
+.kx-by .links a { display: flex; justify-content: space-between; gap: 16px; padding: 14px 0; text-decoration: none; font-weight: 500; }
+.kx-by .links a::after { content: "→"; color: var(--lake-blue); transition: transform .2s; }
+.kx-by .links a:hover { color: var(--lake-blue); }
+.kx-by .links a:hover::after { transform: translateX(4px); }
+.kx-by .links small { display: block; color: var(--smoke); font-weight: 400; font-size: 13px; }
+.kx-modules { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 22px; }
+.kx-modules a { border: 1px solid var(--ash); border-radius: 9999px; padding: 7px 14px; font-size: 12px; text-transform: uppercase; letter-spacing: 0.04em; text-decoration: none; }
+.kx-modules a:hover { border-color: var(--lake-blue); color: var(--lake-blue); }
+
+/* Pull quote */
+.kx-quote { margin: 0 auto; text-align: center; max-width: 880px; margin: 0 auto; }
+.kx-quote p { font-size: clamp(24px, 3.2vw, 40px); font-weight: 500; letter-spacing: -0.03em; line-height: 1.2; text-wrap: balance; }
+.kx-quote cite { display: block; margin-top: 22px; font-style: normal; font-size: 13px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--smoke); }
+.kx-quote cite a { color: var(--lake-blue); text-decoration: none; font-weight: 600; }
+
+/* Ticks list + split blocks */
+.kx-split { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 32px 64px; align-items: center; }
+.kx-split.flip > :first-child { order: 2; }
+.kx-split img.photo { width: 100%; height: auto; border-radius: 28px; display: block; aspect-ratio: 4 / 3; object-fit: cover; }
+.kx-ticks { list-style: none; margin: 24px 0 0; padding: 0; display: grid; gap: 0; }
+.kx-ticks li { display: grid; grid-template-columns: 24px minmax(0, 1fr); gap: 12px; padding: 16px 0; border-top: 1px solid var(--ash); color: var(--graphite); }
+.kx-ticks li:first-child { border-top: 0; }
+.kx-ticks li::before { content: ""; width: 20px; height: 20px; margin-top: 1px; border-radius: 50%; background: var(--lake-blue) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath d='M5.5 10.4l3 3 6-6.4' fill='none' stroke='%23fff' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / 100% no-repeat; }
+.kx-ticks strong { color: var(--off-black); font-weight: 600; }
+.kx-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 24px; }
+.kx-chips span { border: 1px solid var(--ash); background: var(--white); border-radius: 9999px; padding: 8px 16px; font-size: 13px; font-weight: 500; color: var(--lake-blue); }
+
+/* Illustrations in the "in the field" panels (no figures, they only show the idea) */
+.kx-vis { border: 1px solid var(--ash); border-radius: 28px; background: var(--white); padding: clamp(22px, 3vw, 36px); display: grid; gap: 14px; min-width: 0; }
+.kx-vis .cap-t { font-size: 12px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--smoke); font-weight: 500; }
+.kx-bar { display: grid; gap: 6px; }
+.kx-bar span { font-size: 13px; color: var(--graphite); }
+.kx-bar i { display: block; height: 14px; border-radius: 9999px; background: linear-gradient(90deg, var(--g-blue), var(--g-violet)); }
+.kx-flow { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+.kx-flow li { border: 1px solid var(--ash); border-radius: 16px; padding: 14px 18px; font-size: 14px; background: var(--parchment); position: relative; }
+.kx-flow li + li::before { content: "↓"; position: absolute; top: -17px; left: 22px; color: var(--lake-blue); font-weight: 600; background: var(--white); line-height: 1; padding: 2px 4px; }
+.kx-flow li.on { border-color: var(--lake-blue); color: var(--lake-blue); font-weight: 600; }
+.kx-vis svg { width: 100%; height: auto; display: block; }
+.kx-vis .axis { stroke: var(--ash); }
+.kx-vis .area { fill: rgba(10, 52, 237, .14); stroke: var(--lake-blue); stroke-width: 2; }
+.kx-vis .thr { stroke: #FF7953; stroke-dasharray: 5 5; }
+.kx-vis text { fill: var(--smoke); font-size: 11px; font-family: var(--font); }
+.kx-save { display: inline-flex; gap: 8px; align-items: center; font-weight: 600; color: var(--lake-blue); font-size: 14px; }
+
+/* Contact */
+.kx-book { display: grid; gap: 14px; justify-items: start; }
+.kx-book p { color: var(--graphite); }
+
+/* 404 */
+.kx-404 { text-align: center; padding-block: clamp(80px, 12vw, 160px); }
+.kx-404 .big { font-size: clamp(88px, 16vw, 200px); font-weight: 500; letter-spacing: -0.05em; line-height: 1; color: var(--lake-blue); }
+.kx-404 h1 { font-size: clamp(28px, 4vw, 44px); margin-top: 12px; }
+.kx-404 p { color: var(--graphite); margin: 18px auto 0; max-width: 48ch; }
+
+/* Footer extras */
+.foot.kx-foot { grid-template-columns: minmax(0, 1.4fr) repeat(4, minmax(0, 1fr)); }
+.kx-foot .by-link { display: inline-block; margin-top: 14px; font-size: 13px; text-transform: uppercase; letter-spacing: 0.06em; text-decoration: none; border-bottom: 1px solid currentColor; }
+
+@media (max-width: 1080px) {
+  .kx-points { grid-template-columns: minmax(0, 1fr); }
+  .kx-points .col-img { order: -1; }
+  .kx-grid, .kx-grid.four { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .kx-by, .kx-split { grid-template-columns: minmax(0, 1fr); }
+  .kx-split.flip > :first-child { order: 0; }
+  .foot.kx-foot { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 680px) {
+  .kx-grid, .kx-grid.two, .kx-grid.four, .kx-steps { grid-template-columns: minmax(0, 1fr); }
+  .foot.kx-foot { grid-template-columns: minmax(0, 1fr); }
+  .kx-flow li + li::before { left: 18px; }
+}
+.head h2 em { font-style: normal; color: var(--lake-blue); }
+.kx-five { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+.kx-five > * { grid-column: span 2; }
+.kx-five > :nth-child(n+4) { grid-column: span 3; }
+@media (max-width: 1080px) { .kx-five { grid-template-columns: repeat(2, minmax(0, 1fr)); } .kx-five > *, .kx-five > :nth-child(n+4) { grid-column: auto; } }
+@media (max-width: 680px) { .kx-five { grid-template-columns: minmax(0, 1fr); } }

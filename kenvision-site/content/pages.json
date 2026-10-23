@@ -1,0 +1,1372 @@
+{
+ "retail-analytics": {
+  "meta": {
+   "title": "Retail Analytics | KenVision - AI Video Intelligence",
+   "description": "Optimize store operations with real-time shopper analytics. Track footfall, heatmaps, and queue times to boost conversion and efficiency.",
+   "og_description": "Optimize store operations with real-time shopper analytics. Track footfall, heatmaps, and queue times to boost conversion and efficiency.",
+   "og_image": "https://kenvision.ai/assets/retail-ai-view.webp",
+   "keywords": null,
+   "jsonld": [
+    {
+     "@context": "https://schema.org",
+     "@type": "Product",
+     "name": "KenVision Retail Analytics",
+     "description": "AI-powered retail analytics to understand shopper behavior and optimize store operations.",
+     "brand": {
+      "@type": "Brand",
+      "name": "KenVision"
+     },
+     "image": "https://kenvision.ai/assets/retail-ai-view.webp"
+    },
+    {
+     "@context": "https://schema.org",
+     "@type": "BreadcrumbList",
+     "itemListElement": [
+      {
+       "@type": "ListItem",
+       "position": 1,
+       "name": "Home",
+       "item": "https://kenvision.ai/index.html"
+      },
+      {
+       "@type": "ListItem",
+       "position": 2,
+       "name": "Solutions",
+       "item": "https://kenvision.ai/solutions/index.html"
+      },
+      {
+       "@type": "ListItem",
+       "position": 3,
+       "name": "Retail Analytics",
+       "item": "https://kenvision.ai/solutions/retail-analytics.html"
+      }
+     ]
+    },
+    {
+     "@context": "https://schema.org",
+     "@type": "FAQPage",
+     "mainEntity": [
+      {
+       "@type": "Question",
+       "name": "How does KenVision improve retail store performance?",
+       "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "KenVision tracks footfall, dwell time, queue lengths, and shopper movement patterns using existing store cameras. This data helps optimize store layouts, staff allocation, and promotional placements to increase conversion rates."
+       }
+      },
+      {
+       "@type": "Question",
+       "name": "What is retail people counting and why does it matter?",
+       "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Retail people counting uses AI video analysis to count exactly how many shoppers enter, move through, and exit a store. It provides accurate footfall data to benchmark performance, plan staffing, and measure marketing campaign effectiveness."
+       }
+      },
+      {
+       "@type": "Question",
+       "name": "Can KenVision manage queues at checkout?",
+       "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. KenVision monitors queue lengths in real time and sends automated alerts to staff when wait times exceed defined thresholds, reducing cart abandonment and improving customer satisfaction."
+       }
+      }
+     ]
+    }
+   ]
+  },
+  "h1": "Retail analytics from the CCTV you already have",
+  "lede": "Understand who walks in, where they go, what holds their attention and where you lose them — then act in real time. KenVision turns every store camera into a measurement tool, privacy-first and without new hardware.",
+  "hero_img": {
+   "src": "assets/retail-ai-view.webp",
+   "alt": "Retail Analytics AI View"
+  },
+  "faq": [
+   {
+    "q": "Do we need to install new cameras?",
+    "a": "No. KenVision is camera-agnostic and works with your existing CCTV, so most stores can go live without buying or rewiring hardware."
+   },
+   {
+    "q": "How is shopper privacy handled?",
+    "a": "Video is processed on-prem or at the edge. Only anonymized, aggregate metrics leave the store — no raw footage and no identity data. Demographic insights are statistical, not individual."
+   },
+   {
+    "q": "How fast can a store go live?",
+    "a": "A first use case can typically be stood up in days. From there you expand camera-by-camera and store-by-store."
+   },
+   {
+    "q": "Can we compare performance across locations?",
+    "a": "Yes. Multi-store analytics put every location on the same metrics so you can benchmark and roll out what works across the chain."
+   },
+   {
+    "q": "What metrics does KenVision track?",
+    "a": "Footfall counts, zone heatmaps, dwell time per fixture, queue length and wait time, demo-zone engagement, and privacy-safe demographic breakdowns — all from your existing CCTV streams."
+   }
+  ],
+  "pain": {
+   "h": "Bridging the Retail Blind Spot",
+   "items": [
+    {
+     "t": "Zone invisibility",
+     "p": "Retailers lacks precise data on how shopper density fluctuates between zones."
+    },
+    {
+     "t": "Engagement Gaps",
+     "p": "Understanding where interaction happens vs. where people just pass through."
+    },
+    {
+     "t": "Checkout Bottlenecks",
+     "p": "Long queues leading to cart abandonment and lost revenue opportunities."
+    },
+    {
+     "t": "Staff Allocation",
+     "p": "Mismatched staffing levels during peak vs. quiet hours."
+    }
+   ]
+  },
+  "how_h": "How KenVision Helps",
+  "core": {
+   "h": "Shopper Core Analytics",
+   "h2b": [],
+   "items": [
+    {
+     "t": "People Counting",
+     "p": "Accurate footfall triggers at entrances.",
+     "img": {
+      "src": "assets/retail-store.webp",
+      "alt": "People Counting"
+     }
+    },
+    {
+     "t": "Heatmaps",
+     "p": "Visualize high-traffic zones.",
+     "img": {
+      "src": "assets/images/retail-heatmap-update.webp",
+      "alt": "Heatmaps"
+     }
+    },
+    {
+     "t": "Queue Management",
+     "p": "Alerts for long wait times.",
+     "img": {
+      "src": "assets/queue-management.webp",
+      "alt": "Queue Management"
+     }
+    },
+    {
+     "t": "Dwell Time",
+     "p": "Measure engagement with displays.",
+     "img": {
+      "src": "https://images.unsplash.com/photo-1534452203293-494d7ddbf7e0?w=800&q=80&fm=webp&auto=format",
+      "alt": "Dwell Time"
+     }
+    },
+    {
+     "t": "Real-Time Staff Sync",
+     "p": "Automatically alert staff to high-occupancy zones or service queues.",
+     "img": {
+      "src": "assets/warehouse-logistics.webp",
+      "alt": "Real-Time Staff Sync"
+     }
+    },
+    {
+     "t": "Peak Prediction",
+     "p": "Identify traffic patterns before they happen to optimize staffing.",
+     "img": {
+      "src": "assets/ai-architecture.webp",
+      "alt": "Peak Prediction"
+     }
+    }
+   ]
+  },
+  "impact": {
+   "h": "Business Impact",
+   "items": [
+    {
+     "t": "Smarter Store Layouts",
+     "p": "Identify underperforming zones and optimize layout using real shopper behavior."
+    },
+    {
+     "t": "Workforce Planning",
+     "p": "Align staffing levels with actual footfall and peak engagement times."
+    },
+    {
+     "t": "Conversion Potential",
+     "p": "Use dwell time and movement insights to design better promotions."
+    }
+   ]
+  },
+  "scale": {
+   "h": "Built for Single Stores and Large Malls",
+   "li": [
+    "Centralized dashboards",
+    "Store-wise and zone-wise comparisons",
+    "Consistent metrics across locations",
+    "No operational disruption"
+   ],
+   "img": {
+    "src": "assets/mall-escalators.webp",
+    "alt": "Multi-Store Analytics"
+   }
+  },
+  "field": {
+   "eyebrow": "In the field",
+   "h": "Proven across retail formats",
+   "lede": "KenVision is deployed across very different retail environments — each with its own definition of \"a good day.\"",
+   "li": [
+    "✓ Phone & electronics retail. A national electronics retailer uses footfall and demo-zone engagement to convert browsers into buyers and match staff to peaks.",
+    "✓ Jewellery & high-value retail. A jewellery chain pairs traffic insight with theft detection and suspicious-behaviour alerts around display cases.",
+    "✓ FMCG brand activation. A leading FMCG brand measures sampling performance across mobile and pop-up counters, with privacy-safe demographic breakdowns of who engaged.",
+    "✓ Grocery & supermarkets. Queue management and planogram engagement reduce checkout abandonment and sharpen shelf decisions."
+   ],
+   "caption": "Shopper funnel"
+  },
+  "why": {
+   "h": "Retail-grade AI without retail-sized projects",
+   "items": [
+    {
+     "t": "Existing CCTV",
+     "p": "Layer analytics onto the cameras already in your stores — no rip-and-replace."
+    },
+    {
+     "t": "Privacy-first",
+     "p": "On-prem and edge processing; anonymized metrics out, raw footage stays in store."
+    },
+    {
+     "t": "Fast rollout",
+     "p": "Prove a use case in one store in days, then scale across the chain."
+    },
+    {
+     "t": "Camera-agnostic",
+     "p": "Works across brands and formats, from flagship stores to pop-up counters."
+    }
+   ]
+  },
+  "faq_h": {
+   "h": "Retail Analytics FAQ",
+   "p": "Common questions from store ops and merchandising teams."
+  },
+  "strip": [],
+  "cta": {
+   "h": "See what your shoppers are really doing",
+   "p": "Book a 30-min demo and we'll show footfall, heatmaps, dwell and queue detection running on cameras like yours."
+  },
+  "steps": [
+   {
+    "t": "1. Data Capture",
+    "p": "KenVision connects to existing cameras, CCTV systems, and edge devices to ingest live video streams.",
+    "img": {
+     "src": "assets/images/process-step-1.webp",
+     "alt": "Data Capture"
+    }
+   },
+   {
+    "t": "2. KenVision",
+    "p": "The patented AI layer that processes data in real-time.",
+    "img": {
+     "src": "assets/images/process-step-2.webp",
+     "alt": "KenVision Processing"
+    }
+   },
+   {
+    "t": "3. Actionable Outputs",
+    "p": "Clear dashboards, alerts, and reports enable faster decisions and high-impact results.",
+    "img": {
+     "src": "assets/images/process-step-3.webp",
+     "alt": "Actionable Outputs"
+    }
+   }
+  ]
+ },
+ "commercial-buildings": {
+  "meta": {
+   "title": "Commercial Buildings | KenVision - AI Video Intelligence",
+   "description": "Transform commercial properties with AI. Monitor occupancy, enhance security, and reduce energy costs with KenVision's building analytics.",
+   "og_description": "Transform commercial properties with AI. Monitor occupancy, enhance security, and reduce energy costs with KenVision's building analytics.",
+   "og_image": "https://kenvision.ai/assets/commercial-buildings.webp",
+   "keywords": null,
+   "jsonld": [
+    {
+     "@context": "https://schema.org",
+     "@type": "Product",
+     "name": "KenVision Commercial Building Analytics",
+     "description": "AI-powered building analytics to optimize occupancy, security, and efficiency.",
+     "brand": {
+      "@type": "Brand",
+      "name": "KenVision"
+     },
+     "image": "https://kenvision.ai/assets/commercial-buildings.webp"
+    },
+    {
+     "@context": "https://schema.org",
+     "@type": "BreadcrumbList",
+     "itemListElement": [
+      {
+       "@type": "ListItem",
+       "position": 1,
+       "name": "Home",
+       "item": "https://kenvision.ai/index.html"
+      },
+      {
+       "@type": "ListItem",
+       "position": 2,
+       "name": "Solutions",
+       "item": "https://kenvision.ai/solutions/index.html"
+      },
+      {
+       "@type": "ListItem",
+       "position": 3,
+       "name": "Commercial Buildings",
+       "item": "https://kenvision.ai/solutions/commercial-buildings.html"
+      }
+     ]
+    },
+    {
+     "@context": "https://schema.org",
+     "@type": "FAQPage",
+     "mainEntity": [
+      {
+       "@type": "Question",
+       "name": "How does AI video analytics improve commercial building operations?",
+       "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "KenVision monitors real-time occupancy, access patterns, and asset movement within commercial buildings. Facility managers gain insights to optimize HVAC usage, reduce energy waste, detect unauthorized access, and improve overall space utilization."
+       }
+      },
+      {
+       "@type": "Question",
+       "name": "Can KenVision integrate with existing access control systems?",
+       "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. KenVision is designed to work alongside existing security infrastructure including access control, CCTV, and building management systems. It adds an AI intelligence layer without requiring replacement of current systems."
+       }
+      }
+     ]
+    }
+   ]
+  },
+  "h1": "Know how your building is really used",
+  "lede": "Badge data tells you who tapped in — not who's actually in the room. KenVision measures true occupancy and space utilization from existing cameras, so facilities and CRE teams can right-size space, cut energy and plan with confidence.",
+  "hero_img": {
+   "src": "assets/commercial-buildings.webp",
+   "alt": "Building Analytics Dashboard"
+  },
+  "faq": [
+   {
+    "q": "How is this different from badge or booking data?",
+    "a": "Badges show entry events and bookings show intent — neither shows who is actually present. KenVision measures real occupancy continuously from cameras, so your numbers reflect reality."
+   },
+   {
+    "q": "Is occupant privacy protected?",
+    "a": "Yes. Processing runs on-prem or at the edge and outputs only anonymized counts and zone metrics. No raw footage leaves the building and no individuals are identified."
+   },
+   {
+    "q": "Can occupancy drive our HVAC?",
+    "a": "Live occupancy can be exposed to your BMS so heating, cooling and ventilation respond to real demand rather than fixed schedules — cutting energy waste on empty floors."
+   },
+   {
+    "q": "Does it work across multiple buildings?",
+    "a": "Yes — every asset is measured on the same baseline so facilities and CRE teams can benchmark and standardize across a whole portfolio."
+   },
+   {
+    "q": "Do we need new sensors or cameras?",
+    "a": "No. KenVision uses the CCTV already covering lobbies, floors and common areas. No new sensors, no rewiring, and no proprietary hardware required."
+   }
+  ],
+  "pain": {
+   "h": "Visibility Into Building Operations",
+   "items": [
+    {
+     "t": "Space Waste",
+     "p": "Offices lit and heated while empty, driving up unnecessary costs."
+    },
+    {
+     "t": "Security Gaps",
+     "p": "Tailgating and unauthorized access often go undetected."
+    },
+    {
+     "t": "Asset Tracking",
+     "p": "Losing track of valuable shared equipment and resources."
+    },
+    {
+     "t": "Siloed Systems",
+     "p": "Security, HVAC, and access control data usually don't talk to each other."
+    }
+   ]
+  },
+  "how_h": "How KenVision Helps",
+  "core": {
+   "h": "Facility Core Analytics",
+   "h2b": [],
+   "items": [
+    {
+     "t": "Occupancy Tracking",
+     "p": "Know exactly how many people are in each room.",
+     "img": {
+      "src": "https://images.unsplash.com/photo-1497366216548-37526070297c?w=800&q=80&fm=webp&auto=format",
+      "alt": "Occupancy Tracking"
+     }
+    },
+    {
+     "t": "HVAC Optimization",
+     "p": "Adjust climate control based on real-time usage.",
+     "img": {
+      "src": "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=800&q=80&fm=webp&auto=format",
+      "alt": "HVAC Optimization"
+     }
+    },
+    {
+     "t": "Access Control",
+     "p": "Detect tailgating and unauthorized entry.",
+     "img": {
+      "src": "assets/surveillance-camera.webp",
+      "alt": "Access Control"
+     }
+    },
+    {
+     "t": "Asset Tracking",
+     "p": "Locate critical equipment instantly.",
+     "img": {
+      "src": "assets/warehouse-logistics.webp",
+      "alt": "Asset Tracking"
+     }
+    },
+    {
+     "t": "Anomaly Awareness",
+     "p": "Flag unusual movement or overcrowding in restricted areas to prevent safety incidents.",
+     "img": {
+      "src": "assets/alert-dashboard.webp",
+      "alt": "Anomaly Awareness"
+     }
+    },
+    {
+     "t": "Utilization Index",
+     "p": "Instant overview of building-wide occupancy levels and available capacity.",
+     "img": {
+      "src": "assets/images/core-analytics.webp",
+      "alt": "Utilization Index"
+     }
+    },
+    {
+     "t": "Trend Forecasting",
+     "p": "Identify traffic peaks and troughs to optimize cleaning and lighting schedules.",
+     "img": {
+      "src": "assets/ai-architecture.webp",
+      "alt": "Trend Forecasting"
+     }
+    },
+    {
+     "t": "Live Floor Grid",
+     "p": "Visual heatmap overlay of real-time movement across individual floor plans.",
+     "img": {
+      "src": "assets/images/core-heatmaps.webp",
+      "alt": "Live Floor Grid"
+     }
+    }
+   ]
+  },
+  "impact": {
+   "h": "Operational Impact",
+   "items": [
+    {
+     "t": "Optimized space planning",
+     "p": "Redesign layouts and allocate space based on actual usage, not assumptions."
+    },
+    {
+     "t": "Improved security & safety",
+     "p": "Gain visibility into movement and access patterns without manual monitoring."
+    },
+    {
+     "t": "Operational efficiency",
+     "p": "Reduce energy and staffing inefficiencies through data-driven decisions."
+    }
+   ]
+  },
+  "scale": {
+   "h": "Designed for Single Buildings and Large Campuses",
+   "li": [
+    "Office buildings",
+    "Business parks",
+    "Corporate campuses",
+    "Mixed-use developments"
+   ],
+   "img": {
+    "src": "assets/commercial-buildings.webp",
+    "alt": "Commercial Campus Scalability"
+   }
+  },
+  "field": {
+   "eyebrow": "Occupancy-driven energy",
+   "h": "Less wasted space. Less wasted energy.",
+   "lede": "HVAC and lighting often run on schedules, not reality — conditioning empty floors all day. Right-sizing space is just as hard when planning relies on bookings nobody honoured.",
+   "li": [
+    "✓ Cut energy waste. Drive HVAC from live occupancy so you only condition space that's actually in use.",
+    "✓ Right-size the portfolio. Utilization evidence supports lease, consolidation and fit-out decisions.",
+    "✓ Plan services to demand. Schedule cleaning, security and amenities around real patterns.",
+    "✓ Benchmark assets. Compare buildings, floors and tenants on a consistent occupancy baseline."
+   ],
+   "caption": "Occupancy-driven energy"
+  },
+  "why": {
+   "h": "Occupancy intelligence that respects the building — and its people",
+   "items": [
+    {
+     "t": "Existing cameras",
+     "p": "Use the CCTV already covering lobbies, floors and common areas — no new sensors."
+    },
+    {
+     "t": "Privacy-first",
+     "p": "On-prem and edge processing; counts and zones out, no identity, no stored footage."
+    },
+    {
+     "t": "Integrates",
+     "p": "Occupancy signals feed BMS, HVAC and workplace tools through clean interfaces."
+    },
+    {
+     "t": "Scales",
+     "p": "One floor or a whole portfolio, with consistent metrics across every asset."
+    }
+   ]
+  },
+  "faq_h": {
+   "h": "Buildings Analytics FAQ",
+   "p": "Common questions from facilities and CRE teams."
+  },
+  "strip": [],
+  "cta": {
+   "h": "Know how your building is really used",
+   "p": "Book a 30-min demo and we'll show occupancy and utilization running on existing cameras and how it feeds energy and space decisions."
+  },
+  "steps": [
+   {
+    "t": "1. Data Capture",
+    "p": "KenVision connects to existing cameras, CCTV systems, and edge devices to ingest live video streams.",
+    "img": {
+     "src": "assets/images/process-step-1.webp",
+     "alt": "Data Capture"
+    }
+   },
+   {
+    "t": "2. KenVision",
+    "p": "The patented AI layer that processes data in real-time.",
+    "img": {
+     "src": "assets/images/process-step-2.webp",
+     "alt": "KenVision Processing"
+    }
+   },
+   {
+    "t": "3. Actionable Outputs",
+    "p": "Clear dashboards, alerts, and reports enable faster decisions and high-impact results.",
+    "img": {
+     "src": "assets/images/process-step-3.webp",
+     "alt": "Actionable Outputs"
+    }
+   }
+  ]
+ },
+ "smart-cities": {
+  "meta": {
+   "title": "Smart Cities | KenVision - AI Video Intelligence",
+   "description": "Improve public safety and traffic management with city-scale video intelligence. Real-time anomaly detection and crowd analytics for modern cities.",
+   "og_description": "Improve public safety and traffic management with city-scale video intelligence. Real-time anomaly detection and crowd analytics for modern cities.",
+   "og_image": "https://kenvision.ai/assets/smart-city-street.webp",
+   "keywords": null,
+   "jsonld": [
+    {
+     "@context": "https://schema.org",
+     "@type": "Product",
+     "name": "KenVision Smart City Solutions",
+     "description": "AI-powered urban analytics for public safety, traffic management, and crowd control.",
+     "brand": {
+      "@type": "Brand",
+      "name": "KenVision"
+     },
+     "image": "https://kenvision.ai/assets/smart-city-street.webp"
+    },
+    {
+     "@context": "https://schema.org",
+     "@type": "BreadcrumbList",
+     "itemListElement": [
+      {
+       "@type": "ListItem",
+       "position": 1,
+       "name": "Home",
+       "item": "https://kenvision.ai/index.html"
+      },
+      {
+       "@type": "ListItem",
+       "position": 2,
+       "name": "Solutions",
+       "item": "https://kenvision.ai/solutions/index.html"
+      },
+      {
+       "@type": "ListItem",
+       "position": 3,
+       "name": "Smart Cities",
+       "item": "https://kenvision.ai/solutions/smart-cities.html"
+      }
+     ]
+    },
+    {
+     "@context": "https://schema.org",
+     "@type": "FAQPage",
+     "mainEntity": [
+      {
+       "@type": "Question",
+       "name": "How does KenVision support smart city operations?",
+       "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "KenVision provides city-scale video intelligence for crowd management, traffic flow monitoring, anomaly detection, and public safety surveillance. It processes feeds from distributed camera networks in real time and integrates with city operations centers."
+       }
+      },
+      {
+       "@type": "Question",
+       "name": "What is AI crowd management in smart cities?",
+       "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "AI crowd management uses video analytics to monitor crowd density, flow, and behavior across public spaces. KenVision detects overcrowding, unusual gatherings, and safety incidents, enabling proactive response by city authorities."
+       }
+      }
+     ]
+    }
+   ]
+  },
+  "h1": "Smarter, safer public spaces from existing cameras",
+  "lede": "Cities already have eyes on the street. KenVision turns those camera feeds into traffic flow analytics and crowd-density insight — privacy-first and processed on site — so agencies can ease congestion and respond before crowds become a risk.",
+  "hero_img": {
+   "src": "assets/smart-bridge.webp",
+   "alt": "Smart City Dashboard"
+  },
+  "faq": [
+   {
+    "q": "Does this require new street cameras?",
+    "a": "No. KenVision is camera-agnostic and works with the municipal and transport CCTV already deployed across the city — no new street furniture required."
+   },
+   {
+    "q": "How do you handle citizen privacy?",
+    "a": "Video is processed on-prem or at the edge and only aggregate flow and density metrics are produced. The goal is understanding patterns in public space, not identifying individuals, and raw footage stays on site."
+   },
+   {
+    "q": "Can it alert us when a crowd gets risky?",
+    "a": "Yes. You set density and flow thresholds, and KenVision raises real-time alerts so teams can act before a situation escalates — minutes of warning make the difference."
+   },
+   {
+    "q": "Can we start small?",
+    "a": "Absolutely — begin with a single corridor or hotspot and expand to a wider network once the value is proven. The platform scales from one intersection to city-wide."
+   },
+   {
+    "q": "What outputs does it produce?",
+    "a": "Vehicle and pedestrian flow counts, crowd density maps, congestion hotspot flags, threshold-based real-time alerts, and long-run trend reports for planning — all from existing camera feeds."
+   }
+  ],
+  "pain": {
+   "h": "Cities Generate Massive Data",
+   "items": [
+    {
+     "t": "Traffic Congestion",
+     "p": "Gridlocks and inefficient signal timing cost billions in lost productivity."
+    },
+    {
+     "t": "Public Safety",
+     "p": "Slow response times to accidents and emergencies."
+    },
+    {
+     "t": "Infrastructure Decay",
+     "p": "Difficulty in monitoring road conditions and asset health manually."
+    },
+    {
+     "t": "Data Silos",
+     "p": "Traffic, police, and utilities operate on disconnected systems."
+    }
+   ]
+  },
+  "how_h": "How KenVision Enables Smart Cities",
+  "core": {
+   "h": "City-Wide Intelligence",
+   "h2b": [],
+   "items": [
+    {
+     "t": "Traffic Analysis",
+     "p": "Monitor flow, vehicle counts, and congestion hotspots.",
+     "img": {
+      "src": "https://images.unsplash.com/photo-1480714378408-67cf0d13bc1b?w=800&q=80&fm=webp&auto=format",
+      "alt": "Traffic Analysis"
+     }
+    },
+    {
+     "t": "ANPR / LPR",
+     "p": "Automatic license plate recognition for tolling and security.",
+     "img": {
+      "src": "assets/images/anpr-lpr.webp",
+      "alt": "ANPR / LPR"
+     }
+    },
+    {
+     "t": "Crowd Management",
+     "p": "Monitor public gatherings and pedestrian density.",
+     "img": {
+      "src": "assets/images/crowd-management.webp",
+      "alt": "Crowd Management"
+     }
+    },
+    {
+     "t": "Incident Detection",
+     "p": "Instantly identify accidents or stalled vehicles.",
+     "img": {
+      "src": "assets/images/incident-detection.webp",
+      "alt": "Incident Detection"
+     }
+    },
+    {
+     "t": "Parking Enforcement",
+     "p": "Detect illegal parking or stopped vehicles.",
+     "img": {
+      "src": "assets/images/parking-enforcement.webp",
+      "alt": "Parking Enforcement"
+     }
+    },
+    {
+     "t": "Incident Correlation",
+     "p": "Automated correlation of events across multiple cameras into a single view.",
+     "img": {
+      "src": "assets/alert-dashboard.webp",
+      "alt": "Incident Correlation"
+     }
+    }
+   ]
+  },
+  "impact": {
+   "h": "Impact for Cities",
+   "items": [
+    {
+     "t": "Improved Public Safety",
+     "p": "Detect risks early and respond faster to incidents across public spaces."
+    },
+    {
+     "t": "Smarter Traffic",
+     "p": "Reduce congestion and improve mobility using real-time traffic insights."
+    },
+    {
+     "t": "Urban Planning",
+     "p": "Use historical movement and usage data to plan infrastructure."
+    }
+   ]
+  },
+  "scale": {
+   "h": "Built for City-Scale Operations",
+   "li": [
+    "Multi-Zone Deployments: Monitor multiple districts from a single dashboard.",
+    "Cross-Department: Share insights securely between traffic and safety teams.",
+    "Centralized Command: Unified view of the entire city's status.",
+    "Scalable Expansion: Add new cameras and zones easily as the city grows."
+   ],
+   "img": {
+    "src": "assets/smart-city-street.webp",
+    "alt": "City-Scale Scalability"
+   }
+  },
+  "field": {
+   "eyebrow": "Why it matters",
+   "h": "Public safety depends on seeing patterns early",
+   "lede": "The difference between a managed crowd and a dangerous one is often a few minutes of warning. KenVision watches continuously and surfaces the signals that matter — without parking analysts in front of video walls.",
+   "li": [
+    "✓ Earlier warning. Density thresholds and flow anomalies trigger alerts before situations escalate.",
+    "✓ Smoother movement. Flow data informs signal timing, routing and staffing across the network.",
+    "✓ Evidence for planning. Long-run patterns justify infrastructure and operational investment.",
+    "✓ Privacy by design. Aggregate counts and densities — not surveillance of individuals."
+   ],
+   "caption": "Crowd density over time"
+  },
+  "why": {
+   "h": "City-scale intelligence on the cameras already in place",
+   "items": [
+    {
+     "t": "Existing CCTV",
+     "p": "Builds on current municipal and transport cameras — no new street furniture."
+    },
+    {
+     "t": "Privacy-first",
+     "p": "On-prem and edge processing produces aggregate metrics, not records of individuals."
+    },
+    {
+     "t": "Real-time",
+     "p": "Flows, densities and anomalies surface live, with thresholds you control."
+    },
+    {
+     "t": "Scalable",
+     "p": "From one corridor to a network of intersections and public spaces."
+    }
+   ]
+  },
+  "faq_h": {
+   "h": "Smart Cities FAQ",
+   "p": "Common questions from transport and public safety teams."
+  },
+  "strip": [],
+  "cta": {
+   "h": "Build safer, smarter public spaces",
+   "p": "Book a 30-min demo and we'll show traffic flow and crowd-density analytics running on existing city cameras."
+  },
+  "steps": [
+   {
+    "t": "1. Data Capture",
+    "p": "KenVision connects to existing cameras, CCTV systems, and edge devices to ingest live video streams.",
+    "img": {
+     "src": "assets/images/process-step-1.webp",
+     "alt": "Data Capture"
+    }
+   },
+   {
+    "t": "2. KenVision",
+    "p": "The patented AI layer that processes data in real-time.",
+    "img": {
+     "src": "assets/images/process-step-2.webp",
+     "alt": "KenVision Processing"
+    }
+   },
+   {
+    "t": "3. Actionable Outputs",
+    "p": "Clear dashboards, alerts, and reports enable faster decisions and high-impact results.",
+    "img": {
+     "src": "assets/images/process-step-3.webp",
+     "alt": "Actionable Outputs"
+    }
+   }
+  ]
+ },
+ "video-surveillance": {
+  "meta": {
+   "title": "Video Surveillance Intelligence | KenVision - AI Video Intelligence",
+   "description": "Unify your security operations with KenVision. A device-agnostic platform for enterprise-grade video surveillance, threat detection, and centralized management.",
+   "og_description": "Unify your security operations with KenVision. A device-agnostic platform for enterprise-grade video surveillance, threat detection, and centralized management.",
+   "og_image": "https://kenvision.ai/assets/ai-architecture.webp",
+   "keywords": null,
+   "jsonld": [
+    {
+     "@context": "https://schema.org",
+     "@type": "Product",
+     "name": "KenVision Enterprise Surveillance",
+     "description": "Unified, AI-powered video surveillance platform for enterprise security.",
+     "brand": {
+      "@type": "Brand",
+      "name": "KenVision"
+     },
+     "image": "https://kenvision.ai/assets/ai-architecture.webp"
+    },
+    {
+     "@context": "https://schema.org",
+     "@type": "BreadcrumbList",
+     "itemListElement": [
+      {
+       "@type": "ListItem",
+       "position": 1,
+       "name": "Home",
+       "item": "https://kenvision.ai/index.html"
+      },
+      {
+       "@type": "ListItem",
+       "position": 2,
+       "name": "Solutions",
+       "item": "https://kenvision.ai/solutions/index.html"
+      },
+      {
+       "@type": "ListItem",
+       "position": 3,
+       "name": "Video Surveillance",
+       "item": "https://kenvision.ai/solutions/video-surveillance.html"
+      }
+     ]
+    },
+    {
+     "@context": "https://schema.org",
+     "@type": "FAQPage",
+     "mainEntity": [
+      {
+       "@type": "Question",
+       "name": "What makes KenVision different from traditional video surveillance?",
+       "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Unlike passive CCTV recording, KenVision actively analyzes live video to detect threats, flag anomalies, and trigger alerts in real time. It eliminates the need for manual footage review and integrates with existing camera hardware across any vendor."
+       }
+      },
+      {
+       "@type": "Question",
+       "name": "Is KenVision compatible with all camera brands?",
+       "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. KenVision is device-agnostic and works with cameras from all major manufacturers. It connects via standard RTSP streams or SDK integrations, making it compatible with virtually any existing surveillance setup."
+       }
+      }
+     ]
+    }
+   ]
+  },
+  "h1": "AI video surveillance that watches so your team doesn't have to",
+  "lede": "Most cameras only matter after something goes wrong. KenVision turns existing CCTV into an always-on layer that detects theft, intrusion, missing PPE and fire or smoke in real time — and routes each event into a clear response SOP.",
+  "hero_img": {
+   "src": "assets/alert-dashboard.webp",
+   "alt": "Security Alert Dashboard"
+  },
+  "faq": [
+   {
+    "q": "How is this different from a standard alarm or panic button?",
+    "a": "Alarms react to a person pressing a button after they notice something. KenVision continuously analyzes the feed and detects theft, intrusion, PPE breaches and fire or smoke automatically, then drives a defined response SOP — before someone has to press anything."
+   },
+   {
+    "q": "Does fire & smoke detection replace our sensors?",
+    "a": "It complements them. Camera-based visual detection can cover large or open areas and catch events that point sensors may miss, working alongside traditional fire systems."
+   },
+   {
+    "q": "Will it overwhelm staff with false alerts?",
+    "a": "Detection is tuned to your environment and thresholds, and every alert carries the camera and zone so staff can verify quickly. The goal is fewer, more meaningful alerts tied to a clear action — not noise."
+   },
+   {
+    "q": "How is footage and privacy handled?",
+    "a": "Processing runs on-prem or at the edge. Raw footage stays on site; alerts and logs are what move. This suits sensitive and high-value environments where data sovereignty matters."
+   },
+   {
+    "q": "Does it work with our existing cameras?",
+    "a": "Yes. KenVision is camera-agnostic — indoor, outdoor, day or night — and layers detection onto whatever CCTV is already in place. No replacement hardware needed."
+   }
+  ],
+  "pain": {
+   "h": "Recording Footage Is Not Enough",
+   "items": [
+    {
+     "t": "Manual Monitoring",
+     "p": "Traditional systems require constant human attention, leading to fatigue."
+    },
+    {
+     "t": "False Alert Fatigue",
+     "p": "Unintelligent motion triggers create noise, masking actual threats."
+    },
+    {
+     "t": "Reactive Response",
+     "p": "Forensic review only happens after the loss has occurred."
+    },
+    {
+     "t": "Scale Complexity",
+     "p": "Managing hundreds of cameras across sites becomes operationally impossible."
+    }
+   ]
+  },
+  "how_h": "From Cameras to Cognitive Surveillance",
+  "core": {
+   "h": "Security Core",
+   "h2b": [
+    "Intelligence Features"
+   ],
+   "items": [
+    {
+     "t": "Real-Time Threat Detection",
+     "p": "Instantly identify intrusions, unauthorized access, and suspicious activity as incidents unfold.",
+     "img": {
+      "src": "assets/ai-architecture.webp",
+      "alt": "Threat Detection AI"
+     }
+    },
+    {
+     "t": "Pattern Analytics",
+     "p": "Identify behavioral patterns and anomalies before they escalate into security breaches.",
+     "img": {
+      "src": "assets/alert-dashboard.webp",
+      "alt": "Pattern Analytics"
+     }
+    },
+    {
+     "t": "Cam-Sync Tracking",
+     "p": "Seamlessly track individuals or objects across multiple camera views in a unified operational interface.",
+     "img": {
+      "src": "assets/home-surveillance.webp",
+      "alt": "Cam-Sync Tracking"
+     }
+    },
+    {
+     "t": "Global Orchestration",
+     "p": "Manage and monitor security across dispersed global sites from a single enterprise intelligence hub.",
+     "img": {
+      "src": "assets/smart-city-street.webp",
+      "alt": "Global Orchestration"
+     }
+    },
+    {
+     "t": "Alert Prioritization",
+     "p": "AI-sorted alerts ensure operators focus exclusively on high-probability threats and active breaches.",
+     "img": {
+      "src": "assets/images/alert-prioritization-mobile.webp",
+      "alt": "Alert Prioritization"
+     }
+    },
+    {
+     "t": "Hub Visualization",
+     "p": "View real-time intelligence feeds from any site, anywhere, through a unified browser-based interface.",
+     "img": {
+      "src": "assets/images/dashboards/kenvision-imac-points.webp",
+      "alt": "Hub Visualization"
+     }
+    }
+   ]
+  },
+  "impact": {
+   "h": "Operational Impact",
+   "items": [
+    {
+     "t": "Faster Response Times",
+     "p": "Real-time alerts enable immediate action during critical incidents."
+    },
+    {
+     "t": "Reduced False Positives",
+     "p": "AI filtering minimizes noise and operator fatigue."
+    },
+    {
+     "t": "Scalable Security",
+     "p": "Manage surveillance across multiple sites without increasing manpower."
+    }
+   ]
+  },
+  "scale": {
+   "h": "Built for Enterprise-Scale Surveillance",
+   "li": [
+    "Single-Site: Deploy seamless coverage for individual facilities or sites.",
+    "Multi-Location: Centralized monitoring across dispersed geographic locations.",
+    "Centralized Ops: Unified command center view for all connected streams.",
+    "Seamless Scaling: Add cameras or locations without system downtime."
+   ],
+   "img": {
+    "src": "assets/ai-architecture.webp",
+    "alt": "Enterprise Scalability"
+   }
+  },
+  "field": {
+   "eyebrow": "From signal to standard response",
+   "h": "Detection is only useful if it drives a consistent response",
+   "lede": "A flashing alert that nobody knows how to act on changes nothing. KenVision pairs detection with response SOPs so the same event produces the same trained, repeatable action — every shift, every site.",
+   "li": [
+    "✓ Real-time alerts. Events reach the right people instantly, with the camera and zone attached.",
+    "✓ Standardized SOPs. Turn suspicious-behaviour signals into a defined response, used consistently.",
+    "✓ Full audit trail. Every detection is timestamped and logged for review and accountability.",
+    "✓ Proven in high-value retail. A jewellery chain uses theft and suspicious-behaviour alerts with standardized response around display cases."
+   ],
+   "caption": "From signal to standard response"
+  },
+  "why": {
+   "h": "Security AI that fits your cameras, not the other way around",
+   "items": [
+    {
+     "t": "Existing CCTV",
+     "p": "Add detection to the cameras already protecting your sites — no rip-and-replace."
+    },
+    {
+     "t": "Privacy-first",
+     "p": "On-prem and edge processing keeps footage on site while events flow to your team."
+    },
+    {
+     "t": "Real-time",
+     "p": "Sub-second alerting so action happens during the event, not after footage review."
+    },
+    {
+     "t": "Camera-agnostic",
+     "p": "Indoor, outdoor, day or night — one platform across every camera type."
+    }
+   ]
+  },
+  "faq_h": {
+   "h": "Safety & Security FAQ",
+   "p": "Common questions from loss prevention and security teams."
+  },
+  "strip": [],
+  "cta": {
+   "h": "Turn your cameras into an always-on safety layer",
+   "p": "Book a 30-min demo and we'll show detection and alert SOPs running on existing cameras for your environment."
+  },
+  "steps": [
+   {
+    "t": "1. Data Capture",
+    "p": "KenVision connects to existing cameras, CCTV systems, and edge devices to ingest live video streams.",
+    "img": {
+     "src": "assets/images/process-step-1.webp",
+     "alt": "Data Capture"
+    }
+   },
+   {
+    "t": "2. KenVision",
+    "p": "The patented AI layer that processes data in real-time.",
+    "img": {
+     "src": "assets/images/process-step-2.webp",
+     "alt": "KenVision Processing"
+    }
+   },
+   {
+    "t": "3. Actionable Outputs",
+    "p": "Clear dashboards, alerts, and reports enable faster decisions and high-impact results.",
+    "img": {
+     "src": "assets/images/process-step-3.webp",
+     "alt": "Actionable Outputs"
+    }
+   }
+  ]
+ },
+ "solutions-index": {
+  "meta": {
+   "title": "Solutions | KenVision - AI Video Intelligence",
+   "description": "Explore KenVision's AI-powered video analytics solutions for Retail, Commercial Buildings, Smart Cities, and Video Surveillance. Scalable and privacy-first.",
+   "og_description": "Explore KenVision's AI-powered video analytics solutions for Retail, Commercial Buildings, Smart Cities, and Video Surveillance. Scalable and privacy-first.",
+   "og_image": "https://kenvision.ai/assets/solutions-hero.webp",
+   "keywords": null,
+   "jsonld": [
+    {
+     "@context": "https://schema.org",
+     "@type": "Service",
+     "name": "KenVision AI Solutions",
+     "description": "AI-powered video analytics solutions for various industries.",
+     "brand": {
+      "@type": "Brand",
+      "name": "KenVision"
+     },
+     "image": "https://kenvision.ai/assets/solutions-hero.webp",
+     "areaServed": "Global"
+    },
+    {
+     "@context": "https://schema.org",
+     "@type": "BreadcrumbList",
+     "itemListElement": [
+      {
+       "@type": "ListItem",
+       "position": 1,
+       "name": "Home",
+       "item": "https://kenvision.ai/index.html"
+      },
+      {
+       "@type": "ListItem",
+       "position": 2,
+       "name": "Solutions",
+       "item": "https://kenvision.ai/solutions/index.html"
+      }
+     ]
+    }
+   ]
+  },
+  "h1": "AI Video Intelligence Across Industries",
+  "lede": "KenVision adapts video intelligence to different environments by understanding context, behavior, and operational needs — enabling smarter decisions across every industry.",
+  "hero_img": {
+   "src": "assets/images/solutions-hero-collage.webp",
+   "alt": "AI Video Intelligence Across Industries"
+  }
+ },
+ "home": {
+  "meta": {
+   "title": "KenVision | AI-Powered Video Intelligence Platform",
+   "description": "KenVision transforms everyday video into insights that improve safety, efficiency, and decision-making. AI-powered video intelligence for smarter decisions.",
+   "og_description": "KenVision transforms everyday video into insights that improve safety, efficiency, and decision-making. AI-Powered video intelligence for smarter decisions.",
+   "og_image": "https://kenvision.ai/assets/images/dashboards/kenvision-imac-dashboard.webp",
+   "keywords": null,
+   "jsonld": [
+    {
+     "@context": "https://schema.org",
+     "@type": "Organization",
+     "name": "KenVision",
+     "url": "https://kenvision.ai/",
+     "logo": "https://kenvision.ai/assets/kenvision-logo.webp",
+     "sameAs": [
+      "https://x.com/Intelenseinc",
+      "https://www.linkedin.com/company/intelense/"
+     ]
+    },
+    {
+     "@context": "https://schema.org",
+     "@type": "WebSite",
+     "name": "KenVision",
+     "url": "https://kenvision.ai/",
+     "potentialAction": {
+      "@type": "SearchAction",
+      "target": "https://kenvision.ai/search?q={search_term_string}",
+      "query-input": "required name=search_term_string"
+     }
+    },
+    {
+     "@context": "https://schema.org",
+     "@type": "FAQPage",
+     "mainEntity": [
+      {
+       "@type": "Question",
+       "name": "What is KenVision?",
+       "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "KenVision is an AI-powered video intelligence platform by Intelense that transforms existing camera infrastructure into real-time decision systems. It detects events, analyzes behavior, and delivers actionable insights across retail, commercial buildings, smart cities, and security environments."
+       }
+      },
+      {
+       "@type": "Question",
+       "name": "How does KenVision's AI video analytics work?",
+       "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "KenVision connects to existing CCTV cameras and edge devices, processes live video streams through a patented AI layer (KEN AI), and outputs structured intelligence — including heatmaps, anomaly alerts, behavior patterns, and dashboards — in under 2 seconds."
+       }
+      },
+      {
+       "@type": "Question",
+       "name": "What industries does KenVision support?",
+       "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "KenVision serves retail, commercial real estate, smart cities, and enterprise video surveillance. It can deploy at single locations or scale to city-wide infrastructure."
+       }
+      },
+      {
+       "@type": "Question",
+       "name": "Does KenVision require new cameras?",
+       "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. KenVision is device-agnostic and integrates with your existing cameras and CCTV systems. Deployment is operational within days without replacing infrastructure."
+       }
+      },
+      {
+       "@type": "Question",
+       "name": "How is KenVision deployed?",
+       "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "KenVision supports four deployment models: Edge (on-site low latency), On-Premise (secure local), Cloud (scalable), and Hybrid. On-premise options ensure data sovereignty and privacy compliance."
+       }
+      }
+     ]
+    },
+    {
+     "@context": "https://schema.org",
+     "@type": "SoftwareApplication",
+     "name": "KenVision",
+     "applicationCategory": "BusinessApplication",
+     "operatingSystem": "Cloud, Edge, On-Premise",
+     "description": "AI-powered video intelligence platform that transforms existing cameras into real-time decision systems for retail, commercial buildings, smart cities, and enterprise security.",
+     "url": "https://kenvision.ai/",
+     "provider": {
+      "@type": "Organization",
+      "name": "Intelense Inc.",
+      "url": "https://intelense.com"
+     },
+     "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD",
+      "availability": "https://schema.org/InStock",
+      "description": "Request a demo to get pricing tailored to your deployment needs."
+     },
+     "featureList": [
+      "Real-time video analytics",
+      "Anomaly detection",
+      "Heatmaps and movement tracking",
+      "People counting",
+      "Queue management",
+      "Smart alerts and notifications",
+      "Edge, cloud, and hybrid deployment"
+     ]
+    }
+   ]
+  },
+  "faq": [
+   {
+    "q": "How is KenVision different from other video-AI platforms?",
+    "a": "Many platforms either sell you new cloud cameras or focus on a single industry. KenVision combines four strengths at once: it runs on the existing CCTV you already own, processes video on-prem or at the edge so footage never leaves your site, is genuinely camera-agnostic across brands, and covers retail, buildings, cities and safety from one platform — not just one use case."
+   },
+   {
+    "q": "Do we have to replace our cameras?",
+    "a": "No. KenVision is camera-agnostic and layers onto the CCTV you already have — there's no proprietary hardware and no rip-and-replace. If a camera can output a video stream, KenVision can read it."
+   },
+   {
+    "q": "Where is the video processed?",
+    "a": "On-prem or at the edge, on your site. Only anonymized metrics and alerts move out — raw footage stays local. That makes privacy reviews and data-sovereignty compliance far simpler than cloud-only alternatives."
+   },
+   {
+    "q": "How quickly can we see value?",
+    "a": "A first use case can typically be running in days. You then expand camera-by-camera and site-by-site on the same platform — no new procurement cycle required."
+   },
+   {
+    "q": "Which industries does KenVision support?",
+    "a": "Retail and electronics, jewellery and high-value retail, grocery, FMCG brand activations, commercial buildings, smart cities, and worksite or perimeter safety — all from one platform with a consistent API and dashboard."
+   },
+   {
+    "q": "What deployment models are available?",
+    "a": "KenVision supports Edge (on-device, lowest latency), On-Premise (fully local, no cloud dependency), Cloud (multi-site scale), and Hybrid (privacy-sensitive streams on-prem, aggregated reporting in cloud). The right choice depends on your privacy requirements and bandwidth — we help scope this in the first call."
+   }
+  ],
+  "faq_h": {
+   "h": "Frequently Asked Questions",
+   "p": "Everything you need to know before your first call."
+  }
+ },
+ "company": {
+  "meta": {
+   "title": "Company | KenVision - About Intelense",
+   "description": "Intelense is a global AI company building the future of cognitive video intelligence. Learn about our KEN AI technology, mission, and global operations.",
+   "og_description": "Intelense is a global AI company building the future of cognitive video intelligence. Learn about our KEN AI technology, mission, and global operations.",
+   "og_image": "https://kenvision.ai/assets/images/dashboards/kenvision-imac-dashboard.webp",
+   "keywords": null,
+   "jsonld": [
+    {
+     "@context": "https://schema.org",
+     "@type": "AboutPage",
+     "mainEntity": {
+      "@type": "Organization",
+      "name": "Intelense",
+      "url": "https://intelense.com",
+      "logo": "https://kenvision.ai/assets/intelense-logo.webp",
+      "description": "Intelense is a global AI and Data Analytics company transforming public safety through real-time, intelligent video awareness.",
+      "address": [
+       {
+        "@type": "PostalAddress",
+        "streetAddress": "3600 Steeles Ave E",
+        "addressLocality": "Markham",
+        "addressRegion": "ON",
+        "postalCode": "M1W 2Z2",
+        "addressCountry": "CA"
+       },
+       {
+        "@type": "PostalAddress",
+        "streetAddress": "No. 45, C2 Gubbalala Village",
+        "addressLocality": "Bangalore",
+        "addressRegion": "Karnataka",
+        "postalCode": "560061",
+        "addressCountry": "IN"
+       }
+      ]
+     }
+    },
+    {
+     "@context": "https://schema.org",
+     "@type": "BreadcrumbList",
+     "itemListElement": [
+      {
+       "@type": "ListItem",
+       "position": 1,
+       "name": "Home",
+       "item": "https://kenvision.ai/index.html"
+      },
+      {
+       "@type": "ListItem",
+       "position": 2,
+       "name": "Company",
+       "item": "https://kenvision.ai/company.html"
+      }
+     ]
+    }
+   ]
+  }
+ },
+ "contact": {
+  "meta": {
+   "title": "Contact | KenVision AI Video Intelligence",
+   "description": "Book a 30-min demo or send us a message. KenVision by Intelense — AI video intelligence for retail, buildings, smart cities and security.",
+   "og_description": "Book a 30-min demo or send us a message. Privacy-first AI video analytics for the cameras you already own.",
+   "og_image": "https://kenvision.ai/assets/images/dashboards/kenvision-imac-dashboard.webp",
+   "keywords": null,
+   "jsonld": []
+  }
+ },
+ "404": {
+  "meta": {
+   "title": "Page Not Found | KenVision",
+   "description": "",
+   "og_description": "",
+   "og_image": null,
+   "keywords": null,
+   "jsonld": []
+  }
+ }
+}
