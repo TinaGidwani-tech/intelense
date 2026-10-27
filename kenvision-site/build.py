@@ -193,7 +193,7 @@ def footer():
       </div>
       <div>
         <h4>Contact</h4>
-        <ul><li class="email">enquiries@intelense.ca</li><li><a href="tel:+12895523165">+1 (289) 552-3165</a> Canada</li><li><a href="tel:+919342810422">+91 93428 10422</a> India</li><li>Markham, Ontario, Canada</li><li>Bengaluru, India</li><li><a href="{LINKEDIN}" target="_blank" rel="noopener noreferrer">LinkedIn</a></li><li><a href="{XURL}" target="_blank" rel="noopener noreferrer">X</a></li></ul>
+        <ul><li class="email">enquiries@intelense.ca</li><li class="email">dinesh@intelense.com</li><li><a href="tel:+12895523165">+1 (289) 552-3165</a> Canada</li><li><a href="tel:+919342810422">+91 93428 10422</a> India</li><li>Markham, Ontario, Canada</li><li>Bengaluru, India</li><li><a href="{LINKEDIN}" target="_blank" rel="noopener noreferrer">LinkedIn</a></li><li><a href="{XURL}" target="_blank" rel="noopener noreferrer">X</a></li></ul>
       </div>
     </div>
     <div class="legal"><span>© 2026 Intelense Inc. · <a href="{INTELENSE}/privacy" rel="noopener">Privacy</a> · <a href="{INTELENSE}/terms" rel="noopener">Terms</a></span><span>KenVision is a product of <a href="{INTELENSE}/">Intelense</a> · Photography and video: Pexels and Unsplash</span></div>
