@@ -855,3 +855,32 @@ body { letter-spacing: -0.01em; }
 .kx-compare .layer { position: absolute; inset: 0; }
 .kx-compare .layer .sc { width: 100%; height: 100%; }
 @media (max-width: 680px) { .kx-compare { aspect-ratio: 4 / 3; } }
+
+/* compare slider on real footage */
+.kx-compare.vid { aspect-ratio: 16 / 9; background: #0b0b0c; }
+.kx-compare.vid .cv { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
+.kx-compare.vid .layer.ken { background: transparent; }
+.kx-compare .tint { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(10, 52, 237, .10), rgba(124, 40, 233, .10)); }
+.kx-compare .ov { position: absolute; inset: 0; width: 100%; height: 100%; }
+.kx-compare .ov .bx rect.r { fill: rgba(10, 52, 237, .10); stroke: #0A34ED; stroke-width: 3; }
+.kx-compare .ov .bx.v rect.r { stroke: #FF7953; fill: rgba(255, 121, 83, .10); }
+.kx-compare .ov .bx.ok rect.r { stroke: #368736; fill: rgba(54, 135, 54, .12); }
+.kx-compare .ov .bx rect.t { fill: #0A34ED; }
+.kx-compare .ov .bx.v rect.t { fill: #FF7953; }
+.kx-compare .ov .bx.ok rect.t { fill: #368736; }
+.kx-compare .ov .bx text { fill: #fff; font: 600 18px Montserrat, sans-serif; }
+.kx-compare .hud { position: absolute; right: 18px; bottom: 18px; display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
+.kx-compare .hud span { background: rgba(8, 10, 24, .72); color: #fff; font-size: 12px; font-weight: 600; padding: 7px 12px; border-radius: 9999px; backdrop-filter: blur(6px); }
+.kx-compare .hud b { font-variant-numeric: tabular-nums; margin-left: 6px; }
+.kx-compare.vid .lab.l { background: rgba(8, 10, 24, .72); color: #fff; }
+@media (max-width: 680px) { .kx-compare.vid { aspect-ratio: 4 / 3; } .kx-compare .hud { right: 10px; bottom: 10px; } .kx-compare .hud span { padding: 5px 9px; font-size: 11px; } }
+@media (max-width: 680px) {
+  .kx-compare.vid { aspect-ratio: 3 / 2; }
+  .kx-compare .lab { top: 10px; padding: 5px 10px; font-size: 11px; }
+  .kx-compare .lab.l { left: 10px; } .kx-compare .lab.r { right: 10px; }
+  .kx-compare .handle::after { width: 38px; height: 38px; }
+  .kx-compare .hud { left: 10px; right: 10px; justify-content: center; }
+  .kx-compare .hud span { padding: 4px 8px; font-size: 10.5px; }
+  .kx-compare .hud b { margin-left: 4px; }
+  .kx-compare .ov .bx text { font-size: 22px; }
+}

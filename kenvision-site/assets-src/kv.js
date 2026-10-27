@@ -124,11 +124,49 @@
     upd();
   });
 
-  // Compare slider
+  // Compare slider. With data-tracks the right side draws detections over a real video, frame by frame.
   $$('[data-compare]').forEach(function (box) {
     var r = box.querySelector('.rng');
     function set() { box.style.setProperty('--pos', r.value + '%'); }
     r.addEventListener('input', set); set();
+    var v = box.querySelector('video'), svg = box.querySelector('.ov');
+    if (!v || !svg || !box.dataset.tracks) return;
+    var data = JSON.parse(box.dataset.tracks), NS = 'http://www.w3.org/2000/svg', els = [];
+    data.tracks.forEach(function (t) {
+      var g = document.createElementNS(NS, 'g'); g.setAttribute('class', 'bx ' + t.kind);
+      var rect = document.createElementNS(NS, 'rect'); rect.setAttribute('class', 'r'); rect.setAttribute('rx', 8);
+      var tag = document.createElementNS(NS, 'rect'); tag.setAttribute('class', 't'); tag.setAttribute('rx', 14); tag.setAttribute('height', 28);
+      var txt = document.createElementNS(NS, 'text'); txt.textContent = t.label;
+      tag.setAttribute('width', 22 + t.label.length * 10.5);
+      g.appendChild(rect); g.appendChild(tag); g.appendChild(txt); svg.appendChild(g);
+      els.push({ t: t, g: g, rect: rect, tag: tag, txt: txt });
+    });
+    var counts = {}; $$('[data-n]', box).forEach(function (b) { counts[b.getAttribute('data-n')] = b; });
+    function at(k, time) {
+      if (time < k[0][0] || time > k[k.length - 1][0]) return null;
+      for (var i = 1; i < k.length; i++) {
+        if (time <= k[i][0]) {
+          var a = k[i - 1], b = k[i], f = (time - a[0]) / (b[0] - a[0] || 1);
+          return [1, 2, 3, 4].map(function (j) { return a[j] + (b[j] - a[j]) * f; });
+        }
+      }
+      return null;
+    }
+    function draw() {
+      var time = (v.currentTime || 0) % data.dur, n = {};
+      els.forEach(function (o) {
+        var b = at(o.t.k, time);
+        if (!b || b[2] < 0 || b[0] > data.w) { o.g.style.display = 'none'; return; }
+        o.g.style.display = '';
+        o.rect.setAttribute('x', b[0]); o.rect.setAttribute('y', b[1]); o.rect.setAttribute('width', b[2] - b[0]); o.rect.setAttribute('height', b[3] - b[1]);
+        o.tag.setAttribute('x', b[0]); o.tag.setAttribute('y', b[1] - 30); o.txt.setAttribute('x', b[0] + 11); o.txt.setAttribute('y', b[1] - 10);
+        n[o.t.kind] = (n[o.t.kind] || 0) + 1;
+      });
+      Object.keys(counts).forEach(function (k) { counts[k].textContent = n[k] || 0; });
+    }
+    function loop() { draw(); if (!v.paused) requestAnimationFrame(loop); }
+    v.addEventListener('play', loop); v.addEventListener('seeked', draw); v.addEventListener('timeupdate', draw); v.addEventListener('loadeddata', draw);
+    draw();
   });
 
   // Sector carousel
@@ -145,7 +183,7 @@
   });
 
   // Clips: stay on the poster for reduced motion, otherwise play only while on screen
-  $$('video.kx-vid, .bgv video').forEach(function (v) {
+  $$('video.kx-vid, .bgv video, video.cv').forEach(function (v) {
     if (reduce) { v.removeAttribute('autoplay'); v.pause(); return; }
     if ('IntersectionObserver' in window) {
       new IntersectionObserver(function (es) { es.forEach(function (en) { var p = en.isIntersecting ? v.play() : v.pause(); if (p && p.catch) p.catch(function () {}); }); }, { threshold: 0.2 }).observe(v);

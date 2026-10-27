@@ -327,12 +327,23 @@ def stats(items):
     return '<div class="kx-statband">' + ''.join(f'<div{rv(i)}><b data-count>{e(v)}</b><span>{e(l)}</span><small>{e(s)}</small></div>' for i, (v, l, s) in enumerate(items)) + '</div>'
 
 
+# Hand-placed tracks for the warehouse clip (video-warehouse.mp4, 1280x720, 10 s). Boxes are interpolated by kv.js while the clip plays.
+WAREHOUSE_TRACKS = {'w': 1280, 'h': 720, 'dur': 10, 'tracks': [
+    {'label': 'Person', 'kind': 'p', 'k': [[0, 296, 324, 398, 508], [1.7, 334, 312, 406, 524], [3.4, 330, 322, 404, 532], [5.1, 318, 314, 388, 524], [6.8, 268, 306, 334, 530], [8.5, 256, 312, 322, 532], [9.8, 296, 312, 384, 532]]},
+    {'label': 'Person', 'kind': 'p', 'k': [[0, 120, 306, 172, 398], [1.7, 0, 300, 52, 402], [2.1, -40, 300, 12, 402]]},
+    {'label': 'Forklift', 'kind': 'v', 'k': [[0, 636, 88, 958, 520], [5, 650, 88, 962, 520], [10, 636, 88, 958, 520]]},
+    {'label': 'Helmet', 'kind': 'ok', 'k': [[0, 756, 254, 822, 322], [5, 764, 254, 830, 322], [10, 756, 254, 822, 322]]},
+]}
+
+
 def compare():
-    """Camera feed vs the same scene read by KenVision; drag the handle."""
-    fit = lambda svg: svg.replace('<svg class="sc"', '<svg class="sc" preserveAspectRatio="xMidYMid slice"', 1)
-    raw = fit(scenes.scene('retail-analytics', ken=False, uid='cr'))
-    ken = fit(scenes.scene('retail-analytics', ken=True, uid='ck'))
-    return (f'<div class="kx-compare" data-compare{rv()}><div class="layer raw">{raw}</div><div class="layer ken">{ken}</div>'
+    """Real warehouse footage: the left side is the plain camera feed, the right side is the same frame with KenVision's detections drawn on top."""
+    import json as _j
+    return (f"<div class=\"kx-compare vid\" data-compare data-tracks='{_j.dumps(WAREHOUSE_TRACKS)}'{rv()}>"
+            '<video class="cv" muted loop playsinline autoplay preload="metadata" poster="@a/footage/video-warehouse-poster.jpg" aria-label="Warehouse camera footage with a forklift and a worker">'
+            '<source src="@a/footage/video-warehouse.mp4" type="video/mp4"></video>'
+            '<div class="layer ken"><span class="tint"></span><svg class="ov" viewBox="0 0 1280 720" preserveAspectRatio="xMidYMid slice" aria-hidden="true"></svg>'
+            '<div class="hud" aria-hidden="true"><span>People <b data-n="p">0</b></span><span>Vehicles <b data-n="v">0</b></span><span>Helmets <b data-n="ok">0</b></span></div></div>'
             '<span class="lab l">Camera feed</span><span class="lab r">With KenVision</span><span class="handle" aria-hidden="true"></span>'
             '<input class="rng" type="range" min="0" max="100" value="50" aria-label="Compare the camera feed with the KenVision view"></div>')
 
