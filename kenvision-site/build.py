@@ -484,7 +484,7 @@ def page_home():
     band = f'''<section class="block kx-partners" id="partners" style="padding-block:clamp(40px,5vw,72px)">
     <div class="wrap">
       <div class="clients" role="group" aria-label="Partners and programs: {", ".join(n for _, n in partners)}">
-        <div class="marquee"><ul>{cells}</ul><ul aria-hidden="true">{cells}</ul></div>
+        <div class="marquee"><ul>{cells}</ul></div>
       </div>
     </div>
   </section>'''

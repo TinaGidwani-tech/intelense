@@ -430,3 +430,11 @@ footer .logo img.kv-logo { height: 56px; }
 .cta.has-vid .eyebrow { color: #c4c8e0; }
 .cta.has-vid .btn-ghost { border-color: rgba(255, 255, 255, .7); color: #fff; }
 .cta.has-vid .btn-ghost:hover { background: #fff; color: #0A34ED; }
+
+/* partner logos: a still, wrapped row instead of a scrolling band */
+.kx-partners .marquee { animation: none; width: auto; justify-content: center; }
+.kx-partners .marquee ul { flex-wrap: wrap; justify-content: center; padding: 0 clamp(16px, 3vw, 32px); row-gap: clamp(14px, 1.8vw, 24px); }
+.kx-partners .clients::after { display: none; }
+.kx-partners .marquee .tile { width: clamp(130px, 14vw, 190px); height: clamp(84px, 8vw, 110px); }
+.kx-partners .marquee { width: 100%; }
+.kx-partners .marquee ul { flex: 1 1 100%; min-width: 0; }
