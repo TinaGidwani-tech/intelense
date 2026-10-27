@@ -207,7 +207,7 @@
     });
   }
 
-  // Contact form: validates in the page, then posts to /send-message.php on this site, which emails enquiries@intelense.ca
+  // Contact form: validates in the page, then posts to /send-message.php on this site, which emails enquiries@intelense.ca and dinesh@intelense.com
   var form = document.getElementById('demo-form');
   if (form) {
     var note = document.getElementById('form-status');

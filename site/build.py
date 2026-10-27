@@ -955,7 +955,7 @@ def page_contact():
       </div>
       <aside class="panel">
         <ul class="info-list">
-          <li><span>Email</span><b class="email">enquiries@intelense.ca</b></li>
+          <li><span>Email</span><b class="email">enquiries@intelense.ca</b><b class="email">dinesh@intelense.com</b></li>
           <li><span>Phone</span><b><a href="tel:+12895523165">+1 (289) 552-3165</a> <small>Canada</small></b><b><a href="tel:+919342810422">+91 93428 10422</a> <small>India</small></b></li>
           <li><span>Offices</span><b>3600 Steeles Ave E, Markham, ON Canada</b><b>No. 45 C2, Deepika Layout, Gubbalala, Uttarahalli Hobli, Bengaluru, Karnataka 560061</b></li>
         </ul>

@@ -1,8 +1,9 @@
 <?php
-// Receives the website contact form (JSON) and emails it to enquiries@intelense.ca using the server's own mail.
+// Receives the website contact form (JSON) and emails it to enquiries@intelense.ca and dinesh@intelense.com using the server's own mail.
 // Upload next to index.html (public_html). The site's JavaScript posts to /send-message.php.
 
-const TO_ADDRESS   = 'enquiries@intelense.ca';
+// Every message goes to all of these addresses.
+const TO_ADDRESSES = ['enquiries@intelense.ca', 'dinesh@intelense.com'];
 // A mailbox on the domain this site runs on (create it in cPanel > Email Accounts if needed). Mail sent "from" a domain the
 // server does not host often lands in spam; the visitor's address goes in Reply-To instead, so Reply works as expected.
 const FROM_ADDRESS = 'website@intelense.com';
@@ -67,7 +68,7 @@ $headers = [
     'X-Mailer: intelense-contact-form',
 ];
 
-$sent = mail(TO_ADDRESS, '=?UTF-8?B?' . base64_encode($subject) . '?=', $body, implode("\r\n", $headers), '-f' . FROM_ADDRESS);
+$sent = mail(implode(', ', TO_ADDRESSES), '=?UTF-8?B?' . base64_encode($subject) . '?=', $body, implode("\r\n", $headers), '-f' . FROM_ADDRESS);
 if (!$sent) {
     error_log('intelense contact form: mail() failed for ' . $email);
     reply(500, ['ok' => false, 'error' => 'We could not send that message.']);
