@@ -124,49 +124,78 @@
     upd();
   });
 
-  // Compare slider. With data-tracks the right side draws detections over a real video, frame by frame.
+  // Compare slider on real footage. Right of the handle the overlay is drawn over the video; data comes from data-scenes.
   $$('[data-compare]').forEach(function (box) {
     var r = box.querySelector('.rng');
     function set() { box.style.setProperty('--pos', r.value + '%'); }
     r.addEventListener('input', set); set();
-    var v = box.querySelector('video'), svg = box.querySelector('.ov');
-    if (!v || !svg || !box.dataset.tracks) return;
-    var data = JSON.parse(box.dataset.tracks), NS = 'http://www.w3.org/2000/svg', els = [];
-    data.tracks.forEach(function (t) {
-      var g = document.createElementNS(NS, 'g'); g.setAttribute('class', 'bx ' + t.kind);
-      var rect = document.createElementNS(NS, 'rect'); rect.setAttribute('class', 'r'); rect.setAttribute('rx', 8);
-      var tag = document.createElementNS(NS, 'rect'); tag.setAttribute('class', 't'); tag.setAttribute('rx', 14); tag.setAttribute('height', 28);
-      var txt = document.createElementNS(NS, 'text'); txt.textContent = t.label;
-      tag.setAttribute('width', 22 + t.label.length * 10.5);
-      g.appendChild(rect); g.appendChild(tag); g.appendChild(txt); svg.appendChild(g);
-      els.push({ t: t, g: g, rect: rect, tag: tag, txt: txt });
-    });
-    var counts = {}; $$('[data-n]', box).forEach(function (b) { counts[b.getAttribute('data-n')] = b; });
+    var v = box.querySelector('video'), svg = box.querySelector('.ov'), hud = box.querySelector('.hud');
+    if (!v || !svg || !box.dataset.scenes) return;
+    var scenes = JSON.parse(box.dataset.scenes), NS = 'http://www.w3.org/2000/svg', cur = null, els = [], hudEls = {};
+    function mk(tag, cls) { var e = document.createElementNS(NS, tag); if (cls) e.setAttribute('class', cls); return e; }
+    function build(sc) {
+      cur = sc; svg.innerHTML = ''; hud.innerHTML = ''; els = []; hudEls = {};
+      (sc.tracks || []).forEach(function (t) {
+        var g = mk('g', 'bx ' + t.kind), rect = mk('rect', 'r'), tag = mk('rect', 't'), txt = mk('text');
+        rect.setAttribute('rx', 8); tag.setAttribute('rx', 14); tag.setAttribute('height', 28); tag.setAttribute('width', 22 + t.label.length * 10.5); txt.textContent = t.label;
+        g.appendChild(rect); g.appendChild(tag); g.appendChild(txt); svg.appendChild(g); els.push({ t: t, g: g, rect: rect, tag: tag, txt: txt });
+      });
+      (sc.zones || []).forEach(function (z) {
+        var g = mk('g', 'zn ' + z.kind), rect = mk('rect', 'r'), tag = mk('rect', 't'), txt = mk('text');
+        rect.setAttribute('rx', 24); rect.setAttribute('x', z.x); rect.setAttribute('y', z.y); rect.setAttribute('width', z.w); rect.setAttribute('height', z.h);
+        tag.setAttribute('rx', 16); tag.setAttribute('height', 32); tag.setAttribute('x', z.x + 14); tag.setAttribute('y', z.y + 14);
+        txt.setAttribute('x', z.x + 28); txt.setAttribute('y', z.y + 36);
+        g.appendChild(rect); g.appendChild(tag); g.appendChild(txt); svg.appendChild(g); els.push({ z: z, g: g, tag: tag, txt: txt });
+      });
+      sc.hud.forEach(function (h) { var s = document.createElement('span'); s.appendChild(document.createTextNode(h[1])); var b = document.createElement('b'); b.textContent = '0'; s.appendChild(b); hud.appendChild(s); hudEls[h[0]] = b; });
+    }
     function at(k, time) {
       if (time < k[0][0] || time > k[k.length - 1][0]) return null;
-      for (var i = 1; i < k.length; i++) {
-        if (time <= k[i][0]) {
-          var a = k[i - 1], b = k[i], f = (time - a[0]) / (b[0] - a[0] || 1);
-          return [1, 2, 3, 4].map(function (j) { return a[j] + (b[j] - a[j]) * f; });
-        }
+      for (var i = 1; i < k.length; i++) if (time <= k[i][0]) {
+        var a = k[i - 1], b = k[i], f = (time - a[0]) / (b[0] - a[0] || 1);
+        return [1, 2, 3, 4].map(function (j) { return a[j] + (b[j] - a[j]) * f; });
       }
       return null;
     }
     function draw() {
-      var time = (v.currentTime || 0) % data.dur, n = {};
+      if (!cur) return;
+      var time = (v.currentTime || 0) % cur.dur, n = {}, total = 0, peak = null;
       els.forEach(function (o) {
-        var b = at(o.t.k, time);
-        if (!b || b[2] < 0 || b[0] > data.w) { o.g.style.display = 'none'; return; }
-        o.g.style.display = '';
-        o.rect.setAttribute('x', b[0]); o.rect.setAttribute('y', b[1]); o.rect.setAttribute('width', b[2] - b[0]); o.rect.setAttribute('height', b[3] - b[1]);
-        o.tag.setAttribute('x', b[0]); o.tag.setAttribute('y', b[1] - 30); o.txt.setAttribute('x', b[0] + 11); o.txt.setAttribute('y', b[1] - 10);
-        n[o.t.kind] = (n[o.t.kind] || 0) + 1;
+        if (o.t) {
+          var b = at(o.t.k, time);
+          if (!b || b[2] < 0 || b[0] > cur.w) { o.g.style.display = 'none'; return; }
+          o.g.style.display = '';
+          o.rect.setAttribute('x', b[0]); o.rect.setAttribute('y', b[1]); o.rect.setAttribute('width', b[2] - b[0]); o.rect.setAttribute('height', b[3] - b[1]);
+          o.tag.setAttribute('x', b[0]); o.tag.setAttribute('y', b[1] - 30); o.txt.setAttribute('x', b[0] + 11); o.txt.setAttribute('y', b[1] - 10);
+          n[o.t.kind] = (n[o.t.kind] || 0) + 1;
+        } else {
+          var z = o.z, c = Math.round(z.base + z.amp * Math.sin(time * 0.9 + z.ph) + (z.amp / 3) * Math.sin(time * 2.3 + z.ph * 2));
+          var label = z.label + ' · ' + c;
+          o.txt.textContent = label; o.tag.setAttribute('width', 26 + label.length * 9.6);
+          o.g.style.setProperty('--heat', (0.10 + 0.18 * c / (z.base + z.amp)).toFixed(3));
+          total += c; if (!peak || c > peak[0]) peak = [c, z.label];
+        }
       });
-      Object.keys(counts).forEach(function (k) { counts[k].textContent = n[k] || 0; });
+      if (cur.zones) { n.total = total; if (hudEls.peak) hudEls.peak.textContent = peak ? peak[1] : '-'; }
+      Object.keys(hudEls).forEach(function (k) { if (k !== 'peak') hudEls[k].textContent = n[k] || 0; });
     }
     function loop() { draw(); if (!v.paused) requestAnimationFrame(loop); }
+    function load(i) {
+      var sc = scenes[i]; build(sc);
+      v.setAttribute('poster', sc.poster); v.setAttribute('aria-label', sc.alt);
+      v.src = sc.video; v.load();
+      var p = v.play(); if (p && p.catch) p.catch(function () {});
+      draw();
+    }
+    var seg = box.parentNode.querySelector('.kx-seg');
+    if (seg) $$('button', seg).forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        $$('button', seg).forEach(function (o) { o.setAttribute('aria-selected', o === btn ? 'true' : 'false'); });
+        load(+btn.dataset.scene);
+      });
+    });
     v.addEventListener('play', loop); v.addEventListener('seeked', draw); v.addEventListener('timeupdate', draw); v.addEventListener('loadeddata', draw);
-    draw();
+    build(scenes[0]); draw();
   });
 
   // Sector carousel

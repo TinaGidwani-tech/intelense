@@ -884,3 +884,20 @@ body { letter-spacing: -0.01em; }
   .kx-compare .hud b { margin-left: 4px; }
   .kx-compare .ov .bx text { font-size: 22px; }
 }
+
+/* footage switch + zone overlay */
+.kx-cmpwrap { display: grid; gap: 14px; }
+.kx-seg { display: inline-flex; gap: 4px; padding: 5px; border: 1px solid var(--ash); border-radius: 9999px; justify-self: start; }
+.kx-seg button { font: inherit; border: 0; background: transparent; cursor: pointer; padding: 10px 20px; border-radius: 9999px; font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: .05em; color: var(--graphite); transition: background .25s, color .25s; }
+.kx-seg button:hover { color: var(--off-black); }
+.kx-seg button[aria-selected="true"] { background: #0A34ED; color: #fff; }
+.kx-note { font-size: 12px; color: var(--smoke); }
+.kx-compare .ov .zn { --heat: .15; }
+.kx-compare .ov .zn rect.r { fill: rgba(10, 52, 237, var(--heat)); stroke: #0A34ED; stroke-width: 3; stroke-dasharray: 10 8; }
+.kx-compare .ov .zn.v rect.r { fill: rgba(255, 121, 83, var(--heat)); stroke: #FF7953; }
+.kx-compare .ov .zn rect.t { fill: #0A34ED; }
+.kx-compare .ov .zn.v rect.t { fill: #FF7953; }
+.kx-compare .ov .zn text { fill: #fff; font: 600 19px Montserrat, sans-serif; }
+@media (max-width: 680px) { .kx-seg button { padding: 8px 14px; font-size: 12px; } .kx-compare .ov .zn text { font-size: 24px; } }
+.kx-compare .hud span { white-space: nowrap; }
+@media (max-width: 680px) { .kx-compare .hud { flex-wrap: wrap; gap: 5px; } .kx-compare .ov .zn text { font-size: 21px; } .kx-compare.vid { aspect-ratio: 4 / 3; } }

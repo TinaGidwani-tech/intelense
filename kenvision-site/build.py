@@ -327,25 +327,38 @@ def stats(items):
     return '<div class="kx-statband">' + ''.join(f'<div{rv(i)}><b data-count>{e(v)}</b><span>{e(l)}</span><small>{e(s)}</small></div>' for i, (v, l, s) in enumerate(items)) + '</div>'
 
 
-# Hand-placed tracks for the warehouse clip (video-warehouse.mp4, 1280x720, 10 s). Boxes are interpolated by kv.js while the clip plays.
-WAREHOUSE_TRACKS = {'w': 1280, 'h': 720, 'dur': 10, 'tracks': [
+# Overlays for the two demo clips. Both are drawn from data here, not produced by a model running on the video.
+WAREHOUSE = {'id': 'warehouse', 'name': 'Warehouse', 'video': '@a/footage/video-warehouse.mp4', 'poster': '@a/footage/video-warehouse-poster.jpg',
+             'w': 1280, 'h': 720, 'dur': 10, 'hud': [['p', 'People'], ['v', 'Vehicles'], ['ok', 'Helmets']],
+             'alt': 'Warehouse camera footage with a forklift and a worker', 'tracks': [
     {'label': 'Person', 'kind': 'p', 'k': [[0, 296, 324, 398, 508], [1.7, 334, 312, 406, 524], [3.4, 330, 322, 404, 532], [5.1, 318, 314, 388, 524], [6.8, 268, 306, 334, 530], [8.5, 256, 312, 322, 532], [9.8, 296, 312, 384, 532]]},
     {'label': 'Person', 'kind': 'p', 'k': [[0, 120, 306, 172, 398], [1.7, 0, 300, 52, 402], [2.1, -40, 300, 12, 402]]},
     {'label': 'Forklift', 'kind': 'v', 'k': [[0, 636, 88, 958, 520], [5, 650, 88, 962, 520], [10, 636, 88, 958, 520]]},
-    {'label': 'Helmet', 'kind': 'ok', 'k': [[0, 756, 254, 822, 322], [5, 764, 254, 830, 322], [10, 756, 254, 822, 322]]},
-]}
+    {'label': 'Helmet', 'kind': 'ok', 'k': [[0, 756, 254, 822, 322], [5, 764, 254, 830, 322], [10, 756, 254, 822, 322]]}]}
+MALL = {'id': 'mall', 'name': 'Retail mall', 'video': '@a/footage/video-mall.mp4', 'poster': '@a/footage/video-mall-poster.jpg',
+        'w': 1280, 'h': 720, 'dur': 10.9, 'hud': [['total', 'People in view'], ['peak', 'Busiest zone']],
+        'alt': 'Overhead view of a busy shopping mall atrium with escalators and a food court',
+        'zones': [{'label': 'Escalators', 'x': 300, 'y': 230, 'w': 250, 'h': 450, 'base': 24, 'amp': 7, 'ph': 0.0, 'kind': 'b'},
+                  {'label': 'Entrance', 'x': 20, 'y': 400, 'w': 290, 'h': 300, 'base': 18, 'amp': 6, 'ph': 1.7, 'kind': 'b'},
+                  {'label': 'Concourse', 'x': 470, 'y': 70, 'w': 420, 'h': 170, 'base': 31, 'amp': 8, 'ph': 3.1, 'kind': 'v'},
+                  {'label': 'Atrium floor', 'x': 560, 'y': 330, 'w': 320, 'h': 340, 'base': 22, 'amp': 6, 'ph': 4.4, 'kind': 'b'},
+                  {'label': 'Food court', 'x': 890, 'y': 260, 'w': 380, 'h': 430, 'base': 46, 'amp': 9, 'ph': 2.4, 'kind': 'v'}]}
 
 
 def compare():
-    """Real warehouse footage: the left side is the plain camera feed, the right side is the same frame with KenVision's detections drawn on top."""
+    """Before/after slider on real footage. Left of the handle: the plain feed. Right: the same video with KenVision's overlay drawn on top (see kv.js)."""
     import json as _j
-    return (f"<div class=\"kx-compare vid\" data-compare data-tracks='{_j.dumps(WAREHOUSE_TRACKS)}'{rv()}>"
-            '<video class="cv" muted loop playsinline autoplay preload="metadata" poster="@a/footage/video-warehouse-poster.jpg" aria-label="Warehouse camera footage with a forklift and a worker">'
-            '<source src="@a/footage/video-warehouse.mp4" type="video/mp4"></video>'
+    scenes_ = [MALL, WAREHOUSE]
+    sw = ''.join(f'<button type="button" role="tab" aria-selected="{"true" if i == 0 else "false"}" data-scene="{i}">{sc["name"]}</button>' for i, sc in enumerate(scenes_))
+    first = scenes_[0]
+    return (f"<div class=\"kx-cmpwrap\"{rv()}><div class=\"kx-seg\" role=\"tablist\" aria-label=\"Demo footage\">{sw}</div>"
+            f"<div class=\"kx-compare vid\" data-compare data-scenes='{_j.dumps(scenes_)}'>"
+            f'<video class="cv" muted loop playsinline autoplay preload="metadata" poster="{first["poster"]}" aria-label="{ea(first["alt"])}"><source src="{first["video"]}" type="video/mp4"></video>'
             '<div class="layer ken"><span class="tint"></span><svg class="ov" viewBox="0 0 1280 720" preserveAspectRatio="xMidYMid slice" aria-hidden="true"></svg>'
-            '<div class="hud" aria-hidden="true"><span>People <b data-n="p">0</b></span><span>Vehicles <b data-n="v">0</b></span><span>Helmets <b data-n="ok">0</b></span></div></div>'
+            '<div class="hud" aria-hidden="true"></div></div>'
             '<span class="lab l">Camera feed</span><span class="lab r">With KenVision</span><span class="handle" aria-hidden="true"></span>'
-            '<input class="rng" type="range" min="0" max="100" value="50" aria-label="Compare the camera feed with the KenVision view"></div>')
+            '<input class="rng" type="range" min="0" max="100" value="50" aria-label="Compare the camera feed with the KenVision view"></div>'
+            '<p class="kx-note">Demo footage with an illustrative overlay.</p></div>')
 
 
 def points4(points):
