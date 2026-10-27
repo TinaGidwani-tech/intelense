@@ -438,3 +438,73 @@ footer .logo img.kv-logo { height: 56px; }
 .kx-partners .marquee .tile { width: clamp(130px, 14vw, 190px); height: clamp(84px, 8vw, 110px); }
 .kx-partners .marquee { width: 100%; }
 .kx-partners .marquee ul { flex: 1 1 100%; min-width: 0; }
+
+/* ===== How it works: scroll-linked pipeline ===== */
+.kx-how { position: relative; --p: 0; }
+.kx-how .track { position: absolute; left: 8px; right: 0; top: 7px; height: 3px; border-radius: 3px; background: var(--ash); overflow: hidden; }
+.kx-how .fill { display: block; height: 100%; background: var(--brand-gradient); transform-origin: 0 50%; transform: scaleX(var(--p)); }
+.kx-how .stp { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; }
+.kx-how .stp > li { position: relative; padding-top: 40px; display: grid; gap: 14px; align-content: start; min-width: 0; }
+.kx-how .dot { position: absolute; left: 0; top: 0; width: 18px; height: 18px; border-radius: 50%; background: var(--parchment); border: 3px solid var(--ash); transition: border-color .4s ease, background .4s ease, box-shadow .4s ease; z-index: 1; }
+.kx-how .stp > li.on .dot { border-color: var(--lake-blue); background: var(--lake-blue); box-shadow: 0 0 0 7px rgba(10, 52, 237, .14); }
+.kx-how h3 { font-size: 22px; transition: color .4s; }
+.kx-how .stp > li p { color: var(--graphite); font-size: 15px; }
+.kx-how .vis { min-height: 270px; border: 1px solid var(--ash); border-radius: 28px; background: var(--white); display: grid; place-items: center; padding: 22px; overflow: hidden; position: relative; transition: opacity .6s ease, transform .7s cubic-bezier(.2, .7, .2, 1), box-shadow .6s ease, border-color .6s; }
+.js .kx-how .stp > li:not(.on) .vis { opacity: .42; transform: scale(.97); }
+.js .kx-how .stp > li:not(.on) h3 { color: var(--smoke); }
+.kx-how .stp > li.on .vis { box-shadow: 0 30px 60px -36px rgba(10, 52, 237, .55); border-color: rgba(10, 52, 237, .35); }
+.kx-how .vis.v3 { padding: 12px; place-items: stretch; background: transparent; border: 0; box-shadow: none !important; overflow: visible; }
+.kx-how .vis.v3 .kx-dash { box-shadow: 0 30px 60px -40px rgba(10, 52, 237, .5); }
+
+/* step 1 */
+.hv1 { display: grid; grid-template-columns: auto 58px auto; align-items: center; gap: 0; width: 100%; justify-content: center; }
+.hv1 .src { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
+.hv1 .src li { display: flex; align-items: center; gap: 10px; padding: 11px 14px; border: 1px solid var(--ash); border-radius: 14px; background: var(--parchment); font-size: 13px; font-weight: 500; white-space: nowrap; }
+.hv1 .src svg { width: 20px; height: 20px; stroke: var(--lake-blue); fill: none; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; flex: none; }
+.hv1 .join { width: 58px; height: 150px; overflow: visible; }
+.hv1 .join circle { fill: var(--lake-blue); }
+.hv1 .out { display: grid; gap: 8px; justify-items: center; padding: 18px 14px; border: 1px solid var(--lake-blue); border-radius: 18px; color: var(--lake-blue); text-align: center; font-size: 13px; max-width: 110px; box-shadow: 0 0 0 6px rgba(10, 52, 237, .08); }
+.hv1 .out i { width: 10px; height: 10px; border-radius: 50%; background: var(--lake-blue); animation: kx-ping3 1.8s ease-out infinite; animation-play-state: paused; }
+.kx-how .stp > li.on .hv1 .out i { animation-play-state: running; }
+@keyframes kx-ping3 { 0% { box-shadow: 0 0 0 0 rgba(10, 52, 237, .5); } 80%, 100% { box-shadow: 0 0 0 12px rgba(10, 52, 237, 0); } }
+.kx-how .fl { fill: none; stroke: var(--lake-blue); stroke-width: 2; stroke-linecap: round; stroke-dasharray: 4 7; opacity: .75; animation: kx-flow 1.1s linear infinite; animation-play-state: paused; }
+.kx-how .stp > li.on .fl { animation-play-state: running; }
+@keyframes kx-flow { to { stroke-dashoffset: -22; } }
+
+/* step 2 */
+.hv2 { width: 100%; max-width: 340px; }
+.hv2 svg { width: 100%; height: auto; display: block; overflow: visible; }
+.hv2 .rings circle { fill: none; stroke: var(--lake-blue); stroke-width: 1.2; opacity: 0; transform-origin: 150px 112px; animation: kx-ring 3.2s ease-out infinite; animation-play-state: paused; }
+.hv2 .rings circle + circle { animation-delay: 1.4s; }
+.kx-how .stp > li.on .hv2 .rings circle { animation-play-state: running; }
+@keyframes kx-ring { 0% { opacity: .5; transform: scale(.55); } 100% { opacity: 0; transform: scale(1.08); } }
+.hv2 .body { fill: var(--white); stroke: var(--lake-blue); stroke-width: 2; }
+.hv2 .barrel { fill: var(--parchment); stroke: var(--lake-blue); stroke-width: 2; }
+.hv2 .mount { fill: none; stroke: var(--smoke); stroke-width: 4; stroke-linecap: round; opacity: .6; }
+.hv2 .lens { fill: #0b0d1c; }
+.hv2 .lens2 { fill: var(--lake-blue); animation: kx-lens 2.4s ease-in-out infinite; animation-play-state: paused; }
+.kx-how .stp > li.on .hv2 .lens2 { animation-play-state: running; }
+@keyframes kx-lens { 50% { fill: #7C28E9; transform: scale(1.25); } }
+.hv2 .lens2 { transform-origin: 266px 112px; }
+.hv2 .led { fill: #FF7953; animation: kx-led 1.4s steps(2, end) infinite; }
+@keyframes kx-led { 50% { opacity: .2; } }
+
+/* step 3 */
+.hv3 { width: 100%; }
+@media (max-width: 800px) {
+  .kx-how .track { left: 8px; right: auto; top: 8px; bottom: 0; width: 3px; height: auto; }
+  .kx-how .fill { width: 100%; height: 100%; transform-origin: 50% 0; transform: scaleY(var(--p)); }
+  .kx-how .stp { grid-template-columns: minmax(0, 1fr); gap: 36px; }
+  .kx-how .stp > li { padding: 0 0 0 40px; }
+  .kx-how .dot { top: 4px; }
+}
+@media (max-width: 520px) { .hv1 { grid-template-columns: minmax(0, 1fr) 36px auto; } .hv1 .join { width: 36px; } .hv1 .src li { padding: 9px 10px; font-size: 12px; } .hv1 .out { max-width: 90px; padding: 14px 8px; font-size: 12px; } }
+@media (prefers-reduced-motion: reduce) { .kx-how .fl, .hv2 .rings circle, .hv2 .lens2, .hv2 .led, .hv1 .out i { animation: none; } .hv2 .rings circle { opacity: .25; } }
+/* step 3: a compact slice of the dashboard so all three cards sit at one height */
+.hv3 .kx-dash .fd { display: none; }
+.hv3 .kx-dash .dr { grid-template-columns: minmax(0, 1fr); }
+.hv3 .kx-dash .rc { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); grid-template-rows: auto; }
+.hv3 .kx-dash .ht, .hv3 .kx-dash .hb { min-height: 104px; }
+.hv3 .kx-dash .toast { display: flex !important; position: static; animation: none; opacity: 1; transform: none; margin: 0 16px 16px; justify-content: flex-start; }
+.hv3 .kx-dash .db { grid-template-columns: minmax(0, 1fr); grid-template-rows: auto auto; }
+.hv3 .kx-dash .ds { display: none; }

@@ -416,6 +416,31 @@ HOW_IMGS = [('assets/footage/plaza.jpg', 'Crowd in a public square seen from abo
             ('assets/footage/feat-report-kensafety.jpg', 'Team member reading a report on a tablet on site')]
 
 
+def how_s(items):
+    """'How it works' as a scroll-linked pipeline: the line fills as you scroll and lights each step in turn.
+    Step 1: sources feeding live streams. Step 2: a camera carrying the KenVision logo. Step 3: the dashboard."""
+    ic = {'cam': '<path d="M3 8h12v8H3z"/><path d="M15 11l6-3v8l-6-3"/>',
+          'dvr': '<rect x="3" y="4" width="18" height="6" rx="1.5"/><rect x="3" y="14" width="18" height="6" rx="1.5"/><path d="M7 7h.01M7 17h.01"/>',
+          'chip': '<rect x="7" y="7" width="10" height="10" rx="2"/><path d="M9 3v4M15 3v4M9 17v4M15 17v4M3 9h4M3 15h4M17 9h4M17 15h4"/>'}
+    srcs = ''.join(f'<li><svg viewBox="0 0 24 24" aria-hidden="true">{ic[k]}</svg><span>{t}</span></li>' for k, t in (('cam', 'Existing cameras'), ('dvr', 'CCTV systems'), ('chip', 'Edge devices')))
+    v1 = f'''<div class="hv1"><ul class="src">{srcs}</ul>
+          <svg class="join" viewBox="0 0 70 150" aria-hidden="true"><path class="fl" d="M0 25 C35 25 35 75 68 75"/><path class="fl" d="M0 75 L68 75"/><path class="fl" d="M0 125 C35 125 35 75 68 75"/><circle cx="68" cy="75" r="4"/></svg>
+          <div class="out"><i></i><b>Live video streams</b></div></div>'''
+    v2 = '''<div class="hv2"><svg viewBox="0 0 320 230" role="img" aria-label="Camera carrying the KenVision logo">
+          <g class="rings" aria-hidden="true"><circle cx="150" cy="112" r="64"/><circle cx="150" cy="112" r="94"/></g>
+          <path class="fl" d="M0 112 H60" aria-hidden="true"/><path class="fl" d="M268 112 H320" aria-hidden="true"/>
+          <path class="mount" d="M146 70 V38 M110 38 H182 M126 38 V30 M166 38 V30"/>
+          <rect class="body" x="60" y="70" width="172" height="84" rx="18"/>
+          <rect class="barrel" x="232" y="84" width="34" height="56" rx="9"/>
+          <circle class="lens" cx="266" cy="112" r="17"/><circle class="lens2" cx="266" cy="112" r="8"/>
+          <circle class="led" cx="78" cy="86" r="3.5"/>
+          <image href="@a/logos/kenvision.png" x="80" y="92" width="136" height="50" preserveAspectRatio="xMidYMid meet"/>
+        </svg></div>'''
+    vis = [v1, v2, f'<div class="hv3">{dash()}</div>']
+    lis = ''.join(f'<li{rv(i)}><span class="dot"></span><div class="vis v{i + 1}">{vis[i]}</div><h3>{e(s["t"])}</h3><p>{e(s["p"])}</p></li>' for i, s in enumerate(items))
+    return f'<div class="kx-how" data-how><div class="track" aria-hidden="true"><i class="fill"></i></div><ol class="stp">{lis}</ol></div>'
+
+
 def flowsteps(items):
     return '<ol class="kx-flowsteps">' + ''.join(f'<li{rv(i)}><div class="pic">{img(*HOW_IMGS[i])}</div><h3>{e(s["t"])}</h3><p>{e(s["p"])}</p></li>' for i, s in enumerate(items)) + '</ol>'
 
@@ -506,7 +531,7 @@ def page_home():
     sectors_html = block(head_block('Solutions', 'Intelligence Across Sectors', 'KenVision adapts to different environments by contextualizing intelligence for each industry.')
                          + rows([(k, i, t, p) for k, i, t, p, cl in sec]), 'sectors')
     steps_html = block(head_block('How it works', 'How KenVision Turns Video into Action', '')
-                       + flowsteps([{'t': s['t'], 'p': s['p'], 'img': s['img']} for s in CONTENT['retail-analytics']['steps']]), 'how')
+                       + how_s(CONTENT['retail-analytics']['steps']), 'how')
     core = [('Real-Time Video Analytics', 'Detect events, movement, and anomalies as they happen — not after review.', 'assets/images/core-analytics.webp'),
             ('Behavior & Pattern Analysis', 'Understand how people and objects move, dwell, and interact within spaces.', 'https://images.unsplash.com/photo-1460925895917-afdab827c52f'),
             ('Heatmaps & Movement Tracking', 'Visualize traffic flow, engagement zones, and underutilized areas.', 'assets/images/retail-heatmap-update.webp'),
@@ -591,7 +616,7 @@ def page_solution(key):
     h = hero(crumbs(('@solutions', 'Solutions'), (None, name)), '<span class="eyebrow">Solutions</span>', e(c['h1']), e(c['lede']), demo_btn('Request Demo'),
              media='<div class="kx-stage" data-tilt><figure class="kx-shot round">' + pic + '</figure>' + chips + '</div>')
     pain = block(f'''<div class="kx-side"><div class="sticky"><span class="eyebrow">The challenge</span><h2 style="margin-top:18px">{e(c['pain']['h'])}</h2></div>{issues(c['pain']['items'])}</div>''', 'challenge')
-    how = block(head_block('How it works', e(c['how_h']), '') + flowsteps(c['steps']), 'how')
+    how = block(head_block('How it works', e(c['how_h']), '') + how_s(c['steps']), 'how')
     core_h = f'{c["core"]["h"]} {c["core"]["h2b"][0]}' if c['core']['h2b'] else c['core']['h']
     core = block(head_block('Capabilities', e(core_h), '') + bento(c['core']['items']), 'capabilities')
     impact = block(head_block('Impact', e(c['impact']['h']), '') + outcomes(c['impact']['items']), 'impact')

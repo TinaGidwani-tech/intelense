@@ -104,6 +104,26 @@
     set(0, false);
   });
 
+  // "How it works": the line fills as the section scrolls past and lights each step when the line reaches its dot
+  $$('[data-how]').forEach(function (box) {
+    var lis = $$('.stp > li', box), mq = window.matchMedia('(min-width: 801px)'), ticking = false;
+    function upd() {
+      ticking = false;
+      var r = box.getBoundingClientRect(), vh = window.innerHeight;
+      var p = reduce ? 1 : Math.max(0, Math.min(1, (vh * 0.7 - r.top) / (r.height * 0.8)));
+      box.style.setProperty('--p', p.toFixed(3));
+      var horiz = mq.matches, end = p * (horiz ? r.width : r.height);
+      lis.forEach(function (li) {
+        var lr = li.getBoundingClientRect(), pos = horiz ? lr.left - r.left : lr.top - r.top;
+        li.classList.toggle('on', end >= pos + 6);
+      });
+    }
+    function queue() { if (!ticking) { ticking = true; requestAnimationFrame(upd); } }
+    addEventListener('scroll', queue, { passive: true });
+    addEventListener('resize', queue);
+    upd();
+  });
+
   // Clips: stay on the poster for reduced motion, otherwise play only while on screen
   $$('video.kx-vid, .bgv video').forEach(function (v) {
     if (reduce) { v.removeAttribute('autoplay'); v.pause(); return; }
