@@ -68,9 +68,16 @@ $headers = [
     'X-Mailer: intelense-contact-form',
 ];
 
-$sent = mail(implode(', ', TO_ADDRESSES), '=?UTF-8?B?' . base64_encode($subject) . '?=', $body, implode("\r\n", $headers), '-f' . FROM_ADDRESS);
-if (!$sent) {
-    error_log('intelense contact form: mail() failed for ' . $email);
+// One separate message per address, so a recipient that refuses it cannot stop the others from getting theirs.
+$sent = 0;
+foreach (TO_ADDRESSES as $to) {
+    if (mail($to, '=?UTF-8?B?' . base64_encode($subject) . '?=', $body, implode("\r\n", $headers), '-f' . FROM_ADDRESS)) {
+        $sent++;
+    } else {
+        error_log('intelense contact form: mail() failed for recipient ' . $to . ' (visitor ' . $email . ')');
+    }
+}
+if ($sent === 0) {
     reply(500, ['ok' => false, 'error' => 'We could not send that message.']);
 }
 @touch($stamp);
