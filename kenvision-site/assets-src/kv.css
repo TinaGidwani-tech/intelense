@@ -657,3 +657,80 @@ body { letter-spacing: -0.01em; }
 @container (max-width: 560px) { .kx-dash .db { grid-template-columns: minmax(0, 1fr); } }
 .kx-dash .kp b { white-space: nowrap; }
 @container (max-width: 560px) { .kx-dash .kp b { font-size: 17px; } .kx-dash .kp { padding: 9px 10px; } }
+
+/* =====================================================================
+   v5: KenVision blue (#0A34ED) is the primary colour, the same blue as the call-to-action buttons.
+   Gradients and washes blend the colours of the Ken module logos:
+   KenVision blue, KenIoT violet, KenSafety coral, KenHome sky, KenAgri green.
+   ===================================================================== */
+:root {
+  --lake-blue: #0A34ED;
+  --kv-gradient: linear-gradient(90deg, #0A34ED 0%, #7C28E9 28%, #FF7953 56%, #78AFCF 80%, #368736 100%);
+  --brand-gradient: var(--kv-gradient);
+}
+.eyebrow::before { background: linear-gradient(135deg, #0A34ED, #7C28E9 55%, #FF7953); }
+.wash-a { background: radial-gradient(circle, rgba(255, 121, 83, .55), rgba(120, 175, 207, .3) 55%, rgba(120, 175, 207, 0) 72%); }
+.wash-b { background: radial-gradient(circle, rgba(124, 40, 233, .38), rgba(10, 52, 237, .2) 50%, rgba(10, 52, 237, 0) 72%); }
+.wash-c { background: radial-gradient(circle, rgba(120, 175, 207, .55), rgba(54, 135, 54, .18) 55%, transparent 72%); }
+
+/* headline emphasis + links in primary blue */
+.kx-hero h1 em, .head h2 em { color: var(--lake-blue); background-image: var(--kv-gradient); background-size: 100% 4px; }
+.kx-byline a { color: var(--lake-blue); border-bottom-color: currentColor; }
+.kx-by p a { color: #fff !important; }
+.kx-trust span::before { background: var(--lake-blue); }
+.kx-float.f1 i { background: #0A34ED; box-shadow: 0 0 0 0 rgba(10, 52, 237, .6); }
+.kx-statband b { background: linear-gradient(120deg, #0A34ED 8%, #7C28E9 55%, #FF7953 100%); -webkit-background-clip: text; background-clip: text; color: transparent; }
+
+/* data and diagram marks */
+.kx-bar i { background: linear-gradient(90deg, #0A34ED, #7C28E9); }
+.bars i { background: linear-gradient(180deg, rgba(10, 52, 237, .55), rgba(124, 40, 233, .2)); }
+.bars i.pk { background: linear-gradient(180deg, #0A34ED, #7C28E9); }
+.kx-vis .area { fill: rgba(10, 52, 237, .12); stroke: var(--lake-blue); }
+.kx-save, .kx-flow li.on { color: var(--lake-blue); border-color: var(--lake-blue); }
+.kx-dash .ni.on { background: rgba(10, 52, 237, .1); color: var(--lake-blue); }
+.kx-dash .kp svg { stroke: var(--lake-blue); }
+.kx-row:hover .go { background: var(--lake-blue); border-color: var(--lake-blue); }
+.kx-mini .ic { background: rgba(10, 52, 237, .08); border-color: transparent; }
+.kx-mini .ic svg { stroke: var(--lake-blue); }
+.kx-dark .cell svg { stroke: url(#brand-g); }
+.kx-outcomes > div:hover { background: linear-gradient(160deg, rgba(10, 52, 237, .07), transparent 70%); }
+.panel-d .badge, .scr .lat { background: rgba(10, 52, 237, .1); color: var(--lake-blue); }
+.kx-num { color: var(--lake-blue); }
+
+/* tabs */
+.kx-tabs.std .tablist [aria-selected="true"] { border-color: var(--lake-blue); }
+.kx-tabs.dep .seg [aria-selected="true"] { background: var(--lake-blue); color: #fff; }
+.kx-tabs.dep .seg button b { color: var(--lake-blue); opacity: 1; }
+.kx-tabs.dep .seg [aria-selected="true"] b { color: #fff; opacity: .85; }
+.dg .dn.mid { border-color: var(--lake-blue); color: var(--lake-blue); background: rgba(10, 52, 237, .07); }
+.dg .dl { background: repeating-linear-gradient(90deg, #0A34ED 0 5px, transparent 5px 10px); opacity: .6; }
+.kx-tabs .frame { background: radial-gradient(ellipse at 50% 0%, rgba(124, 40, 233, .08), transparent 60%), #fbf9f7; }
+
+/* how it works */
+.kx-how .fl { stroke: #0A34ED; }
+.hv1 .join circle { fill: #0A34ED; }
+.hv1 .out { border-color: var(--lake-blue); color: var(--lake-blue); }
+.hv1 .out i { background: var(--lake-blue); }
+.hv2 .rings circle { stroke: #7C28E9; }
+.hv2 .body, .hv2 .barrel { stroke: var(--lake-blue); }
+.hv2 .lens2 { fill: var(--lake-blue); }
+@keyframes kx-lens { 50% { fill: #7C28E9; transform: scale(1.25); } }
+.kx-how li.on .dot { border-color: var(--lake-blue); background: var(--lake-blue); box-shadow: 0 0 0 7px rgba(10, 52, 237, .14); }
+.kx-how li.on .vis { border-color: rgba(10, 52, 237, .4); }
+
+/* the one gradient card: made from the Ken logo colours */
+.kx-by { background: linear-gradient(125deg, #0A34ED 0%, #5466DD 34%, #7C28E9 66%, #FF7953 118%); color: #fff; border-color: transparent; }
+.kx-by .wash { display: none; }
+.kx-by .eyebrow { color: rgba(255, 255, 255, .8); }
+.kx-by .eyebrow::before { background: #fff; }
+.kx-by h2 { color: #fff; }
+.kx-by p { color: rgba(255, 255, 255, .88); }
+.kx-by .links li { border-top-color: rgba(255, 255, 255, .28); }
+.kx-by .links a { color: #fff; }
+.kx-by .links a::after { color: #fff; }
+.kx-by .links a:hover { color: #fff; opacity: .85; }
+.kx-by .links small { color: rgba(255, 255, 255, .75); }
+.kx-by .kx-modules a { border-color: rgba(255, 255, 255, .55); color: #fff; }
+.kx-by .kx-modules a:hover { background: #fff; color: #0A34ED; border-color: #fff; }
+.kx-float.f3 { left: auto; right: 14%; bottom: -16px; }
+@media (max-width: 680px) { .kx-float.f3 { left: 2%; right: auto; } }

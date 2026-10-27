@@ -296,7 +296,7 @@ def by_intelense():
       <div class="kx-by">
         <div class="wash wash-b" aria-hidden="true" style="top:-30%;right:-10%"></div>
         <div>
-          <img class="by-logo on-light" src="@a/logos/intelense.png" alt="Intelense" width="194" height="30"><img class="by-logo on-dark" src="@a/logos/intelense-light.png" alt="" aria-hidden="true" width="194" height="30">
+          <img class="by-logo" src="@a/logos/intelense-light.png" alt="Intelense" width="194" height="30">
           <span class="eyebrow">KenVision by Intelense</span>
           <h2 style="margin-top:16px">Part of the Intelense platform.</h2>
           <p>Building real-time intelligence systems for video, sensors, and autonomous platforms. KenVision is the business-intelligence module of the <a href="{INTELENSE}/ken360" style="color:var(--lake-blue);font-weight:600">Intelense Ken platform</a>, and it runs alongside the other Ken modules.</p>
