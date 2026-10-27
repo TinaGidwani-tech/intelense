@@ -209,7 +209,7 @@ def crumbs(*items):
     return f'<ol class="crumbs" aria-label="Breadcrumb">{"".join(out)}</ol>'
 
 
-def hero(crumb, eyebrow, h1, lede, ctas, media='', extra='', center=False):
+def hero(crumb, eyebrow, h1, lede, ctas, media='', extra='', center=False, below=''):
     copy = f'''{crumb}
       {eyebrow}
       <h1>{h1}</h1>
@@ -217,7 +217,9 @@ def hero(crumb, eyebrow, h1, lede, ctas, media='', extra='', center=False):
       <div class="hero-ctas">{ctas}</div>
       {extra}'''
     cls = 'page-hero kv-hero kx-hero' if media else ('page-hero hero-center kx-hero' if center else 'page-hero kx-hero')
-    if media:
+    if below:
+        inner = f'<div class="wrap">\n      {copy}\n      <div class="kx-below">{below}</div>\n    </div>'
+    elif media:
         inner = f'<div class="wrap kv-hero-grid">\n      <div class="kv-hero-copy">\n      {copy}\n      </div>\n      <div class="kv-hero-visual">{media}</div>\n    </div>'
     else:
         inner = f'<div class="wrap">\n      {copy}\n    </div>'
@@ -505,18 +507,16 @@ def page_home():
              'Turn the cameras you <em>already own</em> into real-time intelligence.',
              'KenVision applies advanced AI to your existing CCTV — counting people, mapping behaviour, spotting risk and measuring engagement — without replacing a single camera. Privacy-first, on-prem or edge, running in days.',
              demo_btn() + '<a class="btn btn-ghost" href="@solutions">See solutions</a>',
-             media='<div class="kx-stage" data-tilt><div class="kx-shot">' + dash() + '</div>' + floats + '</div>',
+             center=True, below='<div class="kx-stage" data-tilt><div class="kx-shot">' + dash() + '</div>' + floats + '</div>',
              extra='<div class="kx-trust"><span>Works with existing CCTV</span><span>Privacy-first &amp; on-prem</span><span>Camera-agnostic</span></div>')
     st = f'<section class="kx-proof"><div class="wrap">{stats(HOME_STATS)}</div></section>'
     sectors = ['Electronics retail', 'Jewellery chains', 'FMCG activations', 'Commercial buildings', 'Smart cities', 'Worksite safety']
     strip = ticker(sectors).replace('<section class="kx-ticker"', '<section class="kx-ticker lbl"', 1).replace('<div class="track">', '<span class="lead">Reading existing cameras across</span><div class="track">', 1)
     partners = [('oce', 'OCE'), ('prestige', 'Prestige Group'), ('risingstar', 'RisingStar'), ('google-cloud', 'Google Cloud'), ('aws', 'AWS'), ('nvidia', 'NVIDIA'), ('mars', 'MaRS'), ('ibm', 'IBM'), ('f6s', 'F6S')]
-    cells = ''.join(f'<li class="tile">{img(f"assets/images/partners/{s}.webp", n, lazy=False)}</li>' for s, n in partners)
-    band = f'''<section class="block kx-partners" id="partners" style="padding-block:clamp(40px,5vw,72px)">
+    cells = ''.join(f'<li>{img(f"assets/images/partners/{s}.webp", n, lazy=False)}</li>' for s, n in partners)
+    band = f'''<section class="block kx-partners" id="partners" style="padding-block:clamp(32px,4vw,56px)">
     <div class="wrap">
-      <div class="clients" role="group" aria-label="Partners and programs: {", ".join(n for _, n in partners)}">
-        <div class="marquee"><ul>{cells}</ul></div>
-      </div>
+      <ul class="kx-logos" aria-label="Partners and programs: {", ".join(n for _, n in partners)}">{cells}</ul>
     </div>
   </section>'''
     pts = [('Real-Time Video Analysis', 'Cameras don’t just record. KenVision continuously analyzes live video streams to understand activity as it happens.'),
@@ -550,7 +550,7 @@ def page_home():
     dep_html = block(head_block('Deployment', 'Deploy KenVision Your Way', '') + tabs_deploy(dep), 'deploy')
     quote = f'''<section class="block"><div class="wrap"><figure class="kx-quote"{rv()}><p>“The best camera for your AI is the one already on your wall. Everything after that should be software — not another hardware project.”</p><cite>KenVision product principle, by <a href="{INTELENSE}/">Intelense</a></cite></figure></div></section>'''
     faq = faq_block([(x['q'], x['a']) for x in c['faq']], c['faq_h']['h'], c['faq_h']['p'])
-    cta = cta_band('Ready to Unlock Intelligence from Video?', 'See how KenVision transforms everyday video into insights that improve safety, efficiency, and decision-making.', video='video-home')
+    cta = cta_band('Ready to Unlock Intelligence from Video?', 'See how KenVision transforms everyday video into insights that improve safety, efficiency, and decision-making.')
     body = '\n\n  '.join([h, st, strip, band, standard, sectors_html, steps_html, core_html, why_html, dep_html, by_intelense(), quote, faq, cta])
     return page('index', 'index.html', 'KenVision by Intelense | AI-Powered Video Intelligence Platform', c['meta'], body, 'home')
 
