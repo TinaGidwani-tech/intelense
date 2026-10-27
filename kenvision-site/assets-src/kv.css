@@ -654,3 +654,6 @@ body { letter-spacing: -0.01em; }
 .kx-dash .toast { left: 10px; right: auto; bottom: 10px; width: 152px; padding: 9px 11px; gap: 8px; }
 .kx-dash .toast small { font-size: 10.5px; }
 .kx-ticker .lead { background: var(--parchment); }
+@container (max-width: 560px) { .kx-dash .db { grid-template-columns: minmax(0, 1fr); } }
+.kx-dash .kp b { white-space: nowrap; }
+@container (max-width: 560px) { .kx-dash .kp b { font-size: 17px; } .kx-dash .kp { padding: 9px 10px; } }
