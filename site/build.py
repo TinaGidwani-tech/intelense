@@ -3192,8 +3192,8 @@ PUBLIC.update({legacy_pages.file_for(s_): legacy_pages.public_for(s_) for s_ in 
 OG_IMAGE = '/assets/footage/video-home-poster.jpg'
 
 
-# `python3 site/build.py --deploy dist --no-dark` leaves the light/dark toggle out (the CSS stays, nothing switches it on)
-ENABLE_THEME = '--no-dark' not in sys.argv
+# The light/dark toggle is off by default (the dark CSS stays in site.css, nothing switches it on); pass --dark to build it back in
+ENABLE_THEME = '--dark' in sys.argv
 # Runs before the page paints, so a saved dark choice does not flash light first
 THEME_BOOT = ("<script>try{var t=null;try{t=localStorage.getItem('theme')}catch(e){}"
               "if(!t){var m=/(?:^|;)theme:(dark|light);/.exec(window.name||'');if(m)t=m[1]}"
