@@ -124,6 +124,26 @@
     upd();
   });
 
+  // Compare slider
+  $$('[data-compare]').forEach(function (box) {
+    var r = box.querySelector('.rng');
+    function set() { box.style.setProperty('--pos', r.value + '%'); }
+    r.addEventListener('input', set); set();
+  });
+
+  // Sector carousel
+  $$('[data-car]').forEach(function (car) {
+    var tr = car.querySelector('.track'), cards = $$('.cc', car), dots = car.querySelector('.dots');
+    cards.forEach(function () { dots.appendChild(document.createElement('i')); });
+    var di = $$('i', dots);
+    function step() { return cards[0].getBoundingClientRect().width + 20; }
+    function upd() { var n = Math.round(tr.scrollLeft / step()); di.forEach(function (d, k) { d.classList.toggle('on', k === Math.min(n, di.length - 1)); }); }
+    car.querySelector('[data-prev]').addEventListener('click', function () { tr.scrollBy({ left: -step(), behavior: reduce ? 'auto' : 'smooth' }); });
+    car.querySelector('[data-next]').addEventListener('click', function () { tr.scrollBy({ left: step(), behavior: reduce ? 'auto' : 'smooth' }); });
+    tr.addEventListener('scroll', function () { requestAnimationFrame(upd); }, { passive: true });
+    upd();
+  });
+
   // Clips: stay on the poster for reduced motion, otherwise play only while on screen
   $$('video.kx-vid, .bgv video').forEach(function (v) {
     if (reduce) { v.removeAttribute('autoplay'); v.pause(); return; }

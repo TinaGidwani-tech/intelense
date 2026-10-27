@@ -13,6 +13,7 @@ opened from disk or from a preview host.
 import hashlib
 import html as H
 import importlib.util
+import scenes
 import json
 import re
 import shutil
@@ -326,9 +327,38 @@ def stats(items):
     return '<div class="kx-statband">' + ''.join(f'<div{rv(i)}><b data-count>{e(v)}</b><span>{e(l)}</span><small>{e(s)}</small></div>' for i, (v, l, s) in enumerate(items)) + '</div>'
 
 
+def compare():
+    """Camera feed vs the same scene read by KenVision; drag the handle."""
+    fit = lambda svg: svg.replace('<svg class="sc"', '<svg class="sc" preserveAspectRatio="xMidYMid slice"', 1)
+    raw = fit(scenes.scene('retail-analytics', ken=False, uid='cr'))
+    ken = fit(scenes.scene('retail-analytics', ken=True, uid='ck'))
+    return (f'<div class="kx-compare" data-compare{rv()}><div class="layer raw">{raw}</div><div class="layer ken">{ken}</div>'
+            '<span class="lab l">Camera feed</span><span class="lab r">With KenVision</span><span class="handle" aria-hidden="true"></span>'
+            '<input class="rng" type="range" min="0" max="100" value="50" aria-label="Compare the camera feed with the KenVision view"></div>')
+
+
+def points4(points):
+    return '<div class="kx-pts">' + ''.join(f'<div{rv(i)}><h3>{e(t)}</h3><p>{e(d)}</p></div>' for i, (t, d) in enumerate(points)) + '</div>'
+
+
+def carousel(items):
+    """Sector cards with a drawn scene each; scroll or use the arrows."""
+    cards = ''.join(f'<a class="cc" href="@{k}"><span class="pic">{scenes.scene(k, uid="c" + k[:3])}</span><h3>{e(t)}</h3><p>{e(p)}</p><span class="go">Learn more</span></a>' for k, t, p in items)
+    return (f'<div class="kx-car" data-car{rv()}><div class="track" tabindex="0" aria-label="Solutions">{cards}</div>'
+            '<div class="ctl"><button type="button" data-prev aria-label="Previous">←</button><span class="dots" aria-hidden="true"></span><button type="button" data-next aria-label="Next">→</button></div></div>')
+
+
+def explorer(items):
+    """Six capabilities: pick one and the picture changes."""
+    kinds = [lambda: scenes.scene('retail-analytics', ken=True, uid='ex'), lambda: scenes.mini('paths'), lambda: scenes.mini('heat', 'eh'), lambda: scenes.mini('anomaly'), lambda: scenes.mini('dash'), lambda: scenes.mini('alerts')]
+    btns = ''.join(f'<button type="button" role="tab" id="fx-t{i}" aria-controls="fx-p{i}" aria-selected="{"true" if i == 0 else "false"}" tabindex="{0 if i == 0 else -1}"><span class="t">{e(t)}</span><span class="d">{e(d)}</span></button>' for i, (t, d) in enumerate(items))
+    panels = ''.join(f'<div class="fx-p{" off" if i else ""}" role="tabpanel" id="fx-p{i}" aria-labelledby="fx-t{i}" data-panel{" aria-hidden=" + chr(34) + "true" + chr(34) if i else ""}>{kinds[i]()}</div>' for i in range(len(items)))
+    return f'<div class="kx-tabs fx" data-tabs><div class="tablist" role="tablist" aria-label="Capabilities">{btns}</div><div class="stage">{panels}</div></div>'
+
+
 def rows(items):
     """Sector list: one clean row per solution, picture on the left, arrow on the right."""
-    out = ''.join(f'<a class="kx-row" href="@{k}"{rv(i)}><span class="pic">{img(src, t)}</span><span class="tx"><h3>{e(t)}</h3><p>{e(p)}</p></span><span class="go" aria-hidden="true"></span></a>' for i, (k, src, t, p) in enumerate(items))
+    out = ''.join(f'<a class="kx-row" href="@{k}"{rv(i)}><span class="pic">{src if src.lstrip().startswith("<") else img(src, t)}</span><span class="tx"><h3>{e(t)}</h3><p>{e(p)}</p></span><span class="go" aria-hidden="true"></span></a>' for i, (k, src, t, p) in enumerate(items))
     return f'<div class="kx-rows">{out}</div>'
 
 
@@ -523,13 +553,13 @@ def page_home():
            ('Automated Detection & Alerts', 'Eliminate manual footage review. KenVision detects events instantly and notifies teams in real time.'),
            ('Instant Response Enablement', 'Identify incidents the moment they occur and act within seconds—not hours.'),
            ('Actionable Intelligence', 'Transform raw video into structured insights that support faster, smarter decision-making.')]
-    standard = block(head_block('The KenVision standard', 'Cameras Are Everywhere. <em>Intelligence Is Not.</em>', '') + tabs_standard(pts), 'standard')
+    standard = block(head_block('The KenVision standard', 'Cameras Are Everywhere. <em>Intelligence Is Not.</em>', '') + compare() + points4(pts), 'standard')
     sec = [('retail-analytics', 'assets/footage/industry-retail.jpg', 'Retail Analytics', 'Optimize store performance using footfall, dwell time, heatmaps, and shopper behavior insights.', 'a'),
            ('commercial-buildings', 'assets/footage/lobby.jpg', 'Commercial Buildings', 'Understand occupancy, space utilization, access patterns, and asset movement.', 'b'),
            ('smart-cities', 'assets/footage/industry-smart-cities.jpg', 'Smart Cities', 'Monitor crowds, traffic flow, and public safety conditions in real time.', 'b'),
            ('video-surveillance', 'assets/footage/whse.jpg', 'Video Surveillance', 'Enhance surveillance systems with intelligent detection, alerts, and analytics.', 'a')]
     sectors_html = block(head_block('Solutions', 'Intelligence Across Sectors', 'KenVision adapts to different environments by contextualizing intelligence for each industry.')
-                         + rows([(k, i, t, p) for k, i, t, p, cl in sec]), 'sectors')
+                         + carousel([(k, t, p) for k, i, t, p, cl in sec]), 'sectors')
     steps_html = block(head_block('How it works', 'How KenVision Turns Video into Action', '')
                        + how_s(CONTENT['retail-analytics']['steps']), 'how')
     core = [('Real-Time Video Analytics', 'Detect events, movement, and anomalies as they happen — not after review.', 'assets/images/core-analytics.webp'),
@@ -538,7 +568,7 @@ def page_home():
             ('Anomaly Detection', 'Identify unusual behavior or conditions that deviate from normal patterns.', 'https://images.unsplash.com/photo-1563986768609'),
             ('Dashboards & Reports', 'Clean, visual dashboards that turn complex video data into insights teams can act on.', 'https://images.unsplash.com/photo-1551288049'),
             ('Smart Alerts', 'Automated notifications ensure the right teams are informed at the right time.', 'assets/images/core-alerts.webp')]
-    core_html = block(head_block('Platform', 'Core Capabilities', '') + bento([{'t': t, 'p': p, 'img': {'src': i, 'alt': t}} for t, p, i in core]), 'capabilities')
+    core_html = block(head_block('Platform', 'Core Capabilities', '') + explorer([(t, p) for t, p, i in core]), 'capabilities')
     why = [('layers', 'Existing Infrastructure', 'Deploy using current systems without replacement.'), ('bolt', 'Fast Deployment', 'Operational within days, not months.'),
            ('chart', 'Scalable by Design', 'From single locations to city-wide scale.'), ('filter', 'Privacy-First', 'On-premise processing options for data sovereignty.'),
            ('patrol', 'Enterprise-Ready', 'Built for reliability and long-term security.')]
@@ -563,7 +593,7 @@ def page_solutions():
              ('commercial-buildings', 'assets/footage/lobby.jpg', 'Commercial Buildings', 'Gain real-time visibility into occupancy and space utilization.', 'b'),
              ('smart-cities', 'assets/footage/industry-smart-cities.jpg', 'Smart Cities', 'Monitor traffic flow and public safety at city-wide scale.', 'b'),
              ('video-surveillance', 'assets/footage/whse.jpg', 'Intelligent Surveillance', 'Enhance existing systems with real-time detection and alerts.', 'a')]
-    sec = block(head_block('Solutions', 'Intelligence Across Sectors', '') + rows([(k, i, t, p) for k, i, t, p, cl in cards]), 'sectors')
+    sec = block(head_block('Solutions', 'Intelligence Across Sectors', '') + rows([(k, scenes.scene(k, uid='r' + k[:3]), t, p) for k, i, t, p, cl in cards]), 'sectors')
     tick = ticker(['Real-time video analytics', 'Behavioral understanding', 'Anomaly detection', 'Heatmaps & tracking', 'Dashboards & reports', 'Edge + cloud deployment'])
     onep = f'<section class="block" style="padding-block:clamp(40px,5vw,72px)"><div class="wrap"><h2 class="kx-h2"{rv()} style="font-size:clamp(24px,3vw,36px)">One Platform. Multiple Solutions.</h2></div></section>'
     scale = [('Single Site', 'Deploy KenVision in individual locations with focused intelligence and minimal setup.'), ('Multi-Location', 'Scale insights across multiple sites with centralized dashboards and unified reporting.'),
@@ -611,19 +641,19 @@ def page_solution(key):
     c = CONTENT[key]
     name = dict((k, n) for k, n, _ in SOLUTIONS)[key]
     hm = SOL_MEDIA[key]
-    pic = vid(hm['video'], hm['alt']) if hm.get('video') else img(hm['img'], hm['alt'], lazy=False, prio=True)
+    pic = scenes.scene(key, uid='h')
     chips = ''.join(f'<span class="kx-float f{i + 1}"><i></i>{t}</span>' for i, t in enumerate(hm['chips']))
     h = hero(crumbs(('@solutions', 'Solutions'), (None, name)), '<span class="eyebrow">Solutions</span>', e(c['h1']), e(c['lede']), demo_btn('Request Demo'),
              media='<div class="kx-stage" data-tilt><figure class="kx-shot round">' + pic + '</figure>' + chips + '</div>')
     pain = block(f'''<div class="kx-side"><div class="sticky"><span class="eyebrow">The challenge</span><h2 style="margin-top:18px">{e(c['pain']['h'])}</h2></div>{issues(c['pain']['items'])}</div>''', 'challenge')
     how = block(head_block('How it works', e(c['how_h']), '') + how_s(c['steps']), 'how')
     core_h = f'{c["core"]["h"]} {c["core"]["h2b"][0]}' if c['core']['h2b'] else c['core']['h']
-    core = block(head_block('Capabilities', e(core_h), '') + bento(c['core']['items']), 'capabilities')
+    core = block(head_block('Capabilities', e(core_h), '') + mini_cards(c['core']['items'], 4 if len(c['core']['items']) % 4 == 0 else 3, ['eye', 'pulse', 'gauge', 'bell', 'chart', 'layers', 'search', 'timeline']), 'capabilities')
     impact = block(head_block('Impact', e(c['impact']['h']), '') + outcomes(c['impact']['items']), 'impact')
     ticks = ''.join(f"<li><span>{re.sub(r'^([^:]+:)', r'<strong>\1</strong>', e(x))}</span></li>" for x in c['scale']['li'])
     scale = block(f'''<div class="kx-split"><div{rv()}><span class="eyebrow">Scale</span><h2 style="margin-top:18px">{e(c['scale']['h'])}</h2>
         <ul class="kx-ticks">{ticks}</ul></div>
-        <div class="kx-frame"{rv(2)}>{img(SOL_MEDIA[key]['scale'], c['scale']['img']['alt'], 'photo')}</div></div>''', 'scale')
+        <div class="kx-frame"{rv(2)}>{scenes.scene(key, uid='s')}</div></div>''', 'scale')
     f = c['field']
 
     def lead(li):
