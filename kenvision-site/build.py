@@ -29,7 +29,7 @@ _spec.loader.exec_module(IB)  # only defines things; nothing is written
 
 icon, OFFICES, world_map = IB.icon, IB.OFFICES, IB.world_map
 CONTENT = json.loads((HERE / 'content' / 'pages.json').read_text(encoding='utf-8'))
-ENABLE_THEME = '--no-dark' not in sys.argv
+ENABLE_THEME = '--dark' in sys.argv  # the light/dark toggle is off by default
 PREVIEW = '--preview' in sys.argv
 
 SITE_URL = 'https://kenvision.ai'
