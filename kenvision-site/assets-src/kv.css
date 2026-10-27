@@ -508,3 +508,19 @@ footer .logo img.kv-logo { height: 56px; }
 .hv3 .kx-dash .toast { display: flex !important; position: static; animation: none; opacity: 1; transform: none; margin: 0 16px 16px; justify-content: flex-start; }
 .hv3 .kx-dash .db { grid-template-columns: minmax(0, 1fr); grid-template-rows: auto auto; }
 .hv3 .kx-dash .ds { display: none; }
+
+/* how it works: keep the three cards tidy at in-between widths */
+.kx-how .vis { padding: 18px; }
+.kx-how .vis.v3 { padding: 0; place-items: center; }
+.hv3 .kx-dash { width: 100%; }
+.hv3 .kx-dash .dm { align-content: start; padding: 14px; gap: 12px; }
+.hv3 .kx-dash .kps { gap: 8px; }
+.hv3 .kx-dash .kp { padding: 9px 10px; align-content: start; }
+.hv3 .kx-dash .kp span { font-size: 10.5px; white-space: nowrap; }
+.hv3 .kx-dash .kp b { font-size: 17px; white-space: nowrap; }
+.hv3 .kx-dash .toast { margin: 0 14px 14px; }
+.hv1 { grid-template-columns: minmax(0, 1fr) 40px auto; }
+.hv1 .join { width: 40px; }
+.hv1 .src li { white-space: normal; padding: 10px 12px; font-size: 12.5px; gap: 8px; }
+.hv1 .out { max-width: 96px; padding: 14px 8px; font-size: 12px; }
+@media (min-width: 801px) { .kx-how .vis { height: 346px; min-height: 0; } .hv2 { max-width: 330px; } }
