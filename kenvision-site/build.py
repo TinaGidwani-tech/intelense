@@ -410,8 +410,14 @@ def tabs_deploy(items):
     return f'<div class="kx-tabs dep" data-tabs><div class="tablist seg" role="tablist" aria-label="Deployment models">{btns}</div><div class="panels">{panels}</div></div>'
 
 
+# "How it works" pictures (Pexels / Unsplash, from the shared footage library): capture, processing, outputs
+HOW_IMGS = [('assets/footage/plaza.jpg', 'Crowd in a public square seen from above, the view a camera captures'),
+            ('assets/footage/feat-trends-keniot.jpg', 'Operator at a monitoring desk in front of a wall of live screens'),
+            ('assets/footage/feat-report-kensafety.jpg', 'Team member reading a report on a tablet on site')]
+
+
 def flowsteps(items):
-    return '<ol class="kx-flowsteps">' + ''.join(f'<li{rv(i)}><div class="pic">{img(s["img"]["src"], s["img"]["alt"])}</div><h3>{e(s["t"])}</h3><p>{e(s["p"])}</p></li>' for i, s in enumerate(items)) + '</ol>'
+    return '<ol class="kx-flowsteps">' + ''.join(f'<li{rv(i)}><div class="pic">{img(*HOW_IMGS[i])}</div><h3>{e(s["t"])}</h3><p>{e(s["p"])}</p></li>' for i, s in enumerate(items)) + '</ol>'
 
 
 def mini_cards(items, cols=4, icons=None):
