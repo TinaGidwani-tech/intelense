@@ -1162,3 +1162,7 @@ header.nav.stuck .logo img.kv-logo { height: 38px; width: auto; }
 /* Buttons: the hover lift can't flicker at the bottom edge (the hit area follows the lift) */
 .btn { position: relative; }
 .btn::before { content: ""; position: absolute; inset: -2px -2px -6px; border-radius: inherit; }
+
+/* Before/after slider never taller than the window: the photo and its overlay crop together */
+.kx-compare.vid { max-height: max(340px, calc(100vh - 220px)); width: 100%; }
+@media (max-width: 680px) { .kx-compare.vid { max-height: none; } }
