@@ -376,7 +376,7 @@ def compare():
             '<div class="hud" aria-hidden="true"></div></div>'
             '<span class="lab l">Camera view</span><span class="lab r">With KenVision</span><span class="handle" aria-hidden="true"></span>'
             '<input class="rng" type="range" min="0" max="100" value="50" aria-label="Compare the camera view with the KenVision view"></div>'
-            '<p class="kx-note">Stock photos with an illustrative overlay: the boxes, zones and counts are drawn for this demo, not read by a model.</p></div>')
+            '</div>')
 
 
 def points4(points):
@@ -419,7 +419,7 @@ def live_block(L, scene=True, cctv=None, extra='', dim=False):
     attrs = f" data-live data-scene='{_j.dumps(data)}'" if data else ' data-live'
     return (f"<div class=\"kx-live still{' cctv' if cctv else ''}{' dim' if dim else ''}\"{attrs}>"
             f'<div class="stack">{img("assets/photos/" + L["photo"] + ".webp", L["alt"], lazy=False)}<svg class="ov" viewBox="0 0 {L["w"]} {L["h"]}" preserveAspectRatio="xMidYMid slice" aria-hidden="true"></svg></div>'
-            f'{cam}<div class="hud" aria-hidden="true"></div><span class="ill">Illustrative overlay</span>{extra}</div>')
+            f'{cam}<div class="hud" aria-hidden="true"></div>{extra}</div>')
 
 
 def sol_pic(key, uid, compact=False):
@@ -565,7 +565,7 @@ def how_s(items):
                 f'<svg class="ov" viewBox="0 0 1280 720" preserveAspectRatio="xMidYMid slice" aria-hidden="true">{svg}</svg></div>{cam_}{extra}</div>')
     v1 = still('how-feed', 'Pedestrians walking along a shopping street, the view an existing camera captures', cctv=True, extra='<span class="kx-chip-live"><i></i>Live stream from an existing camera</span>')
     v2 = still('how-read', 'Two shoppers browsing clothing rails in a boutique, with detection boxes drawn over them', svg=boxes,
-               extra='<span class="ill">Illustrative overlay</span><span class="kx-chip-ken"><img src="@a/logos/kenvision.png" alt="KenVision" width="86" height="32"><b>Reading every frame</b></span>')
+               extra='<span class="kx-chip-ken"><img src="@a/logos/kenvision.png" alt="KenVision" width="86" height="32"><b>Reading every frame</b></span>')
     notes = ('<div class="kx-notes"><div class="nt neg"><i></i><div><b>Shopper waiting for help</b><small>Womenswear \u00b7 CAM 03 \u00b7 just now</small></div></div>'
              '<div class="nt"><i></i><div><b>Womenswear busier than usual</b><small>Ground floor \u00b7 CAM 03 \u00b7 4 min ago</small></div></div>'
              '<span class="sent">Sent to the store manager</span></div>')
@@ -717,7 +717,7 @@ def vis(caption):
     def bar(label, w, style=''):
         return f'<div class="kx-bar"><span>{label}</span><i style="--w:{w}%;{style}"></i></div>'
     if caption == 'Shopper funnel':
-        rows = [('Footfall — entered store', 100), ('Engaged a zone', 72), ('High dwell', 46), ('Converted', 24)]
+        rows = [('Footfall: entered store', 100), ('Engaged a zone', 72), ('High dwell', 46), ('Converted', 24)]
         return '<div class="kx-vis" data-r role="img" aria-label="Shopper funnel: entered store, engaged a zone, high dwell, converted"><span class="cap-t">Shopper funnel</span>' + ''.join(bar(l, w) for l, w in rows) + '</div>'
     if caption == 'Occupancy-driven energy':
         return ('<div class="kx-vis" data-r><span class="cap-t">Occupancy-driven energy</span><ul class="kx-flow"><li>Cameras · live occupancy</li><li>KenVision · occupancy API</li><li>BMS / HVAC · setpoints</li><li class="on">Conditioning only occupied zones</li></ul>'
@@ -890,6 +890,12 @@ ICON_LINKS = ('<link rel="icon" href="@a/icons/favicon.ico" sizes="any">\n<link 
               '<link rel="icon" type="image/png" sizes="192x192" href="@a/icons/icon-192.png">\n<link rel="apple-touch-icon" href="@a/icons/apple-touch-icon.png">')
 
 
+def no_dashes(html):
+    """No long dashes anywhere in the copy: a comma (or a colon after a name) reads the same and stays consistent."""
+    html = html.replace('<option value="">— select a use case —</option>', '<option value="">Select a use case</option>').replace('Intelense — ', 'Intelense: ')
+    return re.sub(r'\s*[\u2014\u2013]\s*', ', ', html)
+
+
 def render(p):
     scripts = ('<script src="@a/site.js" defer></script>\n<script src="@a/kv.js" defer></script>\n<script type="module">\nimport { initCursorGrid } from \'@a/cursor-grid.js\';\n'
                + IB.GRID_START % IB.GRID_OPTS + '\n</script>')
@@ -938,7 +944,7 @@ def deploy(out):
         shutil.copy(SITE_DIR / 'assets' / f, a / f)
     used = set()
     for p in pages:
-        html = render(p)
+        html = no_dashes(render(p))
         used |= set(USED.findall(html))
         d = out / p['file']
         d.parent.mkdir(parents=True, exist_ok=True)

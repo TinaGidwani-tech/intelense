@@ -4,14 +4,14 @@
 .logo img.kv-logo { height: 48px; width: auto; }
 footer .logo img.kv-logo { height: 56px; }
 @media (max-width: 480px) { .logo img.kv-logo { height: 42px; } }
-.kx-progress { position: fixed; left: 0; right: 0; top: 0; height: 3px; z-index: 60; transform: scaleX(0); transform-origin: 0 50%; background: var(--brand-gradient); pointer-events: none; }
 
-.js [data-r] { opacity: 0; transform: translateY(20px); transition: opacity .7s ease var(--d, 0ms), transform .8s cubic-bezier(.2, .7, .2, 1) var(--d, 0ms); }
-.js [data-r].in { opacity: 1; transform: none; }
+/* reveal uses the separate translate property so it never fights a card's own hover transform */
+.js [data-r] { opacity: 0; translate: 0 20px; transition: opacity .7s ease var(--d, 0ms), translate .8s cubic-bezier(.2, .7, .2, 1) var(--d, 0ms); }
+.js [data-r].in { opacity: 1; translate: none; }
 .spot { position: relative; overflow: hidden; }
 .spot::after { content: ""; position: absolute; inset: 0; pointer-events: none; opacity: 0; transition: opacity .3s ease; background: radial-gradient(360px circle at var(--mx, 50%) var(--my, 50%), rgba(10, 52, 237, .13), rgba(124, 40, 233, .05) 45%, transparent 70%); }
 .spot:hover::after { opacity: 1; }
-@media (prefers-reduced-motion: reduce) { .js [data-r] { opacity: 1; transform: none; transition: none; } .kx-progress { display: none; } }
+@media (prefers-reduced-motion: reduce) { .js [data-r] { opacity: 1; translate: none; transition: none; } }
 
 /* ---------- hero ---------- */
 .kx-hero h1 { max-width: 18ch; }
@@ -891,7 +891,6 @@ body { letter-spacing: -0.01em; }
 .kx-seg button { font: inherit; border: 0; background: transparent; cursor: pointer; padding: 10px 20px; border-radius: 9999px; font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: .05em; color: var(--graphite); transition: background .25s, color .25s; }
 .kx-seg button:hover { color: var(--off-black); }
 .kx-seg button[aria-selected="true"] { background: #0A34ED; color: #fff; }
-.kx-note { font-size: 12px; color: var(--smoke); }
 .kx-compare .ov .zn { --heat: .15; }
 .kx-compare .ov .zn rect.r { fill: rgba(10, 52, 237, var(--heat)); stroke: #0A34ED; stroke-width: 3; stroke-dasharray: 10 8; }
 .kx-compare .ov .zn.v rect.r { fill: rgba(255, 121, 83, var(--heat)); stroke: #FF7953; }
@@ -1118,9 +1117,48 @@ body { letter-spacing: -0.01em; }
 
 /* Stock photos with illustrative overlays */
 .kx-live.dim .stack img { filter: brightness(.55) saturate(.8) blur(2px); }
-.kx-live .ill { position: absolute; right: 12px; top: 12px; z-index: 3; background: rgba(8, 10, 24, .6); color: #fff; font-size: 10.5px; font-weight: 600; letter-spacing: .04em; padding: 5px 10px; border-radius: 9999px; backdrop-filter: blur(6px); pointer-events: none; }
-.kx-live.cctv .ill { top: 36px; }
-.kx-row .kx-live .ill { display: none; }
 .kx-compare.vid img.cv { background: #0b0b0c; }
 .kx-frame .kx-chip-live { left: 16px; bottom: 16px; }
-@media (max-width: 680px) { .kx-live .cam { gap: 8px; font-size: 10px; } .kx-live .cam > span:first-child { white-space: nowrap; } .kx-live .cam .clk { display: none; } .kx-live .ill { font-size: 10px; padding: 4px 8px; } }
+@media (max-width: 680px) { .kx-live .cam { gap: 8px; font-size: 10px; } .kx-live .cam > span:first-child { white-space: nowrap; } .kx-live .cam .clk { display: none; } }
+
+/* Sticky header: stays on screen, then compacts with a frosted background and a hairline once the page scrolls */
+html { scroll-padding-top: 84px; }
+header.nav { position: sticky; top: 0; z-index: 50; background: transparent; border-bottom: 1px solid transparent;
+  transition: background-color .35s ease, border-color .35s ease, backdrop-filter .35s ease; }
+header.nav .wrap { transition: min-height .35s cubic-bezier(.2, .7, .2, 1), padding .35s cubic-bezier(.2, .7, .2, 1); }
+header.nav .logo img.kv-logo { transition: height .35s cubic-bezier(.2, .7, .2, 1), width .35s cubic-bezier(.2, .7, .2, 1); }
+header.nav.stuck { background: rgba(246, 243, 241, .82); border-bottom-color: var(--ash); -webkit-backdrop-filter: saturate(1.4) blur(14px); backdrop-filter: saturate(1.4) blur(14px); }
+header.nav.stuck .wrap { min-height: 64px; padding-block: 8px; }
+header.nav.stuck .logo img.kv-logo { height: 38px; width: auto; }
+@media (prefers-reduced-motion: reduce) { header.nav, header.nav .wrap, header.nav .logo img.kv-logo { transition: none; } }
+
+/* Carousel cards lift on hover without the track clipping their top edge */
+.kx-car .track { padding-top: 10px; margin-top: -10px; }
+
+/* One primary colour, no gradients: everything that was a gradient is the flat brand blue */
+:root { --brand-gradient: linear-gradient(#0A34ED, #0A34ED); --kv-gradient: linear-gradient(#0A34ED, #0A34ED); }
+.wash { display: none !important; }
+.eyebrow::before { background: #0A34ED; }
+.kx-hero h1 em, .head h2 em { background-image: linear-gradient(#0A34ED, #0A34ED); }
+.kx-statband b { background: none; -webkit-background-clip: border-box; background-clip: border-box; color: #0A34ED; }
+.kx-ticker li::after { background: #0A34ED; }
+.kx-flowsteps::before { background: #0A34ED; opacity: .25; }
+.kx-bar i { background: #0A34ED; }
+.bars i { background: rgba(10, 52, 237, .35); }
+.bars i.pk { background: #0A34ED; }
+.kx-compare .tint { background: rgba(10, 52, 237, .08); }
+.kx-tabs .frame { background: #fbf9f7; }
+.kx-b .media.fit { background: var(--white); }
+.fx-pic.dashfig { background: #f1eeea; }
+.kx-outcomes > div:hover { background: rgba(10, 52, 237, .05); }
+.kx-ladder li::before { background: rgba(10, 52, 237, .12); }
+.cap-row::before, .pq::before { background: #0A34ED; }
+.spot::after { background: rgba(10, 52, 237, .05); }
+.kx-by { background: #0A34ED; }
+
+/* Logo tiles: one hover for every tile (same lift, no rotation, same timing, no stagger delay) */
+.cl-t, .cl-t.t1, .cl-t.t3, .js .cl-t[data-r], .js .cl-t[data-r].in { transition: transform .35s cubic-bezier(.2, .7, .2, 1), border-color .25s ease, background-color .25s ease, opacity .7s ease var(--d, 0ms), translate .8s cubic-bezier(.2, .7, .2, 1) var(--d, 0ms); }
+.cl-t:hover, .cl-t.t1:hover, .cl-t.t3:hover { transform: translateY(-6px); border-color: #0A34ED; background: #fff; }
+.cl-t img { filter: grayscale(1); opacity: .8; transition: filter .35s ease, opacity .35s ease; }
+.cl-t:hover img { filter: none; opacity: 1; }
+.cl-t::after { display: none; }

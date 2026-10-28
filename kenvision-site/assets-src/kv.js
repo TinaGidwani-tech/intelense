@@ -10,7 +10,7 @@
   var revealEls = $$('[data-r]');
   if ('IntersectionObserver' in window && !reduce) {
     var io = new IntersectionObserver(function (entries) {
-      entries.forEach(function (en) { if (en.isIntersecting) { en.target.classList.add('in'); io.unobserve(en.target); } });
+      entries.forEach(function (en) { if (en.isIntersecting) { var t = en.target; t.classList.add('in'); io.unobserve(t); setTimeout(function () { t.style.setProperty('--d', '0ms'); }, 1500); } });
     }, { threshold: 0.12, rootMargin: '0px 0px -6% 0px' });
     revealEls.forEach(function (el) { io.observe(el); });
   } else {
@@ -241,17 +241,12 @@
     }
   });
 
-  // Thin progress bar under the top edge
-  var bar = document.createElement('div');
-  bar.className = 'kx-progress';
-  bar.setAttribute('aria-hidden', 'true');
-  document.body.appendChild(bar);
-  var ticking = false;
-  function prog() {
-    var h = document.documentElement.scrollHeight - innerHeight;
-    bar.style.transform = 'scaleX(' + (h > 0 ? Math.min(1, scrollY / h) : 0) + ')';
-    ticking = false;
+  // Sticky header: compact, frosted and hairline-ruled once the page scrolls
+  var nav = document.querySelector('header.nav');
+  if (nav) {
+    var navTick = false;
+    var navUpd = function () { navTick = false; nav.classList.toggle('stuck', window.scrollY > 24); };
+    addEventListener('scroll', function () { if (!navTick) { navTick = true; requestAnimationFrame(navUpd); } }, { passive: true });
+    navUpd();
   }
-  addEventListener('scroll', function () { if (!ticking) { ticking = true; requestAnimationFrame(prog); } }, { passive: true });
-  prog();
 })();
