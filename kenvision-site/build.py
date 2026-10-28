@@ -451,9 +451,9 @@ def cap_rows(items):
     outs = [['Events', 'Movement', 'Anomalies'], ['Movement', 'Dwell', 'Interaction'], ['Traffic flow', 'Engagement zones', 'Underused areas'],
             ['Unusual behaviour', 'Abnormal conditions'], ['Dashboards', 'Reports', 'Insights'], ['Right team', 'Right time']]
     ics = ['pulse', 'users', 'zone', 'search', 'chart', 'bell']
-    rows_ = ''.join(f'<article class="cap-row spot"{rv(i)}><span class="ic">{icon(ics[i])}</span><h3>{e(t)}</h3><p>{e(d)}</p>'
-                    f'<ul class="outs" aria-label="What it produces">{"".join(f"<li>{x}</li>" for x in outs[i])}</ul></article>' for i, (t, d) in enumerate(items))
-    return f'<div class="cap-list">{rows_}</div>'
+    rows_ = ''.join(f'<article class="cap-card"{rv(i)}><span class="ic">{icon(ics[i])}</span><h3>{e(t)}</h3><p>{e(d)}</p>'
+                    f'<p class="outs"><span>Gives you</span>{" \u00b7 ".join(outs[i])}</p></article>' for i, (t, d) in enumerate(items))
+    return f'<div class="cap-grid">{rows_}</div>'
 
 
 def rows(items):

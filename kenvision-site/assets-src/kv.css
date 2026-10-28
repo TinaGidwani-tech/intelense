@@ -1100,3 +1100,18 @@ body { letter-spacing: -0.01em; }
 @media (max-width: 900px) { .pq { grid-template-columns: minmax(0, 1fr); } .pq .pflow { grid-auto-flow: column; justify-content: start; align-items: center; } .pq .arrow { width: 36px; height: 2px; margin: 0; background: repeating-linear-gradient(90deg, #0A34ED 0 5px, transparent 5px 10px); animation: kx-dash 1s linear infinite; } }
 @media (max-width: 560px) { .pq { border-radius: 28px; } .pq .pflow { grid-auto-flow: row; } .pq .arrow { width: 2px; height: 22px; margin-left: 22px; background: repeating-linear-gradient(180deg, #0A34ED 0 5px, transparent 5px 10px); animation: kx-dashv 1s linear infinite; } }
 @media (prefers-reduced-motion: reduce) { .pq .arrow { animation: none; } }
+
+/* ===== capabilities: even card grid, no movement on hover ===== */
+.cap-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+.cap-card { display: flex; flex-direction: column; gap: 12px; padding: clamp(24px, 2.6vw, 36px); border: 1px solid var(--ash); border-radius: 32px; background: rgba(251, 249, 247, .6); transition: border-color .3s ease, background-color .3s ease; min-width: 0; }
+.cap-card:hover { border-color: #0A34ED; background: #fff; }
+.cap-card .ic { width: 48px; height: 48px; border-radius: 14px; display: grid; place-items: center; background: rgba(10, 52, 237, .08); margin-bottom: 8px; transition: background-color .3s ease; }
+.cap-card .ic svg { width: 24px; height: 24px; stroke: #0A34ED; fill: none; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; transition: stroke .3s ease; }
+.cap-card:hover .ic { background: #0A34ED; }
+.cap-card:hover .ic svg { stroke: #fff; }
+.cap-card h3 { font-size: clamp(21px, 1.9vw, 26px); }
+.cap-card > p:not(.outs) { color: var(--graphite); font-size: 15.5px; line-height: 1.55; }
+.cap-card .outs { margin-top: auto; padding-top: 16px; border-top: 1px solid var(--ash); font-size: 13px; color: var(--graphite); font-weight: 500; }
+.cap-card .outs span { display: block; font-size: 11px; text-transform: uppercase; letter-spacing: .08em; color: var(--smoke); margin-bottom: 4px; font-weight: 500; }
+@media (max-width: 1080px) { .cap-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 640px) { .cap-grid { grid-template-columns: minmax(0, 1fr); } .cap-card { border-radius: 28px; } }
