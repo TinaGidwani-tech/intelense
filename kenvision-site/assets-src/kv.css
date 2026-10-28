@@ -1042,3 +1042,8 @@ body { letter-spacing: -0.01em; }
 @media (max-width: 800px) { .kx-how .vis .kx-live { aspect-ratio: 16 / 10; } }
 .kx-how .vis.v3 { place-items: stretch; padding: 0; display: block; }
 .kx-how .vis .kx-live { width: 100%; }
+
+/* still photo variant (How it works) */
+.kx-live .stack img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
+.kx-live.cctv .stack img { filter: grayscale(.92) contrast(1.12) brightness(.9); }
+.kx-live.dim .stack img { filter: brightness(.55) saturate(.8) blur(2px); }
