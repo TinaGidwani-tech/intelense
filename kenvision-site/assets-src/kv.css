@@ -1163,6 +1163,6 @@ header.nav.stuck .logo img.kv-logo { height: 38px; width: auto; }
 .btn { position: relative; }
 .btn::before { content: ""; position: absolute; inset: -2px -2px -6px; border-radius: inherit; }
 
-/* Before/after slider never taller than the window: the photo and its overlay crop together */
-.kx-compare.vid { max-height: max(340px, calc(100vh - 220px)); width: 100%; }
-@media (max-width: 680px) { .kx-compare.vid { max-height: none; } }
+/* Before/after slider: always the full 16:9 picture. On a short window it gets narrower (centred) instead of cropping. */
+.kx-compare.vid { width: min(100%, calc((100vh - 220px) * 16 / 9)); min-width: min(100%, 560px); margin-inline: auto; }
+@media (max-width: 680px) { .kx-compare.vid { width: 100%; min-width: 0; } }
