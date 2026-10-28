@@ -953,3 +953,17 @@ body { letter-spacing: -0.01em; }
 .cl-t img[data-c="tissot"] { max-height: 96px; } .cl-t img[data-c="seiko"] { max-height: 56px; } .cl-t img[data-c="caratlane"] { max-height: 78px; } .cl-t img[data-c="prestige"] { max-height: 112px; }
 @media (max-width: 1080px) { .cl-row { grid-template-columns: repeat(3, minmax(0, 1fr)); } .cl-t { margin-top: 0 !important; } .cl-t:nth-child(3n+2) { margin-top: 24px !important; } }
 @media (max-width: 560px) { .cl-row { grid-template-columns: repeat(2, minmax(0, 1fr)); } .cl-t:nth-child(3n+2) { margin-top: 0 !important; } .cl-t:nth-child(2n) { margin-top: 20px !important; } .cl-t.t4 { grid-column: auto; aspect-ratio: 1 / .9; } .cl-t:last-child { grid-column: 1 / -1; aspect-ratio: 2.4 / 1; margin-top: 0 !important; } .cl-t img[data-c="prestige"] { max-height: 80px; } .cl-t img[data-c="tissot"] { max-height: 70px; } }
+
+/* clients wall v3: symmetric. Rows are centred, offsets mirror around the middle, and the last row is centred too. */
+.kx-clients .cl-row { display: flex; flex-wrap: wrap; justify-content: center; gap: 16px; align-items: flex-start; }
+.kx-clients .cl-row .cl-t { flex: 0 0 calc((100% - 64px) / 5); width: auto; aspect-ratio: 1 / .86; margin-top: 0 !important; }
+.kx-clients .cl-row .cl-t.t1, .kx-clients .cl-row .cl-t.t3 { margin-top: clamp(14px, 2vw, 28px) !important; }
+.kx-clients .cl-row .cl-t.t2 { margin-top: clamp(28px, 4vw, 56px) !important; }
+.kx-clients .cl-row .cl-t.t6, .kx-clients .cl-row .cl-t.t7 { margin-top: clamp(14px, 2vw, 28px) !important; }
+@media (max-width: 1080px) {
+  .kx-clients .cl-row .cl-t, .kx-clients .cl-row .cl-t:nth-child(n) { flex-basis: calc((100% - 32px) / 3); margin-top: 0 !important; }
+}
+@media (max-width: 560px) {
+  .kx-clients .cl-row { gap: 12px; }
+  .kx-clients .cl-row .cl-t, .kx-clients .cl-row .cl-t:nth-child(n) { flex-basis: calc((100% - 12px) / 2); aspect-ratio: 1 / .9; margin-top: 0 !important; grid-column: auto; }
+}
