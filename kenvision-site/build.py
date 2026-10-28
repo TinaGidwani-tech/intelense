@@ -531,13 +531,13 @@ HOW_IMGS = [('assets/footage/plaza.jpg', 'Crowd in a public square seen from abo
 def how_s(items):
     """'How it works' as a scroll-linked pipeline: the line fills as you scroll and lights each step in turn.
     Step 1: sources feeding live streams. Step 2: a camera carrying the KenVision logo. Step 3: the dashboard."""
-    W = LIVE['video-surveillance']
+    W = dict(LIVE['smart-cities'], cam='CAM 12 \u00b7 MAIN CONCOURSE')
     v1 = live_block(W, scene=False, cctv=True, extra='<span class="kx-chip-live"><i></i>Live stream from an existing camera</span>')
-    v2 = live_block(dict(W, cam='CAM 04 \u00b7 LOADING BAY'), scene=True, cctv=False,
+    v2 = live_block(W, scene=True, cctv=False,
                     extra='<span class="kx-chip-ken"><img src="@a/logos/kenvision.png" alt="KenVision" width="86" height="32"><b>Reading every frame</b></span>')
-    notes = ('<div class="kx-notes"><div class="nt neg"><i></i><div><b>No helmet detected</b><small>Loading bay \u00b7 CAM 04 \u00b7 just now</small></div></div>'
-             '<div class="nt"><i></i><div><b>Forklift entered walkway</b><small>Loading bay \u00b7 CAM 04 \u00b7 4 min ago</small></div></div>'
-             '<span class="sent">Sent to the safety lead</span></div>')
+    notes = ('<div class="kx-notes"><div class="nt neg"><i></i><div><b>Crowd building at the gates</b><small>Main concourse \u00b7 CAM 12 \u00b7 just now</small></div></div>'
+             '<div class="nt"><i></i><div><b>Queue past the threshold</b><small>Platform access \u00b7 CAM 12 \u00b7 4 min ago</small></div></div>'
+             '<span class="sent">Sent to station operations</span></div>')
     v3 = live_block(W, scene=False, cctv=False, dim=True, extra=notes)
     vis = [v1, v2, v3]
     lis = ''.join(f'<li{rv(i)}><span class="dot"></span><div class="vis v{i + 1}">{vis[i]}</div><h3>{e(s["t"])}</h3><p>{e(s["p"])}</p></li>' for i, s in enumerate(items))
