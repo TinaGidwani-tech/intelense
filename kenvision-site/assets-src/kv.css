@@ -974,3 +974,46 @@ body { letter-spacing: -0.01em; }
 .kx-shot.round video { aspect-ratio: 16 / 10; border: 1px solid var(--ash); border-radius: 40px; }
 .kx-row .pic { background: #0b0b0c; }
 @media (max-width: 680px) { .kx-shot.round video { border-radius: 28px; } }
+
+/* live pictures: real footage + overlay (solution cards and heroes) */
+.kx-live { position: relative; overflow: hidden; aspect-ratio: 16 / 10; background: #0b0b0c; border-radius: inherit; }
+.kx-live .stack { position: absolute; inset: 0; transform: scale(var(--z, 1)); transform-origin: var(--ox, 50%) var(--oy, 50%); }
+.kx-live .stack video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; aspect-ratio: auto; border: 0; border-radius: 0; }
+.kx-live .ov { position: absolute; inset: 0; width: 100%; height: 100%; }
+.kx-live .ov .bx rect.r { fill: rgba(10, 52, 237, .10); stroke: #0A34ED; stroke-width: 3; }
+.kx-live .ov .bx.v rect.r { stroke: #FF7953; fill: rgba(255, 121, 83, .10); }
+.kx-live .ov .bx.ok rect.r { stroke: #368736; fill: rgba(54, 135, 54, .12); }
+.kx-live .ov .bx.neg rect.r { stroke: #E5322D; fill: rgba(229, 50, 45, .14); stroke-width: 4; }
+.kx-live .ov .bx rect.t { fill: #0A34ED; } .kx-live .ov .bx.v rect.t { fill: #FF7953; } .kx-live .ov .bx.ok rect.t { fill: #368736; } .kx-live .ov .bx.neg rect.t { fill: #E5322D; }
+.kx-live .ov .bx text, .kx-live .ov .zn text { fill: #fff; font: 600 22px Montserrat, sans-serif; }
+.kx-live .ov .zn { --heat: .15; }
+.kx-live .ov .zn rect.r { fill: rgba(10, 52, 237, var(--heat)); stroke: #0A34ED; stroke-width: 3; stroke-dasharray: 10 8; }
+.kx-live .ov .zn.v rect.r { fill: rgba(255, 121, 83, var(--heat)); stroke: #FF7953; }
+.kx-live .ov .zn rect.t { fill: #0A34ED; } .kx-live .ov .zn.v rect.t { fill: #FF7953; }
+.kx-live .hud { position: absolute; left: 14px; bottom: 14px; right: 14px; display: flex; gap: 6px; flex-wrap: wrap; z-index: 3; }
+.kx-live .hud span { background: rgba(8, 10, 24, .74); color: #fff; font-size: 11.5px; font-weight: 600; padding: 6px 11px; border-radius: 9999px; white-space: nowrap; backdrop-filter: blur(6px); }
+.kx-live .hud b { margin-left: 6px; font-variant-numeric: tabular-nums; }
+/* CCTV look */
+.kx-live.cctv .stack video { filter: grayscale(.92) contrast(1.12) brightness(.88); }
+.kx-live.cctv::before { content: ""; position: absolute; inset: 0; z-index: 2; pointer-events: none; background: repeating-linear-gradient(0deg, rgba(0, 0, 0, .13) 0 1px, transparent 1px 3px); }
+.kx-live.cctv::after { content: ""; position: absolute; inset: 0; z-index: 2; pointer-events: none; box-shadow: inset 0 0 90px rgba(0, 0, 0, .55); }
+.kx-live .cam { position: absolute; left: 14px; right: 14px; top: 12px; z-index: 3; display: flex; align-items: center; gap: 12px; color: #fff; font: 600 11px/1 'Courier New', ui-monospace, monospace; letter-spacing: .08em; text-shadow: 0 1px 3px rgba(0, 0, 0, .8); }
+.kx-live .cam .rec { display: inline-flex; gap: 6px; align-items: center; color: #ff5a52; margin-left: auto; }
+.kx-live .cam .rec i { width: 8px; height: 8px; border-radius: 50%; background: #ff3b30; animation: kx-led 1.2s steps(2, end) infinite; }
+.kx-live .cam .clk { font-variant-numeric: tabular-nums; }
+.kx-live.cctv .hud { bottom: 14px; }
+/* sizes by context */
+.kx-car .pic .kx-live { border-radius: 0; }
+.kx-row .pic .kx-live { aspect-ratio: 16 / 10; }
+.kx-row .kx-live .hud, .kx-row .kx-live .cam .clk, .kx-car .kx-live .cam .clk { display: none; }
+.kx-row .kx-live .ov .zn text, .kx-row .kx-live .ov .bx text { font-size: 26px; }
+.kx-shot.round .kx-live { border: 1px solid var(--ash); border-radius: 40px; }
+@media (max-width: 680px) { .kx-shot.round .kx-live { border-radius: 28px; } .kx-live .hud span { font-size: 10.5px; padding: 4px 8px; } .kx-live .ov .zn text, .kx-live .ov .bx text { font-size: 22px; } }
+@media (prefers-reduced-motion: reduce) { .kx-live .cam .rec i { animation: none; } }
+
+@media (max-width: 680px) { .kx-live .ov .zn text, .kx-live .ov .bx text { font-size: 26px; } }
+.kx-row .kx-live .ov .zn text, .kx-row .kx-live .ov .bx text { font-size: 30px; }
+
+.kx-row .kx-live .ov, .kx-row .kx-live .cam { display: none; }
+.kx-row .kx-live.cctv .stack video { filter: grayscale(.6) contrast(1.05); }
+.kx-car .kx-live .hud { display: none; }

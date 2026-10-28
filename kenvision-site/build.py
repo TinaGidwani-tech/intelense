@@ -380,17 +380,39 @@ def points4(points):
     return '<div class="kx-pts">' + ''.join(f'<div{rv(i)}><h3>{e(t)}</h3><p>{e(d)}</p></div>' for i, (t, d) in enumerate(points)) + '</div>'
 
 
-# Real footage per solution (the commercial-buildings page has no clip yet and keeps its drawn scene)
-SOL_VIDEO = {'retail-analytics': ('video-mall', 'Shoppers moving through a busy mall atrium with escalators'),
-             'smart-cities': ('video-home', 'Crowd moving through a busy public station concourse'),
-             'video-surveillance': ('video-warehouse', 'Forklift and workers in a warehouse seen by a fixed camera')}
+# Real footage per solution, each with its own overlay (illustrative: drawn from data, not a model running on the video)
+def _z(label, x, y, w, h, base, amp, ph, kind='b', pct=False):
+    return {'label': label, 'x': x, 'y': y, 'w': w, 'h': h, 'base': base, 'amp': amp, 'ph': ph, 'kind': kind, 'pct': pct}
 
 
-def sol_pic(key, uid):
-    if key in SOL_VIDEO:
-        name, alt = SOL_VIDEO[key]
-        return vid(name, alt)
-    return scenes.scene(key, uid=uid)
+LIVE = {
+    'retail-analytics': dict(video='video-mall', alt='Shoppers moving through a busy mall atrium with escalators', w=1280, h=720, dur=10.9, cctv=False,
+                             hud=[['total', 'Shoppers in view'], ['peak', 'Busiest zone']],
+                             zones=[_z('Escalators', 300, 230, 250, 450, 24, 7, 0.0), _z('Entrance', 20, 400, 290, 300, 18, 6, 1.7), _z('Concourse', 470, 70, 420, 170, 31, 8, 3.1, 'v'),
+                                    _z('Atrium floor', 560, 330, 320, 340, 22, 6, 4.4), _z('Food court', 890, 260, 380, 430, 46, 9, 2.4, 'v')]),
+    'commercial-buildings': dict(video='video-mall', alt='Multi-storey building atrium with people on several floors', w=1280, h=720, dur=10.9, cctv=False, zoom=(1.15, '45%', '50%'),
+                                 hud=[['total', 'Avg. occupancy', '%'], ['peak', 'Busiest area']],
+                                 zones=[_z('Level 3', 470, 70, 420, 170, 62, 10, 0.4, 'v', True), _z('Level 2', 560, 330, 320, 340, 44, 9, 2.2, 'b', True),
+                                        _z('Ground lobby', 90, 400, 280, 300, 35, 8, 3.6, 'b', True), _z('Food court', 880, 260, 300, 430, 71, 9, 1.1, 'v', True)]),
+    'smart-cities': dict(video='video-home', alt='Crowd moving through a busy public station concourse', w=1024, h=512, dur=16, cctv=False,
+                         hud=[['total', 'People in view'], ['peak', 'Busiest zone']],
+                         zones=[_z('Ticketing', 10, 150, 330, 350, 20, 6, 0.8), _z('Main concourse', 330, 250, 380, 255, 44, 10, 2.6, 'v'), _z('Platform access', 700, 190, 310, 310, 28, 7, 4.0)]),
+    'video-surveillance': dict(video='video-warehouse', alt='Forklift and workers in a warehouse seen by a fixed camera', w=1280, h=720, dur=10, cctv=True, cam='CAM 04 \u00b7 LOADING BAY',
+                               hud=[['neg', 'PPE alerts'], ['v', 'Vehicles'], ['ok', 'Helmets']],
+                               tracks=[{'label': 'No helmet', 'kind': 'neg', 'k': WAREHOUSE['tracks'][0]['k']}, {'label': 'Person', 'kind': 'p', 'k': WAREHOUSE['tracks'][1]['k']},
+                                       {'label': 'Forklift', 'kind': 'v', 'k': WAREHOUSE['tracks'][2]['k']}, {'label': 'Helmet', 'kind': 'ok', 'k': WAREHOUSE['tracks'][3]['k']}]),
+}
+
+
+def sol_pic(key, uid, compact=False):
+    import json as _j
+    L = LIVE[key]
+    scene = {k: L[k] for k in ('w', 'h', 'dur', 'hud', 'zones', 'tracks') if k in L}
+    z = L.get('zoom')
+    style = f' style="--z:{z[0]};--ox:{z[1]};--oy:{z[2]}"' if z else ''
+    cam = (f'<div class="cam" aria-hidden="true"><span>{L["cam"]}</span><span class="rec"><i></i>REC</span><span class="clk" data-clock></span></div>') if L.get('cctv') else ''
+    return (f"<div class=\"kx-live{' cctv' if L.get('cctv') else ''}\" data-live data-scene='{_j.dumps(scene)}'{style}>"
+            f'<div class="stack">{vid(L["video"], L["alt"])}<svg class="ov" viewBox="0 0 {L["w"]} {L["h"]}" preserveAspectRatio="xMidYMid slice" aria-hidden="true"></svg></div>{cam}<div class="hud" aria-hidden="true"></div></div>')
 
 
 def carousel(items):

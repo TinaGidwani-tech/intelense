@@ -124,30 +124,26 @@
     upd();
   });
 
-  // Compare slider on real footage. Right of the handle the overlay is drawn over the video; data comes from data-scenes.
-  $$('[data-compare]').forEach(function (box) {
-    var r = box.querySelector('.rng');
-    function set() { box.style.setProperty('--pos', r.value + '%'); }
-    r.addEventListener('input', set); set();
-    var v = box.querySelector('video'), svg = box.querySelector('.ov'), hud = box.querySelector('.hud');
-    if (!v || !svg || !box.dataset.scenes) return;
-    var scenes = JSON.parse(box.dataset.scenes), NS = 'http://www.w3.org/2000/svg', cur = null, els = [], hudEls = {};
+  // Overlay engine: draws boxes (tracks) or labelled zones over a video, frame by frame. Shared by the compare slider and the live pictures.
+  function overlay(v, svg, hud) {
+    var NS = 'http://www.w3.org/2000/svg', cur = null, els = [], hudEls = {};
     function mk(tag, cls) { var e = document.createElementNS(NS, tag); if (cls) e.setAttribute('class', cls); return e; }
     function build(sc) {
       cur = sc; svg.innerHTML = ''; hud.innerHTML = ''; els = []; hudEls = {};
+      svg.setAttribute('viewBox', '0 0 ' + sc.w + ' ' + sc.h);
       (sc.tracks || []).forEach(function (t) {
         var g = mk('g', 'bx ' + t.kind), rect = mk('rect', 'r'), tag = mk('rect', 't'), txt = mk('text');
-        rect.setAttribute('rx', 8); tag.setAttribute('rx', 14); tag.setAttribute('height', 28); tag.setAttribute('width', 22 + t.label.length * 10.5); txt.textContent = t.label;
+        rect.setAttribute('rx', 8); tag.setAttribute('rx', 14); tag.setAttribute('height', 34); tag.setAttribute('width', 26 + t.label.length * 12.6); txt.textContent = t.label;
         g.appendChild(rect); g.appendChild(tag); g.appendChild(txt); svg.appendChild(g); els.push({ t: t, g: g, rect: rect, tag: tag, txt: txt });
       });
       (sc.zones || []).forEach(function (z) {
         var g = mk('g', 'zn ' + z.kind), rect = mk('rect', 'r'), tag = mk('rect', 't'), txt = mk('text');
         rect.setAttribute('rx', 24); rect.setAttribute('x', z.x); rect.setAttribute('y', z.y); rect.setAttribute('width', z.w); rect.setAttribute('height', z.h);
-        tag.setAttribute('rx', 16); tag.setAttribute('height', 32); tag.setAttribute('x', z.x + 14); tag.setAttribute('y', z.y + 14);
-        txt.setAttribute('x', z.x + 28); txt.setAttribute('y', z.y + 36);
+        tag.setAttribute('rx', 16); tag.setAttribute('height', 38); tag.setAttribute('x', z.x + 14); tag.setAttribute('y', z.y + 14);
+        txt.setAttribute('x', z.x + 30); txt.setAttribute('y', z.y + 40);
         g.appendChild(rect); g.appendChild(tag); g.appendChild(txt); svg.appendChild(g); els.push({ z: z, g: g, tag: tag, txt: txt });
       });
-      sc.hud.forEach(function (h) { var s = document.createElement('span'); s.appendChild(document.createTextNode(h[1])); var b = document.createElement('b'); b.textContent = '0'; s.appendChild(b); hud.appendChild(s); hudEls[h[0]] = b; });
+      (sc.hud || []).forEach(function (h) { var s = document.createElement('span'); s.appendChild(document.createTextNode(h[1])); var b = document.createElement('b'); b.textContent = '0'; s.appendChild(b); hud.appendChild(s); hudEls[h[0]] = { b: b, suf: h[2] || '' }; });
     }
     function at(k, time) {
       if (time < k[0][0] || time > k[k.length - 1][0]) return null;
@@ -159,33 +155,45 @@
     }
     function draw() {
       if (!cur) return;
-      var time = (v.currentTime || 0) % cur.dur, n = {}, total = 0, peak = null;
+      var time = (v.currentTime || 0) % cur.dur, n = {}, total = 0, zc = 0, peak = null;
       els.forEach(function (o) {
         if (o.t) {
           var b = at(o.t.k, time);
           if (!b || b[2] < 0 || b[0] > cur.w) { o.g.style.display = 'none'; return; }
           o.g.style.display = '';
           o.rect.setAttribute('x', b[0]); o.rect.setAttribute('y', b[1]); o.rect.setAttribute('width', b[2] - b[0]); o.rect.setAttribute('height', b[3] - b[1]);
-          o.tag.setAttribute('x', b[0]); o.tag.setAttribute('y', b[1] - 30); o.txt.setAttribute('x', b[0] + 11); o.txt.setAttribute('y', b[1] - 10);
+          o.tag.setAttribute('x', b[0]); o.tag.setAttribute('y', b[1] - 36); o.txt.setAttribute('x', b[0] + 13); o.txt.setAttribute('y', b[1] - 12);
           n[o.t.kind] = (n[o.t.kind] || 0) + 1;
         } else {
           var z = o.z, c = Math.round(z.base + z.amp * Math.sin(time * 0.9 + z.ph) + (z.amp / 3) * Math.sin(time * 2.3 + z.ph * 2));
-          var label = z.label + ' · ' + c;
-          o.txt.textContent = label; o.tag.setAttribute('width', 26 + label.length * 9.6);
+          if (z.pct) c = Math.max(5, Math.min(99, c));
+          var label = z.label + ' \u00b7 ' + c + (z.pct ? '%' : '');
+          o.txt.textContent = label; o.tag.setAttribute('width', 34 + label.length * 12.2);
           o.g.style.setProperty('--heat', (0.10 + 0.18 * c / (z.base + z.amp)).toFixed(3));
-          total += c; if (!peak || c > peak[0]) peak = [c, z.label];
+          total += c; zc++; if (!peak || c > peak[0]) peak = [c, z.label];
         }
       });
-      if (cur.zones) { n.total = total; if (hudEls.peak) hudEls.peak.textContent = peak ? peak[1] : '-'; }
-      Object.keys(hudEls).forEach(function (k) { if (k !== 'peak') hudEls[k].textContent = n[k] || 0; });
+      if (cur.zones) { n.total = cur.zones[0] && cur.zones[0].pct ? Math.round(total / Math.max(zc, 1)) : total; if (hudEls.peak) hudEls.peak.b.textContent = peak ? peak[1] : '-'; }
+      Object.keys(hudEls).forEach(function (k) { if (k !== 'peak') hudEls[k].b.textContent = (n[k] || 0) + hudEls[k].suf; });
     }
     function loop() { draw(); if (!v.paused) requestAnimationFrame(loop); }
+    v.addEventListener('play', loop); v.addEventListener('seeked', draw); v.addEventListener('timeupdate', draw); v.addEventListener('loadeddata', draw);
+    return { build: function (sc) { build(sc); draw(); }, draw: draw };
+  }
+
+  // Compare slider on real footage. Right of the handle the overlay is drawn over the video; data comes from data-scenes.
+  $$('[data-compare]').forEach(function (box) {
+    var r = box.querySelector('.rng');
+    function set() { box.style.setProperty('--pos', r.value + '%'); }
+    r.addEventListener('input', set); set();
+    var v = box.querySelector('video'), svg = box.querySelector('.ov'), hud = box.querySelector('.hud');
+    if (!v || !svg || !box.dataset.scenes) return;
+    var scenes = JSON.parse(box.dataset.scenes), ov = overlay(v, svg, hud);
     function load(i) {
-      var sc = scenes[i]; build(sc);
+      var sc = scenes[i]; ov.build(sc);
       v.setAttribute('poster', sc.poster); v.setAttribute('aria-label', sc.alt);
       v.src = sc.video; v.load();
       var p = v.play(); if (p && p.catch) p.catch(function () {});
-      draw();
     }
     var seg = box.parentNode.querySelector('.kx-seg');
     if (seg) $$('button', seg).forEach(function (btn) {
@@ -194,8 +202,16 @@
         load(+btn.dataset.scene);
       });
     });
-    v.addEventListener('play', loop); v.addEventListener('seeked', draw); v.addEventListener('timeupdate', draw); v.addEventListener('loadeddata', draw);
-    build(scenes[0]); draw();
+    ov.build(scenes[0]);
+  });
+
+  // Live pictures: a real clip with KenVision's overlay on top (solution pages and cards). data-scene holds one scene.
+  $$('[data-live]').forEach(function (box) {
+    var v = box.querySelector('video'), svg = box.querySelector('.ov'), hud = box.querySelector('.hud');
+    if (!v || !svg || !box.dataset.scene) return;
+    overlay(v, svg, hud).build(JSON.parse(box.dataset.scene));
+    var clock = box.querySelector('[data-clock]');
+    if (clock) { var tick = function () { var d = new Date(); clock.textContent = d.toISOString().slice(0, 10).replace(/-/g, '/') + '  ' + d.toTimeString().slice(0, 8); }; tick(); setInterval(tick, 1000); }
   });
 
   // Sector carousel
@@ -212,7 +228,7 @@
   });
 
   // Clips: stay on the poster for reduced motion, otherwise play only while on screen
-  $$('video.kx-vid, .bgv video, video.cv').forEach(function (v) {
+  $$('video.kx-vid, .bgv video, video.cv, .kx-live video').forEach(function (v) {
     if (reduce) { v.removeAttribute('autoplay'); v.pause(); return; }
     if ('IntersectionObserver' in window) {
       new IntersectionObserver(function (es) { es.forEach(function (en) { var p = en.isIntersecting ? v.play() : v.pause(); if (p && p.catch) p.catch(function () {}); }); }, { threshold: 0.2 }).observe(v);
