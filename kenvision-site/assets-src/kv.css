@@ -1135,25 +1135,7 @@ header.nav.stuck .logo img.kv-logo { height: 38px; width: auto; }
 /* Carousel cards lift on hover without the track clipping their top edge */
 .kx-car .track { padding-top: 10px; margin-top: -10px; }
 
-/* One primary colour, no gradients: everything that was a gradient is the flat brand blue */
-:root { --brand-gradient: linear-gradient(#0A34ED, #0A34ED); --kv-gradient: linear-gradient(#0A34ED, #0A34ED); }
-.wash { display: none !important; }
-.eyebrow::before { background: #0A34ED; }
-.kx-hero h1 em, .head h2 em { background-image: linear-gradient(#0A34ED, #0A34ED); }
-.kx-statband b { background: none; -webkit-background-clip: border-box; background-clip: border-box; color: #0A34ED; }
-.kx-ticker li::after { background: #0A34ED; }
-.kx-flowsteps::before { background: #0A34ED; opacity: .25; }
-.kx-bar i { background: #0A34ED; }
-.bars i { background: rgba(10, 52, 237, .35); }
-.bars i.pk { background: #0A34ED; }
-.kx-compare .tint { background: rgba(10, 52, 237, .08); }
-.kx-tabs .frame { background: #fbf9f7; }
-.kx-b .media.fit { background: var(--white); }
-.fx-pic.dashfig { background: #f1eeea; }
-.kx-outcomes > div:hover { background: rgba(10, 52, 237, .05); }
-.kx-ladder li::before { background: rgba(10, 52, 237, .12); }
-.cap-row::before, .pq::before { background: #0A34ED; }
-.spot::after { background: rgba(10, 52, 237, .05); }
+/* Only the Part of the Intelense card is a flat brand blue; every other gradient stays as designed */
 .kx-by { background: #0A34ED; }
 
 /* Logo tiles: one hover for every tile (same lift, no rotation, same timing, no stagger delay) */
