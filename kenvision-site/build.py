@@ -446,6 +446,16 @@ def explorer(items):
     return f'<div class="kx-tabs fx" data-tabs><div class="tablist" role="tablist" aria-label="Capabilities">{btns}</div><div class="stage">{panels}</div></div>'
 
 
+def cap_rows(items):
+    """Core capabilities as one typographic list: icon, title, text and what it produces. No pictures."""
+    outs = [['Events', 'Movement', 'Anomalies'], ['Movement', 'Dwell', 'Interaction'], ['Traffic flow', 'Engagement zones', 'Underused areas'],
+            ['Unusual behaviour', 'Abnormal conditions'], ['Dashboards', 'Reports', 'Insights'], ['Right team', 'Right time']]
+    ics = ['pulse', 'users', 'zone', 'search', 'chart', 'bell']
+    rows_ = ''.join(f'<article class="cap-row spot"{rv(i)}><span class="ic">{icon(ics[i])}</span><h3>{e(t)}</h3><p>{e(d)}</p>'
+                    f'<ul class="outs" aria-label="What it produces">{"".join(f"<li>{x}</li>" for x in outs[i])}</ul></article>' for i, (t, d) in enumerate(items))
+    return f'<div class="cap-list">{rows_}</div>'
+
+
 def rows(items):
     """Sector list: one clean row per solution, picture on the left, arrow on the right."""
     out = ''.join(f'<a class="kx-row" href="@{k}"{rv(i)}><span class="pic">{src if src.lstrip().startswith("<") else img(src, t)}</span><span class="tx"><h3>{e(t)}</h3><p>{e(p)}</p></span><span class="go" aria-hidden="true"></span></a>' for i, (k, src, t, p) in enumerate(items))
@@ -659,7 +669,7 @@ def page_home():
             ('Anomaly Detection', 'Identify unusual behavior or conditions that deviate from normal patterns.', 'https://images.unsplash.com/photo-1563986768609'),
             ('Dashboards & Reports', 'Clean, visual dashboards that turn complex video data into insights teams can act on.', 'https://images.unsplash.com/photo-1551288049'),
             ('Smart Alerts', 'Automated notifications ensure the right teams are informed at the right time.', 'assets/images/core-alerts.webp')]
-    core_html = block(head_block('Platform', 'Core Capabilities', '') + explorer([(t, p) for t, p, i in core]), 'capabilities')
+    core_html = block(head_block('Platform', 'Core Capabilities', '') + cap_rows([(t, p) for t, p, i in core]), 'capabilities')
     why = [('layers', 'Existing Infrastructure', 'Deploy using current systems without replacement.'), ('bolt', 'Fast Deployment', 'Operational within days, not months.'),
            ('chart', 'Scalable by Design', 'From single locations to city-wide scale.'), ('filter', 'Privacy-First', 'On-premise processing options for data sovereignty.'),
            ('patrol', 'Enterprise-Ready', 'Built for reliability and long-term security.')]
@@ -669,7 +679,12 @@ def page_home():
            ('03', 'Cloud', 'Elastic, multi-site scale with no on-site servers. Add cameras and locations instantly, and let infrastructure grow with your rollout.'),
            ('04', 'Hybrid', 'Edge or on-prem for sensitive streams, cloud for aggregation and reporting. One platform, mixed architecture — no compromise on privacy or scale.')]
     dep_html = block(head_block('Deployment', 'Deploy KenVision Your Way', '') + tabs_deploy(dep), 'deploy')
-    quote = f'''<section class="block"><div class="wrap"><figure class="kx-quote"{rv()}><p>“The best camera for your AI is the one already on your wall. Everything after that should be software — not another hardware project.”</p><cite>KenVision product principle, by <a href="{INTELENSE}/">Intelense</a></cite></figure></div></section>'''
+    quote = f'''<section class="block kx-pq" id="principle"><div class="wrap"><figure class="pq"{rv()}>
+        <div class="wash wash-b" aria-hidden="true"></div><span class="mark" aria-hidden="true">&ldquo;</span>
+        <div class="pflow" aria-hidden="true"><span class="chip">{icon("eye")}Already on your wall</span><i class="arrow"></i><span class="chip on">KenVision software</span></div>
+        <blockquote><p>The best camera for your AI is the one <b>already on your wall</b>. Everything after that should be <b>software</b> \u2014 not another hardware project.</p></blockquote>
+        <figcaption><img src="@a/logos/intelense-light.png" alt="" width="97" height="15"><span>KenVision product principle, by <a href="{INTELENSE}/">Intelense</a></span></figcaption>
+      </figure></div></section>'''
     faq = faq_block([(x['q'], x['a']) for x in c['faq']], c['faq_h']['h'], c['faq_h']['p'])
     cta = cta_band('Ready to Unlock Intelligence from Video?', 'See how KenVision transforms everyday video into insights that improve safety, efficiency, and decision-making.')
     body = '\n\n  '.join([h, st, clients_band(), strip, standard, sectors_html, steps_html, core_html, why_html, dep_html, by_intelense(), quote, faq, cta])
