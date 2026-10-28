@@ -773,8 +773,7 @@ def page_solution(key):
     why = block(head_block('Why KenVision', e(c['why']['h']), '') + mini_cards(c['why']['items'], 4), 'why')
     faq = faq_block([(x['q'], x['a']) for x in c['faq']], c['faq_h']['h'], c['faq_h']['p'])
     cta = cta_band(c['cta']['h'], c['cta']['p'])
-    extra_cl = clients_band('Retail brands using KenVision', 'Jewellery, watches and fashion retail.', 'Built for the way retail runs.') if key == 'retail-analytics' else ''
-    body = '\n\n  '.join(x for x in [h, extra_cl, pain, how, core, impact, scale, field, ticker(strip_words), why, faq, by_intelense(), cta] if x)
+    body = '\n\n  '.join(x for x in [h, pain, how, core, impact, scale, field, ticker(strip_words), why, faq, by_intelense(), cta] if x)
     return page(key, f'solutions/{key}.html', c['meta']['title'], c['meta'], body, key, depth=1)
 
 
@@ -913,7 +912,7 @@ def resolve(html, depth, version):
             raise SystemExit('unknown link token @' + k)
         return pre + LINKS[k][0] if PREVIEW else LINKS[k][1]
     html = re.sub(r'(?<=href=")@([a-z-]+)(?=")', link, html)
-    base = pre + 'assets/' if PREVIEW else '/assets/'
+    base = (pre or './') + 'assets/' if PREVIEW else '/assets/'
     html = html.replace('@a/', base)
     if version:
         html = re.sub(r'((?:href|src)="[^"]*assets/[a-z-]+\.(?:css|js))"', lambda m: m.group(1) + '?v=' + version + '"', html)

@@ -1155,3 +1155,6 @@ header.nav.stuck .logo img.kv-logo { height: 38px; width: auto; }
 .dropdown a i { grid-row: 1 / span 2; margin-top: 5px; }
 .dropdown a small { margin-left: 0; font-size: 12.5px; line-height: 1.4; }
 .dropdown a.all { display: block; margin-top: 6px; padding: 12px 14px 12px 37px; border-top: 1px solid var(--ash); border-radius: 0 0 14px 14px; font-weight: 600; color: #0A34ED; }
+
+/* Top banner: the "By Intelense" pill is white */
+.announce .tag-new { background: #fff; color: #0a0a0a; }
