@@ -680,10 +680,11 @@ def page_home():
            ('04', 'Hybrid', 'Edge or on-prem for sensitive streams, cloud for aggregation and reporting. One platform, mixed architecture — no compromise on privacy or scale.')]
     dep_html = block(head_block('Deployment', 'Deploy KenVision Your Way', '') + tabs_deploy(dep), 'deploy')
     quote = f'''<section class="block kx-pq" id="principle"><div class="wrap"><figure class="pq"{rv()}>
-        <div class="wash wash-b" aria-hidden="true"></div><span class="mark" aria-hidden="true">&ldquo;</span>
-        <div class="pflow" aria-hidden="true"><span class="chip">{icon("eye")}Already on your wall</span><i class="arrow"></i><span class="chip on">KenVision software</span></div>
-        <blockquote><p>The best camera for your AI is the one <b>already on your wall</b>. Everything after that should be <b>software</b> \u2014 not another hardware project.</p></blockquote>
-        <figcaption><img src="@a/logos/intelense-light.png" alt="" width="97" height="15"><span>KenVision product principle, by <a href="{INTELENSE}/">Intelense</a></span></figcaption>
+        <div class="wash wash-a" aria-hidden="true"></div><div class="wash wash-b" aria-hidden="true"></div>
+        <div class="side"><span class="eyebrow">Product principle</span>
+          <div class="pflow" aria-hidden="true"><span class="chip">{icon("eye")}Already on your wall</span><i class="arrow"></i><span class="chip on">KenVision software</span></div></div>
+        <div class="body"><blockquote><p>\u201cThe best camera for your AI is the one <b>already on your wall</b>. Everything after that should be <b>software</b> \u2014 not another hardware project.\u201d</p></blockquote>
+        <figcaption><img class="on-light" src="@a/logos/intelense.png" alt="" width="97" height="15"><span>KenVision product principle, by <a href="{INTELENSE}/">Intelense</a></span></figcaption></div>
       </figure></div></section>'''
     faq = faq_block([(x['q'], x['a']) for x in c['faq']], c['faq_h']['h'], c['faq_h']['p'])
     cta = cta_band('Ready to Unlock Intelligence from Video?', 'See how KenVision transforms everyday video into insights that improve safety, efficiency, and decision-making.')
