@@ -122,7 +122,7 @@ def demo_btn(label='Book a 30-min Demo', cls='btn btn-blue'):
 
 def header(active):
     items = ''.join(f'<li><a href="@{k}" style="--mod:#0A34ED"><i></i>{n}<small>{d}</small></a></li>' for k, n, d in SOLUTIONS)
-    items += '<li><a href="@solutions">All solutions</a></li>'
+    items += '<li><a class="all" href="@solutions">All solutions</a></li>'
 
     def cur(k):
         return ' aria-current="page"' if active == k else ''
@@ -485,8 +485,9 @@ def dash():
     nav = [('Overview', 'chart', ' on'), ('Heatmaps', 'eye', ''), ('Alerts', 'bell', ''), ('Reports', 'text', ''), ('Cameras', 'plug', '')]
     side = ''.join(f'<span class="ni{on}">{icon(ic)}{lb}</span>' for lb, ic, on in nav)
     kp = [('People in', '1,248', 'M0 22 L12 18 L24 20 L36 11 L48 14 L60 5'), ('Avg. dwell', '4m 12s', 'M0 14 L12 16 L24 9 L36 12 L48 8 L60 10'), ('Queue wait', '3 min', 'M0 6 L12 9 L24 8 L36 15 L48 13 L60 19')]
-    tiles = ''.join(f'<div class="kp"><span>{l}</span><b>{v}</b><svg viewBox="0 0 60 26" aria-hidden="true"><path d="{d}"/></svg></div>' for l, v, d in kp)
-    return f'''<div class="kx-dash" role="img" aria-label="Illustration of the KenVision dashboard with live camera view, heatmap and footfall">
+    keys = ['people', 'dwell', 'queue']
+    tiles = ''.join(f'<div class="kp"><span>{l}</span><b data-kp="{keys[i]}">{v}</b><svg viewBox="0 0 60 26" aria-hidden="true"><path d="{d}"/></svg></div>' for i, (l, v, d) in enumerate(kp))
+    return f'''<div class="kx-dash" data-dash role="img" aria-label="Illustration of the KenVision dashboard with live camera view, heatmap and footfall">
       <div class="dh"><span class="dots"><i></i><i></i><i></i></span><span class="ttl">Store overview</span><span class="smp">Sample data</span><span class="lv"><i></i>Live</span></div>
       <div class="db">
         <div class="ds">{side}</div>
@@ -496,7 +497,7 @@ def dash():
             <div class="fd">{feed}<span class="tg"><i></i>CAM-02 · Entrance</span></div>
             <div class="rc">
               <div class="ht">{heat}<span>Heatmap</span></div>
-              <div class="hb"><span>Footfall by hour</span><div class="bars">{bars}</div></div>
+              <div class="hb"><span>Footfall by hour</span><div class="bars" data-bars>{bars}</div></div>
             </div>
           </div>
         </div>
@@ -515,7 +516,7 @@ def screens():
     stp = ['Event detected on camera', 'Right team notified', 'Action taken on site', 'Logged for review']
     s2 = '<div class="scr s2"><span class="st">Response</span><ol>' + ''.join(f'<li style="--i:{i}"><i></i>{t}</li>' for i, t in enumerate(stp)) + '</ol><span class="lat">Alert in &lt; 2s</span></div>'
     bars = ''.join(f'<i style="--h:{h}%"{" class=pk" if h == 92 else ""}></i>' for h in [34, 46, 41, 58, 72, 92, 70, 54, 64, 80, 57, 40])
-    s3 = f'<div class="scr s3"><span class="st">Insights</span><div class="g"><div class="hb"><span>Footfall by hour</span><div class="bars">{bars}</div></div><div class="ht">{heat}<span>Heatmap</span></div></div></div>'
+    s3 = f'<div class="scr s3"><span class="st">Insights</span><div class="g"><div class="hb"><span>Footfall by hour</span><div class="bars" data-bars>{bars}</div></div><div class="ht">{heat}<span>Heatmap</span></div></div></div>'
     return s0 + s1 + s2 + s3
 
 

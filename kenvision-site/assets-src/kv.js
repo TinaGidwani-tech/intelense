@@ -220,6 +220,28 @@
     if (clock) { var tick = function () { var d = new Date(); clock.textContent = d.toISOString().slice(0, 10).replace(/-/g, '/') + '  ' + d.toTimeString().slice(0, 8); }; tick(); setInterval(tick, 1000); }
   });
 
+  // Live dashboard: the figures drift, the hourly bars breathe and the alert cycles, only while the dashboard is on screen
+  $$('[data-dash]').forEach(function (d) {
+    if (reduce) return;
+    var ppl = 1248, dwell = 252, q = 3, kp = {}, bars = $$('[data-bars] i', d), base = bars.map(function (b) { return parseFloat(b.style.getPropertyValue('--h')); });
+    $$('[data-kp]', d).forEach(function (b) { kp[b.getAttribute('data-kp')] = b; });
+    var toast = d.querySelector('.toast'), msgs = [['Queue alert', 'Checkout 2 \u00b7 long wait'], ['Busy zone', 'Entrance \u00b7 above average'], ['Dwell spike', 'Display wall \u00b7 +40%']], mi = 0, n = 0;
+    function tick() {
+      n++;
+      ppl += Math.round(Math.random() * 9 - 2); dwell = Math.max(200, Math.min(320, dwell + Math.round(Math.random() * 10 - 5))); q = Math.max(2, Math.min(5, q + (Math.random() < .3 ? (Math.random() < .5 ? -1 : 1) : 0)));
+      if (kp.people) kp.people.textContent = ppl.toLocaleString('en-US');
+      if (kp.dwell) kp.dwell.textContent = Math.floor(dwell / 60) + 'm ' + String(dwell % 60).padStart(2, '0') + 's';
+      if (kp.queue) kp.queue.textContent = q + ' min';
+      bars.forEach(function (b, i) { b.style.setProperty('--h', Math.max(18, Math.min(98, base[i] + (Math.random() * 14 - 7))).toFixed(0) + '%'); });
+      if (toast && n % 4 === 0) {
+        mi = (mi + 1) % msgs.length; toast.style.opacity = 0;
+        setTimeout(function () { toast.querySelector('b').textContent = msgs[mi][0]; toast.querySelector('small').textContent = msgs[mi][1]; toast.style.opacity = ''; }, 300);
+      }
+    }
+    var timer = 0;
+    if ('IntersectionObserver' in window) new IntersectionObserver(function (es) { es.forEach(function (en) { clearInterval(timer); if (en.isIntersecting) timer = setInterval(tick, 1800); }); }, { threshold: 0.2 }).observe(d);
+  });
+
   // Sector carousel
   $$('[data-car]').forEach(function (car) {
     var tr = car.querySelector('.track'), cards = $$('.cc', car), dots = car.querySelector('.dots');
