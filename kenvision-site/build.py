@@ -434,9 +434,13 @@ def explorer(items):
             ('assets/footage/ken-dwell.jpg', 'Shoppers in a mall store zone with dwell time and visitor figures', 'Dwell time and visitors per zone'),
             ('assets/footage/ken-aisle-heat.jpg', 'Supermarket aisle with a heatmap on the floor showing where shoppers walk', 'Where shoppers walk and stop'),
             ('assets/footage/ken-loiter.jpg', 'Two camera views: a person loitering in a mall and shoplifting detected in a clothing store', 'Loitering and theft flagged'),
-            ('assets/footage/ken-anomaly.jpg', 'KenVision dashboard flagging suspicious object concealment in a supermarket aisle', 'Behaviour analysis in the dashboard'),
-            ('assets/footage/feat-report-kensafety.jpg', 'Team member in a hard hat reading an alert on a tablet', 'Alert on the team\'s tablet')]
-    kinds = [(lambda p=p: f'<figure class="fx-pic{' light' if 'heatmap' in p[0] else ''}">{img(p[0], p[1], lazy=i > 0)}<figcaption>{e(p[2])}</figcaption></figure>') for i, p in enumerate(pics)]
+            ('DASH', 'KenVision store dashboard with live camera, heatmap and footfall chart', 'Your store at a glance'),
+            ('assets/footage/ken-anomaly.jpg', 'KenVision alert for suspicious object concealment in a supermarket aisle', 'Alert with the evidence attached')]
+    def _fig(p, i):
+        if p[0] == 'DASH':
+            return f'<figure class="fx-pic dashfig">{dash()}<figcaption>{e(p[2])}</figcaption></figure>'
+        return f'<figure class="fx-pic">{img(p[0], p[1], lazy=i > 0)}<figcaption>{e(p[2])}</figcaption></figure>'
+    kinds = [(lambda p=p, i=i: _fig(p, i)) for i, p in enumerate(pics)]
     btns = ''.join(f'<button type="button" role="tab" id="fx-t{i}" aria-controls="fx-p{i}" aria-selected="{"true" if i == 0 else "false"}" tabindex="{0 if i == 0 else -1}"><span class="t">{e(t)}</span><span class="d">{e(d)}</span></button>' for i, (t, d) in enumerate(items))
     panels = ''.join(f'<div class="fx-p{" off" if i else ""}" role="tabpanel" id="fx-p{i}" aria-labelledby="fx-t{i}" data-panel{" aria-hidden=" + chr(34) + "true" + chr(34) if i else ""}>{kinds[i]()}</div>' for i in range(len(items)))
     return f'<div class="kx-tabs fx" data-tabs><div class="tablist" role="tablist" aria-label="Capabilities">{btns}</div><div class="stage">{panels}</div></div>'

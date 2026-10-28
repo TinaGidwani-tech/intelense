@@ -1055,3 +1055,6 @@ body { letter-spacing: -0.01em; }
 .fx-pic.light { background: #fff; }
 .fx-pic.light img { object-fit: contain; }
 .fx-pic { aspect-ratio: 8 / 5; }
+.fx-pic.dashfig { background: radial-gradient(ellipse at 50% 0%, rgba(124, 40, 233, .10), transparent 60%), #f1eeea; display: grid; place-items: center; padding: 22px 22px 70px; }
+.fx-pic.dashfig .kx-dash { width: 100%; }
+@media (max-width: 680px) { .fx-pic.dashfig { padding: 12px 12px 64px; } }
