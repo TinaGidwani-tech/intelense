@@ -39,8 +39,8 @@ LINKEDIN = 'https://www.linkedin.com/company/intelense/'
 XURL = 'https://x.com/Intelenseinc'
 LOGIN_URL = 'https://kenanalytic.com/'
 BLOG_URL = 'https://blog.kenvision.ai'
-# Set to '' to send every "Book a 30-min Demo" button to the contact form instead of the Calendly page
-CALENDLY_URL = 'https://calendly.com/enquiries-intelense/30min'
+# Demo buttons go to the contact form (no external booking page); CALENDLY_URL stays empty
+CALENDLY_URL = ''
 
 # token -> (preview file, public path)
 LINKS = {
