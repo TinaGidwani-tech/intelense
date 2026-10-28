@@ -124,9 +124,10 @@
     upd();
   });
 
-  // Overlay engine: draws boxes (tracks) or labelled zones over a video, frame by frame. Shared by the compare slider and the live pictures.
+  // Overlay engine: draws boxes (tracks) or labelled zones over a photo or video. On a photo the counts drift on a clock; on a video they follow the playhead.
+  // Shared by the compare slider and the live pictures. Everything it draws is illustrative.
   function overlay(v, svg, hud) {
-    var NS = 'http://www.w3.org/2000/svg', cur = null, els = [], hudEls = {};
+    var NS = 'http://www.w3.org/2000/svg', cur = null, els = [], hudEls = {}, t0 = performance.now(), isVid = v.tagName === 'VIDEO';
     function mk(tag, cls) { var e = document.createElementNS(NS, tag); if (cls) e.setAttribute('class', cls); return e; }
     function build(sc) {
       cur = sc; svg.innerHTML = ''; hud.innerHTML = ''; els = []; hudEls = {};
@@ -134,6 +135,7 @@
       (sc.tracks || []).forEach(function (t) {
         var g = mk('g', 'bx ' + t.kind), rect = mk('rect', 'r'), tag = mk('rect', 't'), txt = mk('text');
         rect.setAttribute('rx', 8); tag.setAttribute('rx', 14); tag.setAttribute('height', 34); tag.setAttribute('width', 26 + t.label.length * 12.6); txt.textContent = t.label;
+        if (!t.label) { tag.style.display = 'none'; txt.style.display = 'none'; }
         g.appendChild(rect); g.appendChild(tag); g.appendChild(txt); svg.appendChild(g); els.push({ t: t, g: g, rect: rect, tag: tag, txt: txt });
       });
       (sc.zones || []).forEach(function (z) {
@@ -155,7 +157,7 @@
     }
     function draw() {
       if (!cur) return;
-      var time = (v.currentTime || 0) % cur.dur, n = {}, total = 0, zc = 0, peak = null;
+      var time = (isVid ? (v.currentTime || 0) : (performance.now() - t0) / 1000) % cur.dur, n = {}, total = 0, zc = 0, peak = null;
       els.forEach(function (o) {
         if (o.t) {
           var b = at(o.t.k, time);
@@ -177,23 +179,27 @@
       Object.keys(hudEls).forEach(function (k) { if (k !== 'peak') hudEls[k].b.textContent = (n[k] || 0) + hudEls[k].suf; });
     }
     function loop() { draw(); if (!v.paused) requestAnimationFrame(loop); }
-    v.addEventListener('play', loop); v.addEventListener('seeked', draw); v.addEventListener('timeupdate', draw); v.addEventListener('loadeddata', draw);
+    if (isVid) { v.addEventListener('play', loop); v.addEventListener('seeked', draw); v.addEventListener('timeupdate', draw); v.addEventListener('loadeddata', draw); }
+    else if (!reduce && 'IntersectionObserver' in window) {
+      var timer = 0;
+      new IntersectionObserver(function (es) {
+        es.forEach(function (en) { clearInterval(timer); if (en.isIntersecting) timer = setInterval(draw, 250); });
+      }, { threshold: 0.1 }).observe(svg);
+    }
     return { build: function (sc) { build(sc); draw(); }, draw: draw };
   }
 
-  // Compare slider on real footage. Right of the handle the overlay is drawn over the video; data comes from data-scenes.
+  // Compare slider on stock photos. Right of the handle the overlay is drawn over the photo; data comes from data-scenes.
   $$('[data-compare]').forEach(function (box) {
     var r = box.querySelector('.rng');
     function set() { box.style.setProperty('--pos', r.value + '%'); }
     r.addEventListener('input', set); set();
-    var v = box.querySelector('video'), svg = box.querySelector('.ov'), hud = box.querySelector('.hud');
+    var v = box.querySelector('.cv'), svg = box.querySelector('.ov'), hud = box.querySelector('.hud');
     if (!v || !svg || !box.dataset.scenes) return;
     var scenes = JSON.parse(box.dataset.scenes), ov = overlay(v, svg, hud);
     function load(i) {
       var sc = scenes[i]; ov.build(sc);
-      v.setAttribute('poster', sc.poster); v.setAttribute('aria-label', sc.alt);
-      v.src = sc.video; v.load();
-      var p = v.play(); if (p && p.catch) p.catch(function () {});
+      v.setAttribute('alt', sc.alt); v.src = sc.src;
     }
     var seg = box.parentNode.querySelector('.kx-seg');
     if (seg) $$('button', seg).forEach(function (btn) {
@@ -205,9 +211,9 @@
     ov.build(scenes[0]);
   });
 
-  // Live pictures: a real clip with KenVision's overlay on top (solution pages and cards). data-scene holds one scene.
+  // Live pictures: a stock photo with KenVision's illustrative overlay on top (solution pages and cards). data-scene holds one scene.
   $$('[data-live]').forEach(function (box) {
-    var v = box.querySelector('video'), svg = box.querySelector('.ov'), hud = box.querySelector('.hud');
+    var v = box.querySelector('video, img'), svg = box.querySelector('.ov'), hud = box.querySelector('.hud');
     if (!v || !svg || !box.dataset.scene) return;
     overlay(v, svg, hud).build(JSON.parse(box.dataset.scene));
     var clock = box.querySelector('[data-clock]');

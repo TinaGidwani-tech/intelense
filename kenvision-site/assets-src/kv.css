@@ -1115,3 +1115,12 @@ body { letter-spacing: -0.01em; }
 .cap-card .outs span { display: block; font-size: 11px; text-transform: uppercase; letter-spacing: .08em; color: var(--smoke); margin-bottom: 4px; font-weight: 500; }
 @media (max-width: 1080px) { .cap-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 @media (max-width: 640px) { .cap-grid { grid-template-columns: minmax(0, 1fr); } .cap-card { border-radius: 28px; } }
+
+/* Stock photos with illustrative overlays */
+.kx-live.dim .stack img { filter: brightness(.55) saturate(.8) blur(2px); }
+.kx-live .ill { position: absolute; right: 12px; top: 12px; z-index: 3; background: rgba(8, 10, 24, .6); color: #fff; font-size: 10.5px; font-weight: 600; letter-spacing: .04em; padding: 5px 10px; border-radius: 9999px; backdrop-filter: blur(6px); pointer-events: none; }
+.kx-live.cctv .ill { top: 36px; }
+.kx-row .kx-live .ill { display: none; }
+.kx-compare.vid img.cv { background: #0b0b0c; }
+.kx-frame .kx-chip-live { left: 16px; bottom: 16px; }
+@media (max-width: 680px) { .kx-live .cam { gap: 8px; font-size: 10px; } .kx-live .cam > span:first-child { white-space: nowrap; } .kx-live .cam .clk { display: none; } .kx-live .ill { font-size: 10px; padding: 4px 8px; } }

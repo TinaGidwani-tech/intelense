@@ -197,7 +197,7 @@ def footer():
         <ul><li class="email">enquiries@intelense.ca</li><li class="email">dinesh@intelense.com</li><li><a href="tel:+12895523165">+1 (289) 552-3165</a> Canada</li><li><a href="tel:+919342810422">+91 93428 10422</a> India</li><li>Markham, Ontario, Canada</li><li>Bengaluru, India</li><li><a href="{LINKEDIN}" target="_blank" rel="noopener noreferrer">LinkedIn</a></li><li><a href="{XURL}" target="_blank" rel="noopener noreferrer">X</a></li></ul>
       </div>
     </div>
-    <div class="legal"><span>© 2026 Intelense Inc. · <a href="{INTELENSE}/privacy" rel="noopener">Privacy</a> · <a href="{INTELENSE}/terms" rel="noopener">Terms</a></span><span>KenVision is a product of <a href="{INTELENSE}/">Intelense</a> · Photography and video: Pexels and Unsplash</span></div>
+    <div class="legal"><span>© 2026 Intelense Inc. · <a href="{INTELENSE}/privacy" rel="noopener">Privacy</a> · <a href="{INTELENSE}/terms" rel="noopener">Terms</a></span><span>KenVision is a product of <a href="{INTELENSE}/">Intelense</a> · Photography: <a href="https://www.pexels.com" rel="noopener">Pexels</a> and <a href="https://unsplash.com" rel="noopener">Unsplash</a></span></div>
   </div>
 </footer>
 '''
@@ -342,90 +342,87 @@ def stats(items):
     return '<div class="kx-statband">' + ''.join(f'<div{rv(i)}><b data-count>{e(v)}</b><span>{e(l)}</span><small>{e(s)}</small></div>' for i, (v, l, s) in enumerate(items)) + '</div>'
 
 
-# Overlays for the two demo clips. Both are drawn from data here, not produced by a model running on the video.
-WAREHOUSE = {'id': 'warehouse', 'name': 'Warehouse', 'video': '@a/footage/video-warehouse.mp4', 'poster': '@a/footage/video-warehouse-poster.jpg',
-             'w': 1280, 'h': 720, 'dur': 10, 'hud': [['p', 'People'], ['v', 'Vehicles'], ['ok', 'Helmets']],
-             'alt': 'Warehouse camera footage with a forklift and a worker', 'tracks': [
-    {'label': 'Person', 'kind': 'p', 'k': [[0, 296, 324, 398, 508], [1.7, 334, 312, 406, 524], [3.4, 330, 322, 404, 532], [5.1, 318, 314, 388, 524], [6.8, 268, 306, 334, 530], [8.5, 256, 312, 322, 532], [9.8, 296, 312, 384, 532]]},
-    {'label': 'Person', 'kind': 'p', 'k': [[0, 120, 306, 172, 398], [1.7, 0, 300, 52, 402], [2.1, -40, 300, 12, 402]]},
-    {'label': 'Forklift', 'kind': 'v', 'k': [[0, 636, 88, 958, 520], [5, 650, 88, 962, 520], [10, 636, 88, 958, 520]]},
-    {'label': 'Helmet', 'kind': 'ok', 'k': [[0, 756, 254, 822, 322], [5, 764, 254, 830, 322], [10, 756, 254, 822, 322]]}]}
-MALL = {'id': 'mall', 'name': 'Retail mall', 'video': '@a/footage/video-mall.mp4', 'poster': '@a/footage/video-mall-poster.jpg',
-        'w': 1280, 'h': 720, 'dur': 10.9, 'hud': [['total', 'People in view'], ['peak', 'Busiest zone']],
-        'alt': 'Overhead view of a busy shopping mall atrium with escalators and a food court',
-        'zones': [{'label': 'Escalators', 'x': 300, 'y': 230, 'w': 250, 'h': 450, 'base': 24, 'amp': 7, 'ph': 0.0, 'kind': 'b'},
-                  {'label': 'Entrance', 'x': 20, 'y': 400, 'w': 290, 'h': 300, 'base': 18, 'amp': 6, 'ph': 1.7, 'kind': 'b'},
-                  {'label': 'Concourse', 'x': 470, 'y': 70, 'w': 420, 'h': 170, 'base': 31, 'amp': 8, 'ph': 3.1, 'kind': 'v'},
-                  {'label': 'Atrium floor', 'x': 560, 'y': 330, 'w': 320, 'h': 340, 'base': 22, 'amp': 6, 'ph': 4.4, 'kind': 'b'},
-                  {'label': 'Food court', 'x': 890, 'y': 260, 'w': 380, 'h': 430, 'base': 46, 'amp': 9, 'ph': 2.4, 'kind': 'v'}]}
+# Overlays for the two slider photos. Drawn from data on a 1280 x 720 canvas, not produced by a model running on the photo (illustrative).
+def _t(label, kind, x1, y1, x2, y2, dur=10):
+    """A fixed box on a still photo (two identical keyframes so the overlay engine keeps it on screen)."""
+    return {'label': label, 'kind': kind, 'k': [[0, x1, y1, x2, y2], [dur, x1, y1, x2, y2]]}
+
+
+MALL = {'id': 'mall', 'name': 'Shopping mall', 'src': '@a/photos/slider-mall.webp', 'w': 1280, 'h': 720, 'dur': 10, 'hud': [['p', 'People'], ['peak', 'Busiest zone']],
+        'alt': 'Shoppers and visitors on escalators and a lounge in a bright shopping mall atrium',
+        'tracks': [_t('Visitor', 'p', 378, 516, 446, 686), _t('Visitor', 'p', 706, 563, 842, 694), _t('', 'p', 196, 452, 252, 548), _t('', 'p', 1048, 462, 1104, 568)],
+        'zones': [{'label': 'West escalator', 'x': 20, 'y': 290, 'w': 470, 'h': 330, 'base': 12, 'amp': 4, 'ph': 0.0, 'kind': 'b'},
+                  {'label': 'Lounge', 'x': 480, 'y': 470, 'w': 430, 'h': 220, 'base': 8, 'amp': 3, 'ph': 1.7, 'kind': 'v'},
+                  {'label': 'East escalator', 'x': 840, 'y': 300, 'w': 420, 'h': 330, 'base': 9, 'amp': 3, 'ph': 3.1, 'kind': 'b'}]}
+STREET = {'id': 'street', 'name': 'City street', 'src': '@a/photos/slider-street.webp', 'w': 1280, 'h': 720, 'dur': 10, 'hud': [['v', 'Vehicles'], ['peak', 'Busiest zone']],
+          'alt': 'Overhead view of a city junction with crosswalks and cars',
+          'tracks': [_t('Car', 'v', 718, 76, 760, 124), _t('Car', 'v', 836, 402, 884, 430), _t('Car', 'v', 924, 396, 992, 422), _t('', 'v', 516, 22, 542, 70), _t('', 'v', 514, 74, 540, 120),
+                     _t('', 'v', 514, 124, 540, 170), _t('', 'v', 736, 126, 762, 174), _t('', 'v', 146, 438, 208, 464)],
+          'zones': [{'label': 'Junction', 'x': 480, 'y': 250, 'w': 330, 'h': 270, 'base': 6, 'amp': 2, 'ph': 0.0, 'kind': 'b'},
+                    {'label': 'Northbound lane', 'x': 480, 'y': 10, 'w': 330, 'h': 200, 'base': 14, 'amp': 3, 'ph': 2.0, 'kind': 'v'},
+                    {'label': 'East approach', 'x': 840, 'y': 340, 'w': 410, 'h': 150, 'base': 5, 'amp': 2, 'ph': 3.6, 'kind': 'b'}]}
 
 
 def compare():
-    """Before/after slider on real footage. Left of the handle: the plain feed. Right: the same video with KenVision's overlay drawn on top (see kv.js)."""
+    """Before/after slider on real photos. Left of the handle: the plain photo. Right: the same photo with KenVision's overlay drawn on top (see kv.js)."""
     import json as _j
-    scenes_ = [MALL, WAREHOUSE]
+    scenes_ = [MALL, STREET]
     sw = ''.join(f'<button type="button" role="tab" aria-selected="{"true" if i == 0 else "false"}" data-scene="{i}">{sc["name"]}</button>' for i, sc in enumerate(scenes_))
     first = scenes_[0]
-    return (f"<div class=\"kx-cmpwrap\"{rv()}><div class=\"kx-seg\" role=\"tablist\" aria-label=\"Demo footage\">{sw}</div>"
+    return (f"<div class=\"kx-cmpwrap\"{rv()}><div class=\"kx-seg\" role=\"tablist\" aria-label=\"Demo photos\">{sw}</div>"
             f"<div class=\"kx-compare vid\" data-compare data-scenes='{_j.dumps(scenes_)}'>"
-            f'<video class="cv" muted loop playsinline autoplay preload="metadata" poster="{first["poster"]}" aria-label="{ea(first["alt"])}"><source src="{first["video"]}" type="video/mp4"></video>'
+            f'<img class="cv" src="{first["src"]}" width="1600" height="900" alt="{ea(first["alt"])}">'
             '<div class="layer ken"><span class="tint"></span><svg class="ov" viewBox="0 0 1280 720" preserveAspectRatio="xMidYMid slice" aria-hidden="true"></svg>'
             '<div class="hud" aria-hidden="true"></div></div>'
-            '<span class="lab l">Camera feed</span><span class="lab r">With KenVision</span><span class="handle" aria-hidden="true"></span>'
-            '<input class="rng" type="range" min="0" max="100" value="50" aria-label="Compare the camera feed with the KenVision view"></div>'
-            '<p class="kx-note">Demo footage with an illustrative overlay.</p></div>')
+            '<span class="lab l">Camera view</span><span class="lab r">With KenVision</span><span class="handle" aria-hidden="true"></span>'
+            '<input class="rng" type="range" min="0" max="100" value="50" aria-label="Compare the camera view with the KenVision view"></div>'
+            '<p class="kx-note">Stock photos with an illustrative overlay: the boxes, zones and counts are drawn for this demo, not read by a model.</p></div>')
 
 
 def points4(points):
     return '<div class="kx-pts">' + ''.join(f'<div{rv(i)}><h3>{e(t)}</h3><p>{e(d)}</p></div>' for i, (t, d) in enumerate(points)) + '</div>'
 
 
-# Real footage per solution, each with its own overlay (illustrative: drawn from data, not a model running on the video)
+# One photo per solution, each with its own overlay (illustrative: drawn from data, not a model reading the photo). 1280 x 720 canvas.
 def _z(label, x, y, w, h, base, amp, ph, kind='b', pct=False):
     return {'label': label, 'x': x, 'y': y, 'w': w, 'h': h, 'base': base, 'amp': amp, 'ph': ph, 'kind': kind, 'pct': pct}
 
 
 LIVE = {
-    'retail-analytics': dict(video='video-mall', alt='Shoppers moving through a busy mall atrium with escalators', w=1280, h=720, dur=10.9, cctv=False,
-                             hud=[['total', 'Shoppers in view'], ['peak', 'Busiest zone']],
-                             zones=[_z('Escalators', 300, 230, 250, 450, 24, 7, 0.0), _z('Entrance', 20, 400, 290, 300, 18, 6, 1.7), _z('Concourse', 470, 70, 420, 170, 31, 8, 3.1, 'v'),
-                                    _z('Atrium floor', 560, 330, 320, 340, 22, 6, 4.4), _z('Food court', 890, 260, 380, 430, 46, 9, 2.4, 'v')]),
-    'commercial-buildings': dict(video='video-mall', alt='Multi-storey building atrium with people on several floors', w=1280, h=720, dur=10.9, cctv=False, zoom=(1.15, '45%', '50%'),
+    'retail-analytics': dict(photo='retail-aisle', alt='Shoppers browsing a busy supermarket aisle', w=1280, h=720, dur=10, cctv=False,
+                             hud=[['p', 'Shoppers in view'], ['peak', 'Busiest zone']],
+                             tracks=[_t('Shopper', 'p', 520, 330, 600, 532), _t('', 'p', 436, 348, 480, 472), _t('Staff', 'v', 698, 314, 738, 394), _t('', 'p', 410, 362, 438, 428)],
+                             zones=[_z('Sauce aisle', 330, 420, 340, 260, 24, 6, 0.0), _z('Promo display', 740, 430, 270, 240, 31, 7, 2.4, 'v')]),
+    'commercial-buildings': dict(photo='building-atrium', alt='Visitors in a multi-level building atrium with lounge seating', w=1280, h=720, dur=10, cctv=False,
                                  hud=[['total', 'Avg. occupancy', '%'], ['peak', 'Busiest area']],
-                                 zones=[_z('Level 3', 470, 70, 420, 170, 62, 10, 0.4, 'v', True), _z('Level 2', 560, 330, 320, 340, 44, 9, 2.2, 'b', True),
-                                        _z('Ground lobby', 90, 400, 280, 300, 35, 8, 3.6, 'b', True), _z('Food court', 880, 260, 300, 430, 71, 9, 1.1, 'v', True)]),
-    'smart-cities': dict(video='video-home', alt='Crowd moving through a busy public station concourse', w=1024, h=512, dur=16, cctv=False,
-                         hud=[['total', 'People in view'], ['peak', 'Busiest zone']],
-                         zones=[_z('Ticketing', 10, 150, 330, 350, 20, 6, 0.8), _z('Main concourse', 330, 250, 380, 255, 44, 10, 2.6, 'v'), _z('Platform access', 700, 190, 310, 310, 28, 7, 4.0)]),
-    'video-surveillance': dict(video='video-warehouse', alt='Forklift and workers in a warehouse seen by a fixed camera', w=1280, h=720, dur=10, cctv=True, cam='CAM 04 \u00b7 LOADING BAY',
-                               hud=[['neg', 'PPE alerts'], ['v', 'Vehicles'], ['ok', 'Helmets']],
-                               tracks=[{'label': 'No helmet', 'kind': 'neg', 'k': WAREHOUSE['tracks'][0]['k']}, {'label': 'Person', 'kind': 'p', 'k': WAREHOUSE['tracks'][1]['k']},
-                                       {'label': 'Forklift', 'kind': 'v', 'k': WAREHOUSE['tracks'][2]['k']}, {'label': 'Helmet', 'kind': 'ok', 'k': WAREHOUSE['tracks'][3]['k']}]),
+                                 tracks=[_t('Visitor', 'p', 256, 484, 302, 592), _t('', 'p', 910, 560, 960, 664), _t('', 'p', 498, 446, 540, 488), _t('', 'p', 820, 500, 864, 548),
+                                         _t('', 'p', 1078, 40, 1112, 138)],
+                                 zones=[_z('Level 3 lounge', 700, 40, 430, 210, 38, 8, 0.4, 'v', True), _z('Lounge A', 322, 416, 270, 160, 32, 8, 2.2, 'b', True),
+                                        _z('Lounge B', 766, 466, 280, 200, 54, 9, 3.6, 'b', True)]),
+    'smart-cities': dict(photo='city-station', alt='Commuters crossing a busy station concourse seen from above', w=1280, h=720, dur=10, cctv=False,
+                         hud=[['p', 'People tracked'], ['peak', 'Busiest zone']],
+                         tracks=[_t('Person', 'p', 558, 286, 626, 464), _t('', 'p', 628, 258, 726, 432), _t('', 'p', 858, 228, 930, 374), _t('', 'p', 1080, 420, 1188, 628),
+                                 _t('', 'p', 370, 410, 450, 586), _t('', 'p', 202, 250, 272, 414), _t('', 'p', 786, 148, 846, 302), _t('', 'p', 96, 432, 182, 604), _t('', 'p', 1016, 150, 1086, 300)],
+                         zones=[_z('Platform A', 10, 120, 300, 340, 20, 6, 0.8), _z('Main concourse', 420, 236, 490, 320, 44, 10, 2.6, 'v'), _z('Platform B', 980, 120, 290, 330, 28, 7, 4.0)]),
+    'video-surveillance': dict(photo='surveillance-yard', alt='Two workers beside a forklift between racking, seen by a fixed camera from above', w=1280, h=720, dur=10, cctv=True, cam='CAM 04 \u00b7 LOADING BAY',
+                               hud=[['neg', 'PPE alerts'], ['v', 'Vehicles'], ['p', 'People']],
+                               tracks=[_t('No helmet', 'neg', 812, 266, 978, 472), _t('Person', 'p', 934, 374, 1118, 604), _t('Forklift', 'v', 394, 306, 916, 720)]),
 }
 
 
 def live_block(L, scene=True, cctv=None, extra='', dim=False):
-    """A real clip with optional overlay (scene data), CCTV styling and extra HTML on top."""
+    """A photo with an overlay (scene data), optional CCTV styling and extra HTML on top. The overlay is illustrative."""
     import json as _j
     cctv = L.get('cctv') if cctv is None else cctv
     data = {k: L[k] for k in ('w', 'h', 'dur', 'hud', 'zones', 'tracks') if k in L} if scene else None
-    z = L.get('zoom')
-    style = f' style="--z:{z[0]};--ox:{z[1]};--oy:{z[2]}"' if z else ''
     cam = (f'<div class="cam" aria-hidden="true"><span>{L["cam"]}</span><span class="rec"><i></i>REC</span><span class="clk" data-clock></span></div>') if cctv else ''
     attrs = f" data-live data-scene='{_j.dumps(data)}'" if data else ' data-live'
-    return (f"<div class=\"kx-live{' cctv' if cctv else ''}{' dim' if dim else ''}\"{attrs}{style}>"
-            f'<div class="stack">{vid(L["video"], L["alt"])}<svg class="ov" viewBox="0 0 {L["w"]} {L["h"]}" preserveAspectRatio="xMidYMid slice" aria-hidden="true"></svg></div>{cam}<div class="hud" aria-hidden="true"></div>{extra}</div>')
-
-
-# Retail and Commercial Buildings use photos, so no clip is repeated across the solutions
-SOL_STILL = {'retail-analytics': ('assets/footage/ken-dwell.jpg', 'Shoppers in a mall store zone with dwell time and visitor figures', ''),
-             'commercial-buildings': ('assets/footage/lobby.jpg', 'People moving through a bright building lobby', '<span class="kx-chip-live"><i></i>Lobby occupancy tracked</span>')}
+    return (f"<div class=\"kx-live still{' cctv' if cctv else ''}{' dim' if dim else ''}\"{attrs}>"
+            f'<div class="stack">{img("assets/photos/" + L["photo"] + ".webp", L["alt"], lazy=False)}<svg class="ov" viewBox="0 0 {L["w"]} {L["h"]}" preserveAspectRatio="xMidYMid slice" aria-hidden="true"></svg></div>'
+            f'{cam}<div class="hud" aria-hidden="true"></div><span class="ill">Illustrative overlay</span>{extra}</div>')
 
 
 def sol_pic(key, uid, compact=False):
-    if key in SOL_STILL:
-        src, alt, chip = SOL_STILL[key]
-        return f'<div class="kx-live still"><div class="stack">{img(src, alt, lazy=False)}</div>{chip}</div>'
     return live_block(LIVE[key])
 
 
@@ -550,40 +547,32 @@ def tabs_deploy(items):
     return f'<div class="kx-tabs dep" data-tabs><div class="tablist seg" role="tablist" aria-label="Deployment models">{btns}</div><div class="panels">{panels}</div></div>'
 
 
-# "How it works" pictures (Pexels / Unsplash, from the shared footage library): capture, processing, outputs
-HOW_IMGS = [('assets/footage/plaza.jpg', 'Crowd in a public square seen from above, the view a camera captures'),
-            ('assets/footage/feat-trends-keniot.jpg', 'Operator at a monitoring desk in front of a wall of live screens'),
-            ('assets/footage/feat-report-kensafety.jpg', 'Team member reading a report on a tablet on site')]
-
-
 def how_s(items):
     """'How it works' as a scroll-linked pipeline: the line fills as you scroll and lights each step in turn.
     Step 1: sources feeding live streams. Step 2: a camera carrying the KenVision logo. Step 3: the dashboard."""
-    pic = lambda: img('assets/footage/store.jpg', 'Supermarket aisle with shoppers', lazy=True)
+    # three different Pexels photos: capture, processing, outputs. Boxes and cards are illustrative (drawn here, not read by a model)
+    pic = lambda n, alt: img(f'assets/photos/{n}.webp', alt, lazy=True)
 
     def box(x, y, w, h, label, cls='p'):
         tw = 26 + len(label) * 12.6
         return (f'<g class="bx {cls}"><rect class="r" x="{x}" y="{y}" width="{w}" height="{h}" rx="8"/><rect class="t" x="{x}" y="{y - 36}" width="{tw:.0f}" height="34" rx="14"/>'
                 f'<text x="{x + 13}" y="{y - 12}">{label}</text></g>')
-    boxes = box(526, 318, 70, 198, 'Dwell 42 s', 'p') + box(436, 330, 44, 124, '', 'p').replace('<rect class="t"', '<rect class="t" style="display:none"')
+    boxes = box(360, 70, 240, 640, 'Shopper', 'p') + box(862, 130, 230, 520, 'Dwell 42 s', 'p') + box(1156, 264, 82, 156, 'Staff', 'v')
 
-    def still(svg='', cctv=False, dim=False, extra=''):
-        cam = '<div class="cam" aria-hidden="true"><span>CAM 07 \u00b7 AISLE 4</span><span class="rec"><i></i>REC</span><span class="clk" data-clock></span></div>' if cctv else ''
-        return (f'<div class="kx-live still{" cctv" if cctv else ""}{" dim" if dim else ""}"{" data-live" if cctv else ""}><div class="stack">{pic()}'
-                f'<svg class="ov" viewBox="0 0 1280 720" preserveAspectRatio="xMidYMid slice" aria-hidden="true">{svg}</svg></div>{cam}{extra}</div>')
-    v1 = still(cctv=True, extra='<span class="kx-chip-live"><i></i>Live stream from an existing camera</span>')
-    v2 = still(svg=boxes, extra='<span class="kx-chip-ken"><img src="@a/logos/kenvision.png" alt="KenVision" width="86" height="32"><b>Reading every frame</b></span>')
-    notes = ('<div class="kx-notes"><div class="nt neg"><i></i><div><b>Shopper waiting for help</b><small>Aisle 4 \u00b7 CAM 07 \u00b7 just now</small></div></div>'
-             '<div class="nt"><i></i><div><b>Aisle 4 busier than usual</b><small>Sauces and seasoning \u00b7 CAM 07 \u00b7 4 min ago</small></div></div>'
+    def still(photo, alt, svg='', cctv=False, dim=False, extra='', cam='CAM 07 \u00b7 MAIN ST'):
+        cam_ = f'<div class="cam" aria-hidden="true"><span>{cam}</span><span class="rec"><i></i>REC</span><span class="clk" data-clock></span></div>' if cctv else ''
+        return (f'<div class="kx-live still{" cctv" if cctv else ""}{" dim" if dim else ""}"{" data-live" if cctv else ""}><div class="stack">{pic(photo, alt)}'
+                f'<svg class="ov" viewBox="0 0 1280 720" preserveAspectRatio="xMidYMid slice" aria-hidden="true">{svg}</svg></div>{cam_}{extra}</div>')
+    v1 = still('how-feed', 'Pedestrians walking along a shopping street, the view an existing camera captures', cctv=True, extra='<span class="kx-chip-live"><i></i>Live stream from an existing camera</span>')
+    v2 = still('how-read', 'Two shoppers browsing clothing rails in a boutique, with detection boxes drawn over them', svg=boxes,
+               extra='<span class="ill">Illustrative overlay</span><span class="kx-chip-ken"><img src="@a/logos/kenvision.png" alt="KenVision" width="86" height="32"><b>Reading every frame</b></span>')
+    notes = ('<div class="kx-notes"><div class="nt neg"><i></i><div><b>Shopper waiting for help</b><small>Womenswear \u00b7 CAM 03 \u00b7 just now</small></div></div>'
+             '<div class="nt"><i></i><div><b>Womenswear busier than usual</b><small>Ground floor \u00b7 CAM 03 \u00b7 4 min ago</small></div></div>'
              '<span class="sent">Sent to the store manager</span></div>')
-    v3 = still(dim=True, extra=notes)
+    v3 = still('how-dash', 'A laptop showing an analytics dashboard with charts', dim=True, extra=notes)
     vis = [v1, v2, v3]
     lis = ''.join(f'<li{rv(i)}><span class="dot"></span><div class="vis v{i + 1}">{vis[i]}</div><h3>{e(s["t"])}</h3><p>{e(s["p"])}</p></li>' for i, s in enumerate(items))
     return f'<div class="kx-how" data-how><div class="track" aria-hidden="true"><i class="fill"></i></div><ol class="stp">{lis}</ol></div>'
-
-
-def flowsteps(items):
-    return '<ol class="kx-flowsteps">' + ''.join(f'<li{rv(i)}><div class="pic">{img(*HOW_IMGS[i])}</div><h3>{e(s["t"])}</h3><p>{e(s["p"])}</p></li>' for i, s in enumerate(items)) + '</ol>'
 
 
 def mini_cards(items, cols=4, icons=None):
@@ -663,10 +652,10 @@ def page_home():
            ('Instant Response Enablement', 'Identify incidents the moment they occur and act within seconds—not hours.'),
            ('Actionable Intelligence', 'Transform raw video into structured insights that support faster, smarter decision-making.')]
     standard = block(head_block('The KenVision standard', 'Cameras Are Everywhere. <em>Intelligence Is Not.</em>', '') + compare() + points4(pts), 'standard')
-    sec = [('retail-analytics', 'assets/footage/industry-retail.jpg', 'Retail Analytics', 'Optimize store performance using footfall, dwell time, heatmaps, and shopper behavior insights.', 'a'),
-           ('commercial-buildings', 'assets/footage/lobby.jpg', 'Commercial Buildings', 'Understand occupancy, space utilization, access patterns, and asset movement.', 'b'),
-           ('smart-cities', 'assets/footage/industry-smart-cities.jpg', 'Smart Cities', 'Monitor crowds, traffic flow, and public safety conditions in real time.', 'b'),
-           ('video-surveillance', 'assets/footage/whse.jpg', 'Video Surveillance', 'Enhance surveillance systems with intelligent detection, alerts, and analytics.', 'a')]
+    sec = [('retail-analytics', '', 'Retail Analytics', 'Optimize store performance using footfall, dwell time, heatmaps, and shopper behavior insights.', 'a'),
+           ('commercial-buildings', '', 'Commercial Buildings', 'Understand occupancy, space utilization, access patterns, and asset movement.', 'b'),
+           ('smart-cities', '', 'Smart Cities', 'Monitor crowds, traffic flow, and public safety conditions in real time.', 'b'),
+           ('video-surveillance', '', 'Video Surveillance', 'Enhance surveillance systems with intelligent detection, alerts, and analytics.', 'a')]
     sectors_html = block(head_block('Solutions', 'Intelligence Across Sectors', 'KenVision adapts to different environments by contextualizing intelligence for each industry.')
                          + carousel([(k, t, p) for k, i, t, p, cl in sec]), 'sectors')
     steps_html = block(head_block('How it works', 'How KenVision Turns Video into Action', '')
@@ -704,10 +693,10 @@ def page_solutions():
     c = CONTENT['solutions-index']
     h = hero(crumbs((None, 'Solutions')), '<span class="eyebrow">Solutions</span>', c['h1'], c['lede'], demo_btn('Request Demo'),
              media='<div class="kx-stage" data-tilt><figure class="kx-shot round">' + img('assets/images/solutions-hero-collage.webp', c['hero_img']['alt'], lazy=False, prio=True) + '</figure></div>')
-    cards = [('retail-analytics', 'assets/footage/industry-retail.jpg', 'Retail Analytics', 'Understand shopper behavior using footfall analysis and heatmaps.', 'a'),
-             ('commercial-buildings', 'assets/footage/lobby.jpg', 'Commercial Buildings', 'Gain real-time visibility into occupancy and space utilization.', 'b'),
-             ('smart-cities', 'assets/footage/industry-smart-cities.jpg', 'Smart Cities', 'Monitor traffic flow and public safety at city-wide scale.', 'b'),
-             ('video-surveillance', 'assets/footage/whse.jpg', 'Intelligent Surveillance', 'Enhance existing systems with real-time detection and alerts.', 'a')]
+    cards = [('retail-analytics', '', 'Retail Analytics', 'Understand shopper behavior using footfall analysis and heatmaps.', 'a'),
+             ('commercial-buildings', '', 'Commercial Buildings', 'Gain real-time visibility into occupancy and space utilization.', 'b'),
+             ('smart-cities', '', 'Smart Cities', 'Monitor traffic flow and public safety at city-wide scale.', 'b'),
+             ('video-surveillance', '', 'Intelligent Surveillance', 'Enhance existing systems with real-time detection and alerts.', 'a')]
     sec = block(head_block('Solutions', 'Intelligence Across Sectors', '') + rows([(k, sol_pic(k, 'r' + k[:3]), t, p) for k, i, t, p, cl in cards]), 'sectors')
     tick = ticker(['Real-time video analytics', 'Behavioral understanding', 'Anomaly detection', 'Heatmaps & tracking', 'Dashboards & reports', 'Edge + cloud deployment'])
     onep = f'<section class="block" style="padding-block:clamp(40px,5vw,72px)"><div class="wrap"><h2 class="kx-h2"{rv()} style="font-size:clamp(24px,3vw,36px)">One Platform. Multiple Solutions.</h2></div></section>'
@@ -745,10 +734,10 @@ def vis(caption):
 
 
 SOL_MEDIA = {
-    'retail-analytics': dict(img='assets/footage/aisle.jpg', alt='Shoppers in a busy store aisle', scale='assets/footage/store.jpg', chips=['Footfall', 'Dwell time']),
-    'commercial-buildings': dict(img='assets/footage/lobby.jpg', alt='People moving through a bright building lobby', scale='assets/footage/hero-contact.jpg', chips=['Occupancy', 'Utilization']),
-    'smart-cities': dict(video='video-home', alt='Crowd moving through a busy public concourse', scale='assets/footage/lot.jpg', chips=['Crowd density', 'Flow']),
-    'video-surveillance': dict(video='video-warehouse', alt='Forklift and workers in a warehouse', scale='assets/footage/dock.jpg', chips=['Smart alerts', 'PPE check']),
+    'retail-analytics': dict(chips=['Footfall', 'Dwell time'], scale=('scale-retail', 'Shoppers and storefronts on a busy retail street', 'Every store, one view')),
+    'commercial-buildings': dict(chips=['Occupancy', 'Utilization'], scale=('scale-building', 'Glass office tower rising into a bright sky', 'Whole portfolios, one view')),
+    'smart-cities': dict(chips=['Crowd density', 'Flow'], scale=('scale-city', 'Aerial view of city blocks, a parking lot and the roads around them', 'City-wide, one platform')),
+    'video-surveillance': dict(chips=['Smart alerts', 'PPE check'], scale=('scale-yard', 'Aerial view of rows of trucks and trailers in a logistics yard', 'Every site, one console')),
 }
 
 
@@ -768,7 +757,7 @@ def page_solution(key):
     ticks = ''.join(f"<li><span>{re.sub(r'^([^:]+:)', r'<strong>\1</strong>', e(x))}</span></li>" for x in c['scale']['li'])
     scale = block(f'''<div class="kx-split"><div{rv()}><span class="eyebrow">Scale</span><h2 style="margin-top:18px">{e(c['scale']['h'])}</h2>
         <ul class="kx-ticks">{ticks}</ul></div>
-        <div class="kx-frame"{rv(2)}>{scenes.scene(key, uid='s')}</div></div>''', 'scale')
+        <div class="kx-frame"{rv(2)}>{img('assets/photos/' + hm['scale'][0] + '.webp', hm['scale'][1], 'photo')}<span class="kx-chip-live"><i></i>{hm['scale'][2]}</span></div></div>''', 'scale')
     f = c['field']
 
     def lead(li):
