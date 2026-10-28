@@ -967,3 +967,10 @@ body { letter-spacing: -0.01em; }
   .kx-clients .cl-row { gap: 12px; }
   .kx-clients .cl-row .cl-t, .kx-clients .cl-row .cl-t:nth-child(n) { flex-basis: calc((100% - 12px) / 2); aspect-ratio: 1 / .9; margin-top: 0 !important; grid-column: auto; }
 }
+
+/* real footage in the solution pictures */
+.kx-car .pic video, .kx-row .pic video, .kx-shot.round video { display: block; width: 100%; height: 100%; object-fit: cover; background: #0b0b0c; }
+.kx-car .pic video { aspect-ratio: 8 / 5; }
+.kx-shot.round video { aspect-ratio: 16 / 10; border: 1px solid var(--ash); border-radius: 40px; }
+.kx-row .pic { background: #0b0b0c; }
+@media (max-width: 680px) { .kx-shot.round video { border-radius: 28px; } }

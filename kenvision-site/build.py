@@ -380,9 +380,22 @@ def points4(points):
     return '<div class="kx-pts">' + ''.join(f'<div{rv(i)}><h3>{e(t)}</h3><p>{e(d)}</p></div>' for i, (t, d) in enumerate(points)) + '</div>'
 
 
+# Real footage per solution (the commercial-buildings page has no clip yet and keeps its drawn scene)
+SOL_VIDEO = {'retail-analytics': ('video-mall', 'Shoppers moving through a busy mall atrium with escalators'),
+             'smart-cities': ('video-home', 'Crowd moving through a busy public station concourse'),
+             'video-surveillance': ('video-warehouse', 'Forklift and workers in a warehouse seen by a fixed camera')}
+
+
+def sol_pic(key, uid):
+    if key in SOL_VIDEO:
+        name, alt = SOL_VIDEO[key]
+        return vid(name, alt)
+    return scenes.scene(key, uid=uid)
+
+
 def carousel(items):
     """Sector cards with a drawn scene each; scroll or use the arrows."""
-    cards = ''.join(f'<a class="cc" href="@{k}"><span class="pic">{scenes.scene(k, uid="c" + k[:3])}</span><h3>{e(t)}</h3><p>{e(p)}</p><span class="go">Learn more</span></a>' for k, t, p in items)
+    cards = ''.join(f'<a class="cc" href="@{k}"><span class="pic">{sol_pic(k, "c" + k[:3])}</span><h3>{e(t)}</h3><p>{e(p)}</p><span class="go">Learn more</span></a>' for k, t, p in items)
     return (f'<div class="kx-car" data-car{rv()}><div class="track" tabindex="0" aria-label="Solutions">{cards}</div>'
             '<div class="ctl"><button type="button" data-prev aria-label="Previous">←</button><span class="dots" aria-hidden="true"></span><button type="button" data-next aria-label="Next">→</button></div></div>')
 
@@ -632,7 +645,7 @@ def page_solutions():
              ('commercial-buildings', 'assets/footage/lobby.jpg', 'Commercial Buildings', 'Gain real-time visibility into occupancy and space utilization.', 'b'),
              ('smart-cities', 'assets/footage/industry-smart-cities.jpg', 'Smart Cities', 'Monitor traffic flow and public safety at city-wide scale.', 'b'),
              ('video-surveillance', 'assets/footage/whse.jpg', 'Intelligent Surveillance', 'Enhance existing systems with real-time detection and alerts.', 'a')]
-    sec = block(head_block('Solutions', 'Intelligence Across Sectors', '') + rows([(k, scenes.scene(k, uid='r' + k[:3]), t, p) for k, i, t, p, cl in cards]), 'sectors')
+    sec = block(head_block('Solutions', 'Intelligence Across Sectors', '') + rows([(k, sol_pic(k, 'r' + k[:3]), t, p) for k, i, t, p, cl in cards]), 'sectors')
     tick = ticker(['Real-time video analytics', 'Behavioral understanding', 'Anomaly detection', 'Heatmaps & tracking', 'Dashboards & reports', 'Edge + cloud deployment'])
     onep = f'<section class="block" style="padding-block:clamp(40px,5vw,72px)"><div class="wrap"><h2 class="kx-h2"{rv()} style="font-size:clamp(24px,3vw,36px)">One Platform. Multiple Solutions.</h2></div></section>'
     scale = [('Single Site', 'Deploy KenVision in individual locations with focused intelligence and minimal setup.'), ('Multi-Location', 'Scale insights across multiple sites with centralized dashboards and unified reporting.'),
@@ -680,7 +693,7 @@ def page_solution(key):
     c = CONTENT[key]
     name = dict((k, n) for k, n, _ in SOLUTIONS)[key]
     hm = SOL_MEDIA[key]
-    pic = scenes.scene(key, uid='h')
+    pic = sol_pic(key, 'h')
     chips = ''.join(f'<span class="kx-float f{i + 1}"><i></i>{t}</span>' for i, t in enumerate(hm['chips']))
     h = hero(crumbs(('@solutions', 'Solutions'), (None, name)), '<span class="eyebrow">Solutions</span>', e(c['h1']), e(c['lede']), demo_btn('Request Demo'),
              media='<div class="kx-stage" data-tilt><figure class="kx-shot round">' + pic + '</figure>' + chips + '</div>')
