@@ -290,7 +290,7 @@ def ticker(words):
 MODULE_LINKS = [('KenSafety', 'kensafety'), ('KenHome', 'kenhome'), ('KenAgri', 'kenagri'), ('KenIoT', 'keniot'), ('KenRobotics', 'kenrobotics'), ('KenVoice', 'kenvoice')]
 
 
-CLIENTS = [('swarovski', 'Swarovski'), ('giva', 'GIVA'), ('mia', 'Mia by Tanishq'), ('hyou', 'HYOU Fine Jewelry'), ('rado', 'Rado')]
+CLIENTS = [('swarovski', 'Swarovski'), ('giva', 'GIVA'), ('mia', 'Mia by Tanishq'), ('hyou', 'HYOU Fine Jewelry'), ('rado', 'Rado'), ('tissot', 'Tissot'), ('seiko', 'Seiko'), ('caratlane', 'CaratLane'), ('prestige', 'Prestige Group')]
 
 
 def clients_band(eyebrow='Deployed with retail brands', note='KenVision runs on the existing cameras in their stores.', h2='Trusted where it counts: the shop floor.'):
