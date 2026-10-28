@@ -417,7 +417,15 @@ def live_block(L, scene=True, cctv=None, extra='', dim=False):
             f'<div class="stack">{vid(L["video"], L["alt"])}<svg class="ov" viewBox="0 0 {L["w"]} {L["h"]}" preserveAspectRatio="xMidYMid slice" aria-hidden="true"></svg></div>{cam}<div class="hud" aria-hidden="true"></div>{extra}</div>')
 
 
+# Retail and Commercial Buildings use photos, so no clip is repeated across the solutions
+SOL_STILL = {'retail-analytics': ('assets/footage/ken-dwell.jpg', 'Shoppers in a mall store zone with dwell time and visitor figures', ''),
+             'commercial-buildings': ('assets/footage/lobby.jpg', 'People moving through a bright building lobby', '<span class="kx-chip-live"><i></i>Lobby occupancy tracked</span>')}
+
+
 def sol_pic(key, uid, compact=False):
+    if key in SOL_STILL:
+        src, alt, chip = SOL_STILL[key]
+        return f'<div class="kx-live still"><div class="stack">{img(src, alt, lazy=False)}</div>{chip}</div>'
     return live_block(LIVE[key])
 
 
