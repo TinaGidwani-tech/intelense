@@ -430,13 +430,13 @@ def carousel(items):
 
 def explorer(items):
     """Six capabilities: pick one and the picture changes."""
-    pics = [('assets/footage/feat-queue-kenvision.jpg', 'Crowd in a busy shopping mall seen from above', 'Live crowd view'),
+    pics = [('assets/footage/ken-detect.jpg', 'KenVision camera reading a clothing store, with boxes on customers, staff and a loitering alert', 'Every person detected and classified'),
             ('assets/footage/feat-footfall-kenvision.jpg', 'Shoppers walking into a store entrance', 'Footfall at the entrance'),
-            ('assets/footage/plaza.jpg', 'Aerial view of people crossing a large public square', 'Where people move and gather'),
+            ('assets/footage/ken-heatmap.jpg', 'Isometric supermarket with a heatmap showing where shoppers walk and stop', 'Where shoppers walk and stop'),
             ('assets/footage/feat-proximity-kensafety.jpg', 'Forklift driving close to two people on a loading yard', 'Unusual proximity flagged'),
             ('assets/footage/feat-trends-keniot.jpg', 'Operator at a monitoring desk in front of a wall of screens', 'Dashboards for the control room'),
             ('assets/footage/feat-report-kensafety.jpg', 'Team member in a hard hat reading an alert on a tablet', 'Alert on the team\'s tablet')]
-    kinds = [(lambda p=p: f'<figure class="fx-pic">{img(p[0], p[1], lazy=i > 0)}<figcaption>{e(p[2])}</figcaption></figure>') for i, p in enumerate(pics)]
+    kinds = [(lambda p=p: f'<figure class="fx-pic{' light' if 'heatmap' in p[0] else ''}">{img(p[0], p[1], lazy=i > 0)}<figcaption>{e(p[2])}</figcaption></figure>') for i, p in enumerate(pics)]
     btns = ''.join(f'<button type="button" role="tab" id="fx-t{i}" aria-controls="fx-p{i}" aria-selected="{"true" if i == 0 else "false"}" tabindex="{0 if i == 0 else -1}"><span class="t">{e(t)}</span><span class="d">{e(d)}</span></button>' for i, (t, d) in enumerate(items))
     panels = ''.join(f'<div class="fx-p{" off" if i else ""}" role="tabpanel" id="fx-p{i}" aria-labelledby="fx-t{i}" data-panel{" aria-hidden=" + chr(34) + "true" + chr(34) if i else ""}>{kinds[i]()}</div>' for i in range(len(items)))
     return f'<div class="kx-tabs fx" data-tabs><div class="tablist" role="tablist" aria-label="Capabilities">{btns}</div><div class="stage">{panels}</div></div>'
