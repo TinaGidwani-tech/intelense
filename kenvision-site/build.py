@@ -404,15 +404,21 @@ LIVE = {
 }
 
 
-def sol_pic(key, uid, compact=False):
+def live_block(L, scene=True, cctv=None, extra='', dim=False):
+    """A real clip with optional overlay (scene data), CCTV styling and extra HTML on top."""
     import json as _j
-    L = LIVE[key]
-    scene = {k: L[k] for k in ('w', 'h', 'dur', 'hud', 'zones', 'tracks') if k in L}
+    cctv = L.get('cctv') if cctv is None else cctv
+    data = {k: L[k] for k in ('w', 'h', 'dur', 'hud', 'zones', 'tracks') if k in L} if scene else None
     z = L.get('zoom')
     style = f' style="--z:{z[0]};--ox:{z[1]};--oy:{z[2]}"' if z else ''
-    cam = (f'<div class="cam" aria-hidden="true"><span>{L["cam"]}</span><span class="rec"><i></i>REC</span><span class="clk" data-clock></span></div>') if L.get('cctv') else ''
-    return (f"<div class=\"kx-live{' cctv' if L.get('cctv') else ''}\" data-live data-scene='{_j.dumps(scene)}'{style}>"
-            f'<div class="stack">{vid(L["video"], L["alt"])}<svg class="ov" viewBox="0 0 {L["w"]} {L["h"]}" preserveAspectRatio="xMidYMid slice" aria-hidden="true"></svg></div>{cam}<div class="hud" aria-hidden="true"></div></div>')
+    cam = (f'<div class="cam" aria-hidden="true"><span>{L["cam"]}</span><span class="rec"><i></i>REC</span><span class="clk" data-clock></span></div>') if cctv else ''
+    attrs = f" data-live data-scene='{_j.dumps(data)}'" if data else ' data-live'
+    return (f"<div class=\"kx-live{' cctv' if cctv else ''}{' dim' if dim else ''}\"{attrs}{style}>"
+            f'<div class="stack">{vid(L["video"], L["alt"])}<svg class="ov" viewBox="0 0 {L["w"]} {L["h"]}" preserveAspectRatio="xMidYMid slice" aria-hidden="true"></svg></div>{cam}<div class="hud" aria-hidden="true"></div>{extra}</div>')
+
+
+def sol_pic(key, uid, compact=False):
+    return live_block(LIVE[key])
 
 
 def carousel(items):
@@ -525,24 +531,15 @@ HOW_IMGS = [('assets/footage/plaza.jpg', 'Crowd in a public square seen from abo
 def how_s(items):
     """'How it works' as a scroll-linked pipeline: the line fills as you scroll and lights each step in turn.
     Step 1: sources feeding live streams. Step 2: a camera carrying the KenVision logo. Step 3: the dashboard."""
-    ic = {'cam': '<path d="M3 8h12v8H3z"/><path d="M15 11l6-3v8l-6-3"/>',
-          'dvr': '<rect x="3" y="4" width="18" height="6" rx="1.5"/><rect x="3" y="14" width="18" height="6" rx="1.5"/><path d="M7 7h.01M7 17h.01"/>',
-          'chip': '<rect x="7" y="7" width="10" height="10" rx="2"/><path d="M9 3v4M15 3v4M9 17v4M15 17v4M3 9h4M3 15h4M17 9h4M17 15h4"/>'}
-    srcs = ''.join(f'<li><svg viewBox="0 0 24 24" aria-hidden="true">{ic[k]}</svg><span>{t}</span></li>' for k, t in (('cam', 'Existing cameras'), ('dvr', 'CCTV systems'), ('chip', 'Edge devices')))
-    v1 = f'''<div class="hv1"><ul class="src">{srcs}</ul>
-          <svg class="join" viewBox="0 0 70 150" aria-hidden="true"><path class="fl" d="M0 25 C35 25 35 75 68 75"/><path class="fl" d="M0 75 L68 75"/><path class="fl" d="M0 125 C35 125 35 75 68 75"/><circle cx="68" cy="75" r="4"/></svg>
-          <div class="out"><i></i><b>Live video streams</b></div></div>'''
-    v2 = '''<div class="hv2"><svg viewBox="0 0 320 230" role="img" aria-label="Camera carrying the KenVision logo">
-          <g class="rings" aria-hidden="true"><circle cx="150" cy="112" r="64"/><circle cx="150" cy="112" r="94"/></g>
-          <path class="fl" d="M0 112 H60" aria-hidden="true"/><path class="fl" d="M268 112 H320" aria-hidden="true"/>
-          <path class="mount" d="M146 70 V38 M110 38 H182 M126 38 V30 M166 38 V30"/>
-          <rect class="body" x="60" y="70" width="172" height="84" rx="18"/>
-          <rect class="barrel" x="232" y="84" width="34" height="56" rx="9"/>
-          <circle class="lens" cx="266" cy="112" r="17"/><circle class="lens2" cx="266" cy="112" r="8"/>
-          <circle class="led" cx="78" cy="86" r="3.5"/>
-          <image href="@a/logos/kenvision.png" x="80" y="92" width="136" height="50" preserveAspectRatio="xMidYMid meet"/>
-        </svg></div>'''
-    vis = [v1, v2, f'<div class="hv3">{dash()}</div>']
+    W = LIVE['video-surveillance']
+    v1 = live_block(W, scene=False, cctv=True, extra='<span class="kx-chip-live"><i></i>Live stream from an existing camera</span>')
+    v2 = live_block(dict(W, cam='CAM 04 \u00b7 LOADING BAY'), scene=True, cctv=False,
+                    extra='<span class="kx-chip-ken"><img src="@a/logos/kenvision.png" alt="KenVision" width="86" height="32"><b>Reading every frame</b></span>')
+    notes = ('<div class="kx-notes"><div class="nt neg"><i></i><div><b>No helmet detected</b><small>Loading bay \u00b7 CAM 04 \u00b7 just now</small></div></div>'
+             '<div class="nt"><i></i><div><b>Forklift entered walkway</b><small>Loading bay \u00b7 CAM 04 \u00b7 4 min ago</small></div></div>'
+             '<span class="sent">Sent to the safety lead</span></div>')
+    v3 = live_block(W, scene=False, cctv=False, dim=True, extra=notes)
+    vis = [v1, v2, v3]
     lis = ''.join(f'<li{rv(i)}><span class="dot"></span><div class="vis v{i + 1}">{vis[i]}</div><h3>{e(s["t"])}</h3><p>{e(s["p"])}</p></li>' for i, s in enumerate(items))
     return f'<div class="kx-how" data-how><div class="track" aria-hidden="true"><i class="fill"></i></div><ol class="stp">{lis}</ol></div>'
 

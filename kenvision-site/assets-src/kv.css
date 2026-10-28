@@ -1017,3 +1017,28 @@ body { letter-spacing: -0.01em; }
 .kx-row .kx-live .ov, .kx-row .kx-live .cam { display: none; }
 .kx-row .kx-live.cctv .stack video { filter: grayscale(.6) contrast(1.05); }
 .kx-car .kx-live .hud { display: none; }
+
+/* how it works: one realistic story (warehouse camera) in three steps */
+.kx-how .vis { padding: 0; min-height: 0; overflow: hidden; place-items: stretch; background: #0b0b0c; }
+.kx-how .vis.v3 { background: #0b0b0c; border: 1px solid var(--ash); box-shadow: none; overflow: hidden; }
+.kx-how .vis .kx-live { height: 100%; aspect-ratio: 16 / 11; border-radius: 0; }
+.kx-how .vis .kx-live .hud { display: none; }
+@media (min-width: 801px) { .kx-how .vis { height: auto; } }
+.kx-how .vis .kx-live .ov .bx text { font-size: 26px; }
+.kx-live.dim .stack video { filter: brightness(.55) saturate(.8) blur(2px); }
+.kx-chip-live { position: absolute; left: 12px; bottom: 12px; z-index: 3; display: inline-flex; align-items: center; gap: 8px; background: rgba(8, 10, 24, .75); color: #fff; font-size: 11.5px; font-weight: 600; padding: 6px 12px; border-radius: 9999px; backdrop-filter: blur(6px); }
+.kx-chip-live i { width: 8px; height: 8px; border-radius: 50%; background: #1fbf80; animation: kx-ping2 2s ease-out infinite; }
+.kx-chip-ken { position: absolute; left: 12px; bottom: 12px; z-index: 3; display: inline-flex; align-items: center; gap: 10px; background: rgba(255, 255, 255, .94); color: #242424; padding: 6px 14px 6px 10px; border-radius: 9999px; font-size: 11.5px; box-shadow: 0 10px 24px -10px rgba(0, 0, 0, .5); }
+.kx-chip-ken img { height: 20px; width: auto; display: block; }
+.kx-notes { position: absolute; inset: 0; z-index: 3; display: grid; align-content: center; gap: 10px; padding: 16px; }
+.kx-notes .nt { display: grid; grid-template-columns: 12px minmax(0, 1fr); gap: 12px; align-items: center; padding: 12px 14px; border-radius: 16px; background: rgba(251, 249, 247, .96); color: #242424; box-shadow: 0 14px 30px -14px rgba(0, 0, 0, .6); }
+.kx-notes .nt i { width: 10px; height: 10px; border-radius: 50%; background: #F2B84B; }
+.kx-notes .nt.neg i { background: #E5322D; }
+.kx-notes .nt b { display: block; font-size: 14px; }
+.kx-notes .nt small { color: #6c6e82; font-size: 11.5px; }
+.kx-notes .sent { justify-self: start; background: #0A34ED; color: #fff; font-size: 11.5px; font-weight: 600; padding: 6px 12px; border-radius: 9999px; }
+.js .kx-how .stp > li.on .kx-notes .nt { animation: kx-in .6s cubic-bezier(.2, .7, .2, 1) both; }
+.js .kx-how .stp > li.on .kx-notes .nt + .nt { animation-delay: .25s; }
+@media (max-width: 800px) { .kx-how .vis .kx-live { aspect-ratio: 16 / 10; } }
+.kx-how .vis.v3 { place-items: stretch; padding: 0; display: block; }
+.kx-how .vis .kx-live { width: 100%; }
