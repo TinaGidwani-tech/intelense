@@ -65,15 +65,6 @@
       });
       host.addEventListener('pointerleave', function () { el.style.setProperty('--ry', '0deg'); el.style.setProperty('--rx', '0deg'); });
     });
-
-    // Magnetic primary buttons
-    $$('.hero-ctas .btn-blue, .cta .btn-blue').forEach(function (b) {
-      b.addEventListener('pointermove', function (e) {
-        var r = b.getBoundingClientRect();
-        b.style.transform = 'translate(' + ((e.clientX - r.left - r.width / 2) * 0.12).toFixed(1) + 'px,' + ((e.clientY - r.top - r.height / 2) * 0.22).toFixed(1) + 'px)';
-      });
-      b.addEventListener('pointerleave', function () { b.style.transform = ''; });
-    });
   }
 
   // Tabs (keyboard accessible). data-auto: advance by itself until the visitor takes over.

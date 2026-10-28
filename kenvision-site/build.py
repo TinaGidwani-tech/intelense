@@ -634,7 +634,7 @@ def page_home():
     floats = ('<span class="kx-float f1"><i></i>People counting</span><span class="kx-float f2"><i></i>Heatmaps</span><span class="kx-float f3"><i></i>Smart alerts</span>')
     h = hero('', '<span class="kx-byline">KenVision by <a href="' + INTELENSE + '/">Intelense</a></span>',
              'Turn the cameras you <em>already own</em> into real-time intelligence.',
-             'KenVision applies advanced AI to your existing CCTV — counting people, mapping behaviour, spotting risk and measuring engagement — without replacing a single camera. Privacy-first, on-prem or edge, running in days.',
+             'KenVision transforms your existing CCTV into an AI-powered intelligence layer, measuring footfall, understanding customer behaviour, identifying operational risks, and tracking engagement, without replacing a single camera. Privacy-first by design, deployed on-premises or at the edge, and operational in days.',
              demo_btn() + '<a class="btn btn-ghost" href="@solutions">See solutions</a>',
              center=True, below='<div class="kx-stage" data-tilt><div class="kx-shot">' + dash() + '</div>' + floats + '</div>',
              extra='<div class="kx-trust"><span>Works with existing CCTV</span><span>Privacy-first &amp; on-prem</span><span>Camera-agnostic</span></div>')
