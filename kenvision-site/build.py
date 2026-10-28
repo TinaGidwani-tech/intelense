@@ -290,6 +290,21 @@ def ticker(words):
 MODULE_LINKS = [('KenSafety', 'kensafety'), ('KenHome', 'kenhome'), ('KenAgri', 'kenagri'), ('KenIoT', 'keniot'), ('KenRobotics', 'kenrobotics'), ('KenVoice', 'kenvoice')]
 
 
+CLIENTS = [('swarovski', 'Swarovski'), ('giva', 'GIVA'), ('mia', 'Mia by Tanishq'), ('hyou', 'HYOU Fine Jewelry'), ('rado', 'Rado')]
+
+
+def clients_band(eyebrow='Deployed with retail brands', note='KenVision runs on the existing cameras in their stores.'):
+    from PIL import Image
+    items = ''
+    for slug, name in CLIENTS:
+        w, h = Image.open(IMG_DIR / 'clients' / f'{slug}.png').size
+        items += f'<li{rv(len(items) % 7)}><img data-c="{slug}" src="@a/clients/{slug}.png" alt="{ea(name)}" width="{w}" height="{h}" loading="lazy" decoding="async"></li>'
+    names = ', '.join(n for _, n in CLIENTS)
+    return (f'<section class="block kx-clients" id="clients" style="padding-block:clamp(36px,5vw,64px)"><div class="wrap">'
+            f'<div class="cl-head"><span class="eyebrow">{eyebrow}</span><p>{note}</p></div>'
+            f'<ul class="cl-row" aria-label="Retail brands using KenVision: {names}">{items}</ul></div></section>')
+
+
 def by_intelense():
     mods = ''.join(f'<a href="{INTELENSE}/{k}">{n}</a>' for n, k in MODULE_LINKS)
     return f'''<section class="block" id="by-intelense">
@@ -605,7 +620,7 @@ def page_home():
     quote = f'''<section class="block"><div class="wrap"><figure class="kx-quote"{rv()}><p>“The best camera for your AI is the one already on your wall. Everything after that should be software — not another hardware project.”</p><cite>KenVision product principle, by <a href="{INTELENSE}/">Intelense</a></cite></figure></div></section>'''
     faq = faq_block([(x['q'], x['a']) for x in c['faq']], c['faq_h']['h'], c['faq_h']['p'])
     cta = cta_band('Ready to Unlock Intelligence from Video?', 'See how KenVision transforms everyday video into insights that improve safety, efficiency, and decision-making.')
-    body = '\n\n  '.join([h, st, strip, band, standard, sectors_html, steps_html, core_html, why_html, dep_html, by_intelense(), quote, faq, cta])
+    body = '\n\n  '.join([h, st, clients_band(), strip, band, standard, sectors_html, steps_html, core_html, why_html, dep_html, by_intelense(), quote, faq, cta])
     return page('index', 'index.html', 'KenVision by Intelense | AI-Powered Video Intelligence Platform', c['meta'], body, 'home')
 
 
@@ -692,7 +707,8 @@ def page_solution(key):
     why = block(head_block('Why KenVision', e(c['why']['h']), '') + mini_cards(c['why']['items'], 4), 'why')
     faq = faq_block([(x['q'], x['a']) for x in c['faq']], c['faq_h']['h'], c['faq_h']['p'])
     cta = cta_band(c['cta']['h'], c['cta']['p'])
-    body = '\n\n  '.join([h, pain, how, core, impact, scale, field, ticker(strip_words), why, faq, by_intelense(), cta])
+    extra_cl = clients_band('Retail brands using KenVision', 'Jewellery, watches and fashion retail.') if key == 'retail-analytics' else ''
+    body = '\n\n  '.join(x for x in [h, extra_cl, pain, how, core, impact, scale, field, ticker(strip_words), why, faq, by_intelense(), cta] if x)
     return page(key, f'solutions/{key}.html', c['meta']['title'], c['meta'], body, key, depth=1)
 
 

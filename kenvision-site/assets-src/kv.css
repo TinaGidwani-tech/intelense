@@ -901,3 +901,21 @@ body { letter-spacing: -0.01em; }
 @media (max-width: 680px) { .kx-seg button { padding: 8px 14px; font-size: 12px; } .kx-compare .ov .zn text { font-size: 24px; } }
 .kx-compare .hud span { white-space: nowrap; }
 @media (max-width: 680px) { .kx-compare .hud { flex-wrap: wrap; gap: 5px; } .kx-compare .ov .zn text { font-size: 21px; } .kx-compare.vid { aspect-ratio: 4 / 3; } }
+
+/* retail client logos */
+.kx-clients .wrap { display: grid; grid-template-columns: minmax(0, .8fr) minmax(0, 2fr); gap: 24px clamp(24px, 5vw, 80px); align-items: center; }
+.kx-clients .cl-head { display: grid; gap: 12px; }
+.kx-clients .cl-head p { color: var(--graphite); font-size: 15px; max-width: 30ch; }
+.cl-row { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; align-items: center; gap: 20px clamp(24px, 4vw, 56px); }
+.cl-row li { display: grid; place-items: center; }
+.cl-row img { height: 64px; width: auto; max-width: 150px; object-fit: contain; display: block; filter: grayscale(1) contrast(1.1); mix-blend-mode: multiply; opacity: .78; transition: opacity .25s, filter .25s, transform .25s; }
+.cl-row img:hover { opacity: 1; filter: none; transform: translateY(-2px); }
+@media (max-width: 900px) { .kx-clients .wrap { grid-template-columns: minmax(0, 1fr); } .kx-clients .cl-head p { max-width: none; } }
+@media (max-width: 560px) { .cl-row img { height: 52px; max-width: 120px; } .cl-row { gap: 16px 28px; } }
+.cl-row img { filter: none; mix-blend-mode: normal; opacity: .8; }
+.cl-row img[data-c="mia"] { height: 84px; }
+.cl-row img[data-c="hyou"] { height: 56px; }
+.cl-row img[data-c="swarovski"] { height: 58px; }
+@media (max-width: 560px) { .cl-row img[data-c="mia"] { height: 68px; } .cl-row img[data-c="hyou"] { height: 46px; } .cl-row img[data-c="swarovski"] { height: 48px; } }
+
+.cl-row img:hover { filter: none; opacity: 1; }
