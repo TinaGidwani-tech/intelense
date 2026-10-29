@@ -309,7 +309,7 @@ def footer():
       </div>
       <div>
         <h4>Modules</h4>
-        <ul>{mods}<li><a href="https://kenvision.ai" target="_blank" rel="noopener">KenVision website, kenvision.ai</a></li></ul>
+        <ul>{mods}<li><a href="https://kenvision.ai" target="_blank" rel="noopener">KenVision website</a></li></ul>
       </div>
       <div>
         <h4>Company</h4>
