@@ -309,7 +309,7 @@ def footer():
       </div>
       <div>
         <h4>Modules</h4>
-        <ul>{mods}</ul>
+        <ul>{mods}<li><a href="https://kenvision.ai" target="_blank" rel="noopener">KenVision website, kenvision.ai</a></li></ul>
       </div>
       <div>
         <h4>Company</h4>
@@ -400,6 +400,7 @@ def module_grid():
             <p>{v["card"]}</p>
             <div class="chips"><span class="chip">Footfall</span><span class="chip">Heatmaps</span><span class="chip">Dwell time</span><span class="chip">Queues</span></div>
             <a class="link-arrow" href="kenvision.html">Explore KenVision</a>
+            <a class="link-arrow" href="https://kenvision.ai" target="_blank" rel="noopener">Visit kenvision.ai</a>
           </div>
           <div class="snap" role="img" aria-label="Example plaza camera with a crowd-density heatmap and a live people count for zone A">
             <canvas class="cctv" data-scene="plaza" width="800" height="600"></canvas>
@@ -1221,7 +1222,7 @@ def page_kenvision():
         <li><span>Step 2</span><h3>AI Analyses Video Feeds</h3><p>AI-powered video analytics processes camera feeds to count people, measure activity across defined zones and identify configured events or patterns.</p></li>
         <li><span>Step 3</span><h3>View Insights on Your Dashboard</h3><p>Access available metrics, trends and alerts through dashboards and reports. Use the information to understand activity and make informed operational decisions.</p></li>
       </ol>
-      <p style="margin-top:36px"><a class="btn btn-black" href="#features">See KenVision in Action</a></p>
+      <p style="margin-top:36px"><a class="btn btn-black" href="https://kenvision.ai" target="_blank" rel="noopener">See KenVision in Action</a></p>
     </div>
   </section>'''
 
