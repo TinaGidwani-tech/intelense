@@ -687,7 +687,9 @@ def page_home():
     faq = faq_block([(x['q'], x['a']) for x in c['faq']], c['faq_h']['h'], c['faq_h']['p'])
     cta = cta_band('Ready to Unlock Intelligence from Video?', 'See how KenVision transforms everyday video into insights that improve safety, efficiency, and decision-making.')
     body = '\n\n  '.join([h, st, clients_band(), strip, standard, sectors_html, steps_html, core_html, why_html, dep_html, by_intelense(), quote, faq, cta])
-    return page('index', 'index.html', 'KenVision by Intelense | AI-Powered Video Intelligence Platform', c['meta'], body, 'home')
+    meta = dict(c['meta'])
+    meta['description'] = meta['og_description'] = 'KenVision by Intelense transforms everyday video into insights that improve safety, efficiency, and decision-making. AI-powered video intelligence on the cameras you already own.'
+    return page('index', 'index.html', 'KenVision by Intelense | AI-Powered Video Intelligence Platform', meta, body, 'home')
 
 
 def page_solutions():
