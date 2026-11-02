@@ -6,7 +6,8 @@
 .k3-word b { font-weight: 600; color: #0A34ED; }
 .k3-word.on-dark { color: #fff; }
 .k3-word.on-dark b { color: #7f98ff; }
-.k3-by { font-size: 11px; text-transform: uppercase; letter-spacing: .08em; color: var(--smoke); }
+.k3-by { font-size: 12px; font-weight: 500; letter-spacing: -0.005em; color: var(--smoke); align-self: flex-end; padding-bottom: 3px; }
+.k3-by.on-dark { color: #9a9cb0; }
 .k3-logo img { height: 15px; width: auto; display: block; }
 .js [data-r] { opacity: 0; transform: translateY(18px); transition: opacity .7s ease var(--d, 0ms), transform .8s cubic-bezier(.2, .7, .2, 1) var(--d, 0ms); }
 .js [data-r].in { opacity: 1; transform: none; }

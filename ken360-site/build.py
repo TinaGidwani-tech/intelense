@@ -87,7 +87,7 @@ def dot(c):
 
 def lockup(cls=''):
     return (f'<a class="logo k3-logo {cls}" href="@index" aria-label="Ken360 by Intelense, home"><span class="k3-word">Ken<b>360</b></span>'
-            f'<span class="k3-by">by</span><img class="on-light" src="@a/logos/intelense.png" alt="Intelense" width="100" height="15"></a>')
+            f'<span class="k3-by">by Intelense</span></a>')
 
 
 def header():
@@ -109,7 +109,7 @@ def header():
 def footer():
     mods = ''.join(f'<li><a href="{u}" rel="noopener">{n}</a></li>' for k, n, j, c, u in MODS)
     return f'''<footer><div class="wrap"><div class="foot k3-foot">
-      <div><a class="logo k3-logo" href="@index" aria-label="Ken360 by Intelense, home"><span class="k3-word on-dark">Ken<b>360</b></span><span class="k3-by">by</span><img src="@a/logos/intelense-light.png" alt="Intelense" width="100" height="15"></a>
+      <div><a class="logo k3-logo" href="@index" aria-label="Ken360 by Intelense, home"><span class="k3-word on-dark">Ken<b>360</b></span><span class="k3-by on-dark">by Intelense</span></a>
         <p style="margin-top:16px;max-width:36ch">Ken360 is the core AI technology from Intelense, behind all seven Ken modules.</p></div>
       <div><h4>Platform</h4><ul><li><a href="#how">How it works</a></li><li><a href="#combos">Combinations</a></li><li><a href="#runs">Deployment</a></li><li><a href="#faq">FAQ</a></li></ul></div>
       <div><h4>Ken modules</h4><ul>{mods}</ul></div>
