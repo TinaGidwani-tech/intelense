@@ -1,14 +1,10 @@
 /* Ken360 layer on top of the shared Intelense stylesheet (site/assets/site.css). Light only, brand blue #0A34ED, Montserrat. */
 
 /* ---------- lockup, reveal, headings ---------- */
-.k3-logo { display: inline-flex; align-items: center; gap: 8px; white-space: nowrap; }
-.k3-word { font-size: 26px; font-weight: 600; letter-spacing: -0.035em; color: var(--off-black); line-height: 1; }
-.k3-word b { font-weight: 600; color: #0A34ED; }
-.k3-word.on-dark { color: #fff; }
-.k3-word.on-dark b { color: #7f98ff; }
-.k3-by { font-size: 12px; font-weight: 500; letter-spacing: -0.005em; color: var(--smoke); align-self: flex-end; padding-bottom: 3px; }
-.k3-by.on-dark { color: #9a9cb0; }
-.k3-logo img { height: 15px; width: auto; display: block; }
+.k3-logo { display: inline-flex; align-items: center; }
+.k3-logo img { height: 60px; width: auto; display: block; }
+footer .k3-logo img { height: 68px; }
+@media (max-width: 480px) { .k3-logo img { height: 48px; } }
 .js [data-r] { opacity: 0; transform: translateY(18px); transition: opacity .7s ease var(--d, 0ms), transform .8s cubic-bezier(.2, .7, .2, 1) var(--d, 0ms); }
 .js [data-r].in { opacity: 1; transform: none; }
 @media (prefers-reduced-motion: reduce) { .js [data-r] { opacity: 1; transform: none; transition: none; } }
@@ -16,24 +12,36 @@ h1 em, h2 em { font-style: normal; color: #0A34ED; background-image: linear-grad
 .md { display: inline-block; width: 9px; height: 9px; border-radius: 50%; background: var(--c, #0A34ED); flex: none; }
 .cap-t { font-size: 12px; text-transform: uppercase; letter-spacing: .07em; color: var(--smoke); font-weight: 500; }
 
-/* ---------- hero ---------- */
-.k3-hero h1 { max-width: 16ch; font-size: clamp(38px, 5vw, 68px); }
-.k3-hero-grid { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, .95fr); gap: clamp(32px, 5vw, 72px); align-items: center; }
-.k3-hero .eyebrow { max-width: 60ch; line-height: 1.5; }
-.k3-hero .hero-ctas { justify-content: flex-start; }
-.k3-trust { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 28px; }
+/* ---------- hero: centred copy, full-width stage ---------- */
+.k3-hero .wrap { display: grid; gap: clamp(36px, 5vw, 64px); }
+.k3-hero-copy { text-align: center; display: grid; justify-items: center; }
+.k3-hero h1 { max-width: 20ch; font-size: clamp(38px, 5.6vw, 76px); margin-top: 22px; }
+.k3-hero .lede { max-width: 62ch; margin-top: 24px; }
+.k3-hero .hero-ctas { justify-content: center; }
+.k3-trust { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 28px; justify-content: center; }
 .k3-trust span { display: inline-flex; align-items: center; gap: 8px; padding: 8px 14px; border-radius: 9999px; border: 1px solid var(--ash); background: var(--white); font-size: 13px; color: var(--graphite); }
 .k3-trust span::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: #0A34ED; }
-.k3-console { border: 1px solid var(--ash); border-radius: 32px; background: #fbf9f7; overflow: hidden; position: relative; }
-.k3-console .ch { display: flex; align-items: center; gap: 12px; padding: 12px 18px; border-bottom: 1px solid var(--ash); background: var(--parchment); font-size: 12px; }
-.k3-console .dots { display: inline-flex; gap: 6px; } .k3-console .dots i { width: 9px; height: 9px; border-radius: 50%; background: var(--ash); }
-.k3-console .ttl { font-weight: 600; }
-.k3-console .lv { margin-left: auto; display: inline-flex; gap: 6px; align-items: center; font-weight: 600; font-size: 11px; color: #138a5b; background: rgba(19, 138, 91, .1); padding: 4px 10px; border-radius: 9999px; }
-.k3-console .lv i { width: 7px; height: 7px; border-radius: 50%; background: #1fbf80; animation: k3-ping 2s ease-out infinite; }
-@keyframes k3-ping { 0% { box-shadow: 0 0 0 0 rgba(31, 191, 128, .6); } 80%, 100% { box-shadow: 0 0 0 8px rgba(31, 191, 128, 0); } }
-.k3-console .cb { padding: clamp(18px, 2.4vw, 28px); display: grid; grid-template-columns: minmax(0, 1fr) 44px minmax(0, 1fr); grid-template-rows: auto 1fr; gap: 14px 0; align-items: center; }
-.k3-console .cap-t { grid-column: 1 / -1; }
-.sgs { display: grid; gap: 14px; }
+.k3-stage { position: relative; display: grid; grid-template-columns: minmax(0, .8fr) 64px minmax(0, 1.15fr) 64px minmax(0, 1fr); align-items: center; border: 1px solid var(--ash); border-radius: 40px; background: rgba(251, 249, 247, .75); backdrop-filter: blur(6px); padding: clamp(22px, 3vw, 44px); }
+.k3-stage .cap-t { display: block; margin-bottom: 14px; }
+.k3-stage .in ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+.k3-stage .in li { display: flex; align-items: center; gap: 12px; padding: 11px 16px; border: 1px solid var(--ash); border-radius: 9999px; background: #fff; font-size: 14px; font-weight: 500; animation: k3-lit 5s ease-in-out infinite; animation-delay: calc(var(--i) * .35s); }
+.k3-stage .in svg { width: 18px; height: 18px; stroke: #0A34ED; fill: none; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; flex: none; }
+@keyframes k3-lit { 0%, 100% { border-color: var(--ash); } 20%, 40% { border-color: #0A34ED; } }
+.k3-stage .wire { width: 64px; height: 100%; min-height: 200px; overflow: visible; }
+.k3-stage .wire path { fill: none; stroke: #0A34ED; stroke-width: 1.6; stroke-dasharray: 4 5; vector-effect: non-scaling-stroke; animation: k3-dash 1s linear infinite; opacity: .7; }
+.k3-stage .core { position: relative; display: grid; place-items: center; }
+.k3-stage .halo { position: absolute; inset: -10% -4%; border-radius: 50%; background: radial-gradient(circle, rgba(124, 40, 233, .22), rgba(10, 52, 237, .10) 45%, transparent 70%); filter: blur(10px); animation: k3-breathe 5s ease-in-out infinite; }
+@keyframes k3-breathe { 50% { transform: scale(1.08); opacity: .8; } }
+.k3-stage .core .cb { position: relative; width: 100%; border: 1.5px solid #0A34ED; border-radius: 32px; background: #fff; padding: clamp(22px, 2.6vw, 36px); display: grid; justify-items: center; gap: 14px; text-align: center; box-shadow: 0 0 0 8px rgba(10, 52, 237, .06); }
+.k3-stage .core img { width: min(240px, 70%); height: auto; display: block; }
+.k3-stage .core .cb > span { font-size: 12px; text-transform: uppercase; letter-spacing: .08em; color: var(--smoke); font-weight: 500; }
+.k3-stage .ms { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; }
+.k3-stage .ms span { display: inline-flex; align-items: center; gap: 6px; font-size: 11.5px; font-weight: 600; padding: 5px 10px; border-radius: 9999px; border: 1px solid var(--ash); background: var(--parchment); }
+.k3-stage .ms span { text-transform: none; letter-spacing: 0; color: var(--off-black); }
+.k3-stage .out { display: grid; gap: 12px; align-content: center; }
+.k3-stage .out .cap-t { margin-bottom: 2px; }
+.k3-stage .sgs { display: grid; gap: 10px; }
+@keyframes k3-dash { to { stroke-dashoffset: -18; } }
 .sg { display: grid; grid-template-columns: 10px minmax(0, 1fr); gap: 12px; align-items: center; padding: 14px 16px; border: 1px solid var(--ash); border-radius: 18px; background: #fff; animation: k3-in 6s ease-in-out infinite; }
 .sg.s1 { animation-delay: .5s; }
 .sg i { width: 10px; height: 10px; border-radius: 50%; background: var(--c); }
@@ -49,9 +57,14 @@ h1 em, h2 em { font-style: normal; color: #0A34ED; background-image: linear-grad
 .inc .who { display: flex; gap: 6px; flex-wrap: wrap; }
 .inc .who span { font-size: 11px; font-weight: 600; padding: 4px 10px; border-radius: 9999px; border: 1px solid var(--c); color: var(--c); }
 .inc .act { font-size: 12px; color: var(--graphite); padding-top: 10px; border-top: 1px solid var(--ash); } .inc .act span { color: var(--smoke); text-transform: uppercase; letter-spacing: .06em; font-size: 10.5px; margin-right: 6px; }
-@media (prefers-reduced-motion: reduce) { .sg, .inc, .merge path, .k3-console .lv i { animation: none; } }
-@media (max-width: 1080px) { .k3-hero-grid { grid-template-columns: minmax(0, 1fr); } }
-@media (max-width: 560px) { .k3-console .cb { grid-template-columns: minmax(0, 1fr); } .merge { display: none; } .sgs { margin-bottom: 4px; } }
+@media (prefers-reduced-motion: reduce) { .sg, .inc, .k3-stage .wire path, .k3-stage .in li, .k3-stage .halo { animation: none; } }
+@media (max-width: 1080px) {
+  .k3-stage { grid-template-columns: minmax(0, 1fr); gap: 8px; }
+  .k3-stage .wire { width: 100%; height: 40px; min-height: 0; transform: rotate(90deg) scaleX(.3); display: none; }
+  .k3-stage .in ul { grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); }
+  .k3-stage .core { margin: 14px 0; }
+  .k3-stage { border-radius: 28px; }
+}
 
 /* ---------- what Ken360 is: the stack ---------- */
 .k3-stack { border: 1px solid var(--ash); border-radius: 40px; background: rgba(251, 249, 247, .6); padding: clamp(24px, 3.5vw, 48px); display: grid; gap: 0; }

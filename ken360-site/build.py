@@ -86,8 +86,8 @@ def dot(c):
 # ---------------------------------------------------------------- shared fragments
 
 def lockup(cls=''):
-    return (f'<a class="logo k3-logo {cls}" href="@index" aria-label="Ken360 by Intelense, home"><span class="k3-word">Ken<b>360</b></span>'
-            f'<span class="k3-by">by Intelense</span></a>')
+    return (f'<a class="logo k3-logo {cls}" href="@index" aria-label="Ken360 by Intelense, home">'
+            '<img src="@a/logos/ken360.png" alt="Ken360 by Intelense" width="168" height="64"></a>')
 
 
 def header():
@@ -109,7 +109,7 @@ def header():
 def footer():
     mods = ''.join(f'<li><a href="{u}" rel="noopener">{n}</a></li>' for k, n, j, c, u in MODS)
     return f'''<footer><div class="wrap"><div class="foot k3-foot">
-      <div><a class="logo k3-logo" href="@index" aria-label="Ken360 by Intelense, home"><span class="k3-word on-dark">Ken<b>360</b></span><span class="k3-by on-dark">by Intelense</span></a>
+      <div><a class="logo k3-logo" href="@index" aria-label="Ken360 by Intelense, home"><img src="@a/logos/ken360-light.png" alt="Ken360 by Intelense" width="168" height="64"></a>
         <p style="margin-top:16px;max-width:36ch">Ken360 is the core AI technology from Intelense, behind all seven Ken modules.</p></div>
       <div><h4>Platform</h4><ul><li><a href="#how">How it works</a></li><li><a href="#combos">Combinations</a></li><li><a href="#runs">Deployment</a></li><li><a href="#faq">FAQ</a></li></ul></div>
       <div><h4>Ken modules</h4><ul>{mods}</ul></div>
@@ -131,30 +131,33 @@ def block(inner, sid='', cls=''):
 # ---------------------------------------------------------------- sections
 
 def hero():
+    srcs = [('Cameras', 'M3 8h12v8H3z M15 11l6-3v8l-6-3'), ('Sensors', 'M12 3v4M12 17v4M3 12h4M17 12h4 M12 9a3 3 0 100 6 3 3 0 000-6z'),
+            ('Drones', 'M7 12h10 M5 8a2 2 0 100-4 2 2 0 000 4z M19 8a2 2 0 100-4 2 2 0 000 4z M5 20a2 2 0 100-4 2 2 0 000 4z M19 20a2 2 0 100-4 2 2 0 000 4z'),
+            ('Robots', 'M5 8h14v10H5z M12 4v4 M9 13h.01 M15 13h.01'), ('Voice', 'M9 3h6v11a3 3 0 01-6 0z M5 11a7 7 0 0014 0 M12 18v3')]
+    left = ''.join(f'<li style="--i:{i}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="{d}"/></svg>{n}</li>' for i, (n, d) in enumerate(srcs))
+    mods = ''.join(f'<span style="--c:{c}">{dot(c)}{n}</span>' for k, n, j, c, u in MODS)
     sig = [('kenvision', 'Crowd density rising', 'Zone B · 4 min'), ('kensafety', 'PPE compliance dropped', 'Zone B · now')]
     sigs = ''.join(f'<div class="sg s{i}" style="--c:{MOD[k][3]}"><i></i><div><b>{e(t)}</b><small>{MOD[k][1]} · {m}</small></div></div>' for i, (k, t, m) in enumerate(sig))
     return f'''<section class="page-hero k3-hero">
     <div class="wash wash-a" aria-hidden="true"></div><div class="wash wash-b" aria-hidden="true"></div><div class="cursor-grid" aria-hidden="true"></div>
-    <div class="wrap k3-hero-grid">
+    <div class="wrap">
       <div class="k3-hero-copy">
-        <span class="eyebrow">Ken360 by Intelense · The core technology behind the Ken modules</span>
+        <span class="eyebrow">The core technology behind the Ken modules</span>
         <h1>One picture of everything happening on <em>site</em>.</h1>
         <p class="lede">Ken360 is the core AI technology from Intelense. It brings your cameras, sensors, drones, robots and conversations into one engine, and it powers all seven Ken modules.</p>
         <div class="hero-ctas"><a class="btn btn-blue" href="{INTELENSE}/contact" target="_blank" rel="noopener">Book a demo</a><a class="btn btn-ghost" href="#how">See how it works</a></div>
         <div class="k3-trust"><span>Works with the equipment you already run</span><span>Edge, on-premise or cloud</span></div>
       </div>
-      <div class="k3-visual" aria-label="Two alerts from two modules becoming one incident">
-        <div class="k3-console">
-          <div class="ch"><span class="dots"><i></i><i></i><i></i></span><span class="ttl">Site picture · Warehouse 2</span><span class="lv"><i></i>Live</span></div>
-          <div class="cb">
-            <span class="cap-t">Signals arriving</span>
-            <div class="sgs">{sigs}</div>
-            <svg class="merge" viewBox="0 0 40 60" aria-hidden="true"><path d="M2 8 C24 8 14 30 38 30"/><path d="M2 52 C24 52 14 30 38 30"/></svg>
-            <div class="inc"><span class="tag">Ken360 · one incident</span><b>Crowd building where PPE has dropped</b>
-              <div class="who"><span style="--c:{MOD["kenvision"][3]}">{MOD["kenvision"][1]}</span><span style="--c:{MOD["kensafety"][3]}">{MOD["kensafety"][1]}</span></div>
-              <div class="act"><span>Notify</span> Shift supervisor, Zone B</div></div>
-          </div>
-        </div>
+      <div class="k3-stage" role="img" aria-label="Cameras, sensors, drones, robots and voice flow into Ken360, which raises one incident for the right team">
+        <div class="col in"><span class="cap-t">What it connects to</span><ul>{left}</ul></div>
+        <svg class="wire w1" viewBox="0 0 80 200" preserveAspectRatio="none" aria-hidden="true"><path d="M0 20 C50 20 30 100 80 100"/><path d="M0 60 C50 60 30 100 80 100"/><path d="M0 100 L80 100"/><path d="M0 140 C50 140 30 100 80 100"/><path d="M0 180 C50 180 30 100 80 100"/></svg>
+        <div class="col core"><div class="halo" aria-hidden="true"></div><div class="cb"><img src="@a/logos/ken360.png" alt="" width="168" height="64"><span>One engine. Seven modules.</span><div class="ms">{mods}</div></div></div>
+        <svg class="wire w2" viewBox="0 0 80 200" preserveAspectRatio="none" aria-hidden="true"><path d="M0 100 C40 100 40 50 80 50"/><path d="M0 100 C40 100 40 150 80 150"/></svg>
+        <div class="col out"><span class="cap-t">What your team gets</span>
+          <div class="sgs">{sigs}</div>
+          <div class="inc"><span class="tag">One incident</span><b>Crowd building where PPE has dropped</b>
+            <div class="who"><span style="--c:{MOD["kenvision"][3]}">{MOD["kenvision"][1]}</span><span style="--c:{MOD["kensafety"][3]}">{MOD["kensafety"][1]}</span></div>
+            <div class="act"><span>Notify</span> Shift supervisor, Zone B</div></div></div>
       </div>
     </div></section>'''
 
@@ -305,8 +308,8 @@ def deploy(out):
     (a / 'k3.js').write_text(js)
     for f in ('site.js', 'cursor-grid.js'):
         shutil.copy(SITE_DIR / 'assets' / f, a / f)
-    for d in ('logos', 'icons'):
-        shutil.copytree(SITE_DIR / 'assets' / d, a / d, dirs_exist_ok=True)
+    shutil.copytree(SITE_DIR / 'assets' / 'icons', a / 'icons', dirs_exist_ok=True)
+    shutil.copytree(HERE / 'assets-src' / 'logos', a / 'logos', dirs_exist_ok=True)
     (out / 'index.html').write_text(resolve(render(page_index()), None if PREVIEW else version))
     if not PREVIEW:
         (out / 'robots.txt').write_text(f'User-agent: *\nAllow: /\n\nSitemap: {SITE_URL}/sitemap.xml\n')
