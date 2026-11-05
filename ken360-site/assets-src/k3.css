@@ -77,3 +77,5 @@ summary { transition: color .25s; }
 @keyframes k3-drift { 0%, 100% { transform: translate3d(0, 0, 0); } 50% { transform: translate3d(2.5%, 4%, 0); } }
 .k3-hero .wash-a { animation: k3-drift 14s ease-in-out infinite; } .k3-hero .wash-b { animation: k3-drift 18s ease-in-out infinite reverse; }
 @media (prefers-reduced-motion: reduce) { .js .rv { opacity: 1; transform: none; transition: none; } .js .hl { background-size: 100% 4px; transition: none; } .k3-hero .wash-a, .k3-hero .wash-b { animation: none; } .k3-cols > div:hover, .k3-combos li:hover { transform: none; } }
+
+.k3-next { margin-top: 28px; }

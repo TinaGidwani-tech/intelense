@@ -28,7 +28,6 @@ PREVIEW = '--preview' in sys.argv
 SITE_URL = 'https://ken360.ai'
 INTELENSE = 'https://www.intelense.com'
 LINKEDIN = 'https://www.linkedin.com/company/intelense/'
-DEMO = INTELENSE + '/contact'
 
 
 def e(s):
@@ -96,9 +95,9 @@ def header(current):
     return f'''<div class="announce"><div class="wrap"><span><span class="tag-new">Intelense</span>&nbsp; Ken360 is the core technology behind all seven Ken modules</span><a class="pill" href="{INTELENSE}/">Visit Intelense</a></div></div>
 <header class="nav"><div class="wrap"><a class="logo k3-logo" href="@index" aria-label="Ken360 by Intelense, home"><img src="@a/logos/ken360.png" alt="Ken360 by Intelense" width="168" height="64"></a>
     <ul class="nav-links">{links}</ul>
-    <div class="nav-cta"><a class="btn btn-blue" href="{DEMO}" target="_blank" rel="noopener">Book a demo</a>
+    <div class="nav-cta"><a class="btn btn-blue" href="@p/contact#form">Book a demo</a>
     <button class="menu-btn" type="button" aria-expanded="false" aria-controls="mobile-menu" aria-label="Menu"><span></span></button></div></div>
-  <nav class="mobile-menu" id="mobile-menu" hidden aria-label="Mobile"><div class="wrap">{mobile}<a class="btn btn-blue" href="{DEMO}" target="_blank" rel="noopener">Book a demo</a></div></nav>
+  <nav class="mobile-menu" id="mobile-menu" hidden aria-label="Mobile"><div class="wrap">{mobile}<a class="btn btn-blue" href="@p/contact#form">Book a demo</a></div></nav>
 </header>
 '''
 
@@ -127,7 +126,7 @@ def block(inner, sid=''):
 
 
 def page_hero(eyebrow, h1, lede, ctas=True):
-    btn = f'<div class="hero-ctas"><a class="btn btn-blue" href="{DEMO}" target="_blank" rel="noopener">Book a demo</a><a class="btn btn-ghost" href="{link("platform")}">How it works</a></div>' if ctas else ''
+    btn = f'<div class="hero-ctas"><a class="btn btn-blue" href="@p/contact#form">Book a demo</a><a class="btn btn-ghost" href="{link("platform")}">How it works</a></div>' if ctas else ''
     return f'''<section class="page-hero k3-hero"><div class="wash wash-a" aria-hidden="true"></div><div class="wash wash-b" aria-hidden="true"></div>
     <div class="wrap"><span class="eyebrow">{eyebrow}</span><h1>{h1}</h1><p class="lede">{lede}</p>{btn}</div></section>'''
 
@@ -155,10 +154,10 @@ def faq(items, title='Questions buyers ask'):
     return f'<section class="block" id="faq"><div class="wrap faq-grid"><div><span class="eyebrow">FAQ</span><h2 style="margin-top:18px">{title}</h2></div><div>{det}</div></div></section>'
 
 
-def cta(h='Start with one module. <span class="hl">Add the rest when you are ready.</span>'):
+def cta(h='Start with one module. <span class="hl">Add the rest when you are ready.</span>', nxt=None):
+    more = f'<p class="k3-next"><a class="link-arrow" href="{link(nxt[0])}">Next: {nxt[1]}</a></p>' if nxt else ''
     return f'''<section class="cta"><div class="wrap"><h2>{h}</h2>
-    <p class="lede" style="margin:22px auto 0">Ken360 is useful from the first deployment, not only at full scale.</p>
-    <div class="hero-ctas"><a class="btn btn-blue" href="{DEMO}" target="_blank" rel="noopener">Book a demo</a><a class="btn btn-ghost" href="mailto:enquiries@intelense.ca">Email us</a></div></div></section>'''
+    <div class="hero-ctas"><a class="btn btn-blue" href="@p/contact#form">Book a demo</a><a class="btn btn-ghost" href="mailto:enquiries@intelense.ca">Email us</a></div>{more}</div></section>'''
 
 
 # ---------------------------------------------------------------- pages
@@ -168,7 +167,7 @@ def page_index():
     <div class="wrap"><span class="eyebrow">Core technology by Intelense</span>
       <h1>The AI engine behind <span class="hl">every Ken module</span>.</h1>
       <p class="lede">Ken360 is the core AI technology from Intelense. It connects your cameras, sensors, drones, robots and voice systems, understands what they see, and sends one clear alert to the right person.</p>
-      <div class="hero-ctas"><a class="btn btn-blue" href="{DEMO}" target="_blank" rel="noopener">Book a demo</a><a class="btn btn-ghost" href="{link("platform")}">How it works</a></div>
+      <div class="hero-ctas"><a class="btn btn-blue" href="@p/contact#form">Book a demo</a><a class="btn btn-ghost" href="{link("platform")}">How it works</a></div>
       <div class="hero-meta"><span>Built by Intelense</span><span>Seven Ken modules</span><span>Edge, on-premise or cloud</span></div></div></section>'''
     what = block(head_block('What Ken360 is', 'One technology, <span class="hl">seven modules</span>.',
                             'The Ken modules are the products you use on site. Ken360 is what runs inside every one of them.')
@@ -190,7 +189,7 @@ def page_index():
                         ('Your choice of setup', 'Run at the edge, on your servers, in your private cloud, or a mix.'),
                         ('Works with what you have', 'Ken360 connects to the cameras, sensors and systems you already run.'),
                         ('One API', 'Connect your own systems once, whichever modules you use.')]), 'why')
-    return '\n\n  '.join([hero, what, mods, how, why, faq(FAQ[:4]), cta()])
+    return '\n\n  '.join([hero, what, mods, how, why, faq(FAQ[:4]), cta(nxt=('platform', 'Platform'))])
 
 
 def page_platform():
@@ -209,13 +208,13 @@ def page_platform():
     protos = ''.join(f'<span class="chip">{s}</span>' for s in ('RTSP', 'ONVIF', 'MQTT', 'Modbus', 'OPC-UA', 'ROS2'))
     conn = block(head_block('Connects to', 'What you already run.', 'No replacement phase before you see results.')
                  + f'<h3 style="margin-bottom:14px">Sources</h3><div class="chips">{srcs}</div><h3 style="margin:32px 0 14px">Protocols</h3><div class="chips">{protos}</div>')
-    return '\n\n  '.join([page_hero('Platform', 'One engine for <span class="hl">every site</span>.', 'Ken360 is the layer that turns separate cameras, sensors and robots into one picture of what is happening on site.'), inside, flow, conn, cta()])
+    return '\n\n  '.join([page_hero('Platform', 'One engine for <span class="hl">every site</span>.', 'Ken360 is the layer that turns separate cameras, sensors and robots into one picture of what is happening on site.'), inside, flow, conn, cta(nxt=('modules', 'Modules'))])
 
 
 def page_modules():
     return '\n\n  '.join([page_hero('Modules', 'Seven modules. <span class="hl">One engine.</span>', DEFINITION),
                           block(head_block('The Ken modules', 'What each module adds.', 'Each module sends its own events into Ken360. Ken360 compares them across modules.') + mod_rows(True)),
-                          cta('Not sure which module to start with? <span class="hl">Talk to us.</span>')])
+                          cta('Not sure which module to start with? <span class="hl">Talk to us.</span>', ('combinations', 'Combinations'))])
 
 
 def page_combinations():
@@ -224,7 +223,7 @@ def page_combinations():
         tags = ' <em>+</em> '.join(f'<span class="mn">{dot(MOD[k][4])}{MOD[k][1]}</span>' for k in pair)
         items += f'<li><div class="pair">{tags}</div><h3>{t}</h3><p>{p}</p>{"" if ok else "<span class=draft>Draft example</span>"}</li>'
     return '\n\n  '.join([page_hero('Combinations', 'What one module can not see, <span class="hl">two can</span>.', 'Each Ken module is useful alone. Ken360 compares what they see and turns the overlap into one incident, one alert and one next step.', False),
-                          block(f'<ul class="k3-combos">{items}</ul><p class="k3-note">Examples show how modules can work together. Results depend on your site and setup.</p>'), cta()])
+                          block(f'<ul class="k3-combos">{items}</ul>'), cta()])
 
 
 def page_deployment():
@@ -232,7 +231,7 @@ def page_deployment():
                   ('On your servers', 'Everything runs inside your own data centre. Only the events and derived data you choose leave the site.'),
                   ('In the cloud, or both', 'Use your private cloud for scale and reporting, and keep sensitive streams on site. One platform, mixed setup.')])
     return '\n\n  '.join([page_hero('Deployment', 'Your data stays where <span class="hl">you decide</span>.', 'Run Ken360 at the edge, on your servers, in your private cloud, or a mix. In an on-premise setup the video stays on site.', False),
-                          block(head_block('Setup options', 'Three ways to run Ken360.') + opts), faq(FAQ, 'Deployment, data and support'), cta()])
+                          block(head_block('Setup options', 'Three ways to run Ken360.') + opts), faq(FAQ, 'Deployment, data and support'), cta(nxt=('about', 'About'))])
 
 
 def page_about():
@@ -241,15 +240,35 @@ def page_about():
                          ('One family', 'KenVision, KenSafety, KenHome, KenAgri, KenIoT, KenRobotics and KenVoice all share the same core.'),
                          ('More at intelense.com', 'Read about the company, the team and the offices on the Intelense site.')])
                  + f'<p style="margin-top:32px"><a class="btn btn-ghost" href="{INTELENSE}/about" rel="noopener">About Intelense</a></p>')
-    return '\n\n  '.join([page_hero('About', 'Built by <span class="hl">Intelense</span>.', DEFINITION, False), body, cta()])
+    return '\n\n  '.join([page_hero('About', 'Built by <span class="hl">Intelense</span>.', DEFINITION, False), body, cta(nxt=('contact', 'Contact'))])
 
 
 def page_contact():
-    body = block(head_block('Contact', 'Talk to the team behind Ken360.', 'Tell us what you run today and which module you would start with.')
-                 + f'''<div class="k3-cols c3"><div><h3>Email</h3><p class="email">enquiries@intelense.ca</p><p class="email">dinesh@intelense.com</p></div>
-        <div><h3>Phone</h3><p><a href="tel:+12895523165">+1 (289) 552-3165</a> Canada</p><p><a href="tel:+919342810422">+91 93428 10422</a> India</p></div>
-        <div><h3>Book a demo</h3><p>Use the form on the Intelense site.</p><p><a class="btn btn-blue" href="{DEMO}" target="_blank" rel="noopener">Book a demo</a></p></div></div>''')
-    return '\n\n  '.join([page_hero('Contact', 'Let us <span class="hl">talk</span>.', 'We reply to every enquiry.', False), body])
+    interest = ''.join(f'<option>{m[1]}</option>' for m in MODS)
+    form = f'''<section class="block" id="form"><div class="wrap contact-grid">
+      <div class="panel">
+        <h2 style="font-size:28px;margin-bottom:6px">Book a demo</h2>
+        <p style="color:var(--graphite);margin:0 0 24px">Tell us what you run today and which module you would start with. We reply within one business day.</p>
+        <form class="form" id="demo-form" novalidate aria-label="Book a demo">
+          <div class="field"><label for="f-first">First name <span class="req">*</span></label><input id="f-first" name="first_name" placeholder="Jane" autocomplete="given-name" required></div>
+          <div class="field"><label for="f-last">Last name <span class="req">*</span></label><input id="f-last" name="last_name" placeholder="Smith" autocomplete="family-name" required></div>
+          <div class="field full"><label for="f-email">Work email <span class="req">*</span></label><input id="f-email" name="email" type="email" placeholder="jane@yourcompany.com" autocomplete="email" required></div>
+          <div class="field"><label for="f-company">Company</label><input id="f-company" name="company" placeholder="Your Company" autocomplete="organization"></div>
+          <div class="field"><label for="f-interest">I'm interested in</label><select id="f-interest" name="interest"><option value="">Select a module...</option>{interest}<option>Ken360 platform (all modules)</option><option>Partnership</option><option>Other</option></select></div>
+          <div class="field full"><label for="f-msg">How can we help? <span class="req">*</span></label><textarea id="f-msg" name="message" placeholder="Tell us about your site, your team and what you want to solve." required></textarea></div>
+          <input type="text" name="_honey" value="" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0">
+          <div class="full" style="display:flex;gap:16px;align-items:center;flex-wrap:wrap"><button class="btn btn-blue" type="submit">Request a demo</button><span class="form-note" id="form-status" role="status" aria-live="polite"></span></div>
+          <p class="form-note full">By submitting, you agree to the <a href="{INTELENSE}/privacy">Intelense Privacy Policy</a>. We never share your data.</p>
+        </form>
+        <div class="form-done" id="form-done" hidden tabindex="-1"><h3>Thanks, we have your request.</h3><p>The Intelense team will reply within one business day.</p>
+          <p style="margin-top:18px"><a class="link-arrow" href="{link("modules")}">Explore the modules while you wait</a></p></div>
+      </div>
+      <aside class="panel"><ul class="info-list">
+        <li><span>Email</span><b class="email">enquiries@intelense.ca</b><b class="email">dinesh@intelense.com</b></li>
+        <li><span>Phone</span><b><a href="tel:+12895523165">+1 (289) 552-3165</a> <small>Canada</small></b><b><a href="tel:+919342810422">+91 93428 10422</a> <small>India</small></b></li>
+        <li><span>Built by</span><b><a href="{INTELENSE}/" rel="noopener">Intelense</a></b></li></ul></aside>
+    </div></section>'''
+    return '\n\n  '.join([page_hero('Contact', 'Book a <span class="hl">demo</span>.', 'Talk to the team behind Ken360.', False), form])
 
 
 PAGES = {
@@ -296,11 +315,11 @@ def render(name):
 def resolve(html, version):
     if PREVIEW:
         html = html.replace('href="@index"', 'href="home.html"')
-        html = re.sub(r'href="@p/([a-z]+)"', r'href="\1.html"', html)
+        html = re.sub(r'href="@p/([a-z]+)(#[^"]*)?"', lambda m: 'href="%s.html%s"' % (m.group(1), m.group(2) or ''), html)
         html = html.replace('@a/', 'assets/')
     else:
         html = html.replace('href="@index"', 'href="/"')
-        html = re.sub(r'href="@p/([a-z]+)"', r'href="/\1"', html)
+        html = re.sub(r'href="@p/([a-z]+)(#[^"]*)?"', lambda m: 'href="/%s%s"' % (m.group(1), m.group(2) or ''), html)
         html = html.replace('@a/', '/assets/')
     if version:
         html = re.sub(r'((?:href|src)="[^"]*assets/[a-z0-9-]+\.(?:css|js))"', lambda m: m.group(1) + '?v=' + version + '"', html)
@@ -316,6 +335,8 @@ def deploy(out):
     (a / 'site.css').write_text(css)
     shutil.copy(SITE_DIR / 'assets' / 'site.js', a / 'site.js')
     shutil.copy(HERE / 'assets-src' / 'k3.js', a / 'k3.js')
+    if not PREVIEW:
+        shutil.copy(HERE / 'server' / 'send-message.php', out / 'send-message.php')
     shutil.copytree(SITE_DIR / 'assets' / 'icons', a / 'icons', dirs_exist_ok=True)
     shutil.copytree(HERE / 'assets-src' / 'logos', a / 'logos', dirs_exist_ok=True)
     for name in PAGES:
