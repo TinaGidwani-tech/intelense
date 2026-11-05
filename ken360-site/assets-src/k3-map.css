@@ -110,3 +110,21 @@
 @media (max-width: 680px) { .mlist li { grid-template-columns: minmax(0, 1fr); gap: 6px; } .mh { display: none; } }
 @media (prefers-reduced-motion: reduce) { .main { animation: none; } .u-kpis .kp:hover { transform: none; } }
 .mrows .u-st, .u-tbl .u-st { grid-row: auto; justify-self: start; }
+
+/* Ken360 engine diagram: core on the left, every module on the right */
+.k3-engine { display: grid; grid-template-columns: minmax(280px, .8fr) minmax(0, 1.2fr); gap: clamp(24px, 5vw, 80px); align-items: center; max-width: 1040px; margin-inline: auto; }
+.eng { display: grid; place-items: center; }
+.eng .ring { width: min(380px, 100%); aspect-ratio: 1; border-radius: 50%; background: #fff; border: 1px solid var(--ash); display: grid; place-items: center; box-shadow: 0 0 0 22px rgba(10, 52, 237, .04), 0 0 0 23px var(--ash); }
+.eng .core { width: 78%; aspect-ratio: 1; border-radius: 50%; background: #fff; border: 1px solid var(--ash); display: grid; place-content: center; justify-items: center; gap: 10px; text-align: center; box-shadow: 0 20px 40px -20px rgba(36, 36, 60, .25); }
+.eng .core img { width: 62%; height: auto; display: block; } .eng .core b { font-size: 15px; font-weight: 600; }
+.mods7 { list-style: none; margin: 0; padding: 0 0 0 34px; display: grid; gap: 12px; position: relative; }
+.mods7::before { content: ""; position: absolute; left: 0; top: 28px; bottom: 28px; border-left: 2px solid var(--ash); border-radius: 2px; }
+.mods7 li { display: grid; grid-template-columns: 190px minmax(0, 1fr); gap: 20px; align-items: center; position: relative; }
+.mods7 li::before { content: ""; position: absolute; left: -34px; top: 50%; width: 34px; border-top: 2px solid var(--ash); }
+.mods7 li::after { content: ""; position: absolute; left: -4px; top: 50%; width: 9px; height: 9px; margin-top: -4.5px; border-radius: 50%; background: var(--c, #0A34ED); background: #242424; }
+.wm { display: grid; grid-template-columns: auto 1fr; align-items: baseline; padding: 10px 20px 8px; border-radius: 9999px; background: #fff; border: 1px solid var(--ash); text-decoration: none; font-size: 24px; letter-spacing: -0.03em; line-height: 1; font-weight: 500; color: var(--off-black); transition: background .25s, box-shadow .25s; }
+.wm span { color: var(--c); font-size: 17px; letter-spacing: -0.01em; } .wm small { grid-column: 1 / -1; font-size: 8.5px; letter-spacing: 0; color: var(--smoke); margin-top: 3px; text-align: center; }
+.wm:hover { background: #fff; box-shadow: 0 0 0 1.5px var(--c); }
+.mods7 .use { font-size: 14px; color: var(--graphite); }
+@media (max-width: 860px) { .k3-engine { grid-template-columns: minmax(0, 1fr); } .eng .ring { width: min(300px, 80%); } }
+@media (max-width: 520px) { .mods7 li { grid-template-columns: minmax(0, 1fr); gap: 6px; } .wm { justify-self: start; } }

@@ -236,19 +236,14 @@ def hero():
 
 
 def what_is():
-    caps = [('Shared data model', 'Every camera, sensor, robot and voice stream is stored in the same format.'),
-            ('AI engine', 'Reads each stream and flags what matters. Runs at the edge, on your servers or in the cloud.'),
-            ('Correlation across modules', 'Compares what different modules see and joins the overlap into one incident.'),
-            ('Alerts and routing', 'Sends one clear alert, with context, to the right person.'),
-            ('One dashboard and API', 'One place to see everything, and one API to connect your own systems.')]
-    dots = ''.join(f'<i style="--c:{c}" title="{n}"></i>' for k, n, j, c, u in MODS)
-    rows = ''.join(f'<li><span class="cn"><b>{n}</b></span><span class="jb">{d}</span><span class="dots" aria-label="Used by all seven Ken modules">{dots}</span></li>' for n, d in caps)
-    legend = ''.join(f'<a class="mtag" href="{u}" rel="noopener" style="--c:{c}">{dot(c)}{n}</a>' for k, n, j, c, u in MODS)
+    uses = {'kenvision': 'Retail, malls, QSR, public spaces', 'kensafety': 'Roads, fleets, construction and industrial safety', 'kenhome': 'Home, vehicle and asset security',
+            'kenagri': 'Farms and crop monitoring', 'keniot': 'Predictive maintenance systems', 'kenrobotics': 'Autonomous mobile robots and autonomous drones', 'kenvoice': 'Conversation intelligence'}
+    rows = ''.join(f'<li><a class="wm" href="{u}" rel="noopener" style="--c:{c}">Ken<span>{n[3:].lower() if n != "KenIoT" else "IoT"}</span><small>by Intelense</small></a><span class="use">{uses[k]}</span></li>' for k, n, j, c, u in MODS)
     return block(head_block('What Ken360 is', 'Seven modules. <em>One technology</em> underneath.',
                             'The Ken modules are the products you use on site. Ken360 is what runs inside every one of them: the shared data model, the AI engine, the alerts and the dashboard. Add a module and it joins the same engine, so what each one learns is available to the rest.')
-                 + f'''<div class="ui modsui" id="stack"{rv()}>{ui_bar('Ken360 &middot; Platform', 'Core technology by Intelense')}
-        <div class="ui-in col"><div class="coreline"><div class="ct"><b>Ken360</b><small>One core, seven modules</small></div><div class="lg">{legend}</div></div>
-          <div class="mlist"><div class="mh"><span>Capability</span><span>What it does</span><span>Runs in</span></div><ul>{rows}</ul></div></div></div>
+                 + f'''<div class="k3-engine" id="stack"{rv()}>
+        <div class="eng"><div class="ring"><div class="core"><img src="@a/logos/ken360.png" alt="Ken360 by Intelense" width="240" height="91"><b>The Intelligent Engine</b></div></div></div>
+        <ul class="mods7">{rows}</ul></div>
       <p class="k3-def"{rv(1)}>{DEFINITION}</p>''', 'what')
 
 
