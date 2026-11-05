@@ -115,7 +115,6 @@
 .k3-engine { position: relative; display: grid; grid-template-columns: minmax(300px, .85fr) minmax(0, 1.15fr); gap: clamp(32px, 7vw, 120px); align-items: center; max-width: 1100px; margin-inline: auto; }
 .k3-engine .wires { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; z-index: 0; }
 .k3-engine .wires path { fill: none; stroke: #c9cbd6; stroke-width: 1.5; }
-.story-on .k3-engine .wires path { transition: stroke-dashoffset .9s cubic-bezier(.2, .7, .2, 1), stroke .4s; }
 .eng { display: grid; place-items: center; position: relative; z-index: 1; }
 .eng .ring { width: min(380px, 100%); aspect-ratio: 1; border-radius: 50%; background: #fff; border: 1px solid var(--ash); box-shadow: 0 0 0 18px rgba(10, 52, 237, .04), 0 0 0 19px var(--ash); display: grid; place-items: center; }
 .eng .core { width: 76%; aspect-ratio: 1; border-radius: 50%; background: #fff; box-shadow: 0 20px 40px -22px rgba(36, 36, 80, .3), 0 0 0 1px var(--ash); display: grid; place-content: center; justify-items: center; gap: 8px; text-align: center; padding: 8%; }
@@ -128,17 +127,7 @@
 .wm span { color: var(--c); font-size: 15px; letter-spacing: -0.01em; } .wm small { grid-column: 1 / -1; font-size: 8px; letter-spacing: 0; color: var(--smoke); margin-top: 3px; text-align: center; }
 .use { display: grid; gap: 2px; min-width: 0; } .use b { font-size: 13.5px; font-weight: 500; color: var(--off-black); } .use em { font-style: normal; font-size: 12px; color: var(--smoke); }
 .mods7 li:hover { border-color: var(--c); }
-/* story mode (desktop, set by k3-map.js) */
-.story-on { height: calc(100vh + 7 * 42vh); }
-.story-on .stage { position: sticky; top: 0; height: 100vh; min-height: 620px; display: grid; align-content: center; gap: 28px; }
-.story-on .mods7 li:not(.joined) { opacity: .28; filter: grayscale(1); }
-.story-on .mods7 li.new { border-color: var(--c); box-shadow: 0 0 0 3px color-mix(in srgb, var(--c) 14%, transparent); }
-.cap { margin: 0; text-align: center; font-size: clamp(16px, 1.5vw, 19px); color: var(--off-black); max-width: 64ch; margin-inline: auto; min-height: 3.2em; transition: opacity .35s; }
-.cap.sw { opacity: 0; }
-.prog { display: none; justify-content: center; gap: 8px; }
-.story-on .prog { display: flex; } .prog i { width: 28px; height: 3px; border-radius: 3px; background: var(--ash); transition: background .4s; } .prog i.on { background: #0A34ED; }
-.story-on .cap { display: block; } .cap { display: none; }
 @media (max-width: 960px) { .mods7 li { grid-template-columns: 160px minmax(0, 1fr); } }
 @media (max-width: 860px) { .k3-engine { grid-template-columns: minmax(0, 1fr); overflow-x: clip; } .k3-engine .wires { display: none; } .eng .ring { width: min(300px, 82%); } .mods7 li::before { display: none; } .mods7 { padding-right: 0; } }
 @media (max-width: 560px) { .mods7 li { grid-template-columns: minmax(0, 1fr); border-radius: 24px; gap: 8px; padding: 12px; } .wm { justify-self: start; } }
-@media (prefers-reduced-motion: reduce) { .story-on .k3-engine .wires path, .mods7 li, .cap { transition: none; } }
+@media (prefers-reduced-motion: reduce) { .mods7 li { transition: none; } }

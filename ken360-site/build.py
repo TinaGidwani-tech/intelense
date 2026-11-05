@@ -252,10 +252,9 @@ def what_is():
         <div class="k3-engine"{rv()}>
           <svg class="wires" aria-hidden="true"><g data-wires></g></svg>
           <div class="eng"><div class="ring" data-ring><div class="core"><img src="@a/logos/ken360.png" alt="Ken360 by Intelense" width="240" height="91"><b>The Intelligent Engine</b>
-            <p class="live"><span data-count>7</span> of 7 modules on this engine</p></div></div></div>
+            </div></div></div>
           <ul class="mods7">{rows}</ul></div>
-        <p class="cap" data-cap aria-live="polite">Ken360 is the core AI technology from Intelense. Every Ken module runs on it.</p>
-        <div class="prog" aria-hidden="true">{prog}</div></div></div>
+        </div>
       <p class="k3-def"{rv(1)}>{DEFINITION}</p>''', 'what')
 
 
