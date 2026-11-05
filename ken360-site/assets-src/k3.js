@@ -48,22 +48,3 @@
     render();
   });
 })();
-
-/* hero: scattered cards assemble into one dashboard on scroll */
-(function () {
-  var h = document.querySelector('.k3-hero'); if (!h) return;
-  var wrap = h.querySelector('.wrap'), st = h.querySelector('.k3-collage');
-  var mq = window.matchMedia('(min-width:1200px)'), rm = window.matchMedia('(prefers-reduced-motion: reduce)');
-  var tick = false;
-  function ease(x) { return x < .5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2; }
-  function upd() {
-    tick = false;
-    if (!mq.matches || rm.matches) { h.style.removeProperty('--p'); h.classList.remove('asm'); return; }
-    var r = wrap.getBoundingClientRect(), span = r.height - st.offsetHeight;
-    var p = Math.max(0, Math.min(1, -r.top / Math.max(span * .8, 1)));
-    h.style.setProperty('--p', ease(p).toFixed(4));
-    h.classList.toggle('asm', p > .45);
-  }
-  function req() { if (!tick) { tick = true; requestAnimationFrame(upd); } }
-  addEventListener('scroll', req, { passive: true }); addEventListener('resize', req); upd();
-})();
