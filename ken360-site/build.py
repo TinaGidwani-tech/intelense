@@ -41,6 +41,7 @@ MODS = [
     ('kenvoice', 'KenVoice', 'Conversation intelligence', '#5466DD', INTELENSE + '/kenvoice'),
 ]
 MOD = {m[0]: m for m in MODS}
+MODS_JSON = json.dumps({m[0]: [m[1], m[3], m[4]] for m in MODS})
 
 DEFINITION = ('Ken360 is the core AI technology from Intelense. It powers all seven Ken modules: '
               'KenVision, KenSafety, KenHome, KenAgri, KenIoT, KenRobotics and KenVoice.')
@@ -207,8 +208,8 @@ def chips(keys):
 
 
 def hero():
-    side = ''.join(f'<li{" class=on" if i == 0 else ""}><i></i>{n}{f"<b>{c}</b>" if c else ""}</li>' for i, (n, c) in enumerate(
-        [('Overview', ''), ('Incidents', '1'), ('Sites', ''), ('Sources', ''), ('Modules', ''), ('Alert rules', ''), ('Settings', '')]))
+    side = ''.join(f'<li><button type="button" class="nv{" on" if i == 0 else ""}" data-v="{v}"><i></i>{n}<b data-badge="{v}"></b></button></li>' for i, (n, v) in enumerate(
+        [('Overview', 'overview'), ('Incidents', 'incidents'), ('Sites', 'sites'), ('Sources', 'sources'), ('Modules', 'modules'), ('Alert rules', 'rules'), ('Settings', 'settings')]))
     rows = ''.join(f'<button type="button" class="ir{" on" if i == 0 else ""}" data-i="{i}"><span class="u-st s-{d["s"].lower()}">{d["s"]}</span><b>{e(d["t"])}</b><small>{d["z"]} · {d["at"]}</small><span class="u-mt">{chips(d["m"])}</span></button>' for i, d in enumerate(INCIDENTS))
     panes = ''.join(
         f'<div class="ip{" on" if i == 0 else ""}" data-p="{i}"><div class="u-ph"><span class="u-mt">{chips(d["m"])}</span><b>{e(d["t"])}</b><small>{d["z"]}</small></div>'
@@ -223,9 +224,9 @@ def hero():
         <p class="lede">Ken360 is the core AI technology from Intelense. It brings your cameras, sensors, drones, robots and conversations into one engine, and it powers all seven Ken modules.</p>
         <div class="hero-ctas"><a class="btn btn-blue" href="{INTELENSE}/contact" target="_blank" rel="noopener">Book a demo</a><a class="btn btn-ghost" href="#how">See how it works</a></div>
       </div>
-      <div class="ui dash" data-incidents>{ui_bar('Ken360 &middot; Overview')}
+      <div class="ui dash" data-dash data-mods="{ea(MODS_JSON)}">{ui_bar('Ken360 &middot; <span data-sitename>Example site</span>')}
         <div class="ui-in"><aside><div class="u-brand">Ken360</div><ul>{side}</ul></aside>
-          <div class="main">
+          <div class="main" data-main>
             <div class="u-top"><b>Example site</b><span class="u-seg">Today</span></div>
             <div class="u-kpis"><div><small>Sources online</small><b>147</b></div><div><small>Alerts raised</small><b>7</b></div><div><small>Incidents opened</small><b>1</b></div></div>
             <div class="u-cols"><div class="u-feed"><span class="cap-t">Incidents</span>{rows}</div><div class="u-detail">{panes}</div></div>
@@ -235,13 +236,19 @@ def hero():
 
 
 def what_is():
-    rows = ''.join(f'<li><span class="mn">{dot(c)}<a href="{u}" rel="noopener">{n}</a></span><span class="jb">{j}</span><button type="button" class="sw" role="switch" aria-checked="true" aria-label="{n}" data-k="{k}"><i></i></button></li>' for k, n, j, c, u in MODS)
-    core = ''.join(f'<span>{x}</span>' for x in ('Shared data model', 'AI engine', 'Correlation across modules', 'Alerts and routing', 'One dashboard and API'))
+    caps = [('Shared data model', 'Every camera, sensor, robot and voice stream is stored in the same format.'),
+            ('AI engine', 'Reads each stream and flags what matters. Runs at the edge, on your servers or in the cloud.'),
+            ('Correlation across modules', 'Compares what different modules see and joins the overlap into one incident.'),
+            ('Alerts and routing', 'Sends one clear alert, with context, to the right person.'),
+            ('One dashboard and API', 'One place to see everything, and one API to connect your own systems.')]
+    dots = ''.join(f'<i style="--c:{c}" title="{n}"></i>' for k, n, j, c, u in MODS)
+    rows = ''.join(f'<li><span class="cn"><b>{n}</b></span><span class="jb">{d}</span><span class="dots" aria-label="Used by all seven Ken modules">{dots}</span></li>' for n, d in caps)
+    legend = ''.join(f'<a class="mtag" href="{u}" rel="noopener" style="--c:{c}">{dot(c)}{n}</a>' for k, n, j, c, u in MODS)
     return block(head_block('What Ken360 is', 'Seven modules. <em>One technology</em> underneath.',
                             'The Ken modules are the products you use on site. Ken360 is what runs inside every one of them: the shared data model, the AI engine, the alerts and the dashboard. Add a module and it joins the same engine, so what each one learns is available to the rest.')
-                 + f'''<div class="ui modsui" id="stack" data-mods{rv()}>{ui_bar('Ken360 &middot; Modules')}
-        <div class="ui-in col"><div class="coreline"><div class="ct"><b>Ken360</b><small>Core technology by Intelense</small></div><div class="cc">{core}</div></div>
-          <div class="mlist"><div class="mh"><span>Module</span><span>What it adds</span><span><em data-mcount>7 of 7</em> on</span></div><ul>{rows}</ul></div></div></div>
+                 + f'''<div class="ui modsui" id="stack"{rv()}>{ui_bar('Ken360 &middot; Platform', 'Core technology by Intelense')}
+        <div class="ui-in col"><div class="coreline"><div class="ct"><b>Ken360</b><small>One core, seven modules</small></div><div class="lg">{legend}</div></div>
+          <div class="mlist"><div class="mh"><span>Capability</span><span>What it does</span><span>Runs in</span></div><ul>{rows}</ul></div></div></div>
       <p class="k3-def"{rv(1)}>{DEFINITION}</p>''', 'what')
 
 
@@ -372,7 +379,7 @@ def resolve(html, version):
 def deploy(out):
     out.mkdir(parents=True, exist_ok=True)
     css = (SITE_DIR / 'assets' / 'site.css').read_text() + '\n' + (HERE / 'assets-src' / 'k3.css').read_text() + '\n' + (HERE / 'assets-src' / 'k3-map.css').read_text()
-    js = (HERE / 'assets-src' / 'k3.js').read_text() + '\n' + (HERE / 'assets-src' / 'k3-map.js').read_text()
+    js = (HERE / 'assets-src' / 'k3.js').read_text() + '\n' + (HERE / 'assets-src' / 'k3-map.js').read_text() + '\n' + (HERE / 'assets-src' / 'k3-dash.js').read_text()
     version = hashlib.md5((css + (SITE_DIR / 'assets' / 'site.js').read_text() + js).encode()).hexdigest()[:8]
     a = out / 'assets'
     a.mkdir(exist_ok=True)
