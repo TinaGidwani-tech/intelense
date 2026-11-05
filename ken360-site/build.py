@@ -191,6 +191,8 @@ def hero():
     return f'''<section class="k3-hero">
     <div class="wrap">
       <div class="k3-collage">
+        <div class="k3-dash" aria-hidden="true"><div class="dh"><i></i><i></i><i></i><span>Ken360 &middot; Example site</span></div></div>
+        <p class="k3-dcap" aria-hidden="true">One dashboard for everything on site.</p>
         <div class="art a1" aria-hidden="true"><div class="ah"><b>Connected today</b><span>Example site</span></div><table>{tbl}</table></div>
         <div class="art a2" aria-hidden="true"><div class="ah"><b>One incident</b><span>Loading dock</span></div>
           <p class="inc">Crowd building where PPE has dropped</p>
