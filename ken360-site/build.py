@@ -130,14 +130,63 @@ def block(inner, sid='', cls=''):
 
 # ---------------------------------------------------------------- sections
 
+def site_map():
+    """An example site as one floor plan. Each Ken module adds its own layer to the same map (toggled by k3.js). All content is illustrative."""
+    C = {k: c for k, n, j, c, u in MODS}
+    zone = lambda x, y, w, h, t: f'<rect class="zn" x="{x}" y="{y}" width="{w}" height="{h}" rx="14"/><text class="zt" x="{x + 16}" y="{y + 26}">{t}</text>'
+    base = (
+        '<rect class="bg" x="20" y="20" width="960" height="520" rx="34"/>'
+        '<rect class="yard" x="48" y="396" width="660" height="116" rx="18"/><text class="zt" x="64" y="426">Yard and gate</text>'
+        '<line class="lane" x1="64" y1="470" x2="690" y2="470"/>'
+        + zone(60, 50, 200, 200, 'Loading dock') + zone(260, 50, 260, 200, 'Storage') + zone(520, 50, 180, 330, 'Production line')
+        + zone(60, 250, 200, 130, 'Office and counter') + zone(260, 250, 260, 130, 'Packing aisle')
+        + '<rect class="field" x="740" y="50" width="220" height="250" rx="18"/><text class="zt" x="756" y="80">Field 3</text>'
+        + ''.join(f'<line class="row" x1="{756 + i * 22}" y1="96" x2="{756 + i * 22}" y2="284"/>' for i in range(9))
+        + '<rect class="zn" x="740" y="330" width="220" height="110" rx="14"/><text class="zt" x="756" y="358">Caretaker\'s home</text>'
+        + '<path class="home" d="M790 416 V386 L830 364 L870 386 V416 Z"/>'
+    )
+    vision = (
+        f'<g data-l="kenvision" style="--c:{C["kenvision"]}">'
+        '<polygon class="fov" points="236,72 90,170 200,238"/><polygon class="fov" points="470,72 330,236 508,236"/>'
+        '<circle class="heat" cx="150" cy="170" r="70"/>'
+        + ''.join(f'<circle class="pp" cx="{x}" cy="{y}" r="6" style="--dx:{dx}px;--dy:{dy}px;animation-delay:{-i * .7}s"/>' for i, (x, y, dx, dy) in enumerate([(120, 150, 16, 10), (150, 180, -14, 12), (178, 150, 10, -14), (140, 214, 18, -8), (200, 200, -12, 8), (110, 190, 12, 14)]))
+        + '<g class="cam"><circle cx="236" cy="72" r="9"/><circle cx="470" cy="72" r="9"/></g>'
+        '<g class="tag"><rect x="74" y="212" width="106" height="26" rx="13"/><text x="88" y="230">Crowd · 12</text></g></g>')
+    safety = (
+        f'<g data-l="kensafety" style="--c:{C["kensafety"]}">'
+        '<rect class="hatch" x="176" y="150" width="76" height="92" rx="8"/>'
+        '<g class="pin"><circle cx="214" cy="196" r="13"/><text x="214" y="201" text-anchor="middle">!</text></g>'
+        '<g class="tag"><rect x="156" y="118" width="100" height="26" rx="13"/><text x="170" y="136">PPE alert</text></g></g>')
+    ring = '<rect class="ring" data-ring x="52" y="42" width="216" height="216" rx="26"/><g class="tag incl" data-ring><rect x="92" y="28" width="124" height="28" rx="14"/><text x="108" y="47">One incident</text></g>'
+    iot = (
+        f'<g data-l="keniot" style="--c:{C["keniot"]}">'
+        + ''.join(f'<g class="sn{" bad" if bad else ""}"><circle cx="{x}" cy="{y}" r="8"/><circle class="pl" cx="{x}" cy="{y}" r="8"/></g><g class="tag"><rect x="{x + 14}" y="{y - 13}" width="{w}" height="26" rx="13"/><text x="{x + 26}" y="{y + 5}">{t}</text></g>'
+                  for x, y, w, t, bad in [(560, 110, 92, 'Vibration', False), (600, 190, 96, 'Temp high', True), (580, 310, 80, 'Motor', False)])
+        + '</g>')
+    robots = (
+        f'<g data-l="kenrobotics" style="--c:{C["kenrobotics"]}">'
+        '<path class="route" d="M290 296 H494 V350 H290 Z"/>'
+        '<rect class="bot" width="26" height="18" rx="6" style="animation-delay:0s"/><rect class="bot" width="26" height="18" rx="6" style="animation-delay:-4s"/>'
+        '<g class="tag"><rect x="392" y="258" width="108" height="26" rx="13"/><text x="406" y="276">Robot fleet</text></g></g>')
+    voice = (
+        f'<g data-l="kenvoice" style="--c:{C["kenvoice"]}">'
+        '<g class="mic"><circle cx="140" cy="326" r="15"/><path d="M140 318v10M134 326a6 6 0 0012 0"/></g>'
+        '<path class="wave w1" d="M164 316a14 14 0 010 20"/><path class="wave w2" d="M174 310a24 24 0 010 32"/>'
+        '<g class="tag"><rect x="78" y="350" width="110" height="26" rx="13"/><text x="92" y="368">Counter 2</text></g></g>')
+    home = (
+        f'<g data-l="kenhome" style="--c:{C["kenhome"]}">'
+        '<circle class="cam2" cx="850" cy="372" r="8"/><polygon class="fov" points="850,372 790,430 910,430"/>'
+        '<g class="tag"><rect x="866" y="396" width="86" height="26" rx="13"/><text x="880" y="414">Driveway</text></g></g>')
+    agri = (
+        f'<g data-l="kenagri" style="--c:{C["kenagri"]}">'
+        '<path class="dry" d="M780 150 L900 130 L920 220 L800 240 Z"/>'
+        '<g class="tag"><rect x="772" y="256" width="132" height="26" rx="13"/><text x="786" y="274">Dry patch</text></g></g>')
+    defs = '<defs><radialGradient id="hg"><stop offset="0" stop-color="#FF7953" stop-opacity=".55"/><stop offset="1" stop-color="#FF7953" stop-opacity="0"/></radialGradient><pattern id="ht" width="10" height="10" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="10" stroke="#FF7953" stroke-width="3" opacity=".55"/></pattern></defs>'
+    return (f'<svg class="map" viewBox="0 0 1000 560" role="img" aria-label="One site floor plan. Each Ken module adds its own layer to the same map." focusable="false">{defs}{base}{agri}{home}{iot}{robots}{voice}{vision}{safety}{ring}</svg>')
+
+
 def hero():
-    srcs = [('Cameras', 'M3 8h12v8H3z M15 11l6-3v8l-6-3'), ('Sensors', 'M12 3v4M12 17v4M3 12h4M17 12h4 M12 9a3 3 0 100 6 3 3 0 000-6z'),
-            ('Drones', 'M7 12h10 M5 8a2 2 0 100-4 2 2 0 000 4z M19 8a2 2 0 100-4 2 2 0 000 4z M5 20a2 2 0 100-4 2 2 0 000 4z M19 20a2 2 0 100-4 2 2 0 000 4z'),
-            ('Robots', 'M5 8h14v10H5z M12 4v4 M9 13h.01 M15 13h.01'), ('Voice', 'M9 3h6v11a3 3 0 01-6 0z M5 11a7 7 0 0014 0 M12 18v3')]
-    left = ''.join(f'<li style="--i:{i}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="{d}"/></svg>{n}</li>' for i, (n, d) in enumerate(srcs))
-    mods = ''.join(f'<span style="--c:{c}">{dot(c)}{n}</span>' for k, n, j, c, u in MODS)
-    sig = [('kenvision', 'Crowd density rising', 'Zone B · 4 min'), ('kensafety', 'PPE compliance dropped', 'Zone B · now')]
-    sigs = ''.join(f'<div class="sg s{i}" style="--c:{MOD[k][3]}"><i></i><div><b>{e(t)}</b><small>{MOD[k][1]} · {m}</small></div></div>' for i, (k, t, m) in enumerate(sig))
+    chips = ''.join(f'<button type="button" class="lt" aria-pressed="true" data-k="{k}" style="--c:{c}">{dot(c)}{n}</button>' for k, n, j, c, u in MODS)
     return f'''<section class="page-hero k3-hero">
     <div class="wash wash-a" aria-hidden="true"></div><div class="wash wash-b" aria-hidden="true"></div><div class="cursor-grid" aria-hidden="true"></div>
     <div class="wrap">
@@ -146,18 +195,13 @@ def hero():
         <h1>One picture of everything happening on <em>site</em>.</h1>
         <p class="lede">Ken360 is the core AI technology from Intelense. It brings your cameras, sensors, drones, robots and conversations into one engine, and it powers all seven Ken modules.</p>
         <div class="hero-ctas"><a class="btn btn-blue" href="{INTELENSE}/contact" target="_blank" rel="noopener">Book a demo</a><a class="btn btn-ghost" href="#how">See how it works</a></div>
-        <div class="k3-trust"><span>Works with the equipment you already run</span><span>Edge, on-premise or cloud</span></div>
       </div>
-      <div class="k3-stage" role="img" aria-label="Cameras, sensors, drones, robots and voice flow into Ken360, which raises one incident for the right team">
-        <div class="col in"><span class="cap-t">What it connects to</span><ul>{left}</ul></div>
-        <svg class="wire w1" viewBox="0 0 80 200" preserveAspectRatio="none" aria-hidden="true"><path d="M0 20 C50 20 30 100 80 100"/><path d="M0 60 C50 60 30 100 80 100"/><path d="M0 100 L80 100"/><path d="M0 140 C50 140 30 100 80 100"/><path d="M0 180 C50 180 30 100 80 100"/></svg>
-        <div class="col core"><div class="halo" aria-hidden="true"></div><div class="cb"><img src="@a/logos/ken360.png" alt="" width="168" height="64"><span>One engine. Seven modules.</span><div class="ms">{mods}</div></div></div>
-        <svg class="wire w2" viewBox="0 0 80 200" preserveAspectRatio="none" aria-hidden="true"><path d="M0 100 C40 100 40 50 80 50"/><path d="M0 100 C40 100 40 150 80 150"/></svg>
-        <div class="col out"><span class="cap-t">What your team gets</span>
-          <div class="sgs">{sigs}</div>
-          <div class="inc"><span class="tag">One incident</span><b>Crowd building where PPE has dropped</b>
-            <div class="who"><span style="--c:{MOD["kenvision"][3]}">{MOD["kenvision"][1]}</span><span style="--c:{MOD["kensafety"][3]}">{MOD["kensafety"][1]}</span></div>
-            <div class="act"><span>Notify</span> Shift supervisor, Zone B</div></div></div>
+      <div class="k3-mapwrap" data-map>
+        <div class="mbar"><span class="lbl">One site. Tap a module to add or remove its layer.</span><div class="lts" role="group" aria-label="Module layers on the site map">{chips}</div></div>
+        <div class="mstage">{site_map()}
+          <div class="mcard" data-card aria-live="polite"><span class="tag">One incident</span><b>Crowd building where PPE has dropped</b><small>KenVision + KenSafety · Loading dock</small><div class="act"><span>Notify</span> Shift supervisor</div></div>
+        </div>
+        <p class="k3-note"><span data-count>7 of 7</span> layers on. Example site and data, for illustration.</p>
       </div>
     </div></section>'''
 
@@ -299,8 +343,8 @@ def resolve(html, version):
 
 def deploy(out):
     out.mkdir(parents=True, exist_ok=True)
-    css = (SITE_DIR / 'assets' / 'site.css').read_text() + '\n' + (HERE / 'assets-src' / 'k3.css').read_text()
-    js = (HERE / 'assets-src' / 'k3.js').read_text()
+    css = (SITE_DIR / 'assets' / 'site.css').read_text() + '\n' + (HERE / 'assets-src' / 'k3.css').read_text() + '\n' + (HERE / 'assets-src' / 'k3-map.css').read_text()
+    js = (HERE / 'assets-src' / 'k3.js').read_text() + '\n' + (HERE / 'assets-src' / 'k3-map.js').read_text()
     version = hashlib.md5((css + (SITE_DIR / 'assets' / 'site.js').read_text() + js).encode()).hexdigest()[:8]
     a = out / 'assets'
     a.mkdir(exist_ok=True)
