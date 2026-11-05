@@ -1,3 +1,4 @@
+import math
 #!/usr/bin/env python3
 """Static generator for ken360.ai (first draft: the home page), in the same design language as www.intelense.com.
 
@@ -236,13 +237,21 @@ def hero():
 
 
 def what_is():
-    uses = {'kenvision': 'Retail, malls, QSR, public spaces', 'kensafety': 'Roads, fleets, construction and industrial safety', 'kenhome': 'Home, vehicle and asset security',
-            'kenagri': 'Farms and crop monitoring', 'keniot': 'Predictive maintenance systems', 'kenrobotics': 'Autonomous mobile robots and autonomous drones', 'kenvoice': 'Conversation intelligence'}
-    rows = ''.join(f'<li><a class="wm" href="{u}" rel="noopener" style="--c:{c}">Ken<span>{n[3:].lower() if n != "KenIoT" else "IoT"}</span><small>by Intelense</small></a><span class="use">{uses[k]}</span></li>' for k, n, j, c, u in MODS)
+    uses = {'kenvision': ('Retail, malls, QSR, public spaces', 'Video events: people, vehicles, objects, zones'),
+            'kensafety': ('Roads, fleets, construction and industrial safety', 'Safety events: PPE, restricted areas, unsafe acts'),
+            'kenhome': ('Home, vehicle and asset security', 'Security events: entry, motion, vehicle and asset alerts'),
+            'kenagri': ('Farms and crop monitoring', 'Field events: crop, soil and weather signals'),
+            'keniot': ('Predictive maintenance systems', 'Machine events: temperature, vibration, readings'),
+            'kenrobotics': ('Autonomous mobile robots and autonomous drones', 'Robot and drone events: position, route, status'),
+            'kenvoice': ('Conversation intelligence', 'Conversation events: queues, requests, tone')}
+    rows = ''.join(f'<li data-k="{k}" style="--c:{c}"><a class="wm" href="{u}" rel="noopener">Ken<span>{n[3:].lower() if n != "KenIoT" else "IoT"}</span><small>by Intelense</small></a><span class="use"><b>{uses[k][0]}</b><em>{uses[k][1]}</em></span><i class="go" aria-hidden="true">&rarr;</i></li>' for k, n, j, c, u in MODS)
+    sats = ''.join(f'<i data-s="{k}" style="--c:{c};left:{50 + 50 * math.cos(math.radians(-90 + 360 * t / 7)):.2f}%;top:{50 + 50 * math.sin(math.radians(-90 + 360 * t / 7)):.2f}%"></i>' for t, (k, n, j, c, u) in enumerate(MODS))
     return block(head_block('What Ken360 is', 'Seven modules. <em>One technology</em> underneath.',
                             'The Ken modules are the products you use on site. Ken360 is what runs inside every one of them: the shared data model, the AI engine, the alerts and the dashboard. Add a module and it joins the same engine, so what each one learns is available to the rest.')
-                 + f'''<div class="k3-engine" id="stack"{rv()}>
-        <div class="eng"><div class="ring"><div class="core"><img src="@a/logos/ken360.png" alt="Ken360 by Intelense" width="240" height="91"><b>The Intelligent Engine</b></div></div></div>
+                 + f'''<div class="k3-engine" id="stack" data-engine{rv()}>
+        <svg class="wires" aria-hidden="true"><g data-wires></g><circle class="pulse" r="5"><animateMotion dur="1.5s" repeatCount="indefinite" path="M0 0"/></circle></svg>
+        <div class="eng"><div class="ring" data-ring><div class="orbit" aria-hidden="true">{sats}</div><div class="core"><img src="@a/logos/ken360.png" alt="Ken360 by Intelense" width="240" height="91"><b>The Intelligent Engine</b>
+          <p class="live" aria-live="polite"><span data-from>KenVision</span> is feeding the engine. The other six can use what it sees.</p></div></div></div>
         <ul class="mods7">{rows}</ul></div>
       <p class="k3-def"{rv(1)}>{DEFINITION}</p>''', 'what')
 
