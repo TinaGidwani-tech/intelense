@@ -185,8 +185,35 @@ def site_map():
     return (f'<svg class="map" viewBox="0 0 1000 560" role="img" aria-label="One site floor plan. Each Ken module adds its own layer to the same map." focusable="false">{defs}{base}{agri}{home}{iot}{robots}{voice}{vision}{safety}{ring}</svg>')
 
 
+def ui_bar(title, tag='Example data'):
+    return f'<div class="ui-bar"><span class="d"></span><span class="d"></span><span class="d"></span><b>{title}</b><em>{tag}</em></div>'
+
+
+INCIDENTS = [
+    dict(t='Crowd building where PPE has dropped', z='Loading dock', m=('kenvision', 'kensafety'), s='Open', at='09:42',
+         tl=[('09:41', 'KenVision', 'Crowd density rising in Zone B'), ('09:42', 'KenSafety', 'PPE compliance dropped in Zone B'),
+             ('09:42', 'Ken360', 'Compared both and opened one incident')], nxt='Notify shift supervisor'),
+    dict(t='Compressor temperature high', z='Production line', m=('keniot',), s='Watching', at='09:15',
+         tl=[('09:12', 'KenIoT', 'Compressor temperature above its limit'), ('09:15', 'Ken360', 'Checked nearby cameras and sensors, no related event'),
+             ('09:15', 'Ken360', 'Raised as a single alert')], nxt='Notify maintenance team'),
+    dict(t='Queue at counter 3', z='Office and counter', m=('kenvoice',), s='Resolved', at='08:50',
+         tl=[('08:47', 'KenVoice', 'Customer queue building at counter 3'), ('08:49', 'Staff', 'Second counter opened'),
+             ('08:50', 'Ken360', 'Marked resolved')], nxt='No action needed'),
+]
+
+
+def chips(keys):
+    return ''.join(f'<span class="mtag" style="--c:{MOD[k][3]}">{dot(MOD[k][3])}{MOD[k][1]}</span>' for k in keys)
+
+
 def hero():
-    chips = ''.join(f'<button type="button" class="lt" aria-pressed="true" data-k="{k}" style="--c:{c}">{dot(c)}{n}</button>' for k, n, j, c, u in MODS)
+    side = ''.join(f'<li{" class=on" if i == 0 else ""}><i></i>{n}{f"<b>{c}</b>" if c else ""}</li>' for i, (n, c) in enumerate(
+        [('Overview', ''), ('Incidents', '1'), ('Sites', ''), ('Sources', ''), ('Modules', ''), ('Alert rules', ''), ('Settings', '')]))
+    rows = ''.join(f'<button type="button" class="ir{" on" if i == 0 else ""}" data-i="{i}"><span class="u-st s-{d["s"].lower()}">{d["s"]}</span><b>{e(d["t"])}</b><small>{d["z"]} · {d["at"]}</small><span class="u-mt">{chips(d["m"])}</span></button>' for i, d in enumerate(INCIDENTS))
+    panes = ''.join(
+        f'<div class="ip{" on" if i == 0 else ""}" data-p="{i}"><div class="u-ph"><span class="u-mt">{chips(d["m"])}</span><b>{e(d["t"])}</b><small>{d["z"]}</small></div>'
+        + '<ol class="u-tl">' + ''.join(f'<li><time>{a}</time><span><b>{w}</b>{e(x)}</span></li>' for a, w, x in d['tl']) + '</ol>'
+        + f'<div class="nx"><span>Next step</span>{d["nxt"]}</div></div>' for i, d in enumerate(INCIDENTS))
     return f'''<section class="page-hero k3-hero">
     <div class="wash wash-a" aria-hidden="true"></div><div class="wash wash-b" aria-hidden="true"></div><div class="cursor-grid" aria-hidden="true"></div>
     <div class="wrap">
@@ -196,41 +223,42 @@ def hero():
         <p class="lede">Ken360 is the core AI technology from Intelense. It brings your cameras, sensors, drones, robots and conversations into one engine, and it powers all seven Ken modules.</p>
         <div class="hero-ctas"><a class="btn btn-blue" href="{INTELENSE}/contact" target="_blank" rel="noopener">Book a demo</a><a class="btn btn-ghost" href="#how">See how it works</a></div>
       </div>
-      <div class="k3-mapwrap" data-map>
-        <div class="mbar"><span class="lbl">One site. Tap a module to add or remove its layer.</span><div class="lts" role="group" aria-label="Module layers on the site map">{chips}</div></div>
-        <div class="mstage">{site_map()}
-          <div class="mcard" data-card aria-live="polite"><span class="tag">One incident</span><b>Crowd building where PPE has dropped</b><small>KenVision + KenSafety · Loading dock</small><div class="act"><span>Notify</span> Shift supervisor</div></div>
-        </div>
-        <p class="k3-note"><span data-count>7 of 7</span> layers on. Example site and data, for illustration.</p>
-      </div>
+      <div class="ui dash" data-incidents>{ui_bar('Ken360 &middot; Overview')}
+        <div class="ui-in"><aside><div class="u-brand">Ken360</div><ul>{side}</ul></aside>
+          <div class="main">
+            <div class="u-top"><b>Example site</b><span class="u-seg">Today</span></div>
+            <div class="u-kpis"><div><small>Sources online</small><b>147</b></div><div><small>Alerts raised</small><b>7</b></div><div><small>Incidents opened</small><b>1</b></div></div>
+            <div class="u-cols"><div class="u-feed"><span class="cap-t">Incidents</span>{rows}</div><div class="u-detail">{panes}</div></div>
+          </div></div></div>
+      <p class="k3-note">Example screen and data, for illustration.</p>
     </div></section>'''
 
 
 def what_is():
-    top = ''.join(f'<a class="mchip" href="{u}" rel="noopener" style="--c:{c}">{dot(c)}{n}</a>' for k, n, j, c, u in MODS)
-    sources = ''.join(f'<span class="schip">{s}</span>' for s in ('Cameras', 'Sensors', 'Drones', 'Robots', 'Voice', 'Building systems'))
+    rows = ''.join(f'<li><span class="mn">{dot(c)}<a href="{u}" rel="noopener">{n}</a></span><span class="jb">{j}</span><button type="button" class="sw" role="switch" aria-checked="true" aria-label="{n}" data-k="{k}"><i></i></button></li>' for k, n, j, c, u in MODS)
+    core = ''.join(f'<span>{x}</span>' for x in ('Shared data model', 'AI engine', 'Correlation across modules', 'Alerts and routing', 'One dashboard and API'))
     return block(head_block('What Ken360 is', 'Seven modules. <em>One technology</em> underneath.',
                             'The Ken modules are the products you use on site. Ken360 is what runs inside every one of them: the shared data model, the AI engine, the alerts and the dashboard. Add a module and it joins the same engine, so what each one learns is available to the rest.')
-                 + f'''<div class="k3-stack" id="stack"{rv()}>
-        <div class="row top"><span class="lbl">The Ken modules</span><div class="mods">{top}</div></div>
-        <div class="links" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
-        <div class="row core"><div class="coreb"><div class="ctitle"><b>Ken360</b><span>core technology by Intelense</span></div>
-          <ul><li>Shared data model</li><li>AI engine</li><li>Correlation across modules</li><li>Alerts and routing</li><li>One dashboard and API</li></ul></div></div>
-        <div class="links" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
-        <div class="row src"><span class="lbl">What it connects to</span><div class="srcs">{sources}</div></div>
-      </div>
+                 + f'''<div class="ui modsui" id="stack" data-mods{rv()}>{ui_bar('Ken360 &middot; Modules')}
+        <div class="ui-in col"><div class="coreline"><div class="ct"><b>Ken360</b><small>Core technology by Intelense</small></div><div class="cc">{core}</div></div>
+          <div class="mlist"><div class="mh"><span>Module</span><span>What it adds</span><span><em data-mcount>7 of 7</em> on</span></div><ul>{rows}</ul></div></div></div>
       <p class="k3-def"{rv(1)}>{DEFINITION}</p>''', 'what')
 
 
 def problem():
-    old = [('kenvision', 'Crowd density rising · Zone B'), ('kensafety', 'PPE compliance dropped · Zone B'), ('keniot', 'Compressor temperature high'), ('kenvoice', 'Queue at counter 3')]
-    olds = ''.join(f'<div class="n" style="--c:{MOD[k][3]}"{rv(i)}>{dot(MOD[k][3])}<span>{e(t)}</span><small>{MOD[k][1]}</small></div>' for i, (k, t) in enumerate(old))
+    old = [('kenvision', 'Crowd density rising · Zone B', '09:41'), ('kensafety', 'PPE compliance dropped · Zone B', '09:42'),
+           ('keniot', 'Compressor temperature high', '09:15'), ('kenvoice', 'Queue at counter 3', '08:47')]
+    def row(k, t, at):
+        return f'<div class="u-al"><span class="mn">{dot(MOD[k][3])}{MOD[k][1]}</span><b>{e(t)}</b><time>{at}</time></div>'
+    a = ''.join(row(*x) for x in old)
+    b = (f'<div class="u-al u-big"><span class="u-mt">{chips(("kenvision", "kensafety"))}</span><b>Crowd building where PPE has dropped, Zone B</b><time>09:42</time><small>One incident · next step: notify shift supervisor</small></div>'
+         + row(*old[2]) + row(*old[3]))
     return block(head_block('The problem', 'Most sites run on <em>separate tools</em>.',
                             'One system watches the cameras. Another reads the sensors. A third listens at the counter. Each sends its own alerts, and no one sees how they connect. Ken360 is the layer that does.')
-                 + f'''<div class="k3-before-after"><div class="ba before"><span class="cap-t">Today: separate alerts</span>{olds}</div>
-      <div class="ba arrowc" aria-hidden="true"><i></i></div>
-      <div class="ba after"{rv(2)}><span class="cap-t">With Ken360: one picture</span>
-        <div class="one"><span class="tag">One incident</span><b>Crowd building where PPE has dropped, Zone B</b><p>Two modules, one alert, one next step. The temperature reading and the queue stay as separate items, each in its own place.</p></div></div></div>''', 'problem')
+                 + f'''<div class="ui inbox" data-inbox{rv()}>{ui_bar('Alerts &middot; Example site')}
+        <div class="ui-in col"><div class="u-tabs" role="group" aria-label="Alert view"><button type="button" aria-pressed="true" data-v="a">Separate tools</button><button type="button" aria-pressed="false" data-v="b">With Ken360</button></div>
+          <div class="u-pane on" data-pane="a"><span class="cap-t">4 alerts from 4 systems</span>{a}</div>
+          <div class="u-pane" data-pane="b"><span class="cap-t">1 incident, 2 other alerts</span>{b}</div></div></div>''', 'problem')
 
 
 def how():
