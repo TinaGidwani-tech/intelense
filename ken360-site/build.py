@@ -32,13 +32,13 @@ LINKEDIN = 'https://www.linkedin.com/company/intelense/'
 
 # key, name, short job, colour (the Ken module colours), where it lives
 MODS = [
-    ('kenvision', 'KenVision', 'Video analytics', '#0A34ED', 'https://kenvision.ai/'),
-    ('kensafety', 'KenSafety', 'Workplace safety', '#FF7953', INTELENSE + '/kensafety'),
-    ('kenhome', 'KenHome', 'Smart home security', '#78AFCF', INTELENSE + '/kenhome'),
-    ('kenagri', 'KenAgri', 'Precision agriculture', '#368736', INTELENSE + '/kenagri'),
-    ('keniot', 'KenIoT', 'Predictive monitoring', '#7C28E9', INTELENSE + '/keniot'),
-    ('kenrobotics', 'KenRobotics', 'Autonomous robotics', '#6C6E82', INTELENSE + '/kenrobotics'),
-    ('kenvoice', 'KenVoice', 'Conversation intelligence', '#5466DD', INTELENSE + '/kenvoice'),
+    ('kenvision', 'KenVision', 'Video analytics', '#17191c', 'https://kenvision.ai/'),
+    ('kensafety', 'KenSafety', 'Workplace safety', '#5d2a1a', INTELENSE + '/kensafety'),
+    ('kenhome', 'KenHome', 'Smart home security', '#777b86', INTELENSE + '/kenhome'),
+    ('kenagri', 'KenAgri', 'Precision agriculture', '#a3a6af', INTELENSE + '/kenagri'),
+    ('keniot', 'KenIoT', 'Predictive monitoring', '#c98a6b', INTELENSE + '/keniot'),
+    ('kenrobotics', 'KenRobotics', 'Autonomous robotics', '#3a3d44', INTELENSE + '/kenrobotics'),
+    ('kenvoice', 'KenVoice', 'Conversation intelligence', '#e8b79c', INTELENSE + '/kenvoice'),
 ]
 MOD = {m[0]: m for m in MODS}
 
@@ -96,10 +96,10 @@ def header():
              f'<li class="has-menu"><a href="#stack">Modules</a><div class="dropdown"><ul>{mod_items}</ul></div></li><li><a href="#faq">FAQ</a></li>')
     mobile = '<a href="#how">Platform</a><a href="#combos">Combinations</a><a href="#runs">Deployment</a><a href="#stack">Modules</a><a href="#faq">FAQ</a>'
     return f'''<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs><linearGradient id="brand-g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#0A34ED"/><stop offset=".3" stop-color="#7C28E9"/><stop offset=".6" stop-color="#FF7953"/><stop offset=".82" stop-color="#78AFCF"/><stop offset="1" stop-color="#73C4C5"/></linearGradient></defs></svg>
-<div class="announce"><div class="wrap"><span><span class="tag-new">Intelense</span>&nbsp; Ken360 is the core technology behind all seven Ken modules</span><a class="pill" href="{INTELENSE}/">Visit Intelense</a></div></div>
+<div class="announce"><div class="wrap"><span>Ken360 is the core technology behind all seven Ken modules.</span><a class="pill" href="{INTELENSE}/">Visit Intelense &rarr;</a></div></div>
 <header class="nav"><div class="wrap">{lockup()}
     <ul class="nav-links">{links}</ul>
-    <div class="nav-cta"><a class="btn btn-blue" href="{INTELENSE}/contact" target="_blank" rel="noopener">Book a demo</a>
+    <div class="nav-cta"><a class="nlink" href="{INTELENSE}/contact" target="_blank" rel="noopener">Contact</a><a class="btn btn-blue" href="{INTELENSE}/contact" target="_blank" rel="noopener">Book a demo</a>
     <button class="menu-btn" type="button" aria-expanded="false" aria-controls="mobile-menu" aria-label="Menu"><span></span></button></div></div>
   <nav class="mobile-menu" id="mobile-menu" hidden aria-label="Mobile"><div class="wrap">{mobile}<a class="btn btn-blue" href="{INTELENSE}/contact" target="_blank" rel="noopener">Book a demo</a></div></nav>
 </header>
@@ -109,7 +109,7 @@ def header():
 def footer():
     mods = ''.join(f'<li><a href="{u}" rel="noopener">{n}</a></li>' for k, n, j, c, u in MODS)
     return f'''<footer><div class="wrap"><div class="foot k3-foot">
-      <div><a class="logo k3-logo" href="@index" aria-label="Ken360 by Intelense, home"><img src="@a/logos/ken360-light.png" alt="Ken360 by Intelense" width="168" height="64"></a>
+      <div><a class="logo k3-logo" href="@index" aria-label="Ken360 by Intelense, home"><img src="@a/logos/ken360.png" alt="Ken360 by Intelense" width="168" height="64"></a>
         <p style="margin-top:16px;max-width:36ch">Ken360 is the core AI technology from Intelense, behind all seven Ken modules.</p></div>
       <div><h4>Platform</h4><ul><li><a href="#how">How it works</a></li><li><a href="#combos">Combinations</a></li><li><a href="#runs">Deployment</a></li><li><a href="#faq">FAQ</a></li></ul></div>
       <div><h4>Ken modules</h4><ul>{mods}</ul></div>
@@ -181,29 +181,46 @@ def site_map():
         f'<g data-l="kenagri" style="--c:{C["kenagri"]}">'
         '<path class="dry" d="M780 150 L900 130 L920 220 L800 240 Z"/>'
         '<g class="tag"><rect x="772" y="256" width="132" height="26" rx="13"/><text x="786" y="274">Dry patch</text></g></g>')
-    defs = '<defs><radialGradient id="hg"><stop offset="0" stop-color="#FF7953" stop-opacity=".55"/><stop offset="1" stop-color="#FF7953" stop-opacity="0"/></radialGradient><pattern id="ht" width="10" height="10" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="10" stroke="#FF7953" stroke-width="3" opacity=".55"/></pattern></defs>'
+    defs = '<defs><radialGradient id="hg"><stop offset="0" stop-color="#e8b79c" stop-opacity=".75"/><stop offset="1" stop-color="#FF7953" stop-opacity="0"/></radialGradient><pattern id="ht" width="10" height="10" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="10" stroke="#5d2a1a" stroke-width="3" opacity=".35"/></pattern></defs>'
     return (f'<svg class="map" viewBox="0 0 1000 560" role="img" aria-label="One site floor plan. Each Ken module adds its own layer to the same map." focusable="false">{defs}{base}{agri}{home}{iot}{robots}{voice}{vision}{safety}{ring}</svg>')
 
 
 def hero():
-    chips = ''.join(f'<button type="button" class="lt" aria-pressed="true" data-k="{k}" style="--c:{c}">{dot(c)}{n}</button>' for k, n, j, c, u in MODS)
-    return f'''<section class="page-hero k3-hero">
-    <div class="wash wash-a" aria-hidden="true"></div><div class="wash wash-b" aria-hidden="true"></div><div class="cursor-grid" aria-hidden="true"></div>
+    rows = [('Cameras', '24', 'Live'), ('Sensors', '112', 'Live'), ('Drones', '2', 'Idle'), ('Robots', '6', 'Live'), ('Voice', '3', 'Live')]
+    tbl = ''.join(f'<tr><td>{n}</td><td class="num">{v}</td><td><span class="st {"on" if s == "Live" else ""}">{s}</span></td></tr>' for n, v, s in rows)
+    return f'''<section class="k3-hero">
     <div class="wrap">
-      <div class="k3-hero-copy">
-        <span class="eyebrow">The core technology behind the Ken modules</span>
-        <h1>One picture of everything happening on <em>site</em>.</h1>
-        <p class="lede">Ken360 is the core AI technology from Intelense. It brings your cameras, sensors, drones, robots and conversations into one engine, and it powers all seven Ken modules.</p>
-        <div class="hero-ctas"><a class="btn btn-blue" href="{INTELENSE}/contact" target="_blank" rel="noopener">Book a demo</a><a class="btn btn-ghost" href="#how">See how it works</a></div>
+      <div class="k3-collage">
+        <div class="art a1" aria-hidden="true"><div class="ah"><b>Connected today</b><span>Example site</span></div><table>{tbl}</table></div>
+        <div class="art a2" aria-hidden="true"><div class="ah"><b>One incident</b><span>Loading dock</span></div>
+          <p class="inc">Crowd building where PPE has dropped</p>
+          <div class="av"><span class="b" style="background:#e9efe3">V</span><span class="b" style="background:#e3ecf3">S</span><small>Video + Safety, merged</small></div>
+          <div class="nt"><span>Notify</span> Shift supervisor</div></div>
+        <div class="art a3" aria-hidden="true"><div class="ah"><b>Raised today</b><span>Example data</span></div>
+          <div class="big">7 alerts <i>&rarr;</i> 1 incident</div>
+          <svg viewBox="0 0 220 60" aria-hidden="true"><path d="M2 48 C22 46 30 22 52 26 S88 52 112 34 S150 6 176 18 S206 30 218 12"/></svg></div>
+        <div class="art a4" aria-hidden="true"><div class="comp"><span class="ph">Ask Ken360 anything...</span><span class="send">&uarr;</span></div><small>For example: What happened at the dock this morning?</small></div>
+        <div class="k3-hero-copy">
+          <span class="tagl">Ken360 by Intelense</span>
+          <h1>One picture of everything <em>happening on site.</em></h1>
+          <p class="lede">Ken360 is the core AI technology from Intelense. It brings your cameras, sensors, drones, robots and conversations into one engine, and it powers all seven Ken modules.</p>
+          <div class="hero-ctas"><a class="btn btn-blue" href="{INTELENSE}/contact" target="_blank" rel="noopener">Book a demo</a><a class="btn btn-ghost" href="#how">See how it works</a></div>
+        </div>
       </div>
-      <div class="k3-mapwrap" data-map>
-        <div class="mbar"><span class="lbl">One site. Tap a module to add or remove its layer.</span><div class="lts" role="group" aria-label="Module layers on the site map">{chips}</div></div>
+    </div></section>'''
+
+
+def map_section():
+    chips = ''.join(f'<button type="button" class="lt" aria-pressed="true" data-k="{k}" style="--c:{c}">{dot(c)}{n}</button>' for k, n, j, c, u in MODS)
+    return block(head_block('One site', 'Seven modules, <em>one map</em>.', 'Every Ken module adds its own layer to the same picture of your site. Tap a module to switch its layer on or off.')
+                 + f'''<div class="k3-mapwrap" data-map>
+        <div class="mbar"><div class="lts" role="group" aria-label="Module layers on the site map">{chips}</div></div>
         <div class="mstage">{site_map()}
           <div class="mcard" data-card aria-live="polite"><span class="tag">One incident</span><b>Crowd building where PPE has dropped</b><small>KenVision + KenSafety · Loading dock</small><div class="act"><span>Notify</span> Shift supervisor</div></div>
         </div>
-        <p class="k3-note"><span data-count>7 of 7</span> layers on. Example site and data, for illustration.</p>
-      </div>
-    </div></section>'''
+        <p class="k3-note"><span data-count>7 of 7</span> layers on. Example site and data, for illustration.</p></div>''', 'sitemap')
+
+
 
 
 def what_is():
@@ -277,7 +294,7 @@ def by_intelense():
     return f'''<section class="block" id="intelense"><div class="wrap"><div class="k3-by-card"{rv()}>
       <div><span class="eyebrow">Ken360 is an Intelense technology</span><h2>The core technology behind the Ken product family.</h2>
         <p>{DEFINITION} Intelense is an applied AI company working in industrial and operational environments. The same team builds every module on Ken360.</p>
-        <p style="margin-top:22px"><a class="btn btn-ghost on-card" href="{INTELENSE}/">Visit intelense.com</a></p></div>
+        <p style="margin-top:22px"><a class="btn btn-ghost" href="{INTELENSE}/">Visit intelense.com</a></p></div>
       <ul class="links"><li><a href="{INTELENSE}/ken360">Ken360 on intelense.com<small>The platform page on the company site</small></a></li>
         <li><a href="https://kenvision.ai/">kenvision.ai<small>The KenVision product site</small></a></li>
         <li><a href="{INTELENSE}/modules">All Ken modules<small>Compare what each module does</small></a></li>
@@ -286,10 +303,10 @@ def by_intelense():
 
 
 def cta():
-    return f'''<section class="cta"><div class="wash wash-b" aria-hidden="true" style="top:10%;right:20%"></div><div class="wash wash-a" aria-hidden="true" style="top:30%;left:20%"></div>
-    <div class="wrap"><span class="eyebrow">Get started</span><h2 style="margin-top:20px">Start with one module. Add the rest when you're ready.</h2>
+    return f'''<section class="cta">
+    <div class="wrap"><h2>Start with one module. <em>Add the rest when you're ready.</em></h2>
     <p class="lede" style="margin:22px auto 0">Ken360 is useful from the first deployment, not only at full scale.</p>
-    <div class="hero-ctas"><a class="btn btn-blue" href="{INTELENSE}/contact" target="_blank" rel="noopener">Book a demo</a><a class="btn btn-black" href="mailto:enquiries@intelense.ca">Email us</a></div></div></section>'''
+    <div class="hero-ctas"><a class="btn btn-blue" href="{INTELENSE}/contact" target="_blank" rel="noopener">Book a demo</a><a class="btn btn-ghost" href="mailto:enquiries@intelense.ca">Email us</a></div></div></section>'''
 
 
 # ---------------------------------------------------------------- page assembly
@@ -310,20 +327,20 @@ def jsonld():
 
 
 def page_index():
-    body = '\n\n  '.join([hero(), what_is(), problem(), how(), combos(), runs(), faq(), by_intelense(), cta()])
+    body = '\n\n  '.join([hero(), what_is(), problem(), how(), map_section(), combos(), runs(), faq(), by_intelense(), cta()])
     return body
 
 
-FONTS = IB.FONTS
+FONTS = ('<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>'
+         '<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400..600&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;1,8..60,400&display=swap">')
 ICON_LINKS = ('<link rel="icon" href="@a/icons/favicon.ico" sizes="any"><link rel="icon" type="image/png" sizes="32x32" href="@a/icons/favicon-32.png">'
               '<link rel="icon" type="image/png" sizes="96x96" href="@a/icons/favicon-96.png"><link rel="apple-touch-icon" href="@a/icons/apple-touch-icon.png">')
 
 
 def render(body):
-    scripts = ('<script src="@a/site.js" defer></script>\n<script src="@a/k3.js" defer></script>\n<script type="module">\nimport { initCursorGrid } from \'@a/cursor-grid.js\';\n'
-               + IB.GRID_START % IB.GRID_OPTS + '\n</script>')
+    scripts = ('<script src="@a/site.js" defer></script>\n<script src="@a/k3.js" defer></script>')
     ld = ''.join('<script type="application/ld+json">' + json.dumps(x, ensure_ascii=False).replace('</', '<\\/') + '</script>' for x in jsonld())
-    head = (f'<title>{e(TITLE)}</title>\n<meta name="description" content="{ea(DESC)}">\n<meta name="author" content="Intelense Inc.">\n<meta name="theme-color" content="#0A34ED">\n{ICON_LINKS}\n'
+    head = (f'<title>{e(TITLE)}</title>\n<meta name="description" content="{ea(DESC)}">\n<meta name="author" content="Intelense Inc.">\n<meta name="theme-color" content="#ffffff">\n{ICON_LINKS}\n'
             f'<meta name="robots" content="index, follow"><link rel="canonical" href="{SITE_URL}/">\n<meta property="og:type" content="website"><meta property="og:site_name" content="Ken360 by Intelense">'
             f'<meta property="og:url" content="{SITE_URL}/"><meta property="og:title" content="{ea(TITLE)}"><meta property="og:description" content="{ea(DESC)}">\n'
             f'<meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="{ea(TITLE)}"><meta name="twitter:description" content="{ea(DESC)}">\n{ld}\n{FONTS}\n'
