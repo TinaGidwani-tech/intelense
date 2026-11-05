@@ -1,12 +1,11 @@
-import math
 #!/usr/bin/env python3
-"""Static generator for ken360.ai (first draft: the home page), in the same design language as www.intelense.com.
+"""Static generator for ken360.ai: a simple multi-page site in the Intelense design language (Montserrat, brand blue, brand gradient).
 
-Reuses the Intelense stylesheet, script and components (site/) and adds ken360-site/assets-src/k3.css and k3.js.
+Reuses the Intelense stylesheet and script (site/) and adds ken360-site/assets-src/k3.css.
 
     python3 ken360-site/build.py --deploy DIR [--preview]
 
---preview writes relative links so the folder opens from disk or a preview host.
+--preview writes relative .html links so the folder opens from disk or a preview host (home page is home.html).
 """
 import hashlib
 import html as H
@@ -25,29 +24,39 @@ IB = importlib.util.module_from_spec(_spec)
 sys.modules['intelense_build'] = IB
 _spec.loader.exec_module(IB)
 
-icon = IB.icon
 PREVIEW = '--preview' in sys.argv
 SITE_URL = 'https://ken360.ai'
 INTELENSE = 'https://www.intelense.com'
 LINKEDIN = 'https://www.linkedin.com/company/intelense/'
+DEMO = INTELENSE + '/contact'
 
-# key, name, short job, colour (the Ken module colours), where it lives
+
+def e(s):
+    return H.escape(s, quote=False)
+
+
+def ea(s):
+    return H.escape(s, quote=True)
+
+
+# ---------------------------------------------------------------- content
+
+# key, name, use case, what it feeds into Ken360, colour, site
 MODS = [
-    ('kenvision', 'KenVision', 'Video analytics', '#0A34ED', 'https://kenvision.ai/'),
-    ('kensafety', 'KenSafety', 'Workplace safety', '#FF7953', INTELENSE + '/kensafety'),
-    ('kenhome', 'KenHome', 'Smart home security', '#78AFCF', INTELENSE + '/kenhome'),
-    ('kenagri', 'KenAgri', 'Precision agriculture', '#368736', INTELENSE + '/kenagri'),
-    ('keniot', 'KenIoT', 'Predictive monitoring', '#7C28E9', INTELENSE + '/keniot'),
-    ('kenrobotics', 'KenRobotics', 'Autonomous robotics', '#6C6E82', INTELENSE + '/kenrobotics'),
-    ('kenvoice', 'KenVoice', 'Conversation intelligence', '#5466DD', INTELENSE + '/kenvoice'),
+    ('kenvision', 'KenVision', 'Video analytics for retail, malls, QSR and public spaces', 'People, vehicles, objects and zones seen by your cameras', '#0A34ED', 'https://kenvision.ai/'),
+    ('kensafety', 'KenSafety', 'Workplace and road safety for fleets, construction and industry', 'PPE, restricted areas and unsafe acts', '#FF7953', INTELENSE + '/kensafety'),
+    ('kenhome', 'KenHome', 'Home, vehicle and asset security', 'Entry, motion, vehicle and asset alerts', '#78AFCF', INTELENSE + '/kenhome'),
+    ('kenagri', 'KenAgri', 'Farm and crop monitoring', 'Crop, soil and weather signals', '#368736', INTELENSE + '/kenagri'),
+    ('keniot', 'KenIoT', 'Predictive maintenance for machines and plants', 'Temperature, vibration and machine readings', '#7C28E9', INTELENSE + '/keniot'),
+    ('kenrobotics', 'KenRobotics', 'Autonomous mobile robots and drones', 'Robot and drone position, route and status', '#6C6E82', INTELENSE + '/kenrobotics'),
+    ('kenvoice', 'KenVoice', 'Conversation intelligence', 'Queues, requests and tone in conversations', '#5466DD', INTELENSE + '/kenvoice'),
 ]
 MOD = {m[0]: m for m in MODS}
-MODS_JSON = json.dumps({m[0]: [m[1], m[3], m[4]] for m in MODS})
 
 DEFINITION = ('Ken360 is the core AI technology from Intelense. It powers all seven Ken modules: '
               'KenVision, KenSafety, KenHome, KenAgri, KenIoT, KenRobotics and KenVoice.')
 
-# Combination scenarios. The first three are from the current ken360.ai page; the rest are DRAFT, to be approved.
+# The first three are from the current ken360.ai page; the rest are DRAFT examples to be approved before launch.
 COMBOS = [
     (('kenvision', 'kensafety'), 'One incident, not two alerts', 'Crowd density rises in a zone where PPE compliance has just dropped. Ken360 raises it as one incident.', True),
     (('keniot', 'kenrobotics'), 'Rerouted before the line stops', 'A predicted conveyor failure reroutes the robot fleet before the line stops.', True),
@@ -68,54 +77,41 @@ FAQ = [
     ('Who builds Ken360?', 'Intelense, an applied AI company working in industrial and operational environments. The same team builds every Ken module.'),
 ]
 
-
-def e(s):
-    return H.escape(s or '', quote=False)
+NAV = [('platform', 'Platform'), ('modules', 'Modules'), ('combinations', 'Combinations'), ('deployment', 'Deployment'), ('about', 'About')]
 
 
-def ea(s):
-    return H.escape(s or '', quote=True)
+# ---------------------------------------------------------------- parts
 
-
-def rv(i=0):
-    return f' data-r style="--d:{i * 70}ms"'
+def link(name):
+    return '@index' if name == 'index' else f'@p/{name}'
 
 
 def dot(c):
-    return f'<i class="md" style="--c:{c}"></i>'
+    return f'<span class="md" style="--c:{c}"></span>'
 
 
-# ---------------------------------------------------------------- shared fragments
-
-def lockup(cls=''):
-    return (f'<a class="logo k3-logo {cls}" href="@index" aria-label="Ken360 by Intelense, home">'
-            '<img src="@a/logos/ken360.png" alt="Ken360 by Intelense" width="168" height="64"></a>')
-
-
-def header():
-    mod_items = ''.join(f'<li><a href="#stack" style="--mod:{c}"><i></i>{n}<small>{job}</small></a></li>' for k, n, job, c, url in MODS)
-    links = ('<li><a href="#how">Platform</a></li><li><a href="#combos">Combinations</a></li><li><a href="#runs">Deployment</a></li>'
-             f'<li class="has-menu"><a href="#stack">Modules</a><div class="dropdown"><ul>{mod_items}</ul></div></li><li><a href="#faq">FAQ</a></li>')
-    mobile = '<a href="#how">Platform</a><a href="#combos">Combinations</a><a href="#runs">Deployment</a><a href="#stack">Modules</a><a href="#faq">FAQ</a>'
-    return f'''<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs><linearGradient id="brand-g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#0A34ED"/><stop offset=".3" stop-color="#7C28E9"/><stop offset=".6" stop-color="#FF7953"/><stop offset=".82" stop-color="#78AFCF"/><stop offset="1" stop-color="#73C4C5"/></linearGradient></defs></svg>
-<div class="announce"><div class="wrap"><span><span class="tag-new">Intelense</span>&nbsp; Ken360 is the core technology behind all seven Ken modules</span><a class="pill" href="{INTELENSE}/">Visit Intelense</a></div></div>
-<header class="nav"><div class="wrap">{lockup()}
+def header(current):
+    links = ''.join(f'<li><a href="{link(n)}"{" aria-current=page" if n == current else ""}>{t}</a></li>' for n, t in NAV)
+    mobile = ''.join(f'<a href="{link(n)}">{t}</a>' for n, t in NAV)
+    return f'''<div class="announce"><div class="wrap"><span><span class="tag-new">Intelense</span>&nbsp; Ken360 is the core technology behind all seven Ken modules</span><a class="pill" href="{INTELENSE}/">Visit Intelense</a></div></div>
+<header class="nav"><div class="wrap"><a class="logo k3-logo" href="@index" aria-label="Ken360 by Intelense, home"><img src="@a/logos/ken360.png" alt="Ken360 by Intelense" width="168" height="64"></a>
     <ul class="nav-links">{links}</ul>
-    <div class="nav-cta"><a class="btn btn-blue" href="{INTELENSE}/contact" target="_blank" rel="noopener">Book a demo</a>
+    <div class="nav-cta"><a class="btn btn-blue" href="{DEMO}" target="_blank" rel="noopener">Book a demo</a>
     <button class="menu-btn" type="button" aria-expanded="false" aria-controls="mobile-menu" aria-label="Menu"><span></span></button></div></div>
-  <nav class="mobile-menu" id="mobile-menu" hidden aria-label="Mobile"><div class="wrap">{mobile}<a class="btn btn-blue" href="{INTELENSE}/contact" target="_blank" rel="noopener">Book a demo</a></div></nav>
+  <nav class="mobile-menu" id="mobile-menu" hidden aria-label="Mobile"><div class="wrap">{mobile}<a class="btn btn-blue" href="{DEMO}" target="_blank" rel="noopener">Book a demo</a></div></nav>
 </header>
 '''
 
 
 def footer():
-    mods = ''.join(f'<li><a href="{u}" rel="noopener">{n}</a></li>' for k, n, j, c, u in MODS)
+    mods = ''.join(f'<li><a href="{m[5]}" rel="noopener">{m[1]}</a></li>' for m in MODS)
+    pages = ''.join(f'<li><a href="{link(n)}">{t}</a></li>' for n, t in NAV) + f'<li><a href="{link("contact")}">Contact</a></li>'
     return f'''<footer><div class="wrap"><div class="foot k3-foot">
       <div><a class="logo k3-logo" href="@index" aria-label="Ken360 by Intelense, home"><img src="@a/logos/ken360-light.png" alt="Ken360 by Intelense" width="168" height="64"></a>
         <p style="margin-top:16px;max-width:36ch">Ken360 is the core AI technology from Intelense, behind all seven Ken modules.</p></div>
-      <div><h4>Platform</h4><ul><li><a href="#how">How it works</a></li><li><a href="#combos">Combinations</a></li><li><a href="#runs">Deployment</a></li><li><a href="#faq">FAQ</a></li></ul></div>
+      <div><h4>Ken360</h4><ul>{pages}</ul></div>
       <div><h4>Ken modules</h4><ul>{mods}</ul></div>
-      <div><h4>Intelense</h4><ul><li><a href="{INTELENSE}/">intelense.com</a></li><li><a href="{INTELENSE}/ken360">Ken360 on intelense.com</a></li><li><a href="{INTELENSE}/about">About Intelense</a></li><li><a href="{INTELENSE}/contact">Contact</a></li></ul></div>
+      <div><h4>Intelense</h4><ul><li><a href="{INTELENSE}/">intelense.com</a></li><li><a href="{INTELENSE}/about">About Intelense</a></li><li><a href="{INTELENSE}/contact">Book a demo</a></li></ul></div>
       <div><h4>Contact</h4><ul><li class="email">enquiries@intelense.ca</li><li class="email">dinesh@intelense.com</li><li><a href="tel:+12895523165">+1 (289) 552-3165</a> Canada</li><li><a href="tel:+919342810422">+91 93428 10422</a> India</li><li><a href="{LINKEDIN}" target="_blank" rel="noopener noreferrer">LinkedIn</a></li></ul></div>
     </div><div class="legal"><span>© 2026 Intelense Inc. · <a href="{INTELENSE}/privacy">Privacy</a> · <a href="{INTELENSE}/terms">Terms</a></span><span>Ken360 is an Intelense technology</span></div></div></footer>
 '''
@@ -126,281 +122,216 @@ def head_block(eyebrow, h2, lede=''):
     return f'<div class="head"><div><span class="eyebrow">{eyebrow}</span><h2>{h2}</h2></div>{lede_html}</div>'
 
 
-def block(inner, sid='', cls=''):
-    return f'<section class="block{" " + cls if cls else ""}"{f" id={chr(34)}{sid}{chr(34)}" if sid else ""}><div class="wrap">{inner}</div></section>'
+def block(inner, sid=''):
+    return f'<section class="block"{f" id={chr(34)}{sid}{chr(34)}" if sid else ""}><div class="wrap">{inner}</div></section>'
 
 
-# ---------------------------------------------------------------- sections
-
-def site_map():
-    """An example site as one floor plan. Each Ken module adds its own layer to the same map (toggled by k3.js). All content is illustrative."""
-    C = {k: c for k, n, j, c, u in MODS}
-    zone = lambda x, y, w, h, t: f'<rect class="zn" x="{x}" y="{y}" width="{w}" height="{h}" rx="14"/><text class="zt" x="{x + 16}" y="{y + 26}">{t}</text>'
-    base = (
-        '<rect class="bg" x="20" y="20" width="960" height="520" rx="34"/>'
-        '<rect class="yard" x="48" y="396" width="660" height="116" rx="18"/><text class="zt" x="64" y="426">Yard and gate</text>'
-        '<line class="lane" x1="64" y1="470" x2="690" y2="470"/>'
-        + zone(60, 50, 200, 200, 'Loading dock') + zone(260, 50, 260, 200, 'Storage') + zone(520, 50, 180, 330, 'Production line')
-        + zone(60, 250, 200, 130, 'Office and counter') + zone(260, 250, 260, 130, 'Packing aisle')
-        + '<rect class="field" x="740" y="50" width="220" height="250" rx="18"/><text class="zt" x="756" y="80">Field 3</text>'
-        + ''.join(f'<line class="row" x1="{756 + i * 22}" y1="96" x2="{756 + i * 22}" y2="284"/>' for i in range(9))
-        + '<rect class="zn" x="740" y="330" width="220" height="110" rx="14"/><text class="zt" x="756" y="358">Caretaker\'s home</text>'
-        + '<path class="home" d="M790 416 V386 L830 364 L870 386 V416 Z"/>'
-    )
-    vision = (
-        f'<g data-l="kenvision" style="--c:{C["kenvision"]}">'
-        '<polygon class="fov" points="236,72 90,170 200,238"/><polygon class="fov" points="470,72 330,236 508,236"/>'
-        '<circle class="heat" cx="150" cy="170" r="70"/>'
-        + ''.join(f'<circle class="pp" cx="{x}" cy="{y}" r="6" style="--dx:{dx}px;--dy:{dy}px;animation-delay:{-i * .7}s"/>' for i, (x, y, dx, dy) in enumerate([(120, 150, 16, 10), (150, 180, -14, 12), (178, 150, 10, -14), (140, 214, 18, -8), (200, 200, -12, 8), (110, 190, 12, 14)]))
-        + '<g class="cam"><circle cx="236" cy="72" r="9"/><circle cx="470" cy="72" r="9"/></g>'
-        '<g class="tag"><rect x="74" y="212" width="106" height="26" rx="13"/><text x="88" y="230">Crowd · 12</text></g></g>')
-    safety = (
-        f'<g data-l="kensafety" style="--c:{C["kensafety"]}">'
-        '<rect class="hatch" x="176" y="150" width="76" height="92" rx="8"/>'
-        '<g class="pin"><circle cx="214" cy="196" r="13"/><text x="214" y="201" text-anchor="middle">!</text></g>'
-        '<g class="tag"><rect x="156" y="118" width="100" height="26" rx="13"/><text x="170" y="136">PPE alert</text></g></g>')
-    ring = '<rect class="ring" data-ring x="52" y="42" width="216" height="216" rx="26"/><g class="tag incl" data-ring><rect x="92" y="28" width="124" height="28" rx="14"/><text x="108" y="47">One incident</text></g>'
-    iot = (
-        f'<g data-l="keniot" style="--c:{C["keniot"]}">'
-        + ''.join(f'<g class="sn{" bad" if bad else ""}"><circle cx="{x}" cy="{y}" r="8"/><circle class="pl" cx="{x}" cy="{y}" r="8"/></g><g class="tag"><rect x="{x + 14}" y="{y - 13}" width="{w}" height="26" rx="13"/><text x="{x + 26}" y="{y + 5}">{t}</text></g>'
-                  for x, y, w, t, bad in [(560, 110, 92, 'Vibration', False), (600, 190, 96, 'Temp high', True), (580, 310, 80, 'Motor', False)])
-        + '</g>')
-    robots = (
-        f'<g data-l="kenrobotics" style="--c:{C["kenrobotics"]}">'
-        '<path class="route" d="M290 296 H494 V350 H290 Z"/>'
-        '<rect class="bot" width="26" height="18" rx="6" style="animation-delay:0s"/><rect class="bot" width="26" height="18" rx="6" style="animation-delay:-4s"/>'
-        '<g class="tag"><rect x="392" y="258" width="108" height="26" rx="13"/><text x="406" y="276">Robot fleet</text></g></g>')
-    voice = (
-        f'<g data-l="kenvoice" style="--c:{C["kenvoice"]}">'
-        '<g class="mic"><circle cx="140" cy="326" r="15"/><path d="M140 318v10M134 326a6 6 0 0012 0"/></g>'
-        '<path class="wave w1" d="M164 316a14 14 0 010 20"/><path class="wave w2" d="M174 310a24 24 0 010 32"/>'
-        '<g class="tag"><rect x="78" y="350" width="110" height="26" rx="13"/><text x="92" y="368">Counter 2</text></g></g>')
-    home = (
-        f'<g data-l="kenhome" style="--c:{C["kenhome"]}">'
-        '<circle class="cam2" cx="850" cy="372" r="8"/><polygon class="fov" points="850,372 790,430 910,430"/>'
-        '<g class="tag"><rect x="866" y="396" width="86" height="26" rx="13"/><text x="880" y="414">Driveway</text></g></g>')
-    agri = (
-        f'<g data-l="kenagri" style="--c:{C["kenagri"]}">'
-        '<path class="dry" d="M780 150 L900 130 L920 220 L800 240 Z"/>'
-        '<g class="tag"><rect x="772" y="256" width="132" height="26" rx="13"/><text x="786" y="274">Dry patch</text></g></g>')
-    defs = '<defs><radialGradient id="hg"><stop offset="0" stop-color="#FF7953" stop-opacity=".55"/><stop offset="1" stop-color="#FF7953" stop-opacity="0"/></radialGradient><pattern id="ht" width="10" height="10" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="10" stroke="#FF7953" stroke-width="3" opacity=".55"/></pattern></defs>'
-    return (f'<svg class="map" viewBox="0 0 1000 560" role="img" aria-label="One site floor plan. Each Ken module adds its own layer to the same map." focusable="false">{defs}{base}{agri}{home}{iot}{robots}{voice}{vision}{safety}{ring}</svg>')
+def page_hero(eyebrow, h1, lede, ctas=True):
+    btn = f'<div class="hero-ctas"><a class="btn btn-blue" href="{DEMO}" target="_blank" rel="noopener">Book a demo</a><a class="btn btn-ghost" href="{link("platform")}">How it works</a></div>' if ctas else ''
+    return f'''<section class="page-hero k3-hero"><div class="wash wash-a" aria-hidden="true"></div><div class="wash wash-b" aria-hidden="true"></div>
+    <div class="wrap"><span class="eyebrow">{eyebrow}</span><h1>{h1}</h1><p class="lede">{lede}</p>{btn}</div></section>'''
 
 
-def ui_bar(title, tag='Example data'):
-    return f'<div class="ui-bar"><span class="d"></span><span class="d"></span><span class="d"></span><b>{title}</b><em>{tag}</em></div>'
+def cols(items, n=3):
+    cells = ''.join(f'<div><h3>{t}</h3><p>{p}</p></div>' for t, p in items)
+    return f'<div class="k3-cols c{n}">{cells}</div>'
 
 
-INCIDENTS = [
-    dict(t='Crowd building where PPE has dropped', z='Loading dock', m=('kenvision', 'kensafety'), s='Open', at='09:42',
-         tl=[('09:41', 'KenVision', 'Crowd density rising in Zone B'), ('09:42', 'KenSafety', 'PPE compliance dropped in Zone B'),
-             ('09:42', 'Ken360', 'Compared both and opened one incident')], nxt='Notify shift supervisor'),
-    dict(t='Compressor temperature high', z='Production line', m=('keniot',), s='Watching', at='09:15',
-         tl=[('09:12', 'KenIoT', 'Compressor temperature above its limit'), ('09:15', 'Ken360', 'Checked nearby cameras and sensors, no related event'),
-             ('09:15', 'Ken360', 'Raised as a single alert')], nxt='Notify maintenance team'),
-    dict(t='Queue at counter 3', z='Office and counter', m=('kenvoice',), s='Resolved', at='08:50',
-         tl=[('08:47', 'KenVoice', 'Customer queue building at counter 3'), ('08:49', 'Staff', 'Second counter opened'),
-             ('08:50', 'Ken360', 'Marked resolved')], nxt='No action needed'),
-]
+def steps(items):
+    cells = ''.join(f'<div><span class="num">0{i + 1}</span><h3>{t}</h3><p>{p}</p></div>' for i, (t, p) in enumerate(items))
+    return f'<div class="k3-cols c{len(items)} numbered">{cells}</div>'
 
 
-def chips(keys):
-    return ''.join(f'<span class="mtag" style="--c:{MOD[k][3]}">{dot(MOD[k][3])}{MOD[k][1]}</span>' for k in keys)
+def mod_rows(show_feed=False):
+    rows = ''
+    for k, n, job, feed, c, u in MODS:
+        extra = f'<small>Feeds Ken360 with: {feed}</small>' if show_feed else ''
+        rows += f'<li><span class="mn">{dot(c)}<b>{n}</b></span><span class="mj">{job}{extra}</span><a class="link-arrow" href="{u}" rel="noopener">Visit {n}</a></li>'
+    return f'<ul class="k3-rows">{rows}</ul>'
 
 
-def hero():
-    side = ''.join(f'<li><button type="button" class="nv{" on" if i == 0 else ""}" data-v="{v}"><i></i>{n}<b data-badge="{v}"></b></button></li>' for i, (n, v) in enumerate(
-        [('Overview', 'overview'), ('Incidents', 'incidents'), ('Sites', 'sites'), ('Sources', 'sources'), ('Modules', 'modules'), ('Alert rules', 'rules'), ('Settings', 'settings')]))
-    rows = ''.join(f'<button type="button" class="ir{" on" if i == 0 else ""}" data-i="{i}"><span class="u-st s-{d["s"].lower()}">{d["s"]}</span><b>{e(d["t"])}</b><small>{d["z"]} · {d["at"]}</small><span class="u-mt">{chips(d["m"])}</span></button>' for i, d in enumerate(INCIDENTS))
-    panes = ''.join(
-        f'<div class="ip{" on" if i == 0 else ""}" data-p="{i}"><div class="u-ph"><span class="u-mt">{chips(d["m"])}</span><b>{e(d["t"])}</b><small>{d["z"]}</small></div>'
-        + '<ol class="u-tl">' + ''.join(f'<li><time>{a}</time><span><b>{w}</b>{e(x)}</span></li>' for a, w, x in d['tl']) + '</ol>'
-        + f'<div class="nx"><span>Next step</span>{d["nxt"]}</div></div>' for i, d in enumerate(INCIDENTS))
-    return f'''<section class="page-hero k3-hero">
-    <div class="wash wash-a" aria-hidden="true"></div><div class="wash wash-b" aria-hidden="true"></div><div class="cursor-grid" aria-hidden="true"></div>
-    <div class="wrap">
-      <div class="k3-hero-copy">
-        <span class="eyebrow">The core technology behind the Ken modules</span>
-        <h1>One picture of everything happening on <em>site</em>.</h1>
-        <p class="lede">Ken360 is the core AI technology from Intelense. It brings your cameras, sensors, drones, robots and conversations into one engine, and it powers all seven Ken modules.</p>
-        <div class="hero-ctas"><a class="btn btn-blue" href="{INTELENSE}/contact" target="_blank" rel="noopener">Book a demo</a><a class="btn btn-ghost" href="#how">See how it works</a></div>
-      </div>
-      <div class="ui dash" data-dash data-mods="{ea(MODS_JSON)}">{ui_bar('Ken360 &middot; <span data-sitename>Example site</span>')}
-        <div class="ui-in"><aside><div class="u-brand">Ken360</div><ul>{side}</ul></aside>
-          <div class="main" data-main>
-            <div class="u-top"><b>Example site</b><span class="u-seg">Today</span></div>
-            <div class="u-kpis"><div><small>Sources online</small><b>147</b></div><div><small>Alerts raised</small><b>7</b></div><div><small>Incidents opened</small><b>1</b></div></div>
-            <div class="u-cols"><div class="u-feed"><span class="cap-t">Incidents</span>{rows}</div><div class="u-detail">{panes}</div></div>
-          </div></div></div>
-      <p class="k3-note">Example screen and data, for illustration.</p>
-    </div></section>'''
+def faq(items, title='Questions buyers ask'):
+    det = ''.join(f'<details{" open" if i == 0 else ""}><summary>{e(q)}</summary><p>{e(a)}</p></details>' for i, (q, a) in enumerate(items))
+    return f'<section class="block" id="faq"><div class="wrap faq-grid"><div><span class="eyebrow">FAQ</span><h2 style="margin-top:18px">{title}</h2></div><div>{det}</div></div></section>'
 
 
-def what_is():
-    uses = {'kenvision': ('Retail, malls, QSR, public spaces', 'Video events: people, vehicles, objects, zones'),
-            'kensafety': ('Roads, fleets, construction and industrial safety', 'Safety events: PPE, restricted areas, unsafe acts'),
-            'kenhome': ('Home, vehicle and asset security', 'Security events: entry, motion, vehicle and asset alerts'),
-            'kenagri': ('Farms and crop monitoring', 'Field events: crop, soil and weather signals'),
-            'keniot': ('Predictive maintenance systems', 'Machine events: temperature, vibration, readings'),
-            'kenrobotics': ('Autonomous mobile robots and autonomous drones', 'Robot and drone events: position, route, status'),
-            'kenvoice': ('Conversation intelligence', 'Conversation events: queues, requests, tone')}
-    rows = ''.join(f'<li data-k="{k}" data-n="{n}" data-add="{ea(uses[k][1])}" style="--c:{c}"><a class="wm" href="{u}" rel="noopener">Ken<span>{n[3:].lower() if n != "KenIoT" else "IoT"}</span><small>by Intelense</small></a><span class="use"><b>{uses[k][0]}</b><em>{uses[k][1]}</em></span></li>' for k, n, j, c, u in MODS)
-    prog = '<i></i>' * 8
-    return block(head_block('What Ken360 is', 'Seven modules. <em>One technology</em> underneath.',
-                            'The Ken modules are the products you use on site. Ken360 is what runs inside every one of them: the shared data model, the AI engine, the alerts and the dashboard. Add a module and it joins the same engine, so what each one learns is available to the rest.')
-                 + f'''<div class="k3-story" id="stack" data-story><div class="stage">
-        <div class="k3-engine"{rv()}>
-          <svg class="wires" aria-hidden="true"><g data-wires></g></svg>
-          <div class="eng"><div class="ring" data-ring><div class="core"><img src="@a/logos/ken360.png" alt="Ken360 by Intelense" width="240" height="91"><b>The Intelligent Engine</b>
-            </div></div></div>
-          <ul class="mods7">{rows}</ul></div>
-        </div>
-      <p class="k3-def"{rv(1)}>{DEFINITION}</p>''', 'what')
-
-
-def problem():
-    old = [('kenvision', 'Crowd density rising · Zone B', '09:41'), ('kensafety', 'PPE compliance dropped · Zone B', '09:42'),
-           ('keniot', 'Compressor temperature high', '09:15'), ('kenvoice', 'Queue at counter 3', '08:47')]
-    def row(k, t, at):
-        return f'<div class="u-al"><span class="mn">{dot(MOD[k][3])}{MOD[k][1]}</span><b>{e(t)}</b><time>{at}</time></div>'
-    a = ''.join(row(*x) for x in old)
-    b = (f'<div class="u-al u-big"><span class="u-mt">{chips(("kenvision", "kensafety"))}</span><b>Crowd building where PPE has dropped, Zone B</b><time>09:42</time><small>One incident · next step: notify shift supervisor</small></div>'
-         + row(*old[2]) + row(*old[3]))
-    return block(head_block('The problem', 'Most sites run on <em>separate tools</em>.',
-                            'One system watches the cameras. Another reads the sensors. A third listens at the counter. Each sends its own alerts, and no one sees how they connect. Ken360 is the layer that does.')
-                 + f'''<div class="ui inbox" data-inbox{rv()}>{ui_bar('Alerts &middot; Example site')}
-        <div class="ui-in col"><div class="u-tabs" role="group" aria-label="Alert view"><button type="button" aria-pressed="true" data-v="a">Separate tools</button><button type="button" aria-pressed="false" data-v="b">With Ken360</button></div>
-          <div class="u-pane on" data-pane="a"><span class="cap-t">4 alerts from 4 systems</span>{a}</div>
-          <div class="u-pane" data-pane="b"><span class="cap-t">1 incident, 2 other alerts</span>{b}</div></div></div>''', 'problem')
-
-
-def how():
-    steps = [('Connect', 'Plug in cameras, sensors, drones, robots and building systems. Ken360 turns every stream into one shared format. No rip-and-replace.',
-              '<div class="protos"><span>RTSP</span><span>ONVIF</span><span>MQTT</span><span>Modbus</span><span>OPC-UA</span><span>ROS2</span></div>'),
-             ('Understand', 'AI reads each stream, then compares them. It can run at the edge, on your servers or in the cloud.',
-              '<div class="mini-u"><span class="a"></span><span class="b"></span><span class="c"></span><em>compare</em></div>'),
-             ('Act', 'The right person gets one clear alert with the context attached. The team spends its time deciding, not watching.',
-              '<div class="mini-a"><b>Zone B · one incident</b><small>Sent to the shift supervisor</small></div>')]
-    li = ''.join(f'<li{rv(i)}><span class="dot"></span><span class="num">0{i + 1}</span><h3>{t}</h3><p>{p}</p>{v}</li>' for i, (t, p, v) in enumerate(steps))
-    return block(head_block('How it works', 'Connect. Understand. <em>Act.</em>', 'Everything on a site flows through the same three steps.')
-                 + f'<div class="k3-how" data-how><div class="track" aria-hidden="true"><i class="fill"></i></div><ol class="stp">{li}</ol></div>', 'how')
-
-
-def combos():
-    chips = ''.join(f'<button type="button" class="mt" aria-pressed="{"true" if k in ("kenvision", "kensafety") else "false"}" data-k="{k}" style="--c:{c}">{dot(c)}{n}</button>' for k, n, j, c, u in MODS)
-    data = [{'a': a, 'b': b, 't': t, 'p': p, 'ok': ok} for (a, b), t, p, ok in COMBOS]
-    names = {k: n for k, n, j, c, u in MODS}
-    jobs = {k: j for k, n, j, c, u in MODS}
-    cols = {k: c for k, n, j, c, u in MODS}
-    return block(head_block('Combinations', 'What one module can\'t see, <em>two can</em>.',
-                            'Each Ken module is useful alone. Ken360 compares what they see and turns the overlap into one incident, one alert and one next step.')
-                 + f'''<div class="k3-pick" data-combos data-set='{json.dumps(data)}' data-names='{json.dumps(names)}' data-cols='{json.dumps(cols)}'{rv()}>
-        <div class="bar"><span class="lbl">Switch on what your site runs</span><div class="mts" role="group" aria-label="Modules on this site">{chips}</div></div>
-        <div class="out"><div class="sum" aria-live="polite"></div><div class="list"></div></div>
-        <p class="k3-note">Examples show how modules can work together. Results depend on your site and setup.</p></div>''', 'combos')
-
-
-def runs():
-    items = [('At the edge', 'Analysis runs next to the cameras and sensors, so alerts are quick and video stays where it is captured.', ['Cameras', 'Edge', 'Alerts']),
-             ('On your servers', 'Everything runs inside your own data centre. Only the events and derived data you choose leave the site.', ['Sources', 'Your servers', 'Dashboard']),
-             ('In the cloud, or both', 'Use your private cloud for scale and reporting, and keep sensitive streams on site. One platform, mixed setup.', ['Sources', 'Edge + cloud', 'Dashboard'])]
-    cards = ''.join(f'<div class="rn"{rv(i)}><h3>{t}</h3><p>{p}</p><div class="path">{"<i></i>".join(f"<span>{x}</span>" for x in n)}</div></div>' for i, (t, p, n) in enumerate(items))
-    return block(head_block('Deployment', 'Your data stays where <em>you decide</em>.', 'Run Ken360 at the edge, on your servers, in your private cloud, or a mix. In an on-premise setup the video stays on site.')
-                 + f'<div class="k3-runs">{cards}</div>', 'runs')
-
-
-def faq():
-    det = ''.join(f'<details{" open" if i == 0 else ""}><summary>{e(q)}</summary><p>{e(a)}</p></details>' for i, (q, a) in enumerate(FAQ))
-    return f'<section class="block" id="faq"><div class="wrap faq-grid"><div><span class="eyebrow">FAQ</span><h2 style="margin-top:18px">Questions buyers ask</h2></div><div>{det}</div></div></section>'
-
-
-def by_intelense():
-    return f'''<section class="block" id="intelense"><div class="wrap"><div class="k3-by-card"{rv()}>
-      <div><span class="eyebrow">Ken360 is an Intelense technology</span><h2>The core technology behind the Ken product family.</h2>
-        <p>{DEFINITION} Intelense is an applied AI company working in industrial and operational environments. The same team builds every module on Ken360.</p>
-        <p style="margin-top:22px"><a class="btn btn-ghost on-card" href="{INTELENSE}/">Visit intelense.com</a></p></div>
-      <ul class="links"><li><a href="{INTELENSE}/ken360">Ken360 on intelense.com<small>The platform page on the company site</small></a></li>
-        <li><a href="https://kenvision.ai/">kenvision.ai<small>The KenVision product site</small></a></li>
-        <li><a href="{INTELENSE}/modules">All Ken modules<small>Compare what each module does</small></a></li>
-        <li><a href="{INTELENSE}/about">About Intelense<small>The team, offices and story</small></a></li></ul>
-    </div></div></section>'''
-
-
-def cta():
-    return f'''<section class="cta"><div class="wash wash-b" aria-hidden="true" style="top:10%;right:20%"></div><div class="wash wash-a" aria-hidden="true" style="top:30%;left:20%"></div>
-    <div class="wrap"><span class="eyebrow">Get started</span><h2 style="margin-top:20px">Start with one module. Add the rest when you're ready.</h2>
+def cta(h='Start with one module. <span class="hl">Add the rest when you are ready.</span>'):
+    return f'''<section class="cta"><div class="wrap"><h2>{h}</h2>
     <p class="lede" style="margin:22px auto 0">Ken360 is useful from the first deployment, not only at full scale.</p>
-    <div class="hero-ctas"><a class="btn btn-blue" href="{INTELENSE}/contact" target="_blank" rel="noopener">Book a demo</a><a class="btn btn-black" href="mailto:enquiries@intelense.ca">Email us</a></div></div></section>'''
+    <div class="hero-ctas"><a class="btn btn-blue" href="{DEMO}" target="_blank" rel="noopener">Book a demo</a><a class="btn btn-ghost" href="mailto:enquiries@intelense.ca">Email us</a></div></div></section>'''
 
 
-# ---------------------------------------------------------------- page assembly
-
-TITLE = 'Ken360 by Intelense | The Core AI Technology Behind All Seven Ken Modules'
-DESC = ('Ken360 is the core AI technology from Intelense that powers KenVision, KenSafety, KenHome, KenAgri, KenIoT, KenRobotics and KenVoice. '
-        'One engine, one picture of every site.')
-
-
-def jsonld():
-    org = {'@type': 'Organization', 'name': 'Intelense', 'url': INTELENSE + '/', 'sameAs': [LINKEDIN]}
-    return [
-        {'@context': 'https://schema.org', '@type': 'SoftwareApplication', 'name': 'Ken360', 'alternateName': 'Ken360 by Intelense',
-         'applicationCategory': 'BusinessApplication', 'url': SITE_URL + '/', 'description': DESC, 'publisher': org, 'provider': org,
-         'sameAs': [INTELENSE + '/ken360'], 'isBasedOn': [{'@type': 'SoftwareApplication', 'name': n, 'url': u} for k, n, j, c, u in MODS]},
-        {'@context': 'https://schema.org', '@type': 'FAQPage', 'mainEntity': [{'@type': 'Question', 'name': q, 'acceptedAnswer': {'@type': 'Answer', 'text': a}} for q, a in FAQ]},
-    ]
-
+# ---------------------------------------------------------------- pages
 
 def page_index():
-    body = '\n\n  '.join([hero(), what_is(), problem(), how(), combos(), runs(), faq(), by_intelense(), cta()])
-    return body
+    hero = f'''<section class="hero k3-hero"><div class="wash wash-a" aria-hidden="true"></div><div class="wash wash-b" aria-hidden="true"></div>
+    <div class="wrap"><span class="eyebrow">Core technology by Intelense</span>
+      <h1>The AI engine behind <span class="hl">every Ken module</span>.</h1>
+      <p class="lede">Ken360 is the core AI technology from Intelense. It connects your cameras, sensors, drones, robots and voice systems, understands what they see, and sends one clear alert to the right person.</p>
+      <div class="hero-ctas"><a class="btn btn-blue" href="{DEMO}" target="_blank" rel="noopener">Book a demo</a><a class="btn btn-ghost" href="{link("platform")}">How it works</a></div>
+      <div class="hero-meta"><span>Built by Intelense</span><span>Seven Ken modules</span><span>Edge, on-premise or cloud</span></div></div></section>'''
+    what = block(head_block('What Ken360 is', 'One technology, <span class="hl">seven modules</span>.',
+                            'The Ken modules are the products you use on site. Ken360 is what runs inside every one of them.')
+                 + cols([('One engine', 'Every module runs on the same core: a shared data model, the AI engine, alerts and one dashboard.'),
+                         ('Seven modules', 'Start with the one you need. Each new module joins the same engine, so what one learns is available to the rest.'),
+                         ('Built by Intelense', 'Ken360 is an Intelense technology. The same team builds Ken360 and every module on it.')])
+                 + f'<p class="k3-def">{DEFINITION}</p>', 'what')
+    mods = block(head_block('The Ken modules', 'Pick what your site needs.', 'Every module is useful on its own and runs on Ken360.') + mod_rows()
+                 + f'<p style="margin-top:32px"><a class="link-arrow" href="{link("modules")}">See what each module feeds into Ken360</a></p>', 'modules')
+    how = block(head_block('How it works', 'Connect. Understand. <span class="hl">Act.</span>', 'Everything on a site flows through the same three steps.')
+                + steps([('Connect', 'Plug in cameras, sensors, drones, robots and building systems. Ken360 turns every stream into one shared format. No rip-and-replace.'),
+                         ('Understand', 'AI reads each stream, then compares them. It can run at the edge, on your servers or in the cloud.'),
+                         ('Act', 'The right person gets one clear alert with the context attached. The team spends its time deciding, not watching.')])
+                + f'<p style="margin-top:32px"><a class="link-arrow" href="{link("platform")}">More about the platform</a></p>', 'how')
+    why = block(head_block('Why Ken360', 'Fewer screens. <span class="hl">Clearer alerts.</span>')
+                + cols([('One dashboard', 'Cameras, sensors, robots and conversations in one place instead of several separate tools.'),
+                        ('Alerts with context', 'When two modules see related things, Ken360 raises one incident instead of two alerts.'),
+                        ('Grow at your pace', 'Start with one module. Add more later without starting again.'),
+                        ('Your choice of setup', 'Run at the edge, on your servers, in your private cloud, or a mix.'),
+                        ('Works with what you have', 'Ken360 connects to the cameras, sensors and systems you already run.'),
+                        ('One API', 'Connect your own systems once, whichever modules you use.')]), 'why')
+    return '\n\n  '.join([hero, what, mods, how, why, faq(FAQ[:4]), cta()])
 
 
-FONTS = IB.FONTS
+def page_platform():
+    parts = [('Shared data model', 'Every camera, sensor, robot and voice stream is stored in the same format, so modules can read each other.'),
+             ('AI engine', 'Reads each stream and flags what matters. Runs at the edge, on your servers or in the cloud.'),
+             ('Correlation across modules', 'Compares what different modules see and joins the overlap into one incident.'),
+             ('Alerts and routing', 'Sends one clear alert, with context, to the right person.'),
+             ('Dashboard and API', 'One place to see everything, and one API to connect your own systems.')]
+    inside = block(head_block('Inside Ken360', 'Five parts, <span class="hl">shared by every module</span>.', 'Add a module and it joins the same engine.')
+                   + '<ul class="k3-rows plain">' + ''.join(f'<li><span class="mn"><b>{t}</b></span><span class="mj">{p}</span></li>' for t, p in parts) + '</ul>')
+    flow = block(head_block('How data flows', 'From a stream to <span class="hl">a decision</span>.')
+                 + steps([('Connect', 'Ken360 connects to the cameras, sensors, drones, robots and building systems you already run and turns each stream into one shared format.'),
+                          ('Understand', 'The AI engine reads every stream. Then it compares them, so related events from different modules are seen together.'),
+                          ('Act', 'The right person gets one alert with the context attached, on the dashboard or through the API.')]))
+    srcs = ''.join(f'<span class="chip">{s}</span>' for s in ('Cameras', 'Sensors', 'Drones', 'Robots', 'Voice', 'Building systems'))
+    protos = ''.join(f'<span class="chip">{s}</span>' for s in ('RTSP', 'ONVIF', 'MQTT', 'Modbus', 'OPC-UA', 'ROS2'))
+    conn = block(head_block('Connects to', 'What you already run.', 'No replacement phase before you see results.')
+                 + f'<h3 style="margin-bottom:14px">Sources</h3><div class="chips">{srcs}</div><h3 style="margin:32px 0 14px">Protocols</h3><div class="chips">{protos}</div>')
+    return '\n\n  '.join([page_hero('Platform', 'One engine for <span class="hl">every site</span>.', 'Ken360 is the layer that turns separate cameras, sensors and robots into one picture of what is happening on site.'), inside, flow, conn, cta()])
+
+
+def page_modules():
+    return '\n\n  '.join([page_hero('Modules', 'Seven modules. <span class="hl">One engine.</span>', DEFINITION),
+                          block(head_block('The Ken modules', 'What each module adds.', 'Each module sends its own events into Ken360. Ken360 compares them across modules.') + mod_rows(True)),
+                          cta('Not sure which module to start with? <span class="hl">Talk to us.</span>')])
+
+
+def page_combinations():
+    items = ''
+    for pair, t, p, ok in COMBOS:
+        tags = ' <em>+</em> '.join(f'<span class="mn">{dot(MOD[k][4])}{MOD[k][1]}</span>' for k in pair)
+        items += f'<li><div class="pair">{tags}</div><h3>{t}</h3><p>{p}</p>{"" if ok else "<span class=draft>Draft example</span>"}</li>'
+    return '\n\n  '.join([page_hero('Combinations', 'What one module can not see, <span class="hl">two can</span>.', 'Each Ken module is useful alone. Ken360 compares what they see and turns the overlap into one incident, one alert and one next step.', False),
+                          block(f'<ul class="k3-combos">{items}</ul><p class="k3-note">Examples show how modules can work together. Results depend on your site and setup.</p>'), cta()])
+
+
+def page_deployment():
+    opts = steps([('At the edge', 'Analysis runs next to the cameras and sensors, so alerts are quick and video stays where it is captured.'),
+                  ('On your servers', 'Everything runs inside your own data centre. Only the events and derived data you choose leave the site.'),
+                  ('In the cloud, or both', 'Use your private cloud for scale and reporting, and keep sensitive streams on site. One platform, mixed setup.')])
+    return '\n\n  '.join([page_hero('Deployment', 'Your data stays where <span class="hl">you decide</span>.', 'Run Ken360 at the edge, on your servers, in your private cloud, or a mix. In an on-premise setup the video stays on site.', False),
+                          block(head_block('Setup options', 'Three ways to run Ken360.') + opts), faq(FAQ, 'Deployment, data and support'), cta()])
+
+
+def page_about():
+    body = block(head_block('About', 'Ken360 is an <span class="hl">Intelense technology</span>.', 'Intelense is an applied AI company working in industrial and operational environments.')
+                 + cols([('One team', 'The same team builds Ken360 and every Ken module that runs on it.'),
+                         ('One family', 'KenVision, KenSafety, KenHome, KenAgri, KenIoT, KenRobotics and KenVoice all share the same core.'),
+                         ('More at intelense.com', 'Read about the company, the team and the offices on the Intelense site.')])
+                 + f'<p style="margin-top:32px"><a class="btn btn-ghost" href="{INTELENSE}/about" rel="noopener">About Intelense</a></p>')
+    return '\n\n  '.join([page_hero('About', 'Built by <span class="hl">Intelense</span>.', DEFINITION, False), body, cta()])
+
+
+def page_contact():
+    body = block(head_block('Contact', 'Talk to the team behind Ken360.', 'Tell us what you run today and which module you would start with.')
+                 + f'''<div class="k3-cols c3"><div><h3>Email</h3><p class="email">enquiries@intelense.ca</p><p class="email">dinesh@intelense.com</p></div>
+        <div><h3>Phone</h3><p><a href="tel:+12895523165">+1 (289) 552-3165</a> Canada</p><p><a href="tel:+919342810422">+91 93428 10422</a> India</p></div>
+        <div><h3>Book a demo</h3><p>Use the form on the Intelense site.</p><p><a class="btn btn-blue" href="{DEMO}" target="_blank" rel="noopener">Book a demo</a></p></div></div>''')
+    return '\n\n  '.join([page_hero('Contact', 'Let us <span class="hl">talk</span>.', 'We reply to every enquiry.', False), body])
+
+
+PAGES = {
+    'index': ('Ken360 by Intelense | The Core AI Technology Behind All Seven Ken Modules',
+              'Ken360 is the core AI technology from Intelense that powers KenVision, KenSafety, KenHome, KenAgri, KenIoT, KenRobotics and KenVoice. One engine, one picture of every site.', page_index),
+    'platform': ('Ken360 Platform | One AI Engine for Cameras, Sensors and Robots', 'How Ken360 connects cameras, sensors, drones, robots and voice into one engine and sends one clear alert to the right person.', page_platform),
+    'modules': ('Ken Modules | KenVision, KenSafety, KenHome, KenAgri, KenIoT, KenRobotics, KenVoice', 'The seven Ken modules by Intelense, all running on Ken360. See what each one does and what it feeds into the shared engine.', page_modules),
+    'combinations': ('Module Combinations | What Ken360 Sees Across Ken Modules', 'Examples of how Ken modules work together on Ken360: one incident, one alert and one next step instead of separate alerts.', page_combinations),
+    'deployment': ('Ken360 Deployment | Edge, On-Premise, Cloud and FAQ', 'Run Ken360 at the edge, on your servers, in your private cloud, or a mix. Answers on data, video, rollout and support.', page_deployment),
+    'about': ('About Ken360 | An Intelense Technology', 'Ken360 is built by Intelense, an applied AI company working in industrial and operational environments.', page_about),
+    'contact': ('Contact Ken360 | Book a Demo with Intelense', 'Talk to the Intelense team about Ken360 and the Ken modules. Email, phone or book a demo.', page_contact),
+}
+
+
+def jsonld(name):
+    org = {'@type': 'Organization', 'name': 'Intelense', 'url': INTELENSE + '/', 'sameAs': [LINKEDIN]}
+    out = []
+    if name == 'index':
+        out.append({'@context': 'https://schema.org', '@type': 'SoftwareApplication', 'name': 'Ken360', 'alternateName': 'Ken360 by Intelense', 'applicationCategory': 'BusinessApplication',
+                    'url': SITE_URL + '/', 'description': PAGES['index'][1], 'publisher': org, 'provider': org, 'sameAs': [INTELENSE + '/ken360'],
+                    'isBasedOn': [{'@type': 'SoftwareApplication', 'name': m[1], 'url': m[5]} for m in MODS]})
+    if name == 'deployment':
+        out.append({'@context': 'https://schema.org', '@type': 'FAQPage', 'mainEntity': [{'@type': 'Question', 'name': q, 'acceptedAnswer': {'@type': 'Answer', 'text': a}} for q, a in FAQ]})
+    return out
+
+
 ICON_LINKS = ('<link rel="icon" href="@a/icons/favicon.ico" sizes="any"><link rel="icon" type="image/png" sizes="32x32" href="@a/icons/favicon-32.png">'
               '<link rel="icon" type="image/png" sizes="96x96" href="@a/icons/favicon-96.png"><link rel="apple-touch-icon" href="@a/icons/apple-touch-icon.png">')
 
 
-def render(body):
-    scripts = ('<script src="@a/site.js" defer></script>\n<script src="@a/k3.js" defer></script>\n<script type="module">\nimport { initCursorGrid } from \'@a/cursor-grid.js\';\n'
-               + IB.GRID_START % IB.GRID_OPTS + '\n</script>')
-    ld = ''.join('<script type="application/ld+json">' + json.dumps(x, ensure_ascii=False).replace('</', '<\\/') + '</script>' for x in jsonld())
-    head = (f'<title>{e(TITLE)}</title>\n<meta name="description" content="{ea(DESC)}">\n<meta name="author" content="Intelense Inc.">\n<meta name="theme-color" content="#0A34ED">\n{ICON_LINKS}\n'
-            f'<meta name="robots" content="index, follow"><link rel="canonical" href="{SITE_URL}/">\n<meta property="og:type" content="website"><meta property="og:site_name" content="Ken360 by Intelense">'
-            f'<meta property="og:url" content="{SITE_URL}/"><meta property="og:title" content="{ea(TITLE)}"><meta property="og:description" content="{ea(DESC)}">\n'
-            f'<meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="{ea(TITLE)}"><meta name="twitter:description" content="{ea(DESC)}">\n{ld}\n{FONTS}\n'
+def render(name):
+    title, desc, fn = PAGES[name]
+    url = SITE_URL + ('/' if name == 'index' else f'/{name}')
+    ld = ''.join('<script type="application/ld+json">' + json.dumps(x, ensure_ascii=False).replace('</', '<\\/') + '</script>' for x in jsonld(name))
+    head = (f'<title>{e(title)}</title>\n<meta name="description" content="{ea(desc)}">\n<meta name="author" content="Intelense Inc.">\n<meta name="theme-color" content="#0A34ED">\n{ICON_LINKS}\n'
+            f'<meta name="robots" content="index, follow"><link rel="canonical" href="{url}">\n<meta property="og:type" content="website"><meta property="og:site_name" content="Ken360 by Intelense">'
+            f'<meta property="og:url" content="{url}"><meta property="og:title" content="{ea(title)}"><meta property="og:description" content="{ea(desc)}">\n'
+            f'<meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="{ea(title)}"><meta name="twitter:description" content="{ea(desc)}">\n{ld}\n{IB.FONTS}\n'
             '<script>document.documentElement.classList.add("js")</script><link rel="stylesheet" href="@a/site.css">')
     return (f'<!doctype html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">\n{head}\n</head>\n<body>\n'
-            f'{header()}\n<main id="top">\n  {body}\n</main>\n\n{footer()}\n{scripts}\n</body>\n</html>\n')
+            f'{header(name)}\n<main id="top">\n  {fn()}\n</main>\n\n{footer()}\n<script src="@a/site.js" defer></script>\n</body>\n</html>\n')
 
 
 def resolve(html, version):
-    html = html.replace('href="@index"', 'href="index.html"' if PREVIEW else 'href="/"')
-    html = html.replace('@a/', 'assets/' if PREVIEW else '/assets/')
+    if PREVIEW:
+        html = html.replace('href="@index"', 'href="home.html"')
+        html = re.sub(r'href="@p/([a-z]+)"', r'href="\1.html"', html)
+        html = html.replace('@a/', 'assets/')
+    else:
+        html = html.replace('href="@index"', 'href="/"')
+        html = re.sub(r'href="@p/([a-z]+)"', r'href="/\1"', html)
+        html = html.replace('@a/', '/assets/')
     if version:
         html = re.sub(r'((?:href|src)="[^"]*assets/[a-z0-9-]+\.(?:css|js))"', lambda m: m.group(1) + '?v=' + version + '"', html)
-        html = re.sub(r"(from '[^']*assets/cursor-grid\.js)'", lambda m: m.group(1) + '?v=' + version + "'", html)
     return html
 
 
 def deploy(out):
     out.mkdir(parents=True, exist_ok=True)
-    css = (SITE_DIR / 'assets' / 'site.css').read_text() + '\n' + (HERE / 'assets-src' / 'k3.css').read_text() + '\n' + (HERE / 'assets-src' / 'k3-map.css').read_text()
-    js = (HERE / 'assets-src' / 'k3.js').read_text() + '\n' + (HERE / 'assets-src' / 'k3-map.js').read_text() + '\n' + (HERE / 'assets-src' / 'k3-dash.js').read_text()
-    version = hashlib.md5((css + (SITE_DIR / 'assets' / 'site.js').read_text() + js).encode()).hexdigest()[:8]
+    css = (SITE_DIR / 'assets' / 'site.css').read_text() + '\n' + (HERE / 'assets-src' / 'k3.css').read_text()
+    version = hashlib.md5((css + (SITE_DIR / 'assets' / 'site.js').read_text()).encode()).hexdigest()[:8]
     a = out / 'assets'
     a.mkdir(exist_ok=True)
     (a / 'site.css').write_text(css)
-    (a / 'k3.js').write_text(js)
-    for f in ('site.js', 'cursor-grid.js'):
-        shutil.copy(SITE_DIR / 'assets' / f, a / f)
+    shutil.copy(SITE_DIR / 'assets' / 'site.js', a / 'site.js')
     shutil.copytree(SITE_DIR / 'assets' / 'icons', a / 'icons', dirs_exist_ok=True)
     shutil.copytree(HERE / 'assets-src' / 'logos', a / 'logos', dirs_exist_ok=True)
-    (out / 'index.html').write_text(resolve(render(page_index()), None if PREVIEW else version))
+    for name in PAGES:
+        html = resolve(render(name), None if PREVIEW else version)
+        if PREVIEW:
+            (out / ('home.html' if name == 'index' else f'{name}.html')).write_text(html)
+        elif name == 'index':
+            (out / 'index.html').write_text(html)
+        else:
+            (out / name).mkdir(exist_ok=True)
+            (out / name / 'index.html').write_text(html)
     if not PREVIEW:
+        urls = ''.join(f'  <url><loc>{SITE_URL}{"/" if n == "index" else "/" + n}</loc></url>\n' for n in PAGES)
         (out / 'robots.txt').write_text(f'User-agent: *\nAllow: /\n\nSitemap: {SITE_URL}/sitemap.xml\n')
-        (out / 'sitemap.xml').write_text(f'<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n  <url><loc>{SITE_URL}/</loc></url>\n</urlset>\n')
+        (out / 'sitemap.xml').write_text(f'<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n{urls}</urlset>\n')
         shutil.copy(a / 'icons' / 'favicon.ico', out / 'favicon.ico')
-    print('wrote the Ken360 home page to', out)
+    print('wrote the Ken360 site (%d pages) to %s' % (len(PAGES), out))
 
 
 if __name__ == '__main__':
