@@ -290,7 +290,7 @@ def render(name):
             f'<meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="{ea(title)}"><meta name="twitter:description" content="{ea(desc)}">\n{ld}\n{IB.FONTS}\n'
             '<script>document.documentElement.classList.add("js")</script><link rel="stylesheet" href="@a/site.css">')
     return (f'<!doctype html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">\n{head}\n</head>\n<body>\n'
-            f'{header(name)}\n<main id="top">\n  {fn()}\n</main>\n\n{footer()}\n<script src="@a/site.js" defer></script>\n</body>\n</html>\n')
+            f'{header(name)}\n<main id="top">\n  {fn()}\n</main>\n\n{footer()}\n<script src="@a/site.js" defer></script>\n<script src="@a/k3.js" defer></script>\n</body>\n</html>\n')
 
 
 def resolve(html, version):
@@ -310,11 +310,12 @@ def resolve(html, version):
 def deploy(out):
     out.mkdir(parents=True, exist_ok=True)
     css = (SITE_DIR / 'assets' / 'site.css').read_text() + '\n' + (HERE / 'assets-src' / 'k3.css').read_text()
-    version = hashlib.md5((css + (SITE_DIR / 'assets' / 'site.js').read_text()).encode()).hexdigest()[:8]
+    version = hashlib.md5((css + (SITE_DIR / 'assets' / 'site.js').read_text() + (HERE / 'assets-src' / 'k3.js').read_text()).encode()).hexdigest()[:8]
     a = out / 'assets'
     a.mkdir(exist_ok=True)
     (a / 'site.css').write_text(css)
     shutil.copy(SITE_DIR / 'assets' / 'site.js', a / 'site.js')
+    shutil.copy(HERE / 'assets-src' / 'k3.js', a / 'k3.js')
     shutil.copytree(SITE_DIR / 'assets' / 'icons', a / 'icons', dirs_exist_ok=True)
     shutil.copytree(HERE / 'assets-src' / 'logos', a / 'logos', dirs_exist_ok=True)
     for name in PAGES:

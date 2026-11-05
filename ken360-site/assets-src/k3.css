@@ -47,3 +47,33 @@ footer .k3-logo img { height: 68px; }
 .foot.k3-foot { grid-template-columns: minmax(0, 1.4fr) repeat(4, minmax(0, 1fr)); }
 @media (max-width: 1080px) { .foot.k3-foot { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 @media (max-width: 680px) { .foot.k3-foot { grid-template-columns: minmax(0, 1fr); } }
+
+/* heroes: everything centred, buttons included */
+.k3-hero .eyebrow { justify-content: center; }
+.k3-hero .hero-ctas { justify-content: center; }
+
+/* scroll reveal */
+.js .rv { opacity: 0; transform: translateY(22px); transition: opacity .7s ease var(--d, 0ms), transform .8s cubic-bezier(.2, .7, .2, 1) var(--d, 0ms); }
+.js .rv.in { opacity: 1; transform: none; }
+.js .hl { background-size: 0 4px; transition: background-size 1s cubic-bezier(.2, .7, .2, 1) .35s; }
+.js .in .hl, .js .in.hl { background-size: 100% 4px; }
+
+/* hover */
+.k3-cols > div { transition: transform .35s cubic-bezier(.2, .7, .2, 1), border-color .3s; }
+.k3-cols > div:hover { transform: translateY(-5px); border-top-color: #0A34ED; }
+.k3-cols > div:hover h3 { background: var(--brand-gradient); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.k3-rows li { transition: background-color .3s, padding .35s cubic-bezier(.2, .7, .2, 1); border-radius: 0; }
+.k3-rows li:hover { background: rgba(255, 255, 255, .7); padding-inline: 18px; }
+.k3-rows .md { transition: transform .3s; } .k3-rows li:hover .md { transform: scale(1.5); }
+.k3-rows .link-arrow { transition: color .25s; }
+.k3-combos li { transition: transform .35s cubic-bezier(.2, .7, .2, 1), border-color .3s, box-shadow .35s, background-color .3s; }
+.k3-combos li:hover { transform: translateY(-6px); border-color: #0A34ED; background: #fff; box-shadow: 0 24px 40px -24px rgba(10, 52, 237, .35); }
+.chip { transition: background-color .25s, color .25s, transform .25s; } .chip:hover { background: var(--off-black); color: #fff; transform: translateY(-2px); }
+details { transition: background-color .3s; } details:hover summary { color: #0A34ED; }
+summary { transition: color .25s; }
+.foot a { transition: color .2s; }
+
+/* gentle drift on the hero glow */
+@keyframes k3-drift { 0%, 100% { transform: translate3d(0, 0, 0); } 50% { transform: translate3d(2.5%, 4%, 0); } }
+.k3-hero .wash-a { animation: k3-drift 14s ease-in-out infinite; } .k3-hero .wash-b { animation: k3-drift 18s ease-in-out infinite reverse; }
+@media (prefers-reduced-motion: reduce) { .js .rv { opacity: 1; transform: none; transition: none; } .js .hl { background-size: 100% 4px; transition: none; } .k3-hero .wash-a, .k3-hero .wash-b { animation: none; } .k3-cols > div:hover, .k3-combos li:hover { transform: none; } }
