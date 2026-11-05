@@ -20,44 +20,51 @@
   });
 
 
-  /* Ken360 engine: wires from the core to each module, one module lit at a time (auto-cycles until the visitor takes over) */
-  $$('[data-engine]').forEach(function (root) {
-    var lis = $$('.mods7 li', root), sats = $$('.orbit i', root), ring = root.querySelector('[data-ring]'), g = root.querySelector('[data-wires]');
-    var pulse = root.querySelector('.pulse'), anim = pulse.querySelector('animateMotion'), from = root.querySelector('[data-from]'), live = root.querySelector('.live');
-    var NS = 'http://www.w3.org/2000/svg', paths = [], cur = -1, timer = null, paused = false, visible = false;
+  /* Ken360 engine: on desktop the modules join the core one by one as the visitor scrolls (calm, no looping motion) */
+  $$('[data-story]').forEach(function (root) {
+    var stage = root.querySelector('.stage'), lis = $$('.mods7 li', root), ring = root.querySelector('[data-ring]'), g = root.querySelector('[data-wires]');
+    var eng = root.querySelector('.k3-engine'), cap = root.querySelector('[data-cap]'), cnt = root.querySelector('[data-count]'), bars = $$('.prog i', root);
+    var NS = 'http://www.w3.org/2000/svg', paths = [], step = -1, capT;
+    var mq = window.matchMedia('(min-width:861px)');
+    function on() { return mq.matches && !reduce; }
     function build() {
       g.innerHTML = ''; paths = [];
       if (window.innerWidth <= 860) return;
-      var b = root.getBoundingClientRect(), r = ring.getBoundingClientRect();
+      var b = eng.getBoundingClientRect(), r = ring.getBoundingClientRect();
       var x1 = r.right - b.left - r.width * .02, y1 = r.top - b.top + r.height / 2;
       lis.forEach(function (li) {
-        var l = li.getBoundingClientRect(), x2 = l.left - b.left - (li.classList.contains('on') ? 0 : 0), y2 = l.top - b.top + l.height / 2, dx = (x2 - x1) * .55;
+        var l = li.getBoundingClientRect(), x2 = l.left - b.left, y2 = l.top - b.top + l.height / 2, dx = (x2 - x1) * .55;
         var p = document.createElementNS(NS, 'path'); p.setAttribute('d', 'M' + x1 + ' ' + y1 + ' C' + (x1 + dx) + ' ' + y1 + ' ' + (x2 - dx) + ' ' + y2 + ' ' + x2 + ' ' + y2);
-        p.style.setProperty('--c', li.style.getPropertyValue('--c')); g.appendChild(p); paths.push(p);
+        p.style.stroke = li.style.getPropertyValue('--c'); g.appendChild(p); paths.push(p);
+        var len = p.getTotalLength(); p.style.strokeDasharray = len; p.setAttribute('data-len', len);
       });
-      if (cur >= 0) set(cur, true);
+      apply(step < 0 ? 0 : step, true);
     }
-    function set(i, force) {
-      if (i === cur && !force) return; cur = i;
-      lis.forEach(function (l, n) { l.classList.toggle('on', n === i); });
-      sats.forEach(function (s, n) { s.classList.toggle('on', n === i); });
-      paths.forEach(function (p, n) { p.classList.toggle('on', n === i); });
-      var col = lis[i].style.getPropertyValue('--c'); live.style.setProperty('--c', col);
-      from.textContent = lis[i].querySelector('.wm').textContent.replace('by Intelense', '').trim();
-      if (paths[i]) { anim.setAttribute('path', paths[i].getAttribute('d')); pulse.style.fill = col; root.classList.add('run'); if (anim.beginElement) { try { anim.beginElement(); } catch (e) {} } } else root.classList.remove('run');
+    function text(n) {
+      if (n === 0) return 'Ken360 is the core AI technology from Intelense. Every Ken module runs on it.';
+      if (n === 7) return 'Seven modules, one engine, one picture of your site.';
+      var name = lis[n - 1].getAttribute('data-n'), add = lis[n - 1].getAttribute('data-add').split(':')[0].toLowerCase();
+      return n === 1 ? name + ' joins first. It feeds ' + add + ' into the shared data model.' : name + ' joins the same engine. Ken360 can now compare its ' + add + ' with what ' + (n === 2 ? 'the first module sees.' : 'the other ' + (n - 1) + ' see.');
     }
-    function tick() { if (!paused && visible) set((cur + 1) % lis.length); }
-    function start() { if (!reduce && !timer) timer = setInterval(tick, 2600); }
-    lis.forEach(function (li, n) {
-      li.addEventListener('mouseenter', function () { paused = true; set(n); });
-      li.addEventListener('mouseleave', function () { paused = false; });
-      li.addEventListener('focusin', function () { paused = true; set(n); });
-      li.addEventListener('focusout', function () { paused = false; });
-      li.addEventListener('click', function (e) { if (!e.target.closest('a')) { var a = li.querySelector('a'); if (window.innerWidth > 860) { set(n); } else a.click(); } });
-    });
-    sats.forEach(function (s, n) { s.style.pointerEvents = 'auto'; s.addEventListener('mouseenter', function () { paused = true; set(n); }); s.addEventListener('mouseleave', function () { paused = false; }); });
-    if ('ResizeObserver' in window) new ResizeObserver(build).observe(root); addEventListener('resize', build);
-    build(); set(0, true);
-    if ('IntersectionObserver' in window) new IntersectionObserver(function (en) { visible = en[0].isIntersecting; if (visible) start(); }, { threshold: .3 }).observe(root); else { visible = true; start(); }
+    function apply(n, force) {
+      if (!on()) { root.classList.remove('story-on'); lis.forEach(function (l) { l.classList.remove('joined', 'new'); }); paths.forEach(function (p) { p.style.strokeDashoffset = 0; }); cnt.textContent = '7'; return; }
+      root.classList.add('story-on');
+      if (n === step && !force) return;
+      var changed = n !== step; step = n;
+      lis.forEach(function (l, i) { l.classList.toggle('joined', i < n); l.classList.toggle('new', i === n - 1 && n < 7); });
+      paths.forEach(function (p, i) { p.style.strokeDashoffset = i < n ? 0 : p.getAttribute('data-len'); });
+      cnt.textContent = n; bars.forEach(function (b, i) { b.classList.toggle('on', i <= n); });
+      if (changed) { cap.classList.add('sw'); clearTimeout(capT); capT = setTimeout(function () { cap.textContent = text(n); cap.classList.remove('sw'); }, 180); }
+    }
+    function upd() {
+      if (!on()) { apply(7, true); return; }
+      var r = root.getBoundingClientRect(), span = r.height - stage.offsetHeight;
+      var p = Math.max(0, Math.min(1, -r.top / Math.max(span, 1)));
+      apply(Math.min(7, Math.floor(p * 8)));
+    }
+    var tick = false; function req() { if (!tick) { tick = true; requestAnimationFrame(function () { tick = false; upd(); }); } }
+    addEventListener('scroll', req, { passive: true });
+    addEventListener('resize', function () { build(); upd(); });
+    apply(on() ? 0 : 7, true); build(); upd();
   });
 })();
