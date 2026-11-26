@@ -887,9 +887,10 @@ def head(p):
     return '\n'.join(x for x in parts if x)
 
 
-ICON_LINKS = ('<link rel="icon" href="@a/icons/favicon.ico" sizes="any">\n<link rel="icon" type="image/png" sizes="32x32" href="@a/icons/favicon-32.png">\n'
-              '<link rel="icon" type="image/png" sizes="48x48" href="@a/icons/favicon-48.png">\n<link rel="icon" type="image/png" sizes="96x96" href="@a/icons/favicon-96.png">\n'
-              '<link rel="icon" type="image/png" sizes="192x192" href="@a/icons/icon-192.png">\n<link rel="apple-touch-icon" href="@a/icons/apple-touch-icon.png">')
+ICON_LINKS = ('<link rel="icon" href="@a/icons/favicon.ico?v=2" sizes="any">\n<link rel="icon" type="image/svg+xml" href="@a/icons/favicon.svg?v=2">\n'
+              '<link rel="icon" type="image/png" sizes="16x16" href="@a/icons/favicon-16.png?v=2">\n<link rel="icon" type="image/png" sizes="32x32" href="@a/icons/favicon-32.png?v=2">\n'
+              '<link rel="icon" type="image/png" sizes="48x48" href="@a/icons/favicon-48.png?v=2">\n<link rel="icon" type="image/png" sizes="96x96" href="@a/icons/favicon-96.png?v=2">\n'
+              '<link rel="icon" type="image/png" sizes="192x192" href="@a/icons/icon-192.png?v=2">\n<link rel="apple-touch-icon" href="@a/icons/apple-touch-icon.png?v=2">')
 
 
 def no_dashes(html):
